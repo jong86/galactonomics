@@ -12,13 +12,15 @@ contract("GalacticIndustrialAuthority", accounts => {
     gia = await GalacticIndustrialAuthority.new({ from: owner });
   })
 
-  it("...should store the value 89.", async () => {
-    // Set value of 89
-    await gia.set(89, { from: bob });
+  it("should deploy 7 commodity contracts", async () => {
 
-    // Get stored value
-    const storedData = await gia.get.call();
+  });
 
-    assert.equal(storedData, 89, "The value 89 was not stored.");
+  it("should allow owner to mint commodities for another account", async () => {
+
+  });
+
+  it("should fail with revert error if a non-owner tries to mint commodities", async () => {
+
   });
 });
