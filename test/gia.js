@@ -1,4 +1,3 @@
-const GalacticCentralAuthority = artifacts.require("./GalacticCentralAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const deployCommodities = require('../util/deployCommodities')
 

@@ -13,13 +13,13 @@ contract("GalacticEconomicAuthority", accounts => {
     gea = await GalacticEconomicAuthority.new()
   })
 
-  it("should let owner create a sell order for a player", async () => {
+  it("should let a player create a sell order", async () => {
     const sellOrderId = await gea.createSellOrder(alice, 0, 0, 1000, 350)
     const order = await gea.getOrder(0, 0)
     assert.equal(order[0], 1000, 'did not create order')
   })
 
-  it("should let a owner buy a sell order for a player", async () => {
+  it("should let a player buy another player's sell order", async () => {
     const sellOrderId = await gea.createSellOrder(alice, 0, 0, 1000, 350)
     await gea.buySellOrder(0, 0, bob)
     const balanceBob = await commodities[0].balanceOf(bob)
