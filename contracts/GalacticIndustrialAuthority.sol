@@ -4,8 +4,8 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./Commodity.sol";
 
 contract GalacticIndustrialAuthority is Ownable {
+  // How actual in-game commodity data is stored
   struct CommodityData {
-    string name;
     address addr;
     uint miningCost;
     uint amountMinedPerBlock;
@@ -13,15 +13,31 @@ contract GalacticIndustrialAuthority is Ownable {
 
   CommodityData[7] commodities;
 
-  constructor() {
-    // Deploy commodity contracts here
+  constructor(address[] _commodities) {
+    for (uint8 i = 0; i < commodities.length; i++) {
+      commodities[i] = CommodityData(_commodities[i], 100, 364000);
+    }
   }
 
   function mintCommodityFor(address _for, uint8 _commodityId) external onlyOwner returns (bool) {
     return true;
   }
 
-  function getCommodities() external view returns (CommodityData[7]) {
-    return commodities;
+  function getCommodity(uint8 _commodityId) external view returns (
+    string,
+    string,
+    address,
+    uint,
+    uint
+  ) {
+    CommodityData memory commodityData = commodities[_commodityId];
+    Commodity commodity = Commodity(commodityData.addr);
+    return (
+      commodity.name(),
+      commodity.symbol(),
+      commodityData.addr,
+      commodityData.miningCost,
+      commodityData.amountMinedPerBlock
+    );
   }
 }
