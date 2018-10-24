@@ -1,6 +1,6 @@
 const GalacticCentralAuthority = artifacts.require("./GalacticCentralAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
-const Commodity = artifacts.require("./Commodity.sol")
+const deployCommodities = require('../util/deployCommodities')
 
 contract("GalacticIndustrialAuthority", accounts => {
   let gia, commodities
@@ -10,18 +10,8 @@ contract("GalacticIndustrialAuthority", accounts => {
   const eve = accounts[3]
 
   beforeEach(async() => {
-    commodities = [
-      await Commodity.new("Fermented Gookala Eggs", "FGE", 0),
-      await Commodity.new("Mufasta Goop", "MFG", 0),
-      await Commodity.new("Byzantimum Crystals", "BZC", 0),
-      await Commodity.new("Superalloy Sprockets", "SAS", 0),
-      await Commodity.new("Arrakian Worm Milk", "AWM", 0),
-      await Commodity.new("Auxilliary Omnireceptors", "AOR", 0),
-      await Commodity.new("L-337 Nanobulators", "L3N", 0)
-    ]
-
+    commodities = await deployCommodities()
     const commodityAddresses = commodities.map(commodity => commodity.address)
-
     gia = await GalacticIndustrialAuthority.new(commodityAddresses)
   })
 
