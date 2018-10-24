@@ -21,7 +21,7 @@ contract("GalacticIndustrialAuthority", accounts => {
     ]
 
     const commodityAddresses = commodities.map(commodity => commodity.address)
-    
+
     gia = await GalacticIndustrialAuthority.new(commodityAddresses)
   })
 
@@ -32,11 +32,20 @@ contract("GalacticIndustrialAuthority", accounts => {
     }
   })
 
-  // it("should allow owner to mint commodities for another account", async () => {
+  it("should allow owner to mint commodities for another account", async () => {
+    const amount = 95421
+    await commodities[0].mint(bob, amount)
+    const balanceBob = await commodities[0].balanceOf(bob)
+    assert.equal(amount, balanceBob, 'could not mint')
+  })
 
-  // })
-
-  // it("should fail with revert error if a non-owner tries to mint commodities", async () => {
-
-  // })
+  it("should not allow a non-owner to mint commodities", async () => {
+    const amount = 95421
+    try {
+      await commodities[0].mint(bob, amount, { from: eve })
+    } catch(e) {
+      return assert(true)
+    }
+    assert(false, 'was able to mint')
+  })
 })
