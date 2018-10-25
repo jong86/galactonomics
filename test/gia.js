@@ -1,5 +1,6 @@
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const deployCommodities = require('../util/deployCommodities')
+const Commodity = artifacts.require("./Commodity.sol")
 
 contract("GalacticIndustrialAuthority", accounts => {
   let gia, commodities
@@ -12,6 +13,7 @@ contract("GalacticIndustrialAuthority", accounts => {
     commodities = await deployCommodities()
     const commodityAddresses = commodities.map(commodity => commodity.address)
     gia = await GalacticIndustrialAuthority.new(commodityAddresses)
+    await commodities[0].setGIA(gia.address)
   })
 
   it("should store all the commodities", async () => {
