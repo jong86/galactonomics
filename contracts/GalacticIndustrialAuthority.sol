@@ -13,14 +13,15 @@ contract GalacticIndustrialAuthority is Ownable {
 
   CommodityData[7] commodities;
 
-  constructor(address[] _commodities) {
+  constructor(address[] _commodities) public {
     for (uint8 i = 0; i < commodities.length; i++) {
       commodities[i] = CommodityData(_commodities[i], 100, 364000);
     }
   }
 
-  function mintCommodityFor(address _for, uint8 _commodityId) external onlyOwner returns (bool) {
-    return true;
+  function mintCommodityFor(address _for, uint8 _commodityId) external onlyOwner {
+    Commodity commodity = Commodity(commodities[_commodityId].addr);
+    commodity.mint(_for, commodities[_commodityId].amountMinedPerBlock);
   }
 
   function getCommodity(uint8 _commodityId) external view returns (

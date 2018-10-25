@@ -12,6 +12,7 @@ contract("GalacticIndustrialAuthority", accounts => {
     commodities = await deployCommodities()
     const commodityAddresses = commodities.map(commodity => commodity.address)
     gia = await GalacticIndustrialAuthority.new(commodityAddresses)
+    commodities.forEach(async commodity => await commodity.setGIA(gia))
   })
 
   it("should store all the commodities", async () => {
@@ -23,7 +24,8 @@ contract("GalacticIndustrialAuthority", accounts => {
 
   it("should allow owner to mint commodities for another account", async () => {
     const amount = 95421
-    await commodities[0].mint(bob, amount)
+    // await commodities[0].mint(bob, amount)
+    await gia.mintCommodityFor(bob, 0)
     const balanceBob = await commodities[0].balanceOf(bob)
     assert.equal(amount, balanceBob, 'could not mint')
   })
