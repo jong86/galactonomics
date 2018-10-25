@@ -12,7 +12,6 @@ contract("GalacticIndustrialAuthority", accounts => {
     commodities = await deployCommodities()
     const commodityAddresses = commodities.map(commodity => commodity.address)
     gia = await GalacticIndustrialAuthority.new(commodityAddresses)
-    commodities.forEach(async commodity => await commodity.setGIA(gia))
   })
 
   it("should store all the commodities", async () => {
