@@ -15,8 +15,8 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor {
   }
 
   function mintCommodityFor(uint8 _commodityId, address _for) external onlyOwner {
-    CommodityInterface commodity = CommodityInterface(commodities[_commodityId].addr);
-    commodity.mint(_for, commodities[_commodityId].amountMinedPerBlock);
+    // CommodityInterface commodity = CommodityInterface(commodities[_commodityId].addr);
+    commodities[0]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
   }
 
   function getCommodity(uint8 _commodityId) external view returns (

@@ -1,8 +1,10 @@
 pragma solidity ^0.4.24;
+import "./CommodityInterface.sol";
 
 contract CommodityInteractor {
   struct CommodityData {
     address addr;
+    CommodityInterface _interface;
     uint miningCost;
     uint amountMinedPerBlock;
   }
@@ -11,7 +13,12 @@ contract CommodityInteractor {
 
   constructor(address[] _commodityAddresses) public {
     for (uint8 i = 0; i < commodities.length; i++) {
-      commodities[i] = CommodityData(_commodityAddresses[i], 100, 364000);
+      commodities[i] = CommodityData(
+        _commodityAddresses[i],
+        CommodityInterface(_commodityAddresses[i]),
+        100,
+        364000
+      );
     }
   }
 }
