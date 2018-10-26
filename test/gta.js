@@ -15,9 +15,21 @@ contract("GalacticTransitAuthority", accounts => {
   })
 
   it("should allow user to buy a spaceship", async () => {
-    const response = await gta.buySpaceship({ from: alice })
+    const response = await gta.buySpaceship('Millenium Falcon', { from: alice })
     const { tokenId } = response.logs[0].args
     const spaceshipOwner = await gta.ownerOf(tokenId)
     assert.equal(alice, spaceshipOwner, 'could not buy')
+  })
+
+  it("should only let users buy one spaceship", async () => {
+    const response = await gta.buySpaceship('Millenium Falcon', { from: alice })
+
+    try {
+      const response2 = await gta.buySpaceship('Millenium Falcon2', { from: alice })
+    } catch (e) {
+      return assert(true)
+    }
+
+    assert(false, 'could buy a second spaceship')
   })
 })
