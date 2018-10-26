@@ -15,6 +15,7 @@ contract GalacticIndustrialAuthority is Ownable {
     uint amountMinedPerBlock;
   }
 
+  event InvestmentMade(address from, uint8 commodityId, uint value);
   event Log(string str);
 
   CommodityData[7] commodities;
@@ -23,6 +24,10 @@ contract GalacticIndustrialAuthority is Ownable {
     for (uint8 i = 0; i < commodities.length; i++) {
       commodities[i] = CommodityData(_commodityAddresses[i], 100, 364000);
     }
+  }
+
+  function investInProduction(uint8 _commodityId) external payable {
+    emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
   function mintCommodityFor(uint8 _commodityId, address _for) external onlyOwner {
@@ -47,4 +52,6 @@ contract GalacticIndustrialAuthority is Ownable {
       commodityData.amountMinedPerBlock
     );
   }
+
+  function() public {}
 }

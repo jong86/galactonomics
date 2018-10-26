@@ -39,4 +39,5 @@ contract Commodity is ERC20Detailed, ERC20Mintable, Ownable {
     gia = _gia;
     emit SetGIA(_gia);
   }
+
 }
