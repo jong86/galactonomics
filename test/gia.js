@@ -24,11 +24,10 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("should allow owner to mint commodities for another account", async () => {
-    const amount = 95421
-    // await commodities[0].mint(bob, amount)
-    await gia.mintCommodityFor(bob, 0)
+    await gia.mintCommodityFor(0, bob)
     const balanceBob = await commodities[0].balanceOf(bob)
-    assert.equal(amount, balanceBob, 'could not mint')
+    const amtMinedPerBlock = (await gia.getCommodity(0))[4]
+    assert.equal(amtMinedPerBlock.toString(), balanceBob.toString(), 'could not mint')
   })
 
   it("should not allow a non-owner to mint commodities", async () => {
