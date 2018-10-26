@@ -33,12 +33,10 @@ contract GalacticTransitAuthority is ERC721 {
     emit SpaceshipBought(msg.sender, _tokenId);
   }
 
-
   function travelToPlanet(uint8 _planetId) external {
     require(0 < _planetId && _planetId < 7, "planetId must be between 0 and 6, inclusive");
     tokenIdToSpaceship[addressToTokenId[msg.sender]].currentPlanet = _planetId;
   }
-
 
   function getInfo() external view returns (
     string name,

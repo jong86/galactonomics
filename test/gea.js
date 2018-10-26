@@ -10,7 +10,8 @@ contract("GalacticEconomicAuthority", accounts => {
 
   beforeEach(async() => {
     commodities = await deployCommodities()
-    gea = await GalacticEconomicAuthority.new()
+    const commodityAddresses = commodities.map(commodity => commodity.address)
+    gea = await GalacticEconomicAuthority.new(commodityAddresses)
   })
 
   it("should let a player create a sell order", async () => {

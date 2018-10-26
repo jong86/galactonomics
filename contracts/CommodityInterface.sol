@@ -1,5 +1,6 @@
 pragma solidity ^0.4.24;
 
 contract CommodityInterface {
-  function mint(address to, uint256 value) public returns (bool) {}
+  function transfer(address _to, uint256 _value) public returns (bool) {}
+  function mint(address _to, uint256 _value) public returns (bool) {}
 }
