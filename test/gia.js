@@ -32,6 +32,11 @@ contract("GalacticIndustrialAuthority", accounts => {
     assert.equal(args.value, web3.toWei(1, 'ether'), 'wrong value logged')
   })
 
+  it("does not emit an event when a non-player invests in production of a commodity", async () => {
+    const response = await gia.investInProduction(0, { from: bob, value: web3.toWei(1, 'ether') })
+    assert(false, 'not implemented yet')
+  })
+
   it("should allow owner to mint commodities for another account", async () => {
     await gia.mintCommodityFor(0, bob)
     const balanceBob = await commodities[0].balanceOf(bob)

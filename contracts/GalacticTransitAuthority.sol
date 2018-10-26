@@ -1,13 +1,16 @@
 pragma solidity ^0.4.24;
 
-contract GalacticTransitAuthority {
-  uint storedData;
+import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 
-  function set(uint x) public {
-    storedData = x;
+contract GalacticTransitAuthority is ERC721 {
+  uint numSpaceships;
+
+  constructor() public ERC721() {}
+
+  function buySpaceship() external payable {
+    numSpaceships++;
+    _mint(msg.sender, numSpaceships);
   }
 
-  function get() public view returns (uint) {
-    return storedData;
-  }
+  function() public {}
 }
