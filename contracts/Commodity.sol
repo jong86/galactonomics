@@ -8,6 +8,7 @@ contract Commodity is ERC20Detailed, ERC20Mintable, Ownable {
   address private gea;
   address private gia;
 
+  event SetGEA(address gea);
   event SetGIA(address gia);
 
   constructor(string _name, string _symbol, uint8 _decimals)
@@ -24,20 +25,23 @@ contract Commodity is ERC20Detailed, ERC20Mintable, Ownable {
     _;
   }
 
-  // function transfer(address to, uint256 value) public onlyGEA returns (bool) {
-  //   // Relay call to original ERC20 transfer function
-  //   // super.transfer(_to, _value);
-  //   return true;
-  // }
-
-  function mint(address to, uint256 value) public onlyGIA returns (bool) {
-    _mint(to, value);
+  function transfer(address _to, uint256 _value) public onlyGEA returns (bool) {
+    super.transfer(_to, _value);
     return true;
+  }
+
+  function mint(address _to, uint256 _value) public onlyGIA returns (bool) {
+    _mint(_to, _value);
+    return true;
+  }
+
+  function setGEA(address _gea) public onlyOwner {
+    gea = _gea;
+    emit SetGEA(_gea);
   }
 
   function setGIA(address _gia) public onlyOwner {
     gia = _gia;
     emit SetGIA(_gia);
   }
-
 }
