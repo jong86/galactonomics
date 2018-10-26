@@ -2,29 +2,13 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./Commodity.sol";
+import "./CommodityInterface.sol";
+import "./CommodityInteractor.sol";
 
-contract CommodityInterface {
-  function mint(address to, uint256 value) public returns (bool) {}
-}
-
-contract GalacticIndustrialAuthority is Ownable {
-  // How actual in-game commodity data is stored
-  struct CommodityData {
-    address addr;
-    uint miningCost;
-    uint amountMinedPerBlock;
-  }
-
+contract GalacticIndustrialAuthority is Ownable, CommodityInteractor {
   event InvestmentMade(address from, uint8 commodityId, uint value);
-  event Log(string str);
 
-  CommodityData[7] commodities;
-
-  constructor(address[] _commodityAddresses) public {
-    for (uint8 i = 0; i < commodities.length; i++) {
-      commodities[i] = CommodityData(_commodityAddresses[i], 100, 364000);
-    }
-  }
+  constructor(address[] _commodityAddresses) CommodityInteractor(_commodityAddresses) {}
 
   function investInProduction(uint8 _commodityId) external payable {
     emit InvestmentMade(msg.sender, _commodityId, msg.value);

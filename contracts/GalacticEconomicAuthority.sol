@@ -14,8 +14,11 @@ contract GalacticEconomicAuthority {
 
   function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _amount, uint _price) external {
     SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _amount, _price);
-    uint _orderId = planetMarketplaces[_planetId].push(sellOrder);
+    uint _orderId = planetMarketplaces[_planetId].push(sellOrder) - 1;
     emit sellOrderCreated(_orderId);
+
+    // transfer commodity to this address
+    
   }
 
   function getSellOrder(uint8 _planetId, uint _orderId) external view returns (address, uint8, uint, uint) {

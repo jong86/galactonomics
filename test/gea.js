@@ -17,8 +17,7 @@ contract("GalacticEconomicAuthority", accounts => {
     const response = await gea.createSellOrder(0, 0, 1000, 350, { from: alice })
     const { orderId } = response.logs[0].args
     const order = await gea.getSellOrder(0, orderId)
-    console.log('order', order);
-    assert.equal(order[0], 1000, 'did not create order')
+    assert.equal(order[2], 1000, 'did not create order')
   })
 
   it("should let a player buy another player's sell order", async () => {
