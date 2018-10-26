@@ -32,4 +32,29 @@ contract("GalacticTransitAuthority", accounts => {
 
     assert(false, 'could buy a second spaceship')
   })
+
+  it("should allow a player to travel to other planets", async () => {
+    const response = await gta.buySpaceship('Millenium Falcon', { from: alice })
+    const { tokenId } = response.logs[0].args
+    await gta.travelToPlanet(1, { from: alice })
+    const response2 = await gta.getInfo({ from: alice })
+    assert.equal(response2[1].toString(), "1", "didn't change planet")
+  })
+
+  it("should error if player tries to travel to a planet that doesn't exist", async () => {
+    let errorCount = 0
+    const response = await gta.buySpaceship('Millenium Falcon', { from: alice })
+    const { tokenId } = response.logs[0].args
+    try {
+      await gta.travelToPlanet(7, { from: alice })
+    } catch (e) {
+      errorCount++
+    }
+    try {
+      await gta.travelToPlanet(-1, { from: alice })
+    } catch (e) {
+      errorCount++
+    }
+    assert(errorCount === 2, "did not error properly")
+  })
 })
