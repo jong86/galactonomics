@@ -3,9 +3,9 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./CommodityInteractor.sol";
-import "./GalacticTransitAuthorityInterface.sol";
+import "./GTAInteractor.sol";
 
-contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
+contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
   struct SellOrder {
@@ -23,22 +23,9 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
   event sellOrderPurchased(uint8 planetId, uint orderId);
   event Log(uint x);
 
-  GalacticTransitAuthorityInterface gta;
-
   constructor(address[] _commodityAddresses, address _gta)
-  CommodityInteractor(_commodityAddresses) public {
-    gta = GalacticTransitAuthorityInterface(_gta);
-  }
-
-  modifier onlyPlayer() {
-    require(gta.isPlayer(msg.sender), "You need to own a spaceship to call this function");
-    _;
-  }
-
-  // modifier hasEnoughCargoSpace() {
-
-  //   _;
-  // }
+  CommodityInteractor(_commodityAddresses)
+  GTAInteractor(_gta) public {}
 
 
   // Action functions
