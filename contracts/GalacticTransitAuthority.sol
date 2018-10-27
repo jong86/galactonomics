@@ -79,14 +79,13 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
 
   function addCargo(address _address, uint _mass) external {
     addressToSpaceship[_address].currentCargo += _mass;
-    emit Log(addressToSpaceship[_address].currentCargo);
-    emit Log(addressToSpaceship[_address].maxCargo);
     emit CargoAdjusted(_address, addressToSpaceship[_address].currentCargo, addressToSpaceship[_address].maxCargo);
   }
 
-  // function removeCargo(address _address, uint _mass) external onlyGEAOrGIA {
-  //   addressToSpaceship[_address].currentCargo -= _mass;
-  // }
+  function removeCargo(address _address, uint _mass) external onlyGEAOrGIA {
+    addressToSpaceship[_address].currentCargo -= _mass;
+    emit CargoAdjusted(_address, addressToSpaceship[_address].currentCargo, addressToSpaceship[_address].maxCargo);
+  }
 
 
   // View functions

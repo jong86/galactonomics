@@ -22,7 +22,6 @@ contract("GalacticEconomicAuthority", accounts => {
     await gta.setGIA(gia.address)
     commodities.forEach(async commodity => await commodity.setGEA(gea.address))
     commodities.forEach(async commodity => await commodity.setGIA(gia.address))
-    await gia.mintCommodityFor(0, player1)
     await gta.buySpaceship("A", { from: player1 })
     await gta.buySpaceship("B", { from: player2 })
   })
@@ -34,16 +33,22 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {
+    await gia.mintCommodityFor(0, player1)
+    await gia.mintCommodityFor(0, player1)
+    await gia.mintCommodityFor(0, player1)
+    await gia.mintCommodityFor(0, player1)
+
     const currentCargoBefore = (await gta.checkCargo(player1))[0]
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
     const currentCargoAfter = (await gta.checkCargo(player1))[0]
-    console.log('currentCargoBefore, currentCargoAfter', currentCargoBefore, currentCargoAfter);
+
     const cargoTotalMass = (await gea.getCommodity(0))[5].mul(qty)
     assert.equal(
       currentCargoBefore.toString(),
       currentCargoAfter.add(cargoTotalMass).toString(),
       "cargo levels were not adjusted"
     )
+    
     const { orderId } = response.logs[0].args
     const order = await gea.getSellOrder(0, orderId)
     assert.equal(order[2], qty, 'did not create sell order')
