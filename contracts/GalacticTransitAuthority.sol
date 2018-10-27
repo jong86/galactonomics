@@ -12,8 +12,11 @@ contract GalacticTransitAuthority is ERC721 {
     uint maxFuel;
   }
 
-  // Hard-coding this for now (no such thing as planet distances right now)
-  uint constant fuelUsage = 33;
+  // Hard-coding this for now (plan to implement planet-distances later)
+  uint public constant fuelUsage = 33;
+  // Hard-coding this for now (plan to implement variable fuel costs later)
+  uint256 public constant refuelCost = 10000000000000000; // 0.01 ether
+
   uint numSpaceships;
 
   mapping(uint => Spaceship) public tokenIdToSpaceship;
@@ -21,19 +24,22 @@ contract GalacticTransitAuthority is ERC721 {
   // For verification that a user is a spaceship-owning player:
   mapping(address => bool) public addressOwnsSpaceship;
 
-  event Log(uint256 num);
   event SpaceshipBought(address owner, uint tokenId);
-  event TravelComplete(address traveller, uint8 planetId, uint currentFuel);
+  event TravelComplete(address player, uint8 planetId, uint currentFuel);
+  event RefuelComplete(address player);
 
   function buySpaceship(string _name) external payable {
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship for now");
+
     numSpaceships++;
     uint _tokenId = numSpaceships;
+
     _mint(msg.sender, _tokenId);
     Spaceship memory spaceship = Spaceship(_name, 0, 0, 100000, 100, 100);
     tokenIdToSpaceship[_tokenId] = spaceship;
     addressToTokenId[msg.sender] = _tokenId;
     addressOwnsSpaceship[msg.sender] = true;
+
     emit SpaceshipBought(msg.sender, _tokenId);
   }
 
@@ -43,13 +49,21 @@ contract GalacticTransitAuthority is ERC721 {
     uint currentFuel;
     (currentFuel,) = checkFuel(msg.sender);
     require(currentFuel > fuelUsage, "You do not have enough fuel to travel");
+
     tokenIdToSpaceship[addressToTokenId[msg.sender]].currentPlanet = _planetId;
     tokenIdToSpaceship[addressToTokenId[msg.sender]].currentFuel -= fuelUsage;
+
     emit TravelComplete(
       msg.sender,
       _planetId,
       tokenIdToSpaceship[addressToTokenId[msg.sender]].currentFuel
     );
+  }
+
+  function refuel() external payable {
+    require(isPlayer(msg.sender), "You need to own a spaceship to refuel");
+    require(msg.value >= refuelCost, "You need to provide the correct amount of ether to refuel");
+    tokenIdToSpaceship[addressToTokenId[msg.sender]].currentFuel = tokenIdToSpaceship[addressToTokenId[msg.sender]].maxFuel;
   }
 
   // function adjustCurrentCargo() public onlyGEAOrGIA {
@@ -89,7 +103,7 @@ contract GalacticTransitAuthority is ERC721 {
     );
   }
 
-  function checkCargo(address _address) public view returns (uint, uint) {
+  function checkCargo(address _address) public view returns (uint currentCargo, uint maxCargo) {
     return (
       tokenIdToSpaceship[addressToTokenId[_address]].currentCargo,
       tokenIdToSpaceship[addressToTokenId[_address]].maxCargo
