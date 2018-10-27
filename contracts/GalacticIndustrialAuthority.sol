@@ -4,14 +4,20 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./Commodity.sol";
 import "./CommodityInterface.sol";
 import "./CommodityInteractor.sol";
+import "./GalacticTransitAuthorityInterface.sol";
 
 contract GalacticIndustrialAuthority is Ownable, CommodityInteractor {
   event InvestmentMade(address from, uint8 commodityId, uint value);
   event CommodityMinted(address to, uint8 commodityId);
 
-  constructor(address[] _commodityAddresses) CommodityInteractor(_commodityAddresses) {}
+  GalacticTransitAuthorityInterface gta;
+
+  constructor(address[] _commodityAddresses, address _gta) CommodityInteractor(_commodityAddresses) {
+    gta = GalacticTransitAuthorityInterface(_gta);
+  }
 
   function investInProduction(uint8 _commodityId) external payable {
+    require(gta.isPlayer(msg.sender) == true, "You need to own a spaceship to invest in commodity-production");
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
