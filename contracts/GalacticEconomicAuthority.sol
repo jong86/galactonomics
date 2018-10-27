@@ -9,7 +9,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
   struct SellOrder {
     address seller;
     uint8 commodityId;
-    uint amount;
+    uint value;
     uint price;
   }
 
@@ -19,12 +19,13 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
 
   constructor(address[] _commodityAddresses) CommodityInteractor(_commodityAddresses) {}
 
-  function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _amount, uint _price) external {
-    SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _amount, _price);
+  function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _value, uint _price) external {
+    SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _value, _price);
     uint _orderId = planetMarketplaces[_planetId].push(sellOrder) - 1;
     emit sellOrderCreated(_orderId);
 
     // transfer commodity to this address for escrow
+    commodities[_commodityId]._interface.transfer(this, _value);
 
   }
 
@@ -33,7 +34,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
     return (
       sellOrder.seller,
       sellOrder.commodityId,
-      sellOrder.amount,
+      sellOrder.value,
       sellOrder.price
     );
   }

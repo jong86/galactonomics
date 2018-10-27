@@ -5,8 +5,8 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract Commodity is ERC20Detailed, ERC20Mintable, Ownable {
-  address private gea;
-  address private gia;
+  address public gea;
+  address public gia;
 
   event SetGEA(address gea);
   event SetGIA(address gia);

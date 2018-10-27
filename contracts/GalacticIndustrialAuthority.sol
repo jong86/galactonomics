@@ -7,6 +7,7 @@ import "./CommodityInteractor.sol";
 
 contract GalacticIndustrialAuthority is Ownable, CommodityInteractor {
   event InvestmentMade(address from, uint8 commodityId, uint value);
+  event CommodityMinted(address to, uint8 commodityId);
 
   constructor(address[] _commodityAddresses) CommodityInteractor(_commodityAddresses) {}
 
@@ -15,8 +16,8 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor {
   }
 
   function mintCommodityFor(uint8 _commodityId, address _for) external onlyOwner {
-    // CommodityInterface commodity = CommodityInterface(commodities[_commodityId].addr);
-    commodities[0]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
+    commodities[_commodityId]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
+    emit CommodityMinted(_for, _commodityId);
   }
 
   function getCommodity(uint8 _commodityId) external view returns (
