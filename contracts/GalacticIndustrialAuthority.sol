@@ -12,12 +12,20 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor {
 
   GalacticTransitAuthorityInterface gta;
 
-  constructor(address[] _commodityAddresses, address _gta) CommodityInteractor(_commodityAddresses) {
+  constructor(address[] _commodityAddresses, address _gta)
+  CommodityInteractor(_commodityAddresses) public {
     gta = GalacticTransitAuthorityInterface(_gta);
   }
 
-  function investInProduction(uint8 _commodityId) external payable {
-    require(gta.isPlayer(msg.sender) == true, "You need to own a spaceship to invest in commodity-production");
+  modifier onlyPlayer() {
+    require(gta.isPlayer(msg.sender), "You need to own a spaceship to call this function");
+    _;
+  }
+
+
+  // Action functions
+
+  function investInProduction(uint8 _commodityId) external payable onlyPlayer {
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
@@ -25,6 +33,9 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor {
     commodities[_commodityId]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
     emit CommodityMinted(_for, _commodityId);
   }
+
+
+  // View functions
 
   function getCommodity(uint8 _commodityId) external view returns (
     string,

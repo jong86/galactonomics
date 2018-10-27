@@ -30,6 +30,9 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   event RefuelComplete(address player);
   event Log(uint x);
 
+
+  // Action functions
+
   function buySpaceship(string _name) external payable {
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship for now");
 
@@ -74,6 +77,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   }
 
 
+  // View functions
 
   function getInfo() external view returns (
     string name,
