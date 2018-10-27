@@ -75,4 +75,10 @@ contract("GalacticIndustrialAuthority", accounts => {
     }
     assert(false, 'could mint')
   })
+
+  it("should fail when user wants to make an investment but doesn't have availability for the cargo", async () => {
+
+
+    assert(false, 'could mint')
+  })
 })

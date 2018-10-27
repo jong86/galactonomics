@@ -48,7 +48,7 @@
   * getSellOrder(_planetId, orderId) [permissions: player] - returns data on an order
 * handles trading commodities between players
 * if player wants to buy, player chooses which sell order to buy (keeps it simple for now)
-* creates array of length 7 called ‘planetMarketplaces’ with structs containing marketplace info (sellOrders for each planet)
+* creates array of length 7 called ‘marketplaces’ with structs containing marketplace info (sellOrders for each planet)
 
 ### Commodity contract (one deployed for each commodity
 * ERC20, mintable, has a name, decimal places: 0

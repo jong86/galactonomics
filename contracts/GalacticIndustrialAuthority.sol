@@ -8,6 +8,9 @@ import "./GTAInteractor.sol";
 contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
+  // Mapping of planetId => address => amount of commodity held
+  mapping(uint8 => mapping(address => uint[7])) warehouses;
+
   event InvestmentMade(address from, uint8 commodityId, uint value);
   event CommodityMinted(address to, uint8 commodityId);
   event Log(uint x);
