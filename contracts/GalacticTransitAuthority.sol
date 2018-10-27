@@ -1,8 +1,9 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
+import "./ControlledByGEAAndGIA.sol";
 
-contract GalacticTransitAuthority is ERC721 {
+contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   struct Spaceship {
     string name;
     uint8 currentPlanet;
@@ -27,6 +28,7 @@ contract GalacticTransitAuthority is ERC721 {
   event SpaceshipBought(address owner, uint tokenId);
   event TravelComplete(address player, uint8 planetId, uint currentFuel);
   event RefuelComplete(address player);
+  event Log(uint x);
 
   function buySpaceship(string _name) external payable {
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship for now");
@@ -66,10 +68,9 @@ contract GalacticTransitAuthority is ERC721 {
     tokenIdToSpaceship[addressToTokenId[msg.sender]].currentFuel = tokenIdToSpaceship[addressToTokenId[msg.sender]].maxFuel;
   }
 
-  // function adjustCurrentCargo() public onlyGEAOrGIA {
-
-  // }
-
+  function adjustCurrentCargo() public onlyGEAOrGIA {
+    emit Log(42);
+  }
 
 
 

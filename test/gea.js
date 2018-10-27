@@ -17,7 +17,7 @@ contract("GalacticEconomicAuthority", accounts => {
     const commodityAddresses = commodities.map(commodity => commodity.address)
     gta = await GalacticTransitAuthority.new()
     gea = await GalacticEconomicAuthority.new(commodityAddresses, gta.address)
-    gia = await GalacticIndustrialAuthority.new(commodityAddresses)
+    gia = await GalacticIndustrialAuthority.new(commodityAddresses, gta.address)
     commodities.forEach(async commodity => await commodity.setGEA(gea.address))
     commodities.forEach(async commodity => await commodity.setGIA(gia.address))
     await gia.mintCommodityFor(0, player1)

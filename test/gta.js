@@ -1,4 +1,6 @@
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
+const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
+const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const deployCommodities = require('../util/deployCommodities')
 
 contract("GalacticTransitAuthority", accounts => {
@@ -9,7 +11,15 @@ contract("GalacticTransitAuthority", accounts => {
   const nonPlayer = accounts[3]
 
   beforeEach(async() => {
+    commodities = await deployCommodities()
+    const commodityAddresses = commodities.map(commodity => commodity.address)
     gta = await GalacticTransitAuthority.new()
+    gea = await GalacticEconomicAuthority.new(commodityAddresses, gta.address)
+    gia = await GalacticIndustrialAuthority.new(commodityAddresses, gta.address)
+    await gta.setGEA(gea.address)
+    await gta.setGIA(gia.address)
+    commodities.forEach(async commodity => await commodity.setGEA(gea.address))
+    commodities.forEach(async commodity => await commodity.setGIA(gia.address))
   })
 
   it("should allow user to buy a spaceship", async () => {
