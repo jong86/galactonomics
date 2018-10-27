@@ -68,17 +68,28 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should let player2 buy player1's sell order", async () => {
+    // Adding these in addition to previous mint in beforeEach
+    await gia.mintCommodityFor(0, player1)
+    await gia.mintCommodityFor(0, player1)
+    await gia.mintCommodityFor(0, player1)
+    await gia.mintCommodityFor(0, player1)
+
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
+
     const player1EthBefore = await web3.eth.getBalance(player1)
     const { orderId } = response.logs[0].args
+
     await gea.buySellOrder(0, orderId, { from: player2, value: qty * price })
+    const currentCargoAfter = (await gta.checkCargo(player2))[0]
+    const cargoTotalMass = (await gea.getCommodity(0))[5].mul(qty)
+    assert.equal(currentCargoAfter.toString(), cargoTotalMass.toString(), "player2 did not have cargo adjusted")
+    
     const balancePlayer2 = await commodities[0].balanceOf(player2)
     const player1EthAfter = await web3.eth.getBalance(player1)
     assert.equal(balancePlayer2, qty, 'player2 did not receive purchased amount of commodity')
+    
     const tradeCost = web3.toBigNumber(qty * price)
     assert.equal(player1EthAfter.toString(), player1EthBefore.add(tradeCost).toString(), 'player1 did not receive payment')
-
-    // Check cargo level before and after purchase
   })
 
   it("should not let non-player buy player1's sell order", async () => {

@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 import "./GalacticTransitAuthorityInterface.sol";
 
+// @dev Convenience contract to inherit GTA interface and related modifiers
 contract GTAInteractor {
   GalacticTransitAuthorityInterface gta;
 

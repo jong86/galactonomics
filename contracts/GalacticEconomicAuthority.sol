@@ -42,7 +42,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
 
   function buySellOrder(uint8 _planetId, uint _orderId) external payable onlyPlayer {
     require(_planetId == gta.getCurrentPlanet(msg.sender), "You are not on the same planet as the order");
-    SellOrder memory order = planetMarketplaces[_planetId][_orderId];
+    SellOrder storage order = planetMarketplaces[_planetId][_orderId];
     require(msg.value == order.value * order.price, "You did not send the correct amount of ether");
     commodities[order.commodityId]._interface.transfer(msg.sender, order.value);
     order.seller.transfer(msg.value);
@@ -50,8 +50,10 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
     gta.addCargo(msg.sender, order.value * commodities[order.commodityId].mass);
 
     // Close order
+    planetMarketplaces[_planetId][_orderId].open = false;
 
     // Add buyer's name to order for historical purposes
+    planetMarketplaces[_planetId][_orderId].buyer = msg.sender;
 
     emit sellOrderPurchased(_planetId, _orderId);
   }
