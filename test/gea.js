@@ -34,6 +34,7 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {
+    // Mint commodity multiple times for player
     Array(4).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
 
     const currentCargoBefore = (await gta.checkCargo(player1))[0]
@@ -64,6 +65,7 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should let player2 buy player1's sell order", async () => {
+    // Mint commodity multiple times for player
     Array(4).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
 
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
@@ -101,6 +103,7 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should revert if player cannot fit the cargo", async () => {
+    // Mint commodity multiple times for players
     Array(4).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
     Array(6).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player2))
 
