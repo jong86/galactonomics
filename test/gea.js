@@ -83,7 +83,7 @@ contract("GalacticEconomicAuthority", accounts => {
     const currentCargoAfter = (await gta.checkCargo(player2))[0]
     const cargoTotalMass = (await gea.getCommodity(0))[5].mul(qty)
     assert.equal(currentCargoAfter.toString(), cargoTotalMass.toString(), "player2 did not have cargo adjusted")
-    
+
     const balancePlayer2 = await commodities[0].balanceOf(player2)
     const player1EthAfter = await web3.eth.getBalance(player1)
     assert.equal(balancePlayer2, qty, 'player2 did not receive purchased amount of commodity')

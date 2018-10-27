@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./ControlledByGEAAndGIA.sol";
 
 contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
-  using SafeMath for uint; // not working
+  using SafeMath for uint;
 
   struct Spaceship {
     string name;
@@ -33,7 +33,6 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   event RefuelComplete(address player);
   event CargoAdjusted(address player, uint currentCargo, uint maxCargo);
   event Log(uint x);
-  event LogMax(uint x);
 
 
   // Action functions
@@ -68,16 +67,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     addressToSpaceship[msg.sender].currentFuel = addressToSpaceship[msg.sender].maxFuel;
   }
 
-  // function adjustCurrentCargo(address _address, uint _absDiff, bool _hasPositiveSign) external onlyGEAOrGIA returns (bool) {
-  //   if (_hasPositiveSign) {
-  //     addressToSpaceship[_address].currentCargo += _absDiff;
-  //   } else {
-  //     addressToSpaceship[_address].currentCargo -= _absDiff;
-  //   }
-  //   return true;
-  // }
-
-  function addCargo(address _address, uint _mass) external {
+  function addCargo(address _address, uint _mass) external onlyGEAOrGIA {
     addressToSpaceship[_address].currentCargo += _mass;
     emit CargoAdjusted(_address, addressToSpaceship[_address].currentCargo, addressToSpaceship[_address].maxCargo);
   }
