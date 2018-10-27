@@ -28,13 +28,15 @@ contract("GalacticEconomicAuthority", accounts => {
     assert.equal(address, bob, 'did not set')
   })
 
-  it("should let a player create a sell order and deposit commodity for escrow", async () => {
-    const response = await gea.createSellOrder(0, 0, 1000, 350, { from: alice })
+  it("should let a player create a sell order (w/ commodity deposited for escrow)", async () => {
+    const qty = 1000
+    const price = 350
+    const response = await gea.createSellOrder(0, 0, qty, price, { from: alice })
     const { orderId } = response.logs[0].args
     const order = await gea.getSellOrder(0, orderId)
-    assert.equal(order[2], 1000, 'did not create sell order')
+    assert.equal(order[2], qty, 'did not create sell order')
     const balanceGEA = await commodities[0].balanceOf(gea.address)
-    assert.equal(balanceGEA, 1000, 'did not transfer funds')
+    assert.equal(balanceGEA, qty, 'did not put commodity in escrow')
   })
 
   it("should let a player buy another player's sell order", async () => {
