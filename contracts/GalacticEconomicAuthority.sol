@@ -4,6 +4,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./Commodity.sol";
 import "./CommodityInterface.sol";
 import "./CommodityInteractor.sol";
+import "./GalacticTransitAuthorityInterface.sol";
 
 contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
   struct SellOrder {
@@ -11,20 +12,27 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
     uint8 commodityId;
     uint value;
     uint price;
+    // bool open;
+    // address buyer;
   }
 
   mapping(uint8 => SellOrder[]) public planetMarketplaces;
 
-  event sellOrderCreated(uint orderId);
-  event Log(CommodityInterface);
+  event sellOrderCreated(uint8 planetId, uint orderId);
+  event sellOrderPurchased(uint8 planetId, uint orderId);
+  event Log(uint x);
 
-  constructor(address[] _commodityAddresses) CommodityInteractor(_commodityAddresses) public {}
+  GalacticTransitAuthorityInterface gta;
+
+  constructor(address[] _commodityAddresses, address _gta) CommodityInteractor(_commodityAddresses) public {
+    gta = GalacticTransitAuthorityInterface(_gta);
+  }
 
   function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _value, uint _price) external {
     SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _value, _price);
     uint _orderId = planetMarketplaces[_planetId].push(sellOrder) - 1;
-    emit sellOrderCreated(_orderId);
     commodities[_commodityId]._interface.transferForPlayer(msg.sender, address(this), _value);
+    emit sellOrderCreated(_planetId, _orderId);
   }
 
   function getSellOrder(uint8 _planetId, uint _orderId) external view returns (address, uint8, uint, uint) {
@@ -35,5 +43,14 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
       sellOrder.value,
       sellOrder.price
     );
+  }
+
+  function buySellOrder(uint8 _planetId, uint _orderId) external payable {
+    require(_planetId == gta.getCurrentPlanet(msg.sender), "You are not on the same planet as the order");
+    SellOrder memory order = planetMarketplaces[_planetId][_orderId];
+    require(msg.value == order.value * order.price, "You did not send the correct amount of ether");
+    commodities[order.commodityId]._interface.transfer(msg.sender, order.value);
+    order.seller.transfer(msg.value);
+    emit sellOrderPurchased(_planetId, _orderId);
   }
 }

@@ -1,9 +1,10 @@
+const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const deployCommodities = require('../util/deployCommodities')
 
 contract("GalacticEconomicAuthority", accounts => {
-  let gea, gia, commodities
+  let gta, gea, gia, commodities
   const owner = accounts[0]
   const alice = accounts[1]
   const bob = accounts[2]
@@ -12,7 +13,8 @@ contract("GalacticEconomicAuthority", accounts => {
   beforeEach(async() => {
     commodities = await deployCommodities()
     const commodityAddresses = commodities.map(commodity => commodity.address)
-    gea = await GalacticEconomicAuthority.new(commodityAddresses)
+    gta = await GalacticTransitAuthority.new()
+    gea = await GalacticEconomicAuthority.new(commodityAddresses, gta.address)
     gia = await GalacticIndustrialAuthority.new(commodityAddresses)
     commodities.forEach(async commodity => await commodity.setGEA(gea.address))
     commodities.forEach(async commodity => await commodity.setGIA(gia.address))
@@ -27,27 +29,25 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should let a player create a sell order and deposit commodity for escrow", async () => {
-    let response
-    try {
-      response = await gea.createSellOrder(0, 0, 10, 350, { from: alice })
-    } catch (e) {
-      console.log("@@@@@@@@@@@@@@here", e)
-    }
-
-    const balanceAlice = await commodities[0].balanceOf(alice)
-    console.log('balanceAlice', balanceAlice);
-
-    // const { orderId } = response.logs[0].args
-    // const order = await gea.getSellOrder(0, orderId)
-    // assert.equal(order[2], 10, 'did not create order')
+    const response = await gea.createSellOrder(0, 0, 1000, 350, { from: alice })
+    const { orderId } = response.logs[0].args
+    const order = await gea.getSellOrder(0, orderId)
+    assert.equal(order[2], 1000, 'did not create sell order')
     const balanceGEA = await commodities[0].balanceOf(gea.address)
-    console.log('balanceGEA', balanceGEA);
+    assert.equal(balanceGEA, 1000, 'did not transfer funds')
   })
 
   it("should let a player buy another player's sell order", async () => {
-    const response = await gea.createSellOrder(0, 0, 1000, 350, { from: alice })
-    await gea.buySellOrder(0, 0, { from: bob })
+    const qty = 1000
+    const price = 350
+    const response = await gea.createSellOrder(0, 0, qty, price, { from: alice })
+    const aliceEthBefore = await web3.eth.getBalance(alice)
+    const { orderId } = response.logs[0].args
+    await gea.buySellOrder(0, orderId, { from: bob, value: qty * price })
     const balanceBob = await commodities[0].balanceOf(bob)
-    assert.equal(balanceBob, 1000, 'player did not receive purchased amount of commodity')
+    const aliceEthAfter = await web3.eth.getBalance(alice)
+    assert.equal(balanceBob, qty, 'player did not receive purchased amount of commodity')
+    const tradeCost = web3.toBigNumber(qty * price)
+    assert.equal(aliceEthAfter.toString(), aliceEthBefore.add(tradeCost).toString(), 'alice did not receive payment')
   })
 })

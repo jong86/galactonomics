@@ -57,5 +57,9 @@ contract GalacticTransitAuthority is ERC721 {
     );
   }
 
+  function getCurrentPlanet(address _address) external view returns (uint8) {
+    return tokenIdToSpaceship[addressToTokenId[_address]].currentPlanet;
+  }
+
   function() public {}
 }

@@ -40,6 +40,11 @@ contract Commodity is ERC20Detailed, ERC20Mintable, Ownable {
     return true;
   }
 
+  function transfer(address _to, uint256 _value) public onlyGEA returns (bool) {
+    super.transfer(_to, _value);
+    return true;
+  }
+
   function mint(address _to, uint256 _value) public onlyGIA returns (bool) {
     _mint(_to, _value);
     return true;
