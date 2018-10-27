@@ -73,6 +73,17 @@ contract("GalacticTransitAuthority", accounts => {
     assert.equal(fuelAfter.toString(), maxFuel.toString(), "currentFuel after refuel is not equal to maxFuel")
   })
 
+  it("cannot refuel spaceship if cost to refuel is not supplied", async () => {
+    await gta.buySpaceship('Millenium Falcon', { from: player1 })
+    await gta.travelToPlanet(1, { from: player1 })
+    try {
+      await gta.refuel({ from: player1 })
+    } catch (e) {
+      return assert(true)
+    }
+    assert(false, "no error when trying to refuel")
+  })
+
   it("should error if player tries to travel to a planet that doesn't exist", async () => {
     let errorCount = 0
     await gta.buySpaceship('Millenium Falcon', { from: player1 })
