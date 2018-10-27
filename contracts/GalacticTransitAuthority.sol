@@ -15,7 +15,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
 
   // Hard-coding this for now (plan to implement planet-distances later)
   uint public constant fuelUsage = 33;
-  // Hard-coding this for now (plan to implement variable fuel costs later)
+  // Hard-coding this for now (plan to implement variable refueling costs later)
   uint256 public constant refuelCost = 10000000000000000; // 0.01 ether
 
   uint numSpaceships;
@@ -71,7 +71,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     tokenIdToSpaceship[addressToTokenId[msg.sender]].currentFuel = tokenIdToSpaceship[addressToTokenId[msg.sender]].maxFuel;
   }
 
-  function adjustCurrentCargo(address _address, uint _currentCargo) public onlyGEAOrGIA returns (bool) {
+  function changeCurrentCargo(address _address, uint _currentCargo) external onlyGEAOrGIA returns (bool) {
     tokenIdToSpaceship[addressToTokenId[_address]].currentCargo = _currentCargo;
     return true;
   }
@@ -109,7 +109,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     );
   }
 
-  function checkCargo(address _address) public view returns (uint currentCargo, uint maxCargo) {
+  function checkCargo(address _address) external view returns (uint currentCargo, uint maxCargo) {
     return (
       tokenIdToSpaceship[addressToTokenId[_address]].currentCargo,
       tokenIdToSpaceship[addressToTokenId[_address]].maxCargo
