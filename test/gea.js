@@ -9,6 +9,8 @@ contract("GalacticEconomicAuthority", accounts => {
   const player1 = accounts[1]
   const player2 = accounts[2]
   const nonPlayer = accounts[3]
+  const qty = 1000
+  const price = 350
 
   beforeEach(async() => {
     commodities = await deployCommodities()
@@ -18,8 +20,9 @@ contract("GalacticEconomicAuthority", accounts => {
     gia = await GalacticIndustrialAuthority.new(commodityAddresses)
     commodities.forEach(async commodity => await commodity.setGEA(gea.address))
     commodities.forEach(async commodity => await commodity.setGIA(gia.address))
-    // mint some commodities for player1, so can test
     await gia.mintCommodityFor(0, player1)
+    await gta.buySpaceship("A", { from: player1 })
+    await gta.buySpaceship("B", { from: player2 })
   })
 
   it("let's owner set GEA address", async () => {
@@ -29,8 +32,6 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should let a player1 create a sell order (w/ commodity deposited for escrow)", async () => {
-    const qty = 1000
-    const price = 350
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
     const { orderId } = response.logs[0].args
     const order = await gea.getSellOrder(0, orderId)
@@ -39,9 +40,16 @@ contract("GalacticEconomicAuthority", accounts => {
     assert.equal(balanceGEA, qty, 'did not put commodity in escrow')
   })
 
-  it("should let a player1 buy another player1's sell order", async () => {
-    const qty = 1000
-    const price = 350
+  it("does not let a non-player make a sell-order", async () => {
+    try {
+      await gea.createSellOrder(0, 0, qty, price, { from: nonPlayer })
+    } catch (e) {
+      return assert(true)
+    }
+    assert(false, 'could create sell-order')
+  })
+
+  it("should let player2 buy player1's sell order", async () => {
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
     const player1EthBefore = await web3.eth.getBalance(player1)
     const { orderId } = response.logs[0].args

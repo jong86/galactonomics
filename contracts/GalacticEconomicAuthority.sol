@@ -29,6 +29,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
   }
 
   function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _value, uint _price) external {
+    require(commodities[_commodityId]._interface.balanceOf(msg.sender) > 0, "You do not own any of this commodity");
     SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _value, _price);
     uint _orderId = planetMarketplaces[_planetId].push(sellOrder) - 1;
     commodities[_commodityId]._interface.transferForPlayer(msg.sender, address(this), _value);
@@ -46,6 +47,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
   }
 
   function buySellOrder(uint8 _planetId, uint _orderId) external payable {
+    require(gta.isPlayer(msg.sender) == true, "You need to own a spaceship to buy commodities");
     require(_planetId == gta.getCurrentPlanet(msg.sender), "You are not on the same planet as the order");
     SellOrder memory order = planetMarketplaces[_planetId][_orderId];
     require(msg.value == order.value * order.price, "You did not send the correct amount of ether");

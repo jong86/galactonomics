@@ -20,6 +20,9 @@ contract GalacticTransitAuthority is ERC721 {
   mapping(uint => Spaceship) public tokenIdToSpaceship;
   mapping(address => uint) public addressToTokenId;
 
+  // For verification that a user is a spaceship-owning player
+  mapping(address => bool) public addressOwnsSpaceship;
+
   function buySpaceship(string _name) external payable {
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship for now");
 
@@ -30,6 +33,7 @@ contract GalacticTransitAuthority is ERC721 {
     Spaceship memory spaceship = Spaceship(_name, 0, 0, 100000, 100, 100);
     tokenIdToSpaceship[_tokenId] = spaceship;
     addressToTokenId[msg.sender] = _tokenId;
+    addressOwnsSpaceship[msg.sender] = true;
     emit SpaceshipBought(msg.sender, _tokenId);
   }
 
@@ -57,8 +61,12 @@ contract GalacticTransitAuthority is ERC721 {
     );
   }
 
-  function getCurrentPlanet(address _address) external view returns (uint8) {
+  function getCurrentPlanet(address _address) public view returns (uint8) {
     return tokenIdToSpaceship[addressToTokenId[_address]].currentPlanet;
+  }
+
+  function isPlayer(address _address) public view returns (bool) {
+    return addressOwnsSpaceship[_address];
   }
 
   function() public {}
