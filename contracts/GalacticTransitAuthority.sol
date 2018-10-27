@@ -14,6 +14,7 @@ contract GalacticTransitAuthority is ERC721 {
 
   event Log(uint256 num);
   event SpaceshipBought(address owner, uint tokenId);
+  event TravelComplete(address traveller, uint8 planetId);
 
   uint numSpaceships;
 
@@ -25,10 +26,8 @@ contract GalacticTransitAuthority is ERC721 {
 
   function buySpaceship(string _name) external payable {
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship for now");
-
     numSpaceships++;
     uint _tokenId = numSpaceships;
-
     _mint(msg.sender, _tokenId);
     Spaceship memory spaceship = Spaceship(_name, 0, 0, 100000, 100, 100);
     tokenIdToSpaceship[_tokenId] = spaceship;
@@ -38,8 +37,10 @@ contract GalacticTransitAuthority is ERC721 {
   }
 
   function travelToPlanet(uint8 _planetId) external {
+    require(isPlayer(msg.sender), "You need to own a spaceship to travel");
     require(0 < _planetId && _planetId < 7, "planetId must be between 0 and 6, inclusive");
     tokenIdToSpaceship[addressToTokenId[msg.sender]].currentPlanet = _planetId;
+    emit TravelComplete(msg.sender, _planetId);
   }
 
   function getInfo() external view returns (
