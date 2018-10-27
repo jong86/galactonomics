@@ -60,7 +60,6 @@ contract("GalacticIndustrialAuthority", accounts => {
     } catch (e) {
       return assert(true)
     }
-
     assert(false, 'could mint')
   })
 })
