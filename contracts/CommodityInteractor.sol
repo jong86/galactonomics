@@ -7,6 +7,7 @@ contract CommodityInteractor {
     CommodityInterface _interface;
     uint miningCost;
     uint amountMinedPerBlock;
+    uint mass;
   }
 
   CommodityData[7] public commodities;
@@ -17,7 +18,8 @@ contract CommodityInteractor {
         _commodityAddresses[i],
         CommodityInterface(_commodityAddresses[i]),
         100,
-        364000
+        364000,
+        1024
       );
     }
   }

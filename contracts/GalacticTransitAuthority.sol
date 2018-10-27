@@ -68,8 +68,9 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     tokenIdToSpaceship[addressToTokenId[msg.sender]].currentFuel = tokenIdToSpaceship[addressToTokenId[msg.sender]].maxFuel;
   }
 
-  function adjustCurrentCargo() public onlyGEAOrGIA {
-    emit Log(42);
+  function adjustCurrentCargo(address _address, uint _currentCargo) public onlyGEAOrGIA returns (bool) {
+    tokenIdToSpaceship[addressToTokenId[_address]].currentCargo = _currentCargo;
+    return true;
   }
 
 
