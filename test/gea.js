@@ -60,4 +60,14 @@ contract("GalacticEconomicAuthority", accounts => {
     const tradeCost = web3.toBigNumber(qty * price)
     assert.equal(player1EthAfter.toString(), player1EthBefore.add(tradeCost).toString(), 'player1 did not receive payment')
   })
+
+  it("should not let non-player buy player1's sell order", async () => {
+    await gea.createSellOrder(0, 0, qty, price, { from: player1 })
+    try {
+      await gea.buySellOrder(0, orderId, { from: nonPlayer, value: qty * price })
+    } catch (e) {
+      return assert(true)
+    }
+    assert(false, "could buy sell-order")
+  })
 })
