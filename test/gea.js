@@ -34,11 +34,7 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {
-    // Adding these in addition to previous mint in beforeEach
-    await gia.mintCommodityFor(0, player1)
-    await gia.mintCommodityFor(0, player1)
-    await gia.mintCommodityFor(0, player1)
-    await gia.mintCommodityFor(0, player1)
+    Array(4).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
 
     const currentCargoBefore = (await gta.checkCargo(player1))[0]
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
@@ -68,11 +64,7 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should let player2 buy player1's sell order", async () => {
-    // Adding these in addition to previous mint in beforeEach
-    await gia.mintCommodityFor(0, player1)
-    await gia.mintCommodityFor(0, player1)
-    await gia.mintCommodityFor(0, player1)
-    await gia.mintCommodityFor(0, player1)
+    Array(4).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
 
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
 
@@ -80,6 +72,7 @@ contract("GalacticEconomicAuthority", accounts => {
     const { orderId } = response.logs[0].args
 
     await gea.buySellOrder(0, orderId, { from: player2, value: qty * price })
+
     const currentCargoAfter = (await gta.checkCargo(player2))[0]
     const cargoTotalMass = (await gea.getCommodity(0))[5].mul(qty)
     assert.equal(currentCargoAfter.toString(), cargoTotalMass.toString(), "player2 did not have cargo adjusted")
@@ -105,5 +98,22 @@ contract("GalacticEconomicAuthority", accounts => {
       return assert(true)
     }
     assert(false, "could buy sell-order")
+  })
+
+  it("should revert if player cannot fit the cargo", async () => {
+    Array(4).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
+    Array(6).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player2))
+
+    const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
+
+    const { orderId } = response.logs[0].args
+
+    try {
+      await gea.buySellOrder(0, orderId, { from: player2, value: qty * price })
+    } catch (e) {
+      return assert(true)
+    }
+
+    assert(false, "did not revert")
   })
 })

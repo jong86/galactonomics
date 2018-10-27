@@ -10,9 +10,9 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   struct Spaceship {
     string name;
     uint8 currentPlanet;
-    uint currentCargo;
+    uint currentCargo; // in kg
     uint maxCargo;
-    uint currentFuel;
+    uint currentFuel; // in litres
     uint maxFuel;
   }
 

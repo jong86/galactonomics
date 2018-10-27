@@ -6,6 +6,8 @@ import "./GalacticTransitAuthorityInterface.sol";
 contract GTAInteractor {
   GalacticTransitAuthorityInterface gta;
 
+  event Log(uint x, uint y);
+
   constructor(address _gta) public {
     gta = GalacticTransitAuthorityInterface(_gta);
   }
@@ -15,8 +17,13 @@ contract GTAInteractor {
     _;
   }
 
-  // modifier hasEnoughCargoSpace() {
-
-  //   _;
-  // }
+  modifier canFitCargo(address _player, uint _incomingCargo) {
+    uint currentCargo;
+    uint maxCargo;
+    (currentCargo, maxCargo) = gta.checkCargo(_player);
+    uint cargoAvailable = maxCargo - currentCargo;
+    emit Log(cargoAvailable, _incomingCargo);
+    require(cargoAvailable >= _incomingCargo, "Cannot fit this cargo");
+    _;
+  }
 }

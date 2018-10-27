@@ -19,13 +19,29 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   // Action functions
 
-  function investInProduction(uint8 _commodityId) external payable onlyPlayer {
+  function investInProduction(uint8 _commodityId) external payable
+  onlyPlayer
+  canFitCargo(msg.sender, getMassOfTotalProductionReturns(_commodityId)) {
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
-  function mintCommodityFor(uint8 _commodityId, address _for) external onlyOwner {
+  function mintCommodityFor(uint8 _commodityId, address _for) external
+  onlyOwner {
+  // canFitCargo(_for, getMassOfOneProductionReturn(_commodityId)) {
     commodities[_commodityId]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
     gta.addCargo(_for, commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass);
+  }
+
+
+  // View functions
+
+  function getMassOfTotalProductionReturns(uint _commodityId) public returns (uint) {
+    return commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass * 12;
+  }
+
+  function getMassOfOneProductionReturn(uint _commodityId) public returns (uint) {
+    emit Log(commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass);
+    return commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass;
   }
 
   function() public {}
