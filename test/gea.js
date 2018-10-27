@@ -34,6 +34,7 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {
+    // Adding these in addition to previous mint in beforeEach
     await gia.mintCommodityFor(0, player1)
     await gia.mintCommodityFor(0, player1)
     await gia.mintCommodityFor(0, player1)
