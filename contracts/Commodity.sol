@@ -25,16 +25,6 @@ contract Commodity is ERC20Detailed, ERC20Mintable, Ownable {
     _;
   }
 
-  function transfer(address _to, uint256 _value) public onlyGEA returns (bool) {
-    super.transfer(_to, _value);
-    return true;
-  }
-
-  function mint(address _to, uint256 _value) public onlyGIA returns (bool) {
-    _mint(_to, _value);
-    return true;
-  }
-
   function setGEA(address _gea) public onlyOwner {
     gea = _gea;
     emit SetGEA(_gea);
@@ -43,5 +33,15 @@ contract Commodity is ERC20Detailed, ERC20Mintable, Ownable {
   function setGIA(address _gia) public onlyOwner {
     gia = _gia;
     emit SetGIA(_gia);
+  }
+
+  function transferForPlayer(address _from, address _to, uint256 _value) public onlyGEA returns (bool) {
+    super._transfer(_from, _to, _value);
+    return true;
+  }
+
+  function mint(address _to, uint256 _value) public onlyGIA returns (bool) {
+    _mint(_to, _value);
+    return true;
   }
 }
