@@ -35,6 +35,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
     SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _value, _price, true, address(0));
     uint _orderId = planetMarketplaces[_planetId].push(sellOrder) - 1;
     commodities[_commodityId]._interface.transferForPlayer(msg.sender, address(this), _value);
+    // Adjust current cargo
     gta.removeCargo(msg.sender, _value * commodities[_commodityId].mass);
 
     emit sellOrderCreated(_planetId, _orderId);
@@ -61,13 +62,15 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
 
   // View functions
 
-  function getSellOrder(uint8 _planetId, uint _orderId) external view returns (address, uint8, uint, uint) {
+  function getSellOrder(uint8 _planetId, uint _orderId) external view returns (address, uint8, uint, uint, bool, address) {
     SellOrder memory sellOrder = planetMarketplaces[_planetId][_orderId];
     return (
       sellOrder.seller,
       sellOrder.commodityId,
       sellOrder.value,
-      sellOrder.price
+      sellOrder.price,
+      sellOrder.open,
+      sellOrder.buyer
     );
   }
 }

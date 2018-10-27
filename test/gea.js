@@ -87,9 +87,14 @@ contract("GalacticEconomicAuthority", accounts => {
     const balancePlayer2 = await commodities[0].balanceOf(player2)
     const player1EthAfter = await web3.eth.getBalance(player1)
     assert.equal(balancePlayer2, qty, 'player2 did not receive purchased amount of commodity')
-    
+
     const tradeCost = web3.toBigNumber(qty * price)
     assert.equal(player1EthAfter.toString(), player1EthBefore.add(tradeCost).toString(), 'player1 did not receive payment')
+
+    const order = await gea.getSellOrder(0, orderId)
+    assert(!order[4], "did not set open bool to false")
+
+    assert.equal(order[5], player2, "did not record player2 as buyer")
   })
 
   it("should not let non-player buy player1's sell order", async () => {
