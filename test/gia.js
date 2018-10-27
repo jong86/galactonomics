@@ -9,6 +9,8 @@ contract("GalacticIndustrialAuthority", accounts => {
   const player1 = accounts[1]
   const player2 = accounts[2]
   const nonPlayer = accounts[3]
+  const qty = 1000
+  const price = 350
 
   beforeEach(async() => {
     commodities = await deployCommodities()
@@ -48,10 +50,21 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("should allow owner to mint commodities for another account", async () => {
+    const currentCargoBefore = (await gta.checkCargo(player1))[0]
     await gia.mintCommodityFor(0, player1)
+    const currentCargoAfter = (await gta.checkCargo(player1))[0]
+
+    const commodityInfo = await gea.getCommodity(0)
+    const cargoTotalMass = (commodityInfo[4]).mul(commodityInfo[5])
+    assert.equal(
+      currentCargoBefore.add(cargoTotalMass).toString().toString(),
+      currentCargoAfter,
+      "did not adjust cargo amount on spaceship"
+    )
+
     const balancePlayer1 = await commodities[0].balanceOf(player1)
     const amtMinedPerBlock = (await gia.getCommodity(0))[4]
-    assert.equal(amtMinedPerBlock.toString(), balancePlayer1.toString(), 'could not mint')
+    assert.equal(amtMinedPerBlock.toString(), balancePlayer1.toString(), 'did not mint')
   })
 
   it("should not allow a non-owner to mint commodities for another account", async () => {

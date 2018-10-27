@@ -1,4 +1,6 @@
 pragma solidity ^0.4.24;
+
+import "./Commodity.sol";
 import "./CommodityInterface.sol";
 
 contract CommodityInteractor {
@@ -18,9 +20,32 @@ contract CommodityInteractor {
         _commodityAddresses[i],
         CommodityInterface(_commodityAddresses[i]),
         100,
-        364000,
-        1024
+        1024,
+        16
       );
     }
+  }
+
+
+  // View functions
+
+  function getCommodity(uint8 _commodityId) external view returns (
+    string,
+    string,
+    address,
+    uint,
+    uint,
+    uint
+  ) {
+    CommodityData memory commodityData = commodities[_commodityId];
+    Commodity commodity = Commodity(commodityData.addr);
+    return (
+      commodity.name(),
+      commodity.symbol(),
+      commodityData.addr,
+      commodityData.miningCost,
+      commodityData.amountMinedPerBlock,
+      commodityData.mass
+    );
   }
 }

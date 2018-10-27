@@ -1,17 +1,20 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./CommodityInteractor.sol";
 import "./GalacticTransitAuthorityInterface.sol";
 
 contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
+  using SafeMath for uint;
+
   struct SellOrder {
     address seller;
     uint8 commodityId;
     uint value;
     uint price;
-    // bool open;
-    // address buyer;
+    bool open;
+    address buyer;
   }
 
   mapping(uint8 => SellOrder[]) public planetMarketplaces;
@@ -32,15 +35,26 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
     _;
   }
 
+  // modifier hasEnoughCargoSpace() {
+
+  //   _;
+  // }
+
 
   // Action functions
 
   function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _value, uint _price) external {
     require(commodities[_commodityId]._interface.balanceOf(msg.sender) > 0, "You do not own any of this commodity");
-    SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _value, _price);
+    SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _value, _price, true, address(0));
     uint _orderId = planetMarketplaces[_planetId].push(sellOrder) - 1;
     commodities[_commodityId]._interface.transferForPlayer(msg.sender, address(this), _value);
     // Adjust current cargo
+    // gta.adjustCurrentCargo(
+    //   msg.sender,
+    //   _value.mul(commodities[_commodityId].mass),
+    //   false
+    // );
+
     emit sellOrderCreated(_planetId, _orderId);
   }
 
@@ -51,6 +65,15 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor {
     commodities[order.commodityId]._interface.transfer(msg.sender, order.value);
     order.seller.transfer(msg.value);
     // Adjust current cargo
+    // gta.adjustCurrentCargo(
+    //   msg.sender,
+    //   order.value * commodities[order.commodityId].mass,
+    //   true
+    // );
+    // Close order
+
+    // Add buyer's name to order for historical purposes
+
     emit sellOrderPurchased(_planetId, _orderId);
   }
 
