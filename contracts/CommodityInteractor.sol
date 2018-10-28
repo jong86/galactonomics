@@ -1,9 +1,12 @@
 pragma solidity ^0.4.24;
 
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Commodity.sol";
 import "./CommodityInterface.sol";
 
 contract CommodityInteractor {
+  using SafeMath for uint;
+
   struct CommodityData {
     address addr;
     CommodityInterface _interface;
@@ -13,6 +16,8 @@ contract CommodityInteractor {
   }
 
   CommodityData[7] public commodities;
+
+  event LogCommodityInteractor(uint x, uint y);
 
   constructor(address[] _commodityAddresses) public {
     for (uint8 i = 0; i < commodities.length; i++) {
@@ -53,7 +58,9 @@ contract CommodityInteractor {
     uint currentCargo;
 
     for (uint8 i = 0; i < commodities.length; i++) {
-      currentCargo += (commodities[i].mass * commodities[i]._interface.balanceOf(_player));
+      uint cargoToAdd = commodities[i].mass.mul(commodities[i]._interface.balanceOf(_player));
+      currentCargo = currentCargo.add(cargoToAdd);
+      emit LogCommodityInteractor(cargoToAdd, currentCargo);
     }
 
     return currentCargo;
