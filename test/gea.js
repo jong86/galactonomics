@@ -26,12 +26,6 @@ contract("GalacticEconomicAuthority", accounts => {
     await gta.buySpaceship("B", { from: player2 })
   })
 
-  it("let's owner set GEA address [*** move this to Commodity tests]", async () => {
-    await commodities[3].setGEA(gea.address)
-    const address = await commodities[3].gea()
-    assert.equal(address, gea.address, 'did not set')
-  })
-
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {
     // Mint commodity multiple times for player
     Array(4).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
