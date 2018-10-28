@@ -8,8 +8,7 @@ import "./GTAInteractor.sol";
 contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
-  // Mapping of planetId => address => amount of commodity held
-  mapping(uint8 => mapping(address => uint[7])) warehouses;
+  uint8 public constant blocksToProduceFor = 12;
 
   event InvestmentMade(address from, uint8 commodityId, uint value);
   event CommodityMinted(address to, uint8 commodityId);
@@ -26,26 +25,37 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   onlyPlayer
   samePlanet(_commodityId)
   canFitCargo(msg.sender, getMassOfTotalProductionReturns(_commodityId)) {
+    // Check investment amount
+    require(
+      msg.value == getRequiredInvestment(_commodityId),
+      "You have not provided enough ether"
+    );
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
   function mintCommodityFor(uint8 _commodityId, address _for) external
   onlyOwner {
   // canFitCargo(_for, getMassOfOneProductionReturn(_commodityId)) {
-    commodities[_commodityId]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
     gta.addCargo(_for, commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass);
+    commodities[_commodityId]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
+  }
+
+
+  // Private helpers
+
+  function getMassOfTotalProductionReturns(uint8 _commodityId) private returns (uint) {
+    return commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass * blocksToProduceFor;
+  }
+
+  function getMassOfOneProductionReturn(uint8 _commodityId) private returns (uint) {
+    return commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass;
   }
 
 
   // View functions
 
-  function getMassOfTotalProductionReturns(uint _commodityId) public returns (uint) {
-    return commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass * 12;
-  }
-
-  function getMassOfOneProductionReturn(uint _commodityId) public returns (uint) {
-    emit Log(commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass);
-    return commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass;
+  function getRequiredInvestment(uint8 _commodityId) public view returns (uint) {
+    return commodities[_commodityId].miningCost * blocksToProduceFor;
   }
 
   function() public {}

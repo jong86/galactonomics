@@ -32,15 +32,17 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("should emit an event when player invests in production of a commodity", async () => {
-    const response = await gia.investInProduction(0, { from: player1, value: web3.toWei(1, 'ether') })
-    const { event, args } = response.logs[0]
-    assert.equal(event, 'InvestmentMade', 'wrong event name')
+    const investment = await gia.getRequiredInvestment(0)
+    const response = await gia.investInProduction(0, { from: player1, value: investment })
+    const i = response.logs.findIndex(item => item.event === "InvestmentMade")
+    if (i === -1) assert(false, 'event not emitted')
+    const { args } = response.logs[i]
     assert.equal(args.from, player1, 'wrong address logged')
     assert.equal(args.commodityId, 0, 'wrong commodityId logged')
-    assert.equal(args.value, web3.toWei(1, 'ether'), 'wrong value logged')
+    assert.equal(args.value.toString(), investment.toString(), 'wrong value logged')
   })
 
-  it("does not let a non-player invests in production of a commodity", async () => {
+  it("does not let a non-player invest in production of a commodity", async () => {
     try {
       await gia.investInProduction(0, { from: nonPlayer, value: web3.toWei(1, 'ether') })
     } catch (e) {
