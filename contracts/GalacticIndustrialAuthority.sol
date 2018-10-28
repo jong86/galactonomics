@@ -34,7 +34,9 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
-  function mintCommodityFor(uint8 _commodityId, address _for) external onlyOwner {
+  function mintCommodityFor(uint8 _commodityId, address _for) external
+  onlyOwner
+  canFitCargo(_for, getCurrentCargo(_for), getMassOfOneProductionReturn(_commodityId)) {
     commodities[_commodityId]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
   }
 

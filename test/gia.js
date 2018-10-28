@@ -76,12 +76,20 @@ contract("GalacticIndustrialAuthority", accounts => {
     } catch (e) {
       return assert(true)
     }
+    
     assert(false, 'could mint')
   })
 
   it("should fail when user wants to make an investment but doesn't have availability for the cargo", async () => {
+    // Max out cargo
+    Array(50).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
 
+    try {
+      await gia.mintCommodityFor(0, player1)
+    } catch (e) {
+      return assert(true)
+    }
 
-    assert(false, 'could mint')
+    assert(false, 'did not fail')
   })
 })
