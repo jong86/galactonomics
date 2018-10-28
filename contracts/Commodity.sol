@@ -11,6 +11,11 @@ contract Commodity is ERC20Detailed, ERC20Mintable, Ownable, ControlledByGEAAndG
   ERC20Detailed(_name, _symbol, _decimals)
   ERC20Mintable() public {}
 
+  function mint(address _to, uint _value) public onlyGIA returns (bool) {
+    _mint(_to, _value);
+    return true;
+  }
+
   function transferForPlayer(address _from, address _to, uint _value) public onlyGEA returns (bool) {
     super._transfer(_from, _to, _value);
     return true;
@@ -21,8 +26,27 @@ contract Commodity is ERC20Detailed, ERC20Mintable, Ownable, ControlledByGEAAndG
     return true;
   }
 
-  function mint(address _to, uint _value) public onlyGIA returns (bool) {
-    _mint(_to, _value);
-    return true;
+
+  // Blocked ERC20 functions (not desirable functionality right now)
+  // Probably better to just make a new 'partial' erc20 contract to inherit from,
+  // but doing this as a quick and easy for now
+  function approve(address spender, uint256 value) public returns (bool) {
+    revert("Blocked function");
+    return false;
+  }
+
+  function transferFrom(address from, address to, uint256 value) public returns (bool) {
+    revert("Blocked function");
+    return false;
+  }
+
+  function increaseAllowance(address spender, uint256 value) public returns (bool) {
+    revert("Blocked function");
+    return false;
+  }
+
+  function decreaseAllowance(address spender, uint256 subtractedValue) public returns (bool) {
+    revert("Blocked function");
+    return false;
   }
 }
