@@ -29,7 +29,7 @@ contract("GalacticTransitAuthority", accounts => {
     assert.equal(player1, spaceshipOwner, 'could not buy')
   })
 
-  it("should only let users buy one spaceship", async () => {
+  it("should only let users buy one spaceship [for now]", async () => {
     await gta.buySpaceship('Millenium Falcon', { from: player1 })
     try {
       await gta.buySpaceship('Millenium Falcon2', { from: player1 })

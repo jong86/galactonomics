@@ -43,7 +43,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   function buySpaceship(string _name) external payable {
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship (for now)");
 
-    numSpaceships++;
+    numSpaceships = numSpaceships.add(1);
     uint _tokenId = numSpaceships;
 
     _mint(msg.sender, _tokenId);
@@ -58,7 +58,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     require(addressToSpaceship[msg.sender].currentFuel >= fuelUsage, "You do not have enough fuel to travel");
 
     addressToSpaceship[msg.sender].currentPlanet = _planetId;
-    addressToSpaceship[msg.sender].currentFuel -= fuelUsage;
+    addressToSpaceship[msg.sender].currentFuel = addressToSpaceship[msg.sender].currentFuel.sub(fuelUsage);
 
     emit TravelComplete(msg.sender, _planetId, addressToSpaceship[msg.sender].currentFuel);
   }

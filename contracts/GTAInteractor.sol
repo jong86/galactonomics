@@ -1,9 +1,12 @@
 pragma solidity ^0.4.24;
 
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./GalacticTransitAuthorityInterface.sol";
 
 // @dev Convenience contract to inherit GTA interface and related modifiers
 contract GTAInteractor {
+  using SafeMath for uint;
+
   GalacticTransitAuthorityInterface gta;
 
   event Log(uint x, uint y);
@@ -19,7 +22,7 @@ contract GTAInteractor {
 
   modifier canFitCargo(address _player, uint _currentCargo, uint _incomingCargo) {
     uint _maxCargo = gta.getMaxCargo(_player);
-    uint _cargoAvailable = _maxCargo - _currentCargo;
+    uint _cargoAvailable = _maxCargo.sub(_currentCargo);
     emit Log(_cargoAvailable, _incomingCargo);
     require(_cargoAvailable >= _incomingCargo, "Cannot fit this cargo");
     _;
