@@ -35,7 +35,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   canFitCargo(msg.sender, getCurrentCargo(msg.sender), getMassOfTotalProductionReturns(_commodityId)) {
     // Check investment amount
     require(
-      msg.value == getRequiredInvestment(_commodityId),
+      msg.value == getAmountRequired(_commodityId),
       "You have not provided enough ether"
     );
     require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
@@ -67,8 +67,12 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   // View functions
 
-  function getRequiredInvestment(uint8 _commodityId) public view returns (uint) {
+  function getAmountRequired(uint8 _commodityId) public view returns (uint) {
     return commodities[_commodityId].miningCost.mul(blocksToProduceFor);
+  }
+
+  function getInvestment(address _address) public view returns (uint, uint) {
+    return (investments[_address].amount, investments[_address].blocksLeft);
   }
 
   function() public {}

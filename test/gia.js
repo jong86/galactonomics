@@ -33,21 +33,21 @@ contract("GalacticIndustrialAuthority", accounts => {
   // })
 
   // it("should emit an event when player invests in production of a commodity", async () => {
-  //   const investment = await gia.getRequiredInvestment(0)
-  //   const response = await gia.investInProduction(0, { from: player1, value: investment })
+  //   const amountRequired = await gia.getAmountRequired(0)
+  //   const response = await gia.investInProduction(0, { from: player1, value: amountRequired })
 
   //   const i = response.logs.findIndex(item => item.event === "InvestmentMade")
   //   if (i === -1) assert(false, 'event not emitted')
   //   const { args } = response.logs[i]
   //   assert.equal(args.from, player1, 'wrong address logged')
   //   assert.equal(args.commodityId, 0, 'wrong commodityId logged')
-  //   assert.equal(args.value.toString(), investment.toString(), 'wrong value logged')
+  //   assert.equal(args.value.toString(), amountRequired.toString(), 'wrong value logged')
   // })
 
   // it("does not let a non-player invest in production of a commodity", async () => {
-  //   const investment = await gia.getRequiredInvestment(0)
+  //   const amountRequired = await gia.getAmountRequired(0)
   //   try {
-  //     await gia.investInProduction(0, { from: nonPlayer, value: investment })
+  //     await gia.investInProduction(0, { from: nonPlayer, value: amountRequired })
   //   } catch (e) {
   //     return assert(true)
   //   }
@@ -55,8 +55,8 @@ contract("GalacticIndustrialAuthority", accounts => {
   // })
 
   // it("should allow owner to mint commodities for another account", async () => {
-  //   const investment = await gia.getRequiredInvestment(0)
-  //   await gia.investInProduction(0, { from: player1, value: investment })
+  //   const amountRequired = await gia.getAmountRequired(0)
+  //   await gia.investInProduction(0, { from: player1, value: amountRequired })
   //   const currentCargoBefore = await gea.getCurrentCargo(player1)
   //   await gia.mintCommodityFor(0, player1)
   //   const currentCargoAfter = await gea.getCurrentCargo(player1)
@@ -84,52 +84,80 @@ contract("GalacticIndustrialAuthority", accounts => {
   //   assert(false, 'could mint')
   // })
 
-  it("should fail when user wants to make an investment but doesn't have availability for the cargo", async () => {
-    const investment = await gia.getRequiredInvestment(0)
+  // it("should fail when user wants to make an investment but doesn't have availability for the cargo", async () => {
+  //   const amountRequired = await gia.getAmountRequired(0)
+  //   const blocksToProduceFor = await gia.blocksToProduceFor()
+  //   const maxCargo = (await gta.addressToSpaceship(player1))[2]
+
+  //   // Max out cargo
+  //   while ((await gea.getCurrentCargo(player1) < maxCargo)) {
+  //     await gia.investInProduction(0, { from: player1, value: amountRequired })
+  //     Array(blocksToProduceFor).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
+  //   }
+
+  //   try {
+  //     await gia.investInProduction(0, { from: player1, value: amountRequired })
+  //   } catch (e) {
+  //     return assert(true)
+  //   }
+
+  //   assert(false, 'did not fail')
+  // })
+
+  // it("records investment in mapping when player invests in production of a commodity", async () => {
+  //   const amountRequired = await gia.getAmountRequired(0)
+  //   await gia.investInProduction(0, { from: player1, value: amountRequired })
+  //   const response = await gia.getInvestment(player1)
+  //   assert.equal(response[0].toString(), amountRequired.toString(), "did not record")
+  // })
+
+  // it("prevents player from mining more than one commodity at a time", async () => {
+  //   const amountRequired = await gia.getAmountRequired(0)
+  //   await gia.investInProduction(0, { from: player1, value: amountRequired })
+  //   try {
+  //     await gia.investInProduction(0, { from: player1, value: amountRequired })
+  //   } catch (e) {
+  //     return assert(true)
+  //   }
+  //   assert(false, "did not prevent")
+  // })
+
+  // it("prevents owner account from minting more if there are no blocksLeft", async () => {
+  //   const amountRequired = await gia.getAmountRequired(0)
+  //   await gia.investInProduction(0, { from: player1, value: amountRequired })
+  //   let blocksLeft = (await gia.getInvestment(player1))[1]
+
+  //   while (blocksLeft > 0) {
+  //     await gia.mintCommodityFor(0, player1)
+  //     blocksLeft = (await gia.getInvestment(player1))[1]
+  //   }
+
+  //   try {
+  //     await gia.mintCommodityFor(0, player1)
+  //   } catch (e) {
+  //     return assert(true)
+  //   }
+  //   assert(false, 'did not fail')
+  // })
+
+  it("if player does not have enough cargo space for minted commodity, player does not receive overflow", async () => {
+    const amountRequired = await gia.getAmountRequired(0)
     const blocksToProduceFor = await gia.blocksToProduceFor()
     const maxCargo = (await gta.addressToSpaceship(player1))[2]
 
     // Max out cargo
     while ((await gea.getCurrentCargo(player1) < maxCargo)) {
-      await gia.investInProduction(0, { from: player1, value: investment })
+      await gia.investInProduction(0, { from: player1, value: amountRequired })
       Array(blocksToProduceFor).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
     }
 
-    try {
-      await gia.investInProduction(0, { from: player1, value: investment })
-    } catch (e) {
-      return assert(true)
-    }
+    const cargoBefore = await gia.getCurrentCargo(player1)
+    const balanceBefore = await commodities[0].balanceOf(player1)
+    await gia.mintCommodityFor(0, player1)
+    const cargoAfter = await gia.getCurrentCargo(player1)
+    const balanceAfter = await commodities[0].balanceOf(player1)
 
-    assert(false, 'did not fail')
-  })
-
-  it("records investment in mapping when player invests in production of a commodity", async () => {
-    const investment = await gia.getRequiredInvestment(0)
-    await gia.investInProduction(0, { from: player1, value: investment })
-
-    const response = await gia.investments(player1)
-    console.log('response', response);
-  })
-
-  it("prevents player from mining more than one commodity at a time", async () => {
-    const investment = await gia.getRequiredInvestment(0)
-    const response = await gia.investInProduction(0, { from: player1, value: investment })
-
-
-  })
-
-  it("prevents owner account from minting more if there are no blocksLeft", async () => {
-    const investment = await gia.getRequiredInvestment(0)
-    const response = await gia.investInProduction(0, { from: player1, value: investment })
-
-
-  })
-
-  it("if player does not have enough cargo space for minted commodity, the overflow is burned", async () => {
-    const investment = await gia.getRequiredInvestment(0)
-    const response = await gia.investInProduction(0, { from: player1, value: investment })
-
-
+    assert.equal(cargoBefore, cargoAfter, "cargo changed")
+    assert.equal(balanceBefore, balanceAfter, "balance changed")
   })
 })
