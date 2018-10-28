@@ -53,9 +53,9 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("should allow owner to mint commodities for another account", async () => {
-    const currentCargoBefore = (await gta.checkCargo(player1))[0]
+    const currentCargoBefore = await gea.getCurrentCargo(player1)
     await gia.mintCommodityFor(0, player1)
-    const currentCargoAfter = (await gta.checkCargo(player1))[0]
+    const currentCargoAfter = await gea.getCurrentCargo(player1)
 
     const commodityInfo = await gea.getCommodity(0)
     const cargoTotalMass = (commodityInfo[4]).mul(commodityInfo[5])
