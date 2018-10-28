@@ -75,8 +75,9 @@ contract("GalacticEconomicAuthority", accounts => {
 
     await gea.buySellOrder(0, orderId, { from: player2, value: qty * price })
 
-    const currentCargoAfter = (await gta.checkCargo(player2))[0]
+    const currentCargoAfter = await gea.getCurrentCargo(player2)
     const cargoTotalMass = (await gea.getCommodity(0))[5].mul(qty)
+    console.log('cargoTotalMass', cargoTotalMass);
     assert.equal(currentCargoAfter.toString(), cargoTotalMass.toString(), "player2 did not have cargo adjusted")
 
     const balancePlayer2 = await commodities[0].balanceOf(player2)
