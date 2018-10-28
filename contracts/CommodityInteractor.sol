@@ -48,4 +48,14 @@ contract CommodityInteractor {
       commodityData.mass
     );
   }
+
+  function getCurrentCargo(address _player) public view returns (uint) {
+    uint currentCargo;
+
+    for (uint8 i = 0; i < commodities.length; i++) {
+      currentCargo += (commodities[i].mass * commodities[i]._interface.balanceOf(_player));
+    }
+
+    return currentCargo;
+  }
 }

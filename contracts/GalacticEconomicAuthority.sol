@@ -11,7 +11,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
   struct SellOrder {
     address seller;
     uint8 commodityId;
-    uint value;
+    uint quantity;
     uint price;
     bool open;
     address buyer;
@@ -30,16 +30,13 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
 
   // Action functions
 
-  function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _value, uint _price) external {
-    require(commodities[_commodityId]._interface.balanceOf(msg.sender) >= _value, "You do not own enough of this commodity");
+  function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _quantity, uint _price) external {
+    require(commodities[_commodityId]._interface.balanceOf(msg.sender) >= _quantity, "You do not own enough of this commodity");
 
     // Arrange transfer or commodity from user to escrow
-    SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _value, _price, true, address(0));
+    SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _quantity, _price, true, address(0));
     uint _orderId = marketplaces[_planetId].push(sellOrder) - 1;
-    commodities[_commodityId]._interface.transferForPlayer(msg.sender, address(this), _value);
-
-    // Adjust current cargo
-    gta.removeCargo(msg.sender, _value * commodities[_commodityId].mass);
+    commodities[_commodityId]._interface.transferForPlayer(msg.sender, address(this), _quantity);
 
     emit sellOrderCreated(_planetId, _orderId);
   }
@@ -47,16 +44,13 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
   function buySellOrder(uint8 _planetId, uint _orderId) external payable
   onlyPlayer
   samePlanet(_planetId)
-  canFitCargo(msg.sender, getMassOfSellOrder(_planetId, _orderId)) {
-    SellOrder memory order = marketplaces[_planetId][_orderId];
-    require(msg.value == order.value * order.price, "You did not send the correct amount of ether");
+  canFitCargo(msg.sender, getCurrentCargo(msg.sender), getMassOfSellOrder(_planetId, _orderId)) {
+    SellOrder memory sellOrder = marketplaces[_planetId][_orderId];
+    require(msg.value == sellOrder.quantity * sellOrder.price, "You did not send the correct amount of ether");
 
     // Arrange transfer of commodity out of escrow
-    commodities[order.commodityId]._interface.transfer(msg.sender, order.value);
-    order.seller.transfer(msg.value);
-
-    // Adjust current cargo
-    gta.addCargo(msg.sender, order.value * commodities[order.commodityId].mass);
+    commodities[sellOrder.commodityId]._interface.transfer(msg.sender, sellOrder.quantity);
+    sellOrder.seller.transfer(msg.value);
 
     // Close order
     marketplaces[_planetId][_orderId].open = false;
@@ -83,7 +77,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
     return (
       sellOrder.seller,
       sellOrder.commodityId,
-      sellOrder.value,
+      sellOrder.quantity,
       sellOrder.price,
       sellOrder.open,
       sellOrder.buyer
@@ -92,7 +86,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
 
   function getMassOfSellOrder(uint8 _planetId, uint _orderId) private view returns (uint) {
     SellOrder memory sellOrder = marketplaces[_planetId][_orderId];
-    uint mass = sellOrder.value * commodities[sellOrder.commodityId].mass;
+    uint mass = sellOrder.quantity * commodities[sellOrder.commodityId].mass;
     return mass;
   }
 }

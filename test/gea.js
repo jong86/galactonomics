@@ -37,9 +37,10 @@ contract("GalacticEconomicAuthority", accounts => {
     // Mint commodity multiple times for player
     Array(4).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
 
-    const currentCargoBefore = (await gta.checkCargo(player1))[0]
+    const currentCargoBefore = await gea.getCurrentCargo(player1)
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
-    const currentCargoAfter = (await gta.checkCargo(player1))[0]
+    const currentCargoAfter = await gea.getCurrentCargo(player1)
+    console.log('currentCargoBefore, currentCargoAfter', currentCargoBefore, currentCargoAfter);
 
     const cargoTotalMass = (await gea.getCommodity(0))[5].mul(qty)
     assert.equal(

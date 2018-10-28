@@ -70,16 +70,6 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     addressToSpaceship[msg.sender].currentFuel = addressToSpaceship[msg.sender].maxFuel;
   }
 
-  function addCargo(address _address, uint _mass) external onlyGEAOrGIA {
-    addressToSpaceship[_address].currentCargo += _mass;
-    emit CargoAdjusted(_address, addressToSpaceship[_address].currentCargo, addressToSpaceship[_address].maxCargo);
-  }
-
-  function removeCargo(address _address, uint _mass) external onlyGEAOrGIA {
-    addressToSpaceship[_address].currentCargo -= _mass;
-    emit CargoAdjusted(_address, addressToSpaceship[_address].currentCargo, addressToSpaceship[_address].maxCargo);
-  }
-
 
   // View functions
 
@@ -112,11 +102,8 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     );
   }
 
-  function checkCargo(address _address) external view returns (uint currentCargo, uint maxCargo) {
-    return (
-      addressToSpaceship[_address].currentCargo,
-      addressToSpaceship[_address].maxCargo
-    );
+  function getMaxCargo(address _address) external view returns (uint) {
+    return addressToSpaceship[_address].maxCargo;
   }
 
   function isPlayer(address _address) public view returns (bool) {

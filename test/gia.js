@@ -34,6 +34,7 @@ contract("GalacticIndustrialAuthority", accounts => {
   it("should emit an event when player invests in production of a commodity", async () => {
     const investment = await gia.getRequiredInvestment(0)
     const response = await gia.investInProduction(0, { from: player1, value: investment })
+
     const i = response.logs.findIndex(item => item.event === "InvestmentMade")
     if (i === -1) assert(false, 'event not emitted')
     const { args } = response.logs[i]
@@ -59,8 +60,8 @@ contract("GalacticIndustrialAuthority", accounts => {
     const commodityInfo = await gea.getCommodity(0)
     const cargoTotalMass = (commodityInfo[4]).mul(commodityInfo[5])
     assert.equal(
-      currentCargoBefore.add(cargoTotalMass).toString().toString(),
-      currentCargoAfter,
+      currentCargoBefore.add(cargoTotalMass).toString(),
+      currentCargoAfter.toString(),
       "did not adjust cargo amount on spaceship"
     )
 

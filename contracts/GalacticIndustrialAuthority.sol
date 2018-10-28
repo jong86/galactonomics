@@ -4,6 +4,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./CommodityInteractor.sol";
 import "./GTAInteractor.sol";
+import "./Commodity.sol";
 
 contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
@@ -24,7 +25,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   function investInProduction(uint8 _commodityId) external payable
   onlyPlayer
   samePlanet(_commodityId)
-  canFitCargo(msg.sender, getMassOfTotalProductionReturns(_commodityId)) {
+  canFitCargo(msg.sender, getCurrentCargo(msg.sender), getMassOfTotalProductionReturns(_commodityId)) {
     // Check investment amount
     require(
       msg.value == getRequiredInvestment(_commodityId),
@@ -33,10 +34,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
-  function mintCommodityFor(uint8 _commodityId, address _for) external
-  onlyOwner {
-  // canFitCargo(_for, getMassOfOneProductionReturn(_commodityId)) {
-    gta.addCargo(_for, commodities[_commodityId].amountMinedPerBlock * commodities[_commodityId].mass);
+  function mintCommodityFor(uint8 _commodityId, address _for) external onlyOwner {
     commodities[_commodityId]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
   }
 

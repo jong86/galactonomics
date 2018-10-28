@@ -17,13 +17,11 @@ contract GTAInteractor {
     _;
   }
 
-  modifier canFitCargo(address _player, uint _incomingCargo) {
-    uint currentCargo;
-    uint maxCargo;
-    (currentCargo, maxCargo) = gta.checkCargo(_player);
-    uint cargoAvailable = maxCargo - currentCargo;
-    emit Log(cargoAvailable, _incomingCargo);
-    require(cargoAvailable >= _incomingCargo, "Cannot fit this cargo");
+  modifier canFitCargo(address _player, uint _currentCargo, uint _incomingCargo) {
+    uint _maxCargo = gta.getMaxCargo(_player);
+    uint _cargoAvailable = _maxCargo - _currentCargo;
+    emit Log(_cargoAvailable, _incomingCargo);
+    require(_cargoAvailable >= _incomingCargo, "Cannot fit this cargo");
     _;
   }
 
