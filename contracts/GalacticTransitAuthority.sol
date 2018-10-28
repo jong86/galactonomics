@@ -15,6 +15,8 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     uint maxFuel;
   }
 
+  // Could create a setter for this:
+  uint public constant costOfSpaceship = 0.01 ether;
   // Hard-coding this for now (plan to implement planet-distances later)
   uint public constant fuelUsage = 33;
   // Hard-coding this for now (plan to implement variable refueling costs later)
@@ -41,6 +43,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   // Action functions
 
   function buySpaceship(string _name) external payable {
+    require(msg.value == costOfSpaceship, "You need to provide the correct amount of ether");
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship (for now)");
 
     numSpaceships = numSpaceships.add(1);
