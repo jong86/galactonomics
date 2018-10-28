@@ -9,8 +9,8 @@ contract("GalacticEconomicAuthority", accounts => {
   const player1 = accounts[1]
   const player2 = accounts[2]
   const nonPlayer = accounts[3]
-  const qty = 100
-  const price = 350
+  const qty = 5
+  const price = 20
 
   beforeEach(async() => {
     commodities = await deployCommodities()
@@ -77,7 +77,6 @@ contract("GalacticEconomicAuthority", accounts => {
 
     const currentCargoAfter = await gea.getCurrentCargo(player2)
     const cargoTotalMass = (await gea.getCommodity(0))[5].mul(qty)
-    console.log('cargoTotalMass', cargoTotalMass);
     assert.equal(currentCargoAfter.toString(), cargoTotalMass.toString(), "player2 did not have cargo adjusted")
 
     const balancePlayer2 = await commodities[0].balanceOf(player2)
