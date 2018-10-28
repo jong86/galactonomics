@@ -22,7 +22,6 @@ contract("GalacticEconomicAuthority", accounts => {
     await gta.setGIA(gia.address)
     commodities.forEach(async commodity => await commodity.setGEA(gea.address))
     commodities.forEach(async commodity => await commodity.setGIA(gia.address))
-    await gia.mintCommodityFor(0, player1)
     await gta.buySpaceship("A", { from: player1 })
     await gta.buySpaceship("B", { from: player2 })
   })
@@ -93,6 +92,8 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should not let non-player buy player1's sell order", async () => {
+    // Mint commodity multiple times for player
+    Array(4).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
     await gea.createSellOrder(0, 0, qty, price, { from: player1 })
     try {
       await gea.buySellOrder(0, orderId, { from: nonPlayer, value: qty * price })
