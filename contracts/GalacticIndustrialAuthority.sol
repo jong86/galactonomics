@@ -9,7 +9,14 @@ import "./Commodity.sol";
 contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
-  uint8 public constant blocksToProduceFor = 12;
+  uint public constant blocksToProduceFor;
+
+  struct Investment {
+    uint amount;
+    uint blocksLeft;
+  }
+
+  mapping(address => Investment) investments;
 
   event InvestmentMade(address from, uint8 commodityId, uint value);
   event CommodityMinted(address to, uint8 commodityId);
@@ -31,12 +38,18 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
       msg.value == getRequiredInvestment(_commodityId),
       "You have not provided enough ether"
     );
+    require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
+
+    investments[msg.sender] = Investment(msg.value, blocksToProduceFor);
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
   function mintCommodityFor(uint8 _commodityId, address _for) external
   onlyOwner
   canFitCargo(_for, getCurrentCargo(_for), getMassOfOneProductionReturn(_commodityId)) {
+    require(investments[_for].blocksLeft > 0, "There is no more blocks left to mine for this investment");
+
+    investments[_for].blocksLeft = investments[_for].blocksLeft.sub(1);
     commodities[_commodityId]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
   }
 

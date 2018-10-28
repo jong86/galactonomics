@@ -15,7 +15,6 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     uint maxFuel;
   }
 
-  // Could create a setter for this:
   uint public constant costOfSpaceship = 0.01 ether;
   // Hard-coding this for now (plan to implement planet-distances later)
   uint public constant fuelUsage = 33;
