@@ -9,7 +9,7 @@ contract("GalacticEconomicAuthority", accounts => {
   const player1 = accounts[1]
   const player2 = accounts[2]
   const nonPlayer = accounts[3]
-  const qty = 1000
+  const qty = 100
   const price = 350
 
   beforeEach(async() => {
@@ -40,7 +40,6 @@ contract("GalacticEconomicAuthority", accounts => {
     const currentCargoBefore = await gea.getCurrentCargo(player1)
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
     const currentCargoAfter = await gea.getCurrentCargo(player1)
-    console.log('currentCargoBefore, currentCargoAfter', currentCargoBefore, currentCargoAfter);
 
     const cargoTotalMass = (await gea.getCommodity(0))[5].mul(qty)
     assert.equal(
