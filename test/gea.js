@@ -22,8 +22,9 @@ contract("GalacticEconomicAuthority", accounts => {
     await gta.setGIA(gia.address)
     commodities.forEach(async commodity => await commodity.setGEA(gea.address))
     commodities.forEach(async commodity => await commodity.setGIA(gia.address))
-    await gta.buySpaceship("A", { from: player1 })
-    await gta.buySpaceship("B", { from: player2 })
+    const costOfSpaceship = await gta.costOfSpaceship()
+    await gta.buySpaceship("A", { from: player1, value: costOfSpaceship })
+    await gta.buySpaceship("B", { from: player2, value: costOfSpaceship })
   })
 
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {

@@ -9,7 +9,7 @@ import "./Commodity.sol";
 contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
-  uint public constant blocksToProduceFor;
+  uint constant public blocksToProduceFor = 8;
 
   struct Investment {
     uint amount;
