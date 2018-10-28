@@ -10,8 +10,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   struct Spaceship {
     string name;
     uint8 currentPlanet;
-    uint currentCargo; // in kg
-    uint maxCargo;
+    uint maxCargo; // in kg
     uint currentFuel; // in litres
     uint maxFuel;
   }
@@ -31,7 +30,6 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   event SpaceshipBought(address owner, uint tokenId);
   event TravelComplete(address player, uint8 planetId, uint currentFuel);
   event RefuelComplete(address player);
-  event CargoAdjusted(address player, uint currentCargo, uint maxCargo);
   event Log(uint x);
 
   modifier onlyPlayer() {
@@ -76,7 +74,6 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   function getInfo() external view returns (
     string name,
     uint8 currentPlanet,
-    uint currentCargo,
     uint maxCargo,
     uint currentFuel,
     uint maxFuel
@@ -84,7 +81,6 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     return (
       addressToSpaceship[msg.sender].name,
       addressToSpaceship[msg.sender].currentPlanet,
-      addressToSpaceship[msg.sender].currentCargo,
       addressToSpaceship[msg.sender].maxCargo,
       addressToSpaceship[msg.sender].currentFuel,
       addressToSpaceship[msg.sender].maxFuel

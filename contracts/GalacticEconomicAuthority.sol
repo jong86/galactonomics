@@ -33,7 +33,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
   function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _quantity, uint _price) external {
     require(commodities[_commodityId]._interface.balanceOf(msg.sender) >= _quantity, "You do not own enough of this commodity");
 
-    // Arrange transfer or commodity from user to escrow
+    // Arrange transfer of commodity from user to escrow
     SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _quantity, _price, true, address(0));
     uint _orderId = marketplaces[_planetId].push(sellOrder) - 1;
     commodities[_commodityId]._interface.transferForPlayer(msg.sender, address(this), _quantity);
