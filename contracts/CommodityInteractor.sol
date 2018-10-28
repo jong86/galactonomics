@@ -21,7 +21,7 @@ contract CommodityInteractor {
         CommodityInterface(_commodityAddresses[i]),
         100,
         1000,
-        10
+        2
       );
     }
   }
