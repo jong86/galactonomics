@@ -34,6 +34,11 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   event CargoAdjusted(address player, uint currentCargo, uint maxCargo);
   event Log(uint x);
 
+  modifier onlyPlayer() {
+    require(isPlayer(msg.sender), "You need to own a spaceship to call this function");
+    _;
+  }
+
 
   // Action functions
 
@@ -50,8 +55,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     emit SpaceshipBought(msg.sender, _tokenId);
   }
 
-  function travelToPlanet(uint8 _planetId) external {
-    require(isPlayer(msg.sender), "You need to own a spaceship to travel");
+  function travelToPlanet(uint8 _planetId) external onlyPlayer {
     require(0 < _planetId && _planetId < 7, "planetId must be between 0 and 6, inclusive");
     require(addressToSpaceship[msg.sender].currentFuel >= fuelUsage, "You do not have enough fuel to travel");
 
@@ -61,8 +65,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     emit TravelComplete(msg.sender, _planetId, addressToSpaceship[msg.sender].currentFuel);
   }
 
-  function refuel() external payable {
-    require(isPlayer(msg.sender), "You need to own a spaceship to refuel");
+  function refuel() external payable onlyPlayer {
     require(msg.value >= refuelCost, "You need to provide the correct amount of ether to refuel");
     addressToSpaceship[msg.sender].currentFuel = addressToSpaceship[msg.sender].maxFuel;
   }
