@@ -24,6 +24,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   function investInProduction(uint8 _commodityId) external payable
   onlyPlayer
+  samePlanet(_commodityId)
   canFitCargo(msg.sender, getMassOfTotalProductionReturns(_commodityId)) {
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }

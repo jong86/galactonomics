@@ -26,4 +26,9 @@ contract GTAInteractor {
     require(cargoAvailable >= _incomingCargo, "Cannot fit this cargo");
     _;
   }
+
+  modifier samePlanet(uint8 _planetId) {
+    require(gta.getCurrentPlanet(msg.sender) == _planetId, "You are not on the right planet");
+    _;
+  }
 }
