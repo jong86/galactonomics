@@ -102,10 +102,10 @@ contract("GalacticEconomicAuthority", accounts => {
     assert(false, "could buy sell-order")
   })
 
-  it("should revert if player cannot fit the cargo", async () => {
+  it("should fail if player cannot fit the cargo they want to buy", async () => {
     // Mint commodity multiple times for players
     Array(4).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player1))
-    Array(6).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player2))
+    Array(10).fill(gia.mintCommodityFor).forEach(async promise => await promise(0, player2))
 
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
 
