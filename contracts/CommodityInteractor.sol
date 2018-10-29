@@ -17,8 +17,6 @@ contract CommodityInteractor {
 
   CommodityData[7] public commodities;
 
-  event LogCommodityInteractor(uint x, uint y);
-
   constructor(address[] _commodityAddresses) public {
     for (uint8 i = 0; i < commodities.length; i++) {
       commodities[i] = CommodityData(
@@ -60,7 +58,6 @@ contract CommodityInteractor {
     for (uint8 i = 0; i < commodities.length; i++) {
       uint cargoToAdd = commodities[i].mass.mul(commodities[i]._interface.balanceOf(_player));
       currentCargo = currentCargo.add(cargoToAdd);
-      emit LogCommodityInteractor(cargoToAdd, currentCargo);
     }
 
     return currentCargo;

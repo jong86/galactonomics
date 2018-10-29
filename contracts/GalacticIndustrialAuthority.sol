@@ -20,7 +20,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   event InvestmentMade(address from, uint8 commodityId, uint value);
   event CommodityMinted(address to, uint8 commodityId);
-  event Log(uint x);
+  event Log(uint x, uint y);
 
   constructor(address[] _commodityAddresses, address _gta)
   CommodityInteractor(_commodityAddresses)
@@ -32,40 +32,40 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   function investInProduction(uint8 _commodityId) external payable
   onlyPlayer
   samePlanet(_commodityId)
+  // To prevent player from investing if they can't fit the cargo:
   canFitCargo(msg.sender, getCurrentCargo(msg.sender), getMassOfTotalProductionReturns(_commodityId)) {
-    // Check investment amount
-    require(
-      msg.value == getAmountRequired(_commodityId),
-      "You have not provided enough ether"
-    );
+    require(msg.value == getAmountRequired(_commodityId), "You have not provided enough ether");
     require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
 
     investments[msg.sender] = Investment(msg.value, blocksToProduceFor);
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
-  function mintCommodityFor(uint8 _commodityId, address _for) external
-  onlyOwner
-  canFitCargo(_for, getCurrentCargo(_for), getMassOfOneProductionReturn(_commodityId)) {
+  function mintCommodityFor(uint8 _commodityId, address _for) external onlyOwner {
     require(investments[_for].blocksLeft > 0, "There is no more blocks left to mine for this investment");
-
     investments[_for].blocksLeft = investments[_for].blocksLeft.sub(1);
-    commodities[_commodityId]._interface.mint(_for, commodities[_commodityId].amountMinedPerBlock);
-  }
 
+    // Only mint what can fit on player's ship
+    uint amountToMint = commodities[_commodityId].amountMinedPerBlock;
+    uint availableCargo = gta.getAvailableCargo(_for, getCurrentCargo(_for));
+    emit Log(amountToMint, availableCargo);
+    if (amountToMint >= availableCargo) {
+      amountToMint = availableCargo;
+    }
 
-  // Private helpers
-
-  function getMassOfTotalProductionReturns(uint8 _commodityId) private returns (uint) {
-    return commodities[_commodityId].amountMinedPerBlock.mul(commodities[_commodityId].mass * blocksToProduceFor);
-  }
-
-  function getMassOfOneProductionReturn(uint8 _commodityId) private returns (uint) {
-    return commodities[_commodityId].amountMinedPerBlock.mul(commodities[_commodityId].mass);
+    commodities[_commodityId]._interface.mint(_for, amountToMint);
   }
 
 
   // View functions
+
+  function getMassOfTotalProductionReturns(uint8 _commodityId) public view returns (uint) {
+    return commodities[_commodityId].amountMinedPerBlock.mul(commodities[_commodityId].mass * blocksToProduceFor);
+  }
+
+  function getMassOfOneProductionReturn(uint8 _commodityId) public view returns (uint) {
+    return commodities[_commodityId].amountMinedPerBlock.mul(commodities[_commodityId].mass);
+  }
 
   function getAmountRequired(uint8 _commodityId) public view returns (uint) {
     return commodities[_commodityId].miningCost.mul(blocksToProduceFor);

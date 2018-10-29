@@ -9,7 +9,7 @@ contract GTAInteractor {
 
   GalacticTransitAuthorityInterface gta;
 
-  event Log(uint x, uint y);
+  event CanFitCargo(uint available, uint incoming);
 
   constructor(address _gta) public {
     gta = GalacticTransitAuthorityInterface(_gta);
@@ -23,7 +23,7 @@ contract GTAInteractor {
   modifier canFitCargo(address _player, uint _currentCargo, uint _incomingCargo) {
     uint _maxCargo = gta.getMaxCargo(_player);
     uint _cargoAvailable = _maxCargo.sub(_currentCargo);
-    emit Log(_cargoAvailable, _incomingCargo);
+    emit CanFitCargo(_cargoAvailable, _incomingCargo);
     require(_cargoAvailable >= _incomingCargo, "Cannot fit this cargo");
     _;
   }

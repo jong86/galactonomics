@@ -49,7 +49,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     uint _tokenId = numSpaceships;
 
     _mint(msg.sender, _tokenId);
-    addressToSpaceship[msg.sender] = Spaceship(_name, 0, 100000, 100, 100);
+    addressToSpaceship[msg.sender] = Spaceship(_name, 0, 60000, 100, 100);
     addressOwnsSpaceship[msg.sender] = true;
 
     emit SpaceshipBought(msg.sender, _tokenId);
@@ -100,8 +100,12 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     );
   }
 
-  function getMaxCargo(address _address) external view returns (uint) {
+  function getMaxCargo(address _address) public view returns (uint) {
     return addressToSpaceship[_address].maxCargo;
+  }
+
+  function getAvailableCargo(address _address, uint _currentCargo) external view returns (uint) {
+    return getMaxCargo(_address).sub(_currentCargo);
   }
 
   function isPlayer(address _address) public view returns (bool) {
