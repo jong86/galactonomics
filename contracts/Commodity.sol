@@ -7,8 +7,8 @@ import "./ControlledByGEAAndGIA.sol";
 // Use of variable name 'value' in here only to be consistent with ERC20 code
 // Elsewhere 'value' is referred to as 'quantity'
 contract Commodity is ERC20Detailed, ERC20Mintable, Ownable, ControlledByGEAAndGIA {
-  constructor(string _name, string _symbol, uint8 _decimals)
-  ERC20Detailed(_name, _symbol, _decimals)
+  constructor(string _name, string _symbol)
+  ERC20Detailed(_name, _symbol, 0)
   ERC20Mintable() public {}
 
   function mint(address _to, uint _value) public onlyGIA returns (bool) {
