@@ -4,18 +4,13 @@ const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAutho
 const Commodity = artifacts.require("./Commodity.sol")
 const commoditiesList = require('../util/commoditiesList')
 
-module.exports = async function(deployer) {
-  const commodities = []
-  commoditesList.forEach(commodity => {
-    commodities.push(deployer.deploy(Commodity, commodity.name, commodity.symbol))
-  })
+module.exports = function(deployer) {
 
+  // const commodityAddresses = commodities.map(commodity => commodity.address)
 
-  const commodityAddresses = commodities.map(commodity => commodity.address)
-
-  const gta = await deployer.deploy(GalacticTransitAuthority)
-  const gea = await deployer.deploy(GalacticEconomicAuthority, commodityAddresses, gta.address)
-  const gia = await deployer.deploy(GalacticIndustrialAuthority, commodityAddresses, gta.address)
+  // const gta = await deployer.deploy(GalacticTransitAuthority)
+  // const gea = await deployer.deploy(GalacticEconomicAuthority, commodityAddresses, gta.address)
+  // const gia = await deployer.deploy(GalacticIndustrialAuthority, commodityAddresses, gta.address)
 
   // await gta.setGEA(gea.address)
   // await gta.setGIA(gia.address)

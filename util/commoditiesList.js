@@ -7,3 +7,5 @@ const commoditesList = [
   { name: "Auxilliary Omnireceptors", symbol: "AOR" },
   { name: "L-337 Nanobulators", symbol: "L3N" },
 ]
+
+module.exports = commoditesList
