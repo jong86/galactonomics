@@ -1,9 +1,15 @@
 import React, { Component } from "react";
+import injectSheet from 'react-jss'
+
 import gtaContract from "./contracts/GalacticTransitAuthority.json";
 import getWeb3 from "./utils/getWeb3";
 import truffleContract from "truffle-contract";
 
-import "./App.css";
+const styles = {
+  App: {
+    textAlign: "center",
+  }
+}
 
 class App extends Component {
   state = {
@@ -49,11 +55,13 @@ class App extends Component {
   };
 
   render() {
+    const { classes } = this.props
+
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <div className="App">
+      <div className={classes.App}>
         <h1>Good to Go!</h1>
         <p>Your Truffle Box is installed and ready.</p>
         <h2>Smart Contract Example</h2>
@@ -70,4 +78,5 @@ class App extends Component {
   }
 }
 
+App = injectSheet(styles)(App)
 export default App;
