@@ -9,7 +9,6 @@ const Commodity4 = artifacts.require("./commodities/Commodity4.sol")
 const Commodity5 = artifacts.require("./commodities/Commodity5.sol")
 const Commodity6 = artifacts.require("./commodities/Commodity6.sol")
 
-
 module.exports = function(deployer) {
   deployer.then(async () => {
     // There are separate contracts for each commodity because truffle doesn't seem to work
