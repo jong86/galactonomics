@@ -1,11 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
 import injectSheet from 'react-jss'
+import colorFromType from '../../utils/colorFromType'
 
 const styles = {
   Button: {
     textAlign: "center",
-    border: '1px solid red',
+    border: ({ type }) => '1px solid ' + colorFromType(type),
+    color: ({ type }) => colorFromType(type),
     width: 'min-content',
+    borderRadius: 4,
+    padding: '4px',
+    cursor: 'pointer',
+    userSelect: 'none',
   }
 }
 

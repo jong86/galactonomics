@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import injectSheet from 'react-jss'
 
 import gtaContract from "./contracts/GalacticTransitAuthority.json";
+import geaContract from "./contracts/GalacticEconomicAuthority.json";
+import giaContract from "./contracts/GalacticIndustrialAuthority.json";
 import getWeb3 from "./utils/getWeb3";
 import truffleContract from "truffle-contract";
 
@@ -11,8 +13,8 @@ import screenMapping from './utils/screenMapping'
 const styles = {
   '@global': {
     body: {
-      backgroundColor: '#000',
-      color: '#fff',
+      backgroundColor: 'black',
+      color: 'white',
       fontFamily: 'Verdana',
     },
     div: {

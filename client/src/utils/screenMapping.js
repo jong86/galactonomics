@@ -8,5 +8,6 @@ export default screen => {
     case 'Welcome': return <Welcome />
     case 'SpaceshipDealer': return <SpaceshipDealer/>
     case 'Travel': return <Travel/>
+    default: break
   }
 }

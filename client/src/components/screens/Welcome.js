@@ -18,12 +18,15 @@ class Welcome extends Component {
     return (
       <div className={classes.container}>
         <h1>Galactonomics</h1>
-        <Button onClick={() => {
-          // If player doesn't own spaceship:
-          goToSpaceshipDealer()
-          // If player owns spaceship:
-          // goToTravel()
-        }}>Continue</Button>
+        <Button
+          onClick={() => {
+            // If player doesn't own spaceship:
+            goToSpaceshipDealer()
+            // If player owns spaceship:
+            // goToTravel()
+          }}
+          type="good"
+        >Continue</Button>
       </div>
     );
   }

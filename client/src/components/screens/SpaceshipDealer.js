@@ -28,7 +28,10 @@ class SpaceshipDealer extends Component {
         <h1>It's dangerous to go alone.</h1>
         <h1>Would you like to purchase a spaceship?</h1>
         <h3>(spaceship ownership is required by law to handle commodities in this galactic region)</h3>
-        <Button onClick={this.buySpaceship}>Okay</Button>
+        <Button
+          onClick={this.buySpaceship}
+          type="good"
+        >Okay</Button>
       </div>
     );
   }
