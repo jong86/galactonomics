@@ -18,18 +18,19 @@ class SpaceshipDealer extends Component {
   buySpaceship = async () => {
     this.setState({ isLoading: true })
 
-    const { web3 } = this.props
-    const { gta } = this.props.contracts
-    const { address } = this.props.user
+    const { web3, contracts, user } = this.props
 
     try {
-      await gta.buySpaceship("My Spaceship", { from: address, value: web3.utils.toWei("0.01", "ether") })
+      await contracts.gta.buySpaceship(
+        "My Spaceship",
+        { from: user.address, value: web3.utils.toWei("0.01", "ether") }
+      )
     } catch (e) {
       return console.error(e)
     }
 
+    // After 'SpaceshipBought' event is heard...
     this.props.goToTravelScreen()
-    // After success of spaceship buying, go to the travel screen
   }
 
   render() {

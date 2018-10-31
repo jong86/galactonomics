@@ -15,8 +15,7 @@ class Welcome extends Component {
   }
 
   checkIfOwnsSpaceship = async () => {
-    const { gta } = this.props.contracts
-    const { address } = this.props.user
+    const { contracts, user } = this.props
 
     // Need a loading indicator here so players who own spaceships don't
     // navigate to the buy spaceship screen before response is received
@@ -24,7 +23,7 @@ class Welcome extends Component {
     let spaceshipsOwned
 
     try {
-      spaceshipsOwned = await gta.balanceOf(address, { from: address })
+      spaceshipsOwned = await contracts.gta.balanceOf(user.address, { from: user.address })
     } catch (e) {
       return console.error(e)
     }
@@ -37,13 +36,12 @@ class Welcome extends Component {
   }
 
   getPlayerInfo = async () => {
-    const { gta } = this.props.contracts
-    const { address } = this.props.user
+    const { contracts, user } = this.props
 
     let playerInfo
 
     try {
-      playerInfo = await gta.getInfo({ from: address })
+      playerInfo = await contracts.gta.getInfo({ from: user.address })
     } catch (e) {
       return console.error(e)
     }
@@ -58,14 +56,16 @@ class Welcome extends Component {
   }
 
   goToNextScreen = () => {
-    if (this.props.user.ownsSpaceship)
+    const { user } = this.props
+
+    if (user.ownsSpaceship)
       this.props.goToTravelScreen()
     else
       this.props.goToSpaceshipDealerScreen()
   }
 
   render() {
-    const { classes, goToSpaceshipDealer } = this.props
+    const { classes } = this.props
 
     return (
       <div className={classes.container}>

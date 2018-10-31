@@ -48,20 +48,19 @@ class Travel extends Component {
     console.log("Hyperdrive activating...")
     console.log("Current speed: 5.39 x 10^11 kph") // Estimate of what speed to get to Mars in 15 seconds
 
-    const { gta } = this.props.contracts
-    const { address } = this.props.user
+    const { contracts, user } = this.props
 
-    try {
-      await gta.travelToPlanet(planetId, { from: address })
-    } catch (e) {
-      return console.error(e)
-    }
+      try {
+        await contracts.gta.travelToPlanet(planetId, { from: user.address })
+      } catch (e) {
+        return console.error(e)
+      }
 
     this.props.goToPlanetIntroScreen()
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, user } = this.props
 
     return (
       <div className={classes.container}>
@@ -84,6 +83,7 @@ class Travel extends Component {
               <div>
                 { planet.name }
               </div>
+              {i == user.currentPlanet && '(current)'}
             </div>
           )}
         </div>
