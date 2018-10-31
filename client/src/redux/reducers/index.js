@@ -1,15 +1,15 @@
 import { combineReducers } from 'redux'
 
-import contracts from './contracts';
-import view from './view';
-import player from './player';
+import web3 from './web3'
+import contracts from './contracts'
+import view from './view'
+import player from './player'
 
 const appReducer = combineReducers({
+  web3,
   contracts,
   view,
   player,
 })
 
-export default (state, action) => {
-  return appReducer(state, action);
-};
+export default (state, action) => appReducer(state, action)

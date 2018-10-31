@@ -9,6 +9,7 @@ import getWeb3 from "./utils/getWeb3";
 import truffleContract from "truffle-contract";
 
 import screenMapping from './utils/screenMapping'
+import { stat } from "fs";
 
 const styles = {
   '@global': {
@@ -39,11 +40,13 @@ class App extends Component {
 
   componentDidMount = async () => {
     try {
-      // Get network provider and web3 instance.
+      // Save web3 in redux store
       const web3 = await getWeb3();
+      this.props.setWeb3(web3)
 
-      // Use web3 to get the user's accounts.
+      // Save account in redux store
       const accounts = await web3.eth.getAccounts();
+      this.props.setAddress(accounts[0])
 
       // Get all contract instances
       let contracts = [
@@ -51,6 +54,7 @@ class App extends Component {
         { json: geaJSON, name: 'gea' },
         { json: giaJSON, name: 'gia' },
       ]
+
       contracts = await Promise.all(
         contracts.map(contract => new Promise(async (resolve, reject) => {
           const Contract = truffleContract(contract.json);
@@ -67,8 +71,7 @@ class App extends Component {
         }))
       )
 
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
+      // Save the contracts to redux store
       contracts.forEach(contract => this.props.addContract(contract.instance, contract.name))
 
       this.setState({ isInitialized: true })
@@ -83,10 +86,10 @@ class App extends Component {
   };
 
   runExample = async () => {
-    const { accounts, contract } = this.state;
+    const { accounts, gta } = this.props;
 
     // Get the value from the contract to prove it worked.
-    const response = await contract.getInfo();
+    const response = await gta.getInfo();
 
     // Update state with the result.
     this.setState({ infoFromGTA: JSON.stringify(response) });
@@ -110,12 +113,15 @@ class App extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     currentScreen: state.view.currentScreen,
+    contract: state.contracts,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    addContract: (instance, name) => dispatch({ type: 'ADD_CONTRACT', instance, name })
+    setWeb3: (web3) => dispatch({ type: 'SET_WEB3', web3 }),
+    addContract: (instance, name) => dispatch({ type: 'ADD_CONTRACT', instance, name }),
+    setAddress: (address) => dispatch({ type: 'SET_ADDRESS', address })
   }
 }
 

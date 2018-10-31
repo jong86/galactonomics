@@ -9,8 +9,15 @@ export default (state, action) => {
       }
     }
 
-    default: {
-      return { ...state }
+    case 'SET_ADDRESS': {
+      const { address } = action
+
+      return {
+        ...state,
+        address,
+      }
     }
+
+    default: return { ...state }
   }
 }
