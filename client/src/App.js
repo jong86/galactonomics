@@ -29,13 +29,35 @@ const styles = {
 
 class App extends Component {
   state = {
-    infoFromGTA: 0,
     isInitialized: null,
-    accounts: null,
-    contract: null,
   };
 
   componentDidMount = async () => {
+    try {
+      await this.initializeBlockchainStuff()
+    } catch (e) {
+      return console.error(e)
+    }
+
+    let ownsSpaceship
+    try {
+      ownsSpaceship = await this.checkIfOwnsSpaceship()
+    } catch (e) {
+      return console.error(e)
+    }
+
+    if (ownsSpaceship) {
+      try {
+        await this.getPlayerInfo()
+      } catch (e) {
+        return console.error(e)
+      }
+    }
+
+    this.setState({ isInitialized: true })
+  }
+
+  initializeBlockchainStuff = () => new Promise(async (resolve, reject) => {
     try {
       // Save web3 in redux store
       const web3 = await getWeb3();
@@ -71,37 +93,57 @@ class App extends Component {
       // Save the contracts to redux store
       contracts.forEach(contract => this.props.addContract(contract.instance, contract.name))
 
-      this.setState({ isInitialized: true })
+      resolve()
 
-    } catch (error) {
+    } catch (e) {
       // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`
-      );
-      console.log(error);
+      reject(e)
     }
-  }
+  })
 
-  // componentDidCatch(error, info) {
-  //   console.log('error', error);
-  //   console.log('info', info);
-  // }
+  checkIfOwnsSpaceship = () => new Promise(async (resolve, reject) => {
+    const { contracts, user } = this.props
 
-  runExample = async () => {
-    const { accounts, gta } = this.props;
+    let spaceshipsOwned
+    try {
+      spaceshipsOwned = await contracts.gta.balanceOf(user.address, { from: user.address })
+    } catch (e) {
+      return reject(e)
+    }
 
-    // Get the value from the contract to prove it worked.
-    const response = await gta.getInfo();
+    if (spaceshipsOwned.toString() === '0') {
+      this.props.setUserInfo({ ownsSpaceship: false })
+      return resolve(false)
+    }
 
-    // Update state with the result.
-    this.setState({ infoFromGTA: JSON.stringify(response) });
-  };
+    this.props.setUserInfo({ ownsSpaceship: true })
+    resolve(true)
+  })
+
+  getPlayerInfo = () => new Promise(async (resolve, reject) => {
+    const { contracts, user } = this.props
+
+    let playerInfo
+    try {
+      playerInfo = await contracts.gta.getInfo({ from: user.address })
+    } catch (e) {
+      return reject(e)
+    }
+
+    this.props.setUserInfo({
+      currentFuel: playerInfo.currentFuel.toString(),
+      currentPlanet: playerInfo.currentPlanet.toString(),
+      maxCargo: playerInfo.maxCargo.toString(),
+      maxFuel: playerInfo.maxFuel.toString(),
+      spaceshipName: playerInfo.spaceshipName.toString(),
+    })
+
+    resolve()
+  })
 
   render() {
-    const { classes } = this.props
-
     if (!this.state.isInitialized) {
-      return <div>Loading Web3, accounts, and contract...</div>;
+      return <div>Activating L-337 Nanobulators...</div>
     }
 
     return (
@@ -115,7 +157,8 @@ class App extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     currentScreen: state.view.currentScreen,
-    contract: state.contracts,
+    contracts: state.contracts,
+    user: state.user,
   }
 }
 
@@ -123,7 +166,8 @@ const mapDispatchToProps = dispatch => {
   return {
     setWeb3: (web3) => dispatch({ type: 'SET_WEB3', web3 }),
     addContract: (instance, name) => dispatch({ type: 'ADD_CONTRACT', instance, name }),
-    setAddress: (address) => dispatch({ type: 'SET_ADDRESS', address })
+    setAddress: (address) => dispatch({ type: 'SET_ADDRESS', address }),
+    setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
   }
 }
 

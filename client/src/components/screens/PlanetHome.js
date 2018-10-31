@@ -2,13 +2,14 @@ import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Button from 'components/reusables/Button'
+import planets from 'utils/planets'
 
 const styles = {
   container: {
     display: 'grid',
     height: '100%',
     width: 'fill-available',
-    gridTemplateColumns: '1.5fr 2.5fr 1fr',
+    gridTemplateColumns: '1.25fr 2.5fr 0.75fr',
     gridTemplateRows: '1fr',
     gridGap: '1px 1px',
     gridTemplateAreas: ". . .",
@@ -23,12 +24,14 @@ class PlanetHome extends Component {
   state = {};
 
   render() {
-    const { classes } = this.props
+    const { classes, user } = this.props
+    const planet = planets[user.currentPlanet]
+
 
     return (
       <div className={classes.container}>
         <div>
-          1
+          <img src={planet.img} />
         </div>
         <div>
           2
@@ -43,13 +46,16 @@ class PlanetHome extends Component {
 
 const mapStateToProps = state => {
   return {
-
+    user: state.user,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    goToPlanetHomeScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetHome' }),
+    goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+    goToPlanetMarketplacesScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetMarketplaces' }),
+    goToPlanetPricesScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetPrices' }),
+    goToPlanetIndustrialScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetIndustrial' }),
   }
 }
 
