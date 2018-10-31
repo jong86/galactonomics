@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import reducer from './reducers/index';
+import initialState from './initialState'
 // import storage from 'redux-persist/lib/storage';
 // import { persistStore, persistReducer } from 'redux-persist';
 
@@ -21,6 +22,7 @@ export const store = createStore(
   // Commenting out persistedReducer for dev for now
   // persistedReducer,
   reducer,
+  initialState,
   reduxDevTools
 )
 

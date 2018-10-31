@@ -1,43 +1,47 @@
-import React, { Component } from "react";
-import { connect } from 'react-redux';
+import React, { Component } from "react"
+import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-
-import gtaContract from "./contracts/GalacticTransitAuthority.json";
-import getWeb3 from "./utils/getWeb3";
-import truffleContract from "truffle-contract";
+import Button from '../reusables/Button'
 
 const styles = {
   container: {
-    textAlign: "center",
+
   }
 }
 
-class App extends Component {
-  state = {
-    infoFromGTA: 0,
-    web3: null,
-    accounts: null,
-    contract: null,
-  };
-
+class Welcome extends Component {
+  state = {};
 
   render() {
-    const { classes } = this.props
+    const { classes, goToSpaceshipDealer } = this.props
 
     return (
       <div className={classes.container}>
         <h1>Galactonomics</h1>
+        <Button onClick={() => {
+          // If player doesn't own spaceship:
+          goToSpaceshipDealer()
+          // If player owns spaceship:
+          // goToTravel()
+        }}>Continue</Button>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   return {
-    global: state.global,
+
   }
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    goToSpaceshipDealer: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'SpaceshipDealer' }),
+    goToTravel: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+  }
+}
 
-App = injectSheet(styles)(App)
-export default App;
+Welcome = connect(mapStateToProps, mapDispatchToProps)(Welcome)
+Welcome = injectSheet(styles)(Welcome)
+export default Welcome;

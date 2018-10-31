@@ -6,10 +6,25 @@ import gtaContract from "./contracts/GalacticTransitAuthority.json";
 import getWeb3 from "./utils/getWeb3";
 import truffleContract from "truffle-contract";
 
+import screenMapping from './utils/screenMapping'
+
 const styles = {
+  '@global': {
+    body: {
+      backgroundColor: '#000',
+      color: '#fff',
+      fontFamily: 'Verdana',
+    },
+    div: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }
+  },
   container: {
     textAlign: "center",
-  }
+  },
 }
 
 class App extends Component {
@@ -55,10 +70,6 @@ class App extends Component {
     this.setState({ infoFromGTA: JSON.stringify(response) });
   };
 
-  showCurrentScreen = () => {
-    return <div>hi</div>
-  }
-
   render() {
     const { classes } = this.props
 
@@ -68,7 +79,7 @@ class App extends Component {
 
     return (
       <div className={classes.container}>
-        { this.showCurrentScreen() }
+        { screenMapping(this.props.currentScreen) }
       </div>
     );
   }
