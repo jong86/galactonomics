@@ -33,7 +33,7 @@ class SpaceshipDealer extends Component {
   }
 
   render() {
-    const { classes, goToTravel } = this.props
+    const { classes } = this.props
 
     return (
       <div className={classes.container}>

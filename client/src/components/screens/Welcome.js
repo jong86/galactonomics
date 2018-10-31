@@ -10,36 +10,45 @@ const styles = {
 }
 
 class Welcome extends Component {
-  state = {};
-
   componentDidMount = () => {
-    // Get player info and save to store
-    this.getPlayerInfo()
+    this.checkIfOwnsSpaceship()
   }
 
-  getPlayerInfo = async () => {
+  checkIfOwnsSpaceship = async () => {
     const { gta } = this.props.contracts
     const { address } = this.props.player
 
-    let response
+    let spaceshipsOwned
 
     try {
-      response = await gta.getInfo({ from: address })
+      spaceshipsOwned = await gta.balanceOf(address, { from: address })
     } catch (e) {
       return console.error(e)
     }
 
-    console.log('response', response);
+    if (spaceshipsOwned.toString() === '0') {
+      this.props.setPlayerInfo({ ownsSpaceship: false })
+      console.log("you dont own a spaceship")
+    } else {
+      this.props.setPlayerInfo({ ownsSpaceship: true })
+      console.log("you own a spaceship")
+    }
+
+    // this.props.setPlayerInfo({
+    //   currentFuel: response.currentFuel.toString(),
+    //   currentPlanet: response.currentPlanet.toString(),
+    //   maxCargo: response.maxCargo.toString(),
+    //   maxFuel: response.maxFuel.toString(),
+    //   spaceshipName: response.spaceshipName.toString(),
+    // })
   }
 
   goToNextScreen = () => {
-
-
-    // if ()
-    //   // If player doesn't own spaceship:
-    //   goToSpaceshipDealerScreen()
-    //   // If player owns spaceship:
-    //   goToTravelScreen()
+    const { player } = this.props
+    if (player.ownsSpaceship)
+      this.props.goToTravelScreen()
+    else
+      this.props.goToSpaceshipDealerScreen()
   }
 
   render() {
@@ -69,6 +78,7 @@ const mapDispatchToProps = dispatch => {
   return {
     goToSpaceshipDealerScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'SpaceshipDealer' }),
     goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+    setPlayerInfo: info => dispatch({ type: 'SET_PLAYER_INFO', info }),
   }
 }
 

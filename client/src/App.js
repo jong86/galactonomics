@@ -80,7 +80,12 @@ class App extends Component {
       );
       console.log(error);
     }
-  };
+  }
+
+  // componentDidCatch(error, info) {
+  //   console.log('error', error);
+  //   console.log('info', info);
+  // }
 
   runExample = async () => {
     const { accounts, gta } = this.props;
