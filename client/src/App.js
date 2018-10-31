@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
+import globalStyles from 'globalStyles'
 
 import gtaJSON from "contracts/GalacticTransitAuthority.json"
 import geaJSON from "contracts/GalacticEconomicAuthority.json"
@@ -10,50 +11,6 @@ import truffleContract from "truffle-contract"
 
 import screenMapping from 'utils/screenMapping'
 
-const styles = {
-  '@global': {
-    body: {
-      backgroundColor: 'black',
-      color: 'white',
-      fontFamily: 'Verdana',
-    },
-    div: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      userSelect: 'none',
-    },
-  },
-
-  '@keyframes vibrate1': {
-    '0%': {
-      '-webkit-transform': 'translate(0)',
-              'transform': 'translate(0)',
-    },
-    '20%': {
-      '-webkit-transform': 'translate(-2px, 2px)',
-              'transform': 'translate(-2px, 2px)',
-    },
-    '40%': {
-      '-webkit-transform': 'translate(-2px, -2px)',
-              'transform': 'translate(-2px, -2px)',
-    },
-    '60%': {
-      '-webkit-transform': 'translate(2px, 2px)',
-              'transform': 'translate(2px, 2px)',
-    },
-    '80%': {
-      '-webkit-transform': 'translate(2px, -2px)',
-              'transform': 'translate(2px, -2px)',
-    },
-    '100%': {
-      '-webkit-transform': 'translate(0)',
-              'transform': 'translate(0)',
-    },
-  }
-}
-
 class App extends Component {
   state = {
     isInitialized: null,
@@ -61,7 +18,8 @@ class App extends Component {
 
   componentDidMount = async () => {
     try {
-      await this.initializeBlockchainStuff()
+      await this.initWeb3AndContracts()
+      this.listenToContracts()
 
       let ownsSpaceship
       ownsSpaceship = await this.checkIfOwnsSpaceship()
@@ -77,7 +35,7 @@ class App extends Component {
     this.setState({ isInitialized: true })
   }
 
-  initializeBlockchainStuff = () => new Promise(async (resolve, reject) => {
+  initWeb3AndContracts = () => new Promise(async (resolve, reject) => {
     try {
       // Save web3 in redux store
       const web3 = await getWeb3()
@@ -120,6 +78,22 @@ class App extends Component {
       reject(e)
     }
   })
+
+  listenToContracts = () => {
+    const { contracts, user } = this.props
+
+    contracts.gta.TravelComplete({}, (error, response) => {
+      if (error) return console.error(error)
+      const { player, currentFuel, planetId } = response.args
+      if (player === user.address) {
+        this.props.setUserInfo({
+          currentFuel: currentFuel.toString(),
+          currentPlanet: planetId.toString(),
+        })
+        this.props.goToPlanetIntroScreen()
+      }
+    })
+  }
 
   checkIfOwnsSpaceship = () => new Promise(async (resolve, reject) => {
     const { contracts, user } = this.props
@@ -188,9 +162,10 @@ const mapDispatchToProps = dispatch => {
     addContract: (instance, name) => dispatch({ type: 'ADD_CONTRACT', instance, name }),
     setAddress: (address) => dispatch({ type: 'SET_ADDRESS', address }),
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
+    goToPlanetIntroScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetIntro' }),
   }
 }
 
 App = connect(mapStateToProps, mapDispatchToProps)(App)
-App = injectSheet(styles)(App)
+App = injectSheet(globalStyles)(App)
 export default App
