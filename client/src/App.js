@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { connect } from 'react-redux';
 import injectSheet from 'react-jss'
 
-import gtaContract from "./contracts/GalacticTransitAuthority.json";
-import geaContract from "./contracts/GalacticEconomicAuthority.json";
-import giaContract from "./contracts/GalacticIndustrialAuthority.json";
+import gtaJSON from "./contracts/GalacticTransitAuthority.json";
+import geaJSON from "./contracts/GalacticEconomicAuthority.json";
+import giaJSON from "./contracts/GalacticIndustrialAuthority.json";
 import getWeb3 from "./utils/getWeb3";
 import truffleContract from "truffle-contract";
 
@@ -32,7 +32,7 @@ const styles = {
 class App extends Component {
   state = {
     infoFromGTA: 0,
-    web3: null,
+    isInitialized: null,
     accounts: null,
     contract: null,
   };
@@ -45,14 +45,34 @@ class App extends Component {
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
 
-      // Get the contract instance.
-      const Contract = truffleContract(gtaContract);
-      Contract.setProvider(web3.currentProvider);
-      const instance = await Contract.deployed();
+      // Get all contract instances
+      let contracts = [
+        { json: gtaJSON, name: 'gta' },
+        { json: geaJSON, name: 'gea' },
+        { json: giaJSON, name: 'gia' },
+      ]
+      contracts = await Promise.all(
+        contracts.map(contract => new Promise(async (resolve, reject) => {
+          const Contract = truffleContract(contract.json);
+          Contract.setProvider(web3.currentProvider);
+          try {
+            const instance = await Contract.deployed();
+            resolve({
+              instance: instance,
+              name: contract.name,
+            })
+          } catch (e) {
+            reject(e)
+          }
+        }))
+      )
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      contracts.forEach(contract => this.props.addContract(contract.instance, contract.name))
+
+      this.setState({ isInitialized: true })
+
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -75,7 +95,7 @@ class App extends Component {
   render() {
     const { classes } = this.props
 
-    if (!this.state.web3) {
+    if (!this.state.isInitialized) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
 
@@ -93,7 +113,12 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    addContract: (instance, name) => dispatch({ type: 'ADD_CONTRACT', instance, name })
+  }
+}
 
-App = connect(mapStateToProps)(App)
+App = connect(mapStateToProps, mapDispatchToProps)(App)
 App = injectSheet(styles)(App)
 export default App;

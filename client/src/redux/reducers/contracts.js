@@ -1,11 +1,11 @@
 export default (state, action) => {
   switch (action.type) {
     case 'ADD_CONTRACT': {
-      const { name, contract } = action
+      const { name, instance } = action
 
       return {
         ...state,
-        [name]: contract,
+        [name]: instance,
       }
     }
 
