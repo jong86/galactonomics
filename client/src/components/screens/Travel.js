@@ -57,8 +57,7 @@ class Travel extends Component {
       return console.error(e)
     }
 
-    this.props.goToTravelScreen()
-    // After success of spaceship buying, go to the travel screen
+    this.props.goToPlanetIntroScreen()
   }
 
   render() {
@@ -103,7 +102,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+    goToPlanetIntroScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetIntro' }),
   }
 }
 
