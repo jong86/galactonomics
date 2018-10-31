@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import { connect } from 'react-redux';
 import injectSheet from 'react-jss'
 
-import gtaJSON from "./contracts/GalacticTransitAuthority.json";
-import geaJSON from "./contracts/GalacticEconomicAuthority.json";
-import giaJSON from "./contracts/GalacticIndustrialAuthority.json";
-import getWeb3 from "./utils/getWeb3";
+import gtaJSON from "contracts/GalacticTransitAuthority.json";
+import geaJSON from "contracts/GalacticEconomicAuthority.json";
+import giaJSON from "contracts/GalacticIndustrialAuthority.json";
+import getWeb3 from "utils/getWeb3";
 import truffleContract from "truffle-contract";
 
-import screenMapping from './utils/screenMapping'
+import screenMapping from 'utils/screenMapping'
 
 const styles = {
   '@global': {

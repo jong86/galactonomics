@@ -12,6 +12,36 @@ const styles = {
 class Welcome extends Component {
   state = {};
 
+  componentDidMount = () => {
+    // Get player info and save to store
+    this.getPlayerInfo()
+  }
+
+  getPlayerInfo = async () => {
+    const { gta } = this.props.contracts
+    const { address } = this.props.player
+
+    let response
+
+    try {
+      response = await gta.getInfo({ from: address })
+    } catch (e) {
+      return console.error(e)
+    }
+
+    console.log('response', response);
+  }
+
+  goToNextScreen = () => {
+
+
+    // if ()
+    //   // If player doesn't own spaceship:
+    //   goToSpaceshipDealerScreen()
+    //   // If player owns spaceship:
+    //   goToTravelScreen()
+  }
+
   render() {
     const { classes, goToSpaceshipDealer } = this.props
 
@@ -19,12 +49,7 @@ class Welcome extends Component {
       <div className={classes.container}>
         <h1>Galactonomics</h1>
         <Button
-          onClick={() => {
-            // If player doesn't own spaceship:
-            goToSpaceshipDealer()
-            // If player owns spaceship:
-            // goToTravel()
-          }}
+          onClick={this.goToNextScreen}
           type="good"
         >Continue</Button>
       </div>
@@ -32,16 +57,18 @@ class Welcome extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
-
+    contracts: state.contracts,
+    player: state.player,
+    web3: state.web3,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    goToSpaceshipDealer: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'SpaceshipDealer' }),
-    goToTravel: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+    goToSpaceshipDealerScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'SpaceshipDealer' }),
+    goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
   }
 }
 

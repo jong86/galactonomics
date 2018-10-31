@@ -1,5 +1,5 @@
 export default {
   view: {
-    currentScreen: 'Travel',
+    currentScreen: 'Welcome',
   },
 }

@@ -28,7 +28,7 @@ class SpaceshipDealer extends Component {
       return console.error(e)
     }
 
-    this.props.goToTravel()
+    this.props.goToTravelScreen()
     // After success of spaceship buying, go to the travel screen
   }
 
@@ -58,10 +58,9 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-
 const mapDispatchToProps = dispatch => {
   return {
-    goToTravel: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+    goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
   }
 }
 

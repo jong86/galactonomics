@@ -74,7 +74,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   // View functions
 
   function getInfo() external view returns (
-    string name,
+    string spaceshipName,
     uint8 currentPlanet,
     uint maxCargo,
     uint currentFuel,

@@ -1,6 +1,6 @@
 import React from "react";
 import injectSheet from 'react-jss'
-import colorFromType from '../../utils/colorFromType'
+import colorFromType from 'utils/colorFromType'
 
 const styles = {
   Button: {

@@ -1,7 +1,7 @@
 import React from "react";
-import Welcome from "../components/screens/Welcome"
-import SpaceshipDealer from "../components/screens/SpaceshipDealer"
-import Travel from  "../components/screens/Travel"
+import Welcome from "components/screens/Welcome"
+import SpaceshipDealer from "components/screens/SpaceshipDealer"
+import Travel from  "components/screens/Travel"
 
 export default screen => {
   switch(screen) {

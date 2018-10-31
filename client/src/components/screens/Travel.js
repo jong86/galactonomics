@@ -16,7 +16,7 @@ const planets = [
   // Positions are 0-100% of window dimension
   { name: "Mondopia", img: imgPlanet0, x: 70, y: 70 },
   { name: "Zyrgon",   img: imgPlanet1, x: 32, y: 42 },
-  { name: "Ribos",    img: imgPlanet2, x: 8, y: 3 },
+  { name: "Ribos",    img: imgPlanet2, x: 8,  y: 3 },
   { name: "Mustafar", img: imgPlanet3, x: 53, y: 16 },
   { name: "Arrakis",  img: imgPlanet4, x: 82, y: 29 },
   { name: "Kronos",   img: imgPlanet5, x: 94, y: 57 },
@@ -44,6 +44,23 @@ const styles = {
 class Travel extends Component {
   state = {};
 
+  travelToPlanet = async planetId => {
+    console.log("Hyperdrive activating...")
+    console.log("Current speed: 5.39 x 10^11 kph") // Estimate of what speed to get to Mars in 15 seconds
+
+    const { gta } = this.props.contracts
+    const { address } = this.props.player
+
+    try {
+      await gta.travelToPlanet(planetId, { from: address })
+    } catch (e) {
+      return console.error(e)
+    }
+
+    this.props.goToTravelScreen()
+    // After success of spaceship buying, go to the travel screen
+  }
+
   render() {
     const { classes } = this.props
 
@@ -59,6 +76,7 @@ class Travel extends Component {
                 left: ((window.innerWidth / 100) * planet.x) - (PWIDTH / 2),
                 bottom: ((window.innerHeight / 100) * planet.y),
               }}
+              onClick={() => this.travelToPlanet(i)}
             >
               <img
                 src={planet.img}
@@ -77,10 +95,18 @@ class Travel extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-
+    contracts: state.contracts,
+    player: state.player,
+    web3: state.web3,
   }
 }
 
-Travel = connect(mapStateToProps)(Travel)
+const mapDispatchToProps = dispatch => {
+  return {
+    goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+  }
+}
+
+Travel = connect(mapStateToProps, mapDispatchToProps)(Travel)
 Travel = injectSheet(styles)(Travel)
 export default Travel;
