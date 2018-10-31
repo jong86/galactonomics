@@ -9,7 +9,6 @@ import getWeb3 from "./utils/getWeb3";
 import truffleContract from "truffle-contract";
 
 import screenMapping from './utils/screenMapping'
-import { stat } from "fs";
 
 const styles = {
   '@global': {
@@ -23,10 +22,8 @@ const styles = {
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-    }
-  },
-  container: {
-    textAlign: "center",
+      userSelect: 'none',
+    },
   },
 }
 
@@ -103,7 +100,7 @@ class App extends Component {
     }
 
     return (
-      <div className={classes.container}>
+      <div>
         { screenMapping(this.props.currentScreen) }
       </div>
     );
