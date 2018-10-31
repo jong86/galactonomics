@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Button from 'components/reusables/Button'
+import planets from 'utils/planets'
 
 const styles = {
   container: {
@@ -13,15 +14,19 @@ class PlanetIntro extends Component {
   state = {};
 
   render() {
-    const { classes } = this.props
+    const { classes, user } = this.props
+    const planet = planets[user.currentPlanet]
 
     return (
       <div className={classes.container}>
-        <h1>Welcome to planet ________</h1>
+        <h1>Welcome to planet {planet.name}</h1>
         <Button
           onClick={this.props.goToPlanetHomeScreen}
           type="good"
         >Continue >></Button>
+        <img
+          src={planet.img}
+        />
       </div>
     );
   }
@@ -29,7 +34,7 @@ class PlanetIntro extends Component {
 
 const mapStateToProps = state => {
   return {
-
+    user: state.user,
   }
 }
 

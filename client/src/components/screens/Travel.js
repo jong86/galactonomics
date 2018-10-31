@@ -35,6 +35,8 @@ class Travel extends Component {
       return console.error(e.toString())
     }
 
+    // Wait until TravelComplete event is heard, then set currentPlanet again in state
+    // so that the correct planet is shown in PlanetIntro
     this.props.goToPlanetIntroScreen()
   }
 
