@@ -29,16 +29,16 @@ class Travel extends Component {
   travelToPlanet = async planetId => {
     const { contracts, user } = this.props
 
-    console.log('planetId, user, contracts', planetId, user, contracts);
+    this.props.goToTravellingScreen()
 
     try {
       await contracts.gta.travelToPlanet(planetId, { from: user.address, gas: 200000 })
     } catch (e) {
+      this.props.goToTravelScreen()
       return console.error(e)
     }
 
     this.props.setTravellingTo(planets[planetId].name)
-    this.props.goToTravellingScreen()
   }
 
   render() {
@@ -87,6 +87,7 @@ const mapDispatchToProps = dispatch => {
   return {
     goToPlanetIntroScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetIntro' }),
     goToTravellingScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travelling' }),
+    goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
     setTravellingTo: travellingTo => dispatch({ type: 'SET_TRAVELLING_TO', travellingTo }),
   }
 }

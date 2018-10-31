@@ -19,7 +19,6 @@ class App extends Component {
   componentDidMount = async () => {
     try {
       await this.initWeb3AndContracts()
-      this.listenToContracts()
 
       let ownsSpaceship
       ownsSpaceship = await this.checkIfOwnsSpaceship()
@@ -79,22 +78,6 @@ class App extends Component {
     }
   })
 
-  listenToContracts = () => {
-    const { contracts, user } = this.props
-
-    contracts.gta.TravelComplete({}, (error, response) => {
-      if (error) return console.error(error)
-      const { player, currentFuel, planetId } = response.args
-      if (player === user.address) {
-        this.props.setUserInfo({
-          currentFuel: currentFuel.toString(),
-          currentPlanet: planetId.toString(),
-        })
-        this.props.goToPlanetIntroScreen()
-      }
-    })
-  }
-
   checkIfOwnsSpaceship = () => new Promise(async (resolve, reject) => {
     const { contracts, user } = this.props
 
@@ -135,6 +118,10 @@ class App extends Component {
     resolve()
   })
 
+  componentDidCatch = (error, errorInfo) => {
+    console.error(error, errorInfo)
+  }
+
   render() {
     if (!this.state.isInitialized) {
       return <div>Activating L-337 Nanobulators...</div>
@@ -162,7 +149,6 @@ const mapDispatchToProps = dispatch => {
     addContract: (instance, name) => dispatch({ type: 'ADD_CONTRACT', instance, name }),
     setAddress: (address) => dispatch({ type: 'SET_ADDRESS', address }),
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
-    goToPlanetIntroScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetIntro' }),
   }
 }
 
