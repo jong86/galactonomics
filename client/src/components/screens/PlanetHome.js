@@ -5,7 +5,17 @@ import Button from 'components/reusables/Button'
 
 const styles = {
   container: {
+    display: 'grid',
+    height: '100%',
+    width: 'fill-available',
+    gridTemplateColumns: '1.5fr 2.5fr 1fr',
+    gridTemplateRows: '1fr',
+    gridGap: '1px 1px',
+    gridTemplateAreas: ". . .",
 
+    '& > div': {
+      border: '1px solid red',
+    }
   }
 }
 
@@ -17,7 +27,15 @@ class PlanetHome extends Component {
 
     return (
       <div className={classes.container}>
-        Planet home screen
+        <div>
+          1
+        </div>
+        <div>
+          2
+        </div>
+        <div>
+          3
+        </div>
       </div>
     );
   }

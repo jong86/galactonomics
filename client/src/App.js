@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from 'react-redux';
 import injectSheet from 'react-jss'
 
@@ -105,9 +105,9 @@ class App extends Component {
     }
 
     return (
-      <div>
+      <Fragment>
         { screenMapping(this.props.currentScreen) }
-      </div>
+      </Fragment>
     );
   }
 }

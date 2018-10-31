@@ -7,7 +7,7 @@ const styles = {
     textAlign: "center",
     border: ({ type }) => '1px solid ' + colorFromType(type),
     color: ({ type }) => colorFromType(type),
-    width: 'min-content',
+    width: 'fit-content',
     borderRadius: 4,
     padding: '4px',
     cursor: 'pointer',
