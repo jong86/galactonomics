@@ -20,7 +20,7 @@ class SpaceshipDealer extends Component {
 
     const { web3 } = this.props
     const { gta } = this.props.contracts
-    const { address } = this.props.player
+    const { address } = this.props.user
 
     try {
       await gta.buySpaceship("My Spaceship", { from: address, value: web3.utils.toWei("0.01", "ether") })
@@ -53,7 +53,7 @@ class SpaceshipDealer extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     contracts: state.contracts,
-    player: state.player,
+    user: state.user,
     web3: state.web3,
   }
 }

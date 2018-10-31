@@ -16,7 +16,10 @@ class Welcome extends Component {
 
   checkIfOwnsSpaceship = async () => {
     const { gta } = this.props.contracts
-    const { address } = this.props.player
+    const { address } = this.props.user
+
+    // Need a loading indicator here so players who own spaceships don't
+    // navigate to the buy spaceship screen before response is received
 
     let spaceshipsOwned
 
@@ -26,26 +29,36 @@ class Welcome extends Component {
       return console.error(e)
     }
 
-    if (spaceshipsOwned.toString() === '0') {
-      this.props.setPlayerInfo({ ownsSpaceship: false })
-      console.log("you dont own a spaceship")
-    } else {
-      this.props.setPlayerInfo({ ownsSpaceship: true })
-      console.log("you own a spaceship")
+    if (spaceshipsOwned.toString() === '0')
+      return this.props.setUserInfo({ ownsSpaceship: false })
+
+    this.props.setUserInfo({ ownsSpaceship: true })
+    this.getPlayerInfo()
+  }
+
+  getPlayerInfo = async () => {
+    const { gta } = this.props.contracts
+    const { address } = this.props.user
+
+    let playerInfo
+
+    try {
+      playerInfo = await gta.getInfo({ from: address })
+    } catch (e) {
+      return console.error(e)
     }
 
-    // this.props.setPlayerInfo({
-    //   currentFuel: response.currentFuel.toString(),
-    //   currentPlanet: response.currentPlanet.toString(),
-    //   maxCargo: response.maxCargo.toString(),
-    //   maxFuel: response.maxFuel.toString(),
-    //   spaceshipName: response.spaceshipName.toString(),
-    // })
+    this.props.setUserInfo({
+      currentFuel: playerInfo.currentFuel.toString(),
+      currentPlanet: playerInfo.currentPlanet.toString(),
+      maxCargo: playerInfo.maxCargo.toString(),
+      maxFuel: playerInfo.maxFuel.toString(),
+      spaceshipName: playerInfo.spaceshipName.toString(),
+    })
   }
 
   goToNextScreen = () => {
-    const { player } = this.props
-    if (player.ownsSpaceship)
+    if (this.props.user.ownsSpaceship)
       this.props.goToTravelScreen()
     else
       this.props.goToSpaceshipDealerScreen()
@@ -69,7 +82,7 @@ class Welcome extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     contracts: state.contracts,
-    player: state.player,
+    user: state.user,
     web3: state.web3,
   }
 }
@@ -78,7 +91,7 @@ const mapDispatchToProps = dispatch => {
   return {
     goToSpaceshipDealerScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'SpaceshipDealer' }),
     goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
-    setPlayerInfo: info => dispatch({ type: 'SET_PLAYER_INFO', info }),
+    setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
   }
 }
 

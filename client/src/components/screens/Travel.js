@@ -49,7 +49,7 @@ class Travel extends Component {
     console.log("Current speed: 5.39 x 10^11 kph") // Estimate of what speed to get to Mars in 15 seconds
 
     const { gta } = this.props.contracts
-    const { address } = this.props.player
+    const { address } = this.props.user
 
     try {
       await gta.travelToPlanet(planetId, { from: address })
@@ -96,7 +96,7 @@ class Travel extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     contracts: state.contracts,
-    player: state.player,
+    user: state.user,
     web3: state.web3,
   }
 }

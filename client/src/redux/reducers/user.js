@@ -1,6 +1,6 @@
 export default (state, action) => {
   switch (action.type) {
-    case 'SET_PLAYER_INFO': {
+    case 'SET_USER_INFO': {
       const { info } = action
 
       return {
