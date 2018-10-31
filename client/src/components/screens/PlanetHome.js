@@ -27,11 +27,10 @@ class PlanetHome extends Component {
     const { classes, user } = this.props
     const planet = planets[user.currentPlanet]
 
-
     return (
       <div className={classes.container}>
         <div>
-          <img src={planet.img} />
+          {/* <img src={planet.img} /> */}
         </div>
         <div>
           2

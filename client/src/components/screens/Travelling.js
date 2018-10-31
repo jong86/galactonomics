@@ -11,12 +11,17 @@ const styles = {
 class Travelling extends Component {
   state = {};
 
+  componentDidMount = () => {
+    // Wait until TravelComplete event is heard, then set currentPlanet again in state
+    // so that the correct planet is shown in PlanetIntro
+  }
+
   render() {
-    const { classes } = this.props
+    const { classes, travellingTo } = this.props
 
     return (
       <div className={classes.container}>
-        <h1>Travelling to planet ________...</h1>
+        <h1>Travelling to planet {travellingTo}...</h1>
       </div>
     );
   }
@@ -24,7 +29,7 @@ class Travelling extends Component {
 
 const mapStateToProps = state => {
   return {
-
+    travellingTo: state.user.travellingTo,
   }
 }
 

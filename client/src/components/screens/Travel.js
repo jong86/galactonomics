@@ -29,15 +29,16 @@ class Travel extends Component {
   travelToPlanet = async planetId => {
     const { contracts, user } = this.props
 
+    console.log('planetId, user, contracts', planetId, user, contracts);
+
     try {
-      await contracts.gta.travelToPlanet(planetId, { from: user.address })
+      await contracts.gta.travelToPlanet(planetId, { from: user.address, gas: 200000 })
     } catch (e) {
-      return console.error(e.toString())
+      return console.error(e)
     }
 
-    // Wait until TravelComplete event is heard, then set currentPlanet again in state
-    // so that the correct planet is shown in PlanetIntro
-    this.props.goToPlanetIntroScreen()
+    this.props.setTravellingTo(planets[planetId].name)
+    this.props.goToTravellingScreen()
   }
 
   render() {
@@ -45,7 +46,7 @@ class Travel extends Component {
 
     return (
       <div className={classes.container}>
-        <h1>Travel</h1>
+        <h1>Choose a planet to travel to</h1>
         <div className={classes.planets}>
           {planets.map((planet, i) =>
             <div
@@ -60,6 +61,7 @@ class Travel extends Component {
               <img
                 src={planet.img}
                 width={PWIDTH}
+                alt=""
               />
               <div>
                 { planet.name }
@@ -84,6 +86,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     goToPlanetIntroScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetIntro' }),
+    goToTravellingScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travelling' }),
+    setTravellingTo: travellingTo => dispatch({ type: 'SET_TRAVELLING_TO', travellingTo }),
   }
 }
 

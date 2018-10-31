@@ -18,6 +18,15 @@ export default (state, action) => {
       }
     }
 
+    case 'SET_TRAVELLING_TO': {
+      const { travellingTo } = action
+
+      return {
+        ...state,
+        travellingTo,
+      }
+    }
+
     default: return { ...state }
   }
 }
