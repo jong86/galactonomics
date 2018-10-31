@@ -35,23 +35,16 @@ class App extends Component {
   componentDidMount = async () => {
     try {
       await this.initializeBlockchainStuff()
-    } catch (e) {
-      return console.error(e)
-    }
 
-    let ownsSpaceship
-    try {
+      let ownsSpaceship
       ownsSpaceship = await this.checkIfOwnsSpaceship()
-    } catch (e) {
-      return console.error(e)
-    }
 
-    if (ownsSpaceship) {
-      try {
+      if (ownsSpaceship) {
         await this.getPlayerInfo()
-      } catch (e) {
-        return console.error(e)
       }
+
+    } catch (e) {
+      console.error(e)
     }
 
     this.setState({ isInitialized: true })
