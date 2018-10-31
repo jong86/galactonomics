@@ -49,14 +49,15 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     uint _tokenId = numSpaceships;
 
     _mint(msg.sender, _tokenId);
-    addressToSpaceship[msg.sender] = Spaceship(_name, 0, 60000, 100, 100);
+    // currentPlanet 255 means 'not on a planet'
+    addressToSpaceship[msg.sender] = Spaceship(_name, 255, 60000, 100, 100);
     addressOwnsSpaceship[msg.sender] = true;
 
     emit SpaceshipBought(msg.sender, _tokenId);
   }
 
   function travelToPlanet(uint8 _planetId) external onlyPlayer {
-    require(0 < _planetId && _planetId < 7, "planetId must be between 0 and 6, inclusive");
+    require(0 <= _planetId && _planetId <= 6, "planetId must be between 0 and 6, inclusive");
     require(addressToSpaceship[msg.sender].currentFuel >= fuelUsage, "You do not have enough fuel to travel");
 
     addressToSpaceship[msg.sender].currentPlanet = _planetId;

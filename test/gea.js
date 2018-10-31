@@ -26,6 +26,8 @@ contract("GalacticEconomicAuthority", accounts => {
     const costOfSpaceship = await gta.costOfSpaceship()
     await gta.buySpaceship("A", { from: player1, value: costOfSpaceship })
     await gta.buySpaceship("B", { from: player2, value: costOfSpaceship })
+    await gta.travelToPlanet(0, { from: player1 })
+    await gta.travelToPlanet(0, { from: player2 })
   })
 
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {
