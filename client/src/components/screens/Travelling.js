@@ -8,7 +8,7 @@ const styles = {
   }
 }
 
-class Welcome extends Component {
+class Travelling extends Component {
   state = {};
 
   render() {
@@ -34,6 +34,6 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-Welcome = connect(mapStateToProps, mapDispatchToProps)(Welcome)
-Welcome = injectSheet(styles)(Welcome)
-export default Welcome;
+Travelling = connect(mapStateToProps, mapDispatchToProps)(Travelling)
+Travelling = injectSheet(styles)(Travelling)
+export default Travelling;
