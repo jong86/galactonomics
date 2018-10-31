@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from "react";
-import { connect } from 'react-redux';
+import React, { Component, Fragment } from "react"
+import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 
-import gtaJSON from "contracts/GalacticTransitAuthority.json";
-import geaJSON from "contracts/GalacticEconomicAuthority.json";
-import giaJSON from "contracts/GalacticIndustrialAuthority.json";
-import getWeb3 from "utils/getWeb3";
-import truffleContract from "truffle-contract";
+import gtaJSON from "contracts/GalacticTransitAuthority.json"
+import geaJSON from "contracts/GalacticEconomicAuthority.json"
+import giaJSON from "contracts/GalacticIndustrialAuthority.json"
+import getWeb3 from "utils/getWeb3"
+import truffleContract from "truffle-contract"
 
 import screenMapping from 'utils/screenMapping'
 
@@ -30,7 +30,7 @@ const styles = {
 class App extends Component {
   state = {
     isInitialized: null,
-  };
+  }
 
   componentDidMount = async () => {
     try {
@@ -53,11 +53,11 @@ class App extends Component {
   initializeBlockchainStuff = () => new Promise(async (resolve, reject) => {
     try {
       // Save web3 in redux store
-      const web3 = await getWeb3();
+      const web3 = await getWeb3()
       this.props.setWeb3(web3)
 
       // Save account in redux store
-      const accounts = await web3.eth.getAccounts();
+      const accounts = await web3.eth.getAccounts()
       this.props.setAddress(accounts[0])
 
       // Get all contract instances
@@ -69,10 +69,10 @@ class App extends Component {
 
       contracts = await Promise.all(
         contracts.map(contract => new Promise(async (resolve, reject) => {
-          const Contract = truffleContract(contract.json);
-          Contract.setProvider(web3.currentProvider);
+          const Contract = truffleContract(contract.json)
+          Contract.setProvider(web3.currentProvider)
           try {
-            const instance = await Contract.deployed();
+            const instance = await Contract.deployed()
             resolve({
               instance: instance,
               name: contract.name,
@@ -143,7 +143,7 @@ class App extends Component {
       <Fragment>
         { screenMapping(this.props.currentScreen) }
       </Fragment>
-    );
+    )
   }
 }
 
@@ -166,4 +166,4 @@ const mapDispatchToProps = dispatch => {
 
 App = connect(mapStateToProps, mapDispatchToProps)(App)
 App = injectSheet(styles)(App)
-export default App;
+export default App
