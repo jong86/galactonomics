@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Button from '../reusables/Button'
+import Button from 'components/reusables/Button'
 
 const styles = {
   container: {
