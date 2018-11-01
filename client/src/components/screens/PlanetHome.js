@@ -14,10 +14,6 @@ const styles = {
     gridGap: '1px 1px',
     gridTemplateAreas: ". . .",
     alignItems: 'start',
-
-    '& > div': {
-      border: '1px solid red',
-    }
   },
   planetImg: {
     width: '100%',
@@ -38,6 +34,7 @@ class PlanetHome extends Component {
           <Button
             onClick={this.props.goToTravelScreen}
             type="good"
+            shape="wide"
           >Leave {planet.name}</Button>
         </div>
         <div>

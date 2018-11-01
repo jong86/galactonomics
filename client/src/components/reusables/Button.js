@@ -7,7 +7,12 @@ const styles = {
     textAlign: "center",
     border: ({ type }) => '1px solid ' + colorFromType(type),
     color: ({ type }) => colorFromType(type),
-    width: 'fit-content',
+    width: ({ shape }) => {
+      switch (shape) {
+        case 'wide': return '100%'
+        case 'small': return 'fit-content'
+      }
+    },
     borderRadius: 4,
     padding: '4px',
     cursor: 'pointer',
