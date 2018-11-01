@@ -9,6 +9,15 @@ export default (state, action) => {
       }
     }
 
+    case 'SET_DIALOG_CONTENT': {
+      const { content } = action
+
+      return {
+        ...state,
+        dialogContent: content,
+      }
+    }
+
     default: return { ...state }
   }
 }

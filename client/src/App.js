@@ -10,6 +10,7 @@ import getWeb3 from "utils/getWeb3"
 import truffleContract from "truffle-contract"
 
 import screenMapping from 'utils/screenMapping'
+import Dialog from 'components/reusables/Dialog'
 
 class App extends Component {
   state = {
@@ -130,6 +131,7 @@ class App extends Component {
     return (
       <Fragment>
         { screenMapping(this.props.currentScreen) }
+        <Dialog>{ this.props.dialogContent }</Dialog>
       </Fragment>
     )
   }
@@ -140,6 +142,7 @@ const mapStateToProps = (state, ownProps) => {
     currentScreen: state.view.currentScreen,
     contracts: state.contracts,
     user: state.user,
+    dialogContent: state.view.dialogContent,
   }
 }
 

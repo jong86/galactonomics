@@ -26,19 +26,11 @@ const styles = {
 class Travel extends Component {
   state = {};
 
-  travelToPlanet = async planetId => {
-    const { contracts, user } = this.props
-
+  startTravelling = async planetId => {
+    // Collect id of chosen planet
+    this.props.setTravellingTo(planetId)
+    // Go to travelling / 'loading' screen
     this.props.goToTravellingScreen()
-
-    try {
-      await contracts.gta.travelToPlanet(planetId, { from: user.address, gas: 200000 })
-    } catch (e) {
-      this.props.goToTravelScreen()
-      return console.error(e)
-    }
-
-    this.props.setTravellingTo(planets[planetId].name)
   }
 
   render() {
@@ -56,7 +48,7 @@ class Travel extends Component {
                 left: ((window.innerWidth / 100) * planet.x) - (PWIDTH / 2),
                 bottom: ((window.innerHeight / 100) * planet.y),
               }}
-              onClick={() => this.travelToPlanet(i)}
+              onClick={() => this.startTravelling(i)}
             >
               <img
                 src={planet.img}
