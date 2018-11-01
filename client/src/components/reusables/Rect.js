@@ -15,7 +15,8 @@ const styles = {
       }
     },
     borderRadius: 4,
-    padding: '4px',
+    padding: '8px',
+    margin: '2px',
     cursor: ({ isButton }) => isButton ? 'pointer' : 'default',
     userSelect: 'none',
   }
