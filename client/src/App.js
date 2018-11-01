@@ -12,6 +12,9 @@ import truffleContract from "truffle-contract"
 import screenMapping from 'utils/screenMapping'
 import Dialog from 'components/reusables/Dialog'
 
+import getPlayerInfo from 'utils/getPlayerInfo'
+
+
 class App extends Component {
   state = {
     isInitialized: null,
@@ -25,7 +28,7 @@ class App extends Component {
       ownsSpaceship = await this.checkIfOwnsSpaceship()
 
       if (ownsSpaceship) {
-        await this.getPlayerInfo()
+        await getPlayerInfo()
       }
 
     } catch (e) {
@@ -96,27 +99,6 @@ class App extends Component {
 
     this.props.setUserInfo({ ownsSpaceship: true })
     resolve(true)
-  })
-
-  getPlayerInfo = () => new Promise(async (resolve, reject) => {
-    const { contracts, user } = this.props
-
-    let playerInfo
-    try {
-      playerInfo = await contracts.gta.getInfo({ from: user.address })
-    } catch (e) {
-      return reject(e)
-    }
-
-    this.props.setUserInfo({
-      currentFuel: playerInfo.currentFuel.toString(),
-      currentPlanet: playerInfo.currentPlanet.toString(),
-      maxCargo: playerInfo.maxCargo.toString(),
-      maxFuel: playerInfo.maxFuel.toString(),
-      spaceshipName: playerInfo.spaceshipName.toString(),
-    })
-
-    resolve()
   })
 
   componentDidCatch = (error, errorInfo) => {

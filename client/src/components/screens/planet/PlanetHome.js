@@ -9,6 +9,7 @@ import {
   FaChartBar,
   FaIndustry,
 } from 'react-icons/fa';
+import getPlayerInfo from 'utils/getPlayerInfo'
 
 const styles = {
   container: {
@@ -39,9 +40,9 @@ class PlanetHome extends Component {
   state = {};
 
   componentDidMount = async () => {
-    const { web3, user } = this.props
-    console.log('web3', web3);
+    await getPlayerInfo()
 
+    const { web3, user } = this.props
     const balance = await web3.eth.getBalance(user.address)
     this.props.setUserInfo({ balance: web3.utils.fromWei(balance) })
   }

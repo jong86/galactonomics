@@ -3,6 +3,9 @@ import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
 import colorFromType from 'utils/colorFromType'
 import Rect from 'components/reusables/Rect'
+import { FaGasPump } from 'react-icons/fa';
+import getRevertMsg from 'utils/getRevertMsg'
+import getPlayerInfo from 'utils/getPlayerInfo'
 
 const styles = {
 }
@@ -34,12 +37,20 @@ class FuelMeter extends Component {
   }
 
   refuel = async () => {
-    this.setState({ isRefueling: true })
-
     const { contracts, user } = this.props
 
     try {
       contracts.gta.refuel({ from: user.address, value: this.state.refuelCost })
+      .on('transactionHash', () => {
+        this.setState({ isRefueling: true })
+      })
+      .on('receipt', receipt => {
+        getPlayerInfo()
+      })
+      .on('error', e => {
+        this.props.setDialogContent(getRevertMsg(e.message))
+      })
+
     } catch (e) {
       return console.error(e)
     }
@@ -57,19 +68,22 @@ class FuelMeter extends Component {
       refuelCost = '(loading...)'
     }
 
+    const isFull = currentFuel === maxFuel
+
     return (
       <Fragment>
         <Rect
           shape="wide"
         >Fuel</Rect>
+        <FaGasPump />
         <div>{currentFuel}/{maxFuel}</div>
-        <div>Cost to refuel: Ξ{refuelCost}</div>
+        {!isFull && <div>Cost to refuel: Ξ{refuelCost}</div>}
         <Rect
-          type="good"
-          isButton
+          type={isFull ? '' : 'good' }
+          isButton={!isFull}
           shape="wide"
-          onClick={this.refuel}
-        >Fill-up tank</Rect>
+          onClick={!isFull && this.refuel}
+        >{isFull ? 'Tank is full' : 'Fill-up tank'}</Rect>
       </Fragment>
     )
   }

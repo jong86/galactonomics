@@ -26,6 +26,7 @@ class Welcome extends Component {
       <div className={classes.container}>
         <h1>Galactonomics</h1>
         <Rect
+          isButton
           onClick={this.goToNextScreen}
           type="good"
         >Continue</Rect>
