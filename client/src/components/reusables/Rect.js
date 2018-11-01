@@ -9,7 +9,7 @@ const styles = {
     color: ({ type }) => colorFromType(type),
     width: ({ shape }) => {
       switch (shape) {
-        case 'wide': return '100% content-box'
+        case 'wide': return 'fill-available'
         case 'small': return 'fit-content'
       }
     },
