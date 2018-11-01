@@ -82,7 +82,7 @@ class FuelMeter extends Component {
           type={isFull ? '' : 'good' }
           isButton={!isFull}
           shape="wide"
-          onClick={!isFull && this.refuel}
+          onClick={() => { if (!isFull) this.refuel()}}
         >{isFull ? 'Tank is full' : 'Fill-up tank'}</Rect>
       </Fragment>
     )
