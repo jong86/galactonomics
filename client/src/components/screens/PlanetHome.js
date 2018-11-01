@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Button from 'components/reusables/Button'
+import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 
 const styles = {
@@ -23,10 +23,15 @@ const styles = {
 class PlanetHome extends Component {
   state = {};
 
-  render() {
-    const { web3 } = this.props
+  componentDidMount = async () => {
+    const { web3, user } = this.props
     console.log('web3', web3);
 
+    const balance = await web3.eth.getBalance(user.address)
+    this.props.setUserInfo({ balance: web3.utils.fromWei(balance) })
+  }
+
+  render() {
     const { classes, user } = this.props
     const planet = planets[user.currentPlanet]
 
@@ -36,19 +41,41 @@ class PlanetHome extends Component {
           <img src={planet.img} className={classes.planetImg} />
           <Rect
             onClick={this.props.goToTravelScreen}
+            isButton
             type="good"
             shape="wide"
-          >Leave {planet.name}</Button>
-          <Button
+          >Leave {planet.name}</Rect>
+          <Rect
             type="status"
             shape="wide"
-          >Ether: </Button>
+          >Ξ{user.balance}</Rect>
         </div>
         <div>
-          2
+          <Rect
+            onClick={this.props.goToPlanetMarketplacesScreen}
+            isButton
+            type="info"
+            shape="wide"
+          >Marketplace</Rect>
+          <Rect
+            onClick={this.props.goToPlanetPricesScreen}
+            isButton
+            type="info"
+            shape="wide"
+          >Commodity Prices</Rect>
+          <Rect
+            onClick={this.props.goToPlanetMarketplacesScreen}
+            isButton
+            type="info"
+            shape="wide"
+          >Industrial Operations</Rect>
         </div>
         <div>
-          3
+          <Rect
+            onClick={this.props.goToPlanetIndustrialScreen}
+            isButton
+            shape="wide"
+          >Fuel</Rect>
         </div>
       </div>
     );
@@ -64,6 +91,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
+
     goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
     goToPlanetMarketplacesScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetMarketplaces' }),
     goToPlanetPricesScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetPrices' }),

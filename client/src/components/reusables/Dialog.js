@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import colorFromType from 'utils/colorFromType'
-import Button from 'components/reusables/Button'
+import Rect from 'components/reusables/Rect'
 
 const styles = {
   Dialog: {
@@ -22,10 +22,10 @@ const styles = {
 let Dialog = ({ classes, children, onConfirm, clearDialogContent }) => (
   <div className={classes.Dialog}>
     { children }
-    <Button onClick={() => {
+    <Rect onClick={() => {
       if (onConfirm) return onConfirm()
       clearDialogContent()
-    }}>Ok</Button>
+    }}>Ok</Rect>
   </div>
 )
 

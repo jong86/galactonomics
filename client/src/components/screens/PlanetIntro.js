@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Button from 'components/reusables/Button'
+import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 
 const styles = {
@@ -20,10 +20,10 @@ class PlanetIntro extends Component {
     return (
       <div className={classes.container}>
         <h1>Welcome to planet {planet.name}</h1>
-        <Button
+        <Rect
           onClick={this.props.goToPlanetHomeScreen}
           type="good"
-        >Continue >></Button>
+        >Continue >></Rect>
         <img
           src={planet.img}
         />

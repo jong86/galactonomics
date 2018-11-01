@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Button from 'components/reusables/Button'
+import Rect from 'components/reusables/Rect'
 import spaceship from 'assets/spaceship.jpg'
 
 const styles = {
@@ -42,10 +42,10 @@ class SpaceshipDealer extends Component {
         <h1>Would you like to purchase a spaceship?</h1>
         <h3>WARNING: Spaceship ownership is required by law to handle commodities in this galactic region</h3>
         <img src={spaceship} />
-        <Button
+        <Rect
           onClick={this.buySpaceship}
           type="good"
-        >{this.state.isLoading ? 'Loading...' : 'Okay'}</Button>
+        >{this.state.isLoading ? 'Loading...' : 'Okay'}</Rect>
       </div>
     );
   }

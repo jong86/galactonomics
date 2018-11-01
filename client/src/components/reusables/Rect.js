@@ -3,28 +3,28 @@ import injectSheet from 'react-jss'
 import colorFromType from 'utils/colorFromType'
 
 const styles = {
-  Button: {
+  Rect: {
     textAlign: "center",
     border: ({ type }) => '1px solid ' + colorFromType(type),
     color: ({ type }) => colorFromType(type),
     width: ({ shape }) => {
       switch (shape) {
-        case 'wide': return '100%'
+        case 'wide': return '100% content-box'
         case 'small': return 'fit-content'
       }
     },
     borderRadius: 4,
     padding: '4px',
-    cursor: 'pointer',
+    cursor: ({ isButton }) => isButton ? 'pointer' : 'default',
     userSelect: 'none',
   }
 }
 
-let Button = ({ classes, children, onClick }) => (
-  <div className={classes.Button} onClick={onClick}>
+let Rect = ({ classes, children, onClick }) => (
+  <div className={classes.Rect} onClick={onClick}>
     { children }
   </div>
 )
 
-Button = injectSheet(styles)(Button)
-export default Button;
+Rect = injectSheet(styles)(Rect)
+export default Rect;

@@ -27,6 +27,12 @@ class Travel extends Component {
   state = {};
 
   startTravelling = async planetId => {
+    // Go right to planet home if user is already on chosen planet
+    const { user } = this.props
+    if (planetId == user.currentPlanet) {
+      return this.props.goToPlanetHomeScreen()
+    }
+
     // Collect id of chosen planet
     this.props.setTravellingTo(planetId)
     // Go to travelling / 'loading' screen
@@ -80,6 +86,7 @@ const mapDispatchToProps = dispatch => {
     goToPlanetIntroScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetIntro' }),
     goToTravellingScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travelling' }),
     goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+    goToPlanetHomeScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetHome' }),
     setTravellingTo: travellingTo => dispatch({ type: 'SET_TRAVELLING_TO', travellingTo }),
   }
 }
