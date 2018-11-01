@@ -5,14 +5,22 @@ import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 
 const styles = {
-  container: {
-    display: 'grid',
+  outer: {
     height: '100%',
-    gridTemplateColumns: '1.5fr 0.5fr',
-    gridTemplateRows: '0.5fr 2fr 0.5fr',
-    gridGap: '1px 1px',
-    gridTemplateAreas: '". ." ". ." ". ."',
-    alignItems: 'start',
+    width: 'fill-available',
+    border: '1px solid red',
+    '& > div': {
+      width: 'fill-available',
+    }
+  },
+  topRow: {
+    flexDirection: 'row',
+  },
+  topLeftCol: {
+    flex: 1,
+  },
+  topRightCol: {
+    flex: 0.2,
   },
 }
 
@@ -25,30 +33,20 @@ class MPIContainer extends Component {
     const iconSize = 96
 
     return (
-      <div className={classes.container}>
-        <div>
-          {/* Cargo meter (top-left) */}
-          cargo
+      <div className={classes.outer}>
+        <div className={classes.topRow}>
+          {/* Top row */}
+          <div className={classes.topLeftCol}>
+            <div>cargo meter here</div>
+            <div>{ this.props.children }</div>
+          </div>
+          <div className={classes.topRightCol}>
+            <div>status/buttons here</div>
+          </div>
         </div>
         <div>
-          {/* Money (top-right) */}
-          money
-        </div>
-        <div>
-          {/* Main */}
-          { this.props.children }
-        </div>
-        <div>
-          {/* buttons (mid-right) */}
-          buttons
-        </div>
-        <div>
-          {/* Navigation (bottom-left) */}
-          Navigation
-        </div>
-        <div>
-          {/* help (bottom-right) */}
-          help
+          {/* Bottom row */}
+          navigation here
         </div>
       </div>
     );

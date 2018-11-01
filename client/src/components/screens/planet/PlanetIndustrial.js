@@ -7,13 +7,7 @@ import MPIContainer from 'components/screens/planet/MPIContainer'
 
 const styles = {
   container: {
-    display: 'grid',
-    height: '100%',
-    gridTemplateColumns: '1.5fr 0.5fr',
-    gridTemplateRows: '0.5fr 2fr 0.5fr',
-    gridGap: '1px 1px',
-    gridTemplateAreas: '". ." ". ." ". ."',
-    alignItems: 'start',
+
   },
 }
 
