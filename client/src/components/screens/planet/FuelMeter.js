@@ -76,7 +76,7 @@ class FuelMeter extends Component {
           shape="wide"
         >Fuel</Rect>
         <FaGasPump />
-        <div>{currentFuel}/{maxFuel}</div>
+        <div>{currentFuel}/{maxFuel} megalitres</div>
         {!isFull && <div>Cost to refuel: Ξ{refuelCost}</div>}
         <Rect
           type={isFull ? '' : 'good' }
