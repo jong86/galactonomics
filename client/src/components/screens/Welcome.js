@@ -38,7 +38,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     contracts: state.contracts,
     user: state.user,
-    web3: state.web3,
   }
 }
 

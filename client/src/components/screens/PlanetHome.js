@@ -24,6 +24,9 @@ class PlanetHome extends Component {
   state = {};
 
   render() {
+    const { web3 } = this.props
+    console.log('web3', web3);
+
     const { classes, user } = this.props
     const planet = planets[user.currentPlanet]
 
@@ -31,11 +34,15 @@ class PlanetHome extends Component {
       <div className={classes.container}>
         <div>
           <img src={planet.img} className={classes.planetImg} />
-          <Button
+          <Rect
             onClick={this.props.goToTravelScreen}
             type="good"
             shape="wide"
           >Leave {planet.name}</Button>
+          <Button
+            type="status"
+            shape="wide"
+          >Ether: </Button>
         </div>
         <div>
           2
@@ -51,6 +58,7 @@ class PlanetHome extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
+    web3: state.web3,
   }
 }
 
