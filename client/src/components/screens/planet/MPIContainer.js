@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
+import CargoMeter from 'components/screens/planet/CargoMeter'
 
 const styles = {
   outer: {
@@ -22,6 +23,9 @@ const styles = {
   topRightCol: {
     flex: 0.2,
   },
+  navigation: {
+    flexDirection: 'row',
+  }
 }
 
 class MPIContainer extends Component {
@@ -37,16 +41,31 @@ class MPIContainer extends Component {
         <div className={classes.topRow}>
           {/* Top row */}
           <div className={classes.topLeftCol}>
-            <div>cargo meter here</div>
+            <CargoMeter current={user.currentCargo} max={user.maxCargo} />
             <div>{ this.props.children }</div>
           </div>
           <div className={classes.topRightCol}>
             <div>status/buttons here</div>
           </div>
         </div>
-        <div>
+        <div className={classes.navigation}>
           {/* Bottom row */}
-          navigation here
+          <Rect
+            isButton
+            onClick={() => changeScreen('PlanetHome')}
+          >{'<< Back'}</Rect>
+          <Rect
+            isButton
+            onClick={() => changeScreen('PlanetMarketplace')}
+          >{'Marketplace'}</Rect>
+          <Rect
+            isButton
+            onClick={() => changeScreen('PlanetPricesd')}
+          >{'Prices elsewhere'}</Rect>
+          <Rect
+            isButton
+            onClick={() => changeScreen('PlanetIndustrial')}
+          >{'Industrial operations'}</Rect>
         </div>
       </div>
     );

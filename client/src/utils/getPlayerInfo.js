@@ -2,23 +2,22 @@ import { store } from '../redux/store'
 
 export default () => new Promise(async (resolve, reject) => {
   const state = store.getState()
-  console.log('state', state);
   const { contracts, user } = state
 
-  let playerInfo
+  let playerInfo, currentCargo
   try {
     playerInfo = await contracts.gta.getInfo({ from: user.address })
+    currentCargo = await contracts.gea.getCurrentCargo(user.address, { from: user.address })
   } catch (e) {
     return reject(e)
   }
-
-  console.log('playerInfo', playerInfo);
 
   store.dispatch({
     type: 'SET_USER_INFO',
     info: {
       currentFuel: playerInfo.currentFuel.toString(),
       currentPlanet: playerInfo.currentPlanet.toString(),
+      currentCargo: currentCargo,
       maxCargo: playerInfo.maxCargo.toString(),
       maxFuel: playerInfo.maxFuel.toString(),
       spaceshipName: playerInfo.spaceshipName.toString(),
