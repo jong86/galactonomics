@@ -16,6 +16,7 @@ class PlanetIndustrial extends Component {
     amountMinedPerBlock: '',
     miningDuration: '',
     miningCost: '',
+    commodityName: '',
   };
 
   componentDidMount = () => {
@@ -36,15 +37,36 @@ class PlanetIndustrial extends Component {
       amountMinedPerBlock: response.amountMinedPerBlock.toString(),
       miningDuration: response.miningDuration.toString(),
       miningCost: response.miningCost.toString(),
+      commodityName: response.name,
+    })
+  }
+
+  acceptOffer = () => {
+    const { user, contracts, setDialogContent } = this.props
+    const { miningCost } = this.state
+
+    contracts.gia.investInProduction(
+      user.currentPlanet,
+      { from: user.address, value: miningCost },
+    )
+    .on('transactionHash', () => {
+      console.log("You accepted the offer")
+    })
+    .on('receipt', receipt => {
+      console.log("Production has begun...")
+    })
+    .on('error', e => {
+      setDialogContent("Error with investment. Did you provide enough ether?")
     })
   }
 
   render() {
-    const { classes, user } = this.props
+    const { classes, user, web3 } = this.props
     const {
       amountMinedPerBlock,
       miningDuration,
       miningCost,
+      commodityName,
     } = this.state
     const planet = planets[user.currentPlanet]
 
@@ -53,8 +75,10 @@ class PlanetIndustrial extends Component {
         <Rect
           size="wide"
         >
-          <div>One of the leading industrial contractors on planet {planet.name} has offered you a deal:</div>
-          <div>Upfront cost: Ξ{miningCost}</div>
+          <div>One of the leading industrial contractors on planet {planet.name + " "}
+          has offered you a deal on the production of {commodityName}.</div>
+          <div>Contract details:</div>
+          <div>Upfront cost: Ξ{web3.utils.fromWei(miningCost)}</div>
           <div>Returns: {amountMinedPerBlock} per block</div>
           <div>Duration: {miningDuration} blocks</div>
           <div>Do you accept their offer?</div>
@@ -66,6 +90,7 @@ class PlanetIndustrial extends Component {
             <Rect
               isButton
               type="good"
+              onClick={this.acceptOffer}
             >Accept</Rect>
           </div>
         </Rect>
@@ -84,6 +109,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    setDialogContent: content => dispatch({ type: 'SET_DIALOG_CONTENT', content }),
   }
 }
 
