@@ -3,11 +3,11 @@ import Welcome from "components/screens/Welcome"
 import SpaceshipDealer from "components/screens/SpaceshipDealer"
 import Travel from  "components/screens/Travel"
 import Travelling from  "components/screens/Travelling"
-import PlanetIntro from  "components/screens/PlanetIntro"
-import PlanetHome from  "components/screens/PlanetHome"
-import PlanetMarketplace from  "components/screens/PlanetMarketplace"
-import PlanetIndustrial from  "components/screens/PlanetIndustrial"
-import PlanetPrices from  "components/screens/PlanetPrices"
+import PlanetIntro from  "components/screens/planet/PlanetIntro"
+import PlanetHome from  "components/screens/planet/PlanetHome"
+import PlanetMarketplace from  "components/screens/planet/PlanetMarketplace"
+import PlanetIndustrial from  "components/screens/planet/PlanetIndustrial"
+import PlanetPrices from  "components/screens/planet/PlanetPrices"
 
 export default screen => {
   switch(screen) {

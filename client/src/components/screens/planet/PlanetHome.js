@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
+import FuelMeter from 'components/screens/planet/FuelMeter'
 import planets from 'utils/planets'
 import {
   FaBalanceScale,
@@ -97,9 +98,10 @@ class PlanetHome extends Component {
           </div>
         </div>
         <div>
-          <Rect
-            shape="wide"
-          >Fuel</Rect>
+          <FuelMeter
+            currentFuel={user.currentFuel}
+            maxFuel={user.maxFuel}
+          />
         </div>
       </div>
     );
