@@ -3,6 +3,11 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
+import {
+  FaBalanceScale,
+  FaChartBar,
+  FaIndustry,
+} from 'react-icons/fa';
 
 const styles = {
   container: {
@@ -62,19 +67,28 @@ class PlanetHome extends Component {
               isButton
               type="info"
               shape="square3"
-            >Marketplace</Rect>
+            >
+              <FaBalanceScale size={64} />
+              Marketplace
+            </Rect>
             <Rect
               onClick={this.props.goToPlanetPricesScreen}
               isButton
               type="info"
               shape="square3"
-            >Commodity Prices</Rect>
+            >
+              <FaChartBar size={64} />
+              Commodity Prices
+            </Rect>
             <Rect
               onClick={this.props.goToPlanetMarketplacesScreen}
               isButton
               type="info"
               shape="square3"
-            >Industrial Operations</Rect>
+            >
+              <FaIndustry size={64} />
+              Industrial Operations
+            </Rect>
           </div>
         </div>
         <div>
