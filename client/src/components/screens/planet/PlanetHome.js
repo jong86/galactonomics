@@ -48,7 +48,7 @@ class PlanetHome extends Component {
   }
 
   render() {
-    const { classes, user } = this.props
+    const { classes, user, changeScreen } = this.props
     const planet = planets[user.currentPlanet]
     const iconSize = 96
 
@@ -57,7 +57,7 @@ class PlanetHome extends Component {
         <div>
           <img src={planet.img} className={classes.planetImg} />
           <Rect
-            onClick={this.props.goToTravelScreen}
+            onClick={() => changeScreen('Travel')}
             isButton
             type="good"
             shape="wide"
@@ -70,7 +70,7 @@ class PlanetHome extends Component {
         <div>
           <div className={classes.top3}>
             <Rect
-              onClick={this.props.goToPlanetMarketplacesScreen}
+              onClick={() => changeScreen('PlanetMarketplace')}
               isButton
               type="info"
               shape="square3"
@@ -79,7 +79,7 @@ class PlanetHome extends Component {
               Marketplace
             </Rect>
             <Rect
-              onClick={this.props.goToPlanetPricesScreen}
+              onClick={() => changeScreen('PlanetPrices')}
               isButton
               type="info"
               shape="square3"
@@ -88,7 +88,7 @@ class PlanetHome extends Component {
               Commodity Prices
             </Rect>
             <Rect
-              onClick={this.props.goToPlanetMarketplacesScreen}
+              onClick={() => changeScreen('PlanetIndustrial')}
               isButton
               type="info"
               shape="square3"
@@ -119,11 +119,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
-
-    goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
-    goToPlanetMarketplacesScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetMarketplaces' }),
-    goToPlanetPricesScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetPrices' }),
-    goToPlanetIndustrialScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetIndustrial' }),
+    changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
   }
 }
 

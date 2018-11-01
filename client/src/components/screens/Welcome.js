@@ -11,12 +11,12 @@ const styles = {
 
 class Welcome extends Component {
   goToNextScreen = () => {
-    const { user } = this.props
+    const { user, changeScreen} = this.props
 
     if (user.ownsSpaceship)
-      this.props.goToTravelScreen()
+      changeScreen('Travel')
     else
-      this.props.goToSpaceshipDealerScreen()
+      changeScreen('SpaceshipDealer')
   }
 
   render() {
@@ -44,8 +44,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    goToSpaceshipDealerScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'SpaceshipDealer' }),
-    goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+    changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
   }
 }
 

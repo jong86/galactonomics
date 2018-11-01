@@ -6,7 +6,6 @@ import spaceship from 'assets/spaceship.jpg'
 
 const styles = {
   container: {
-
   }
 }
 
@@ -18,7 +17,7 @@ class SpaceshipDealer extends Component {
   buySpaceship = async () => {
     this.setState({ isLoading: true })
 
-    const { web3, contracts, user } = this.props
+    const { web3, contracts, user, changeScreen } = this.props
 
     try {
       await contracts.gta.buySpaceship(
@@ -30,7 +29,7 @@ class SpaceshipDealer extends Component {
     }
 
     // After 'SpaceshipBought' event is heard...
-    this.props.goToTravelScreen()
+    changeScreen('Travel')
   }
 
   render() {
@@ -61,7 +60,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+    changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
   }
 }
 

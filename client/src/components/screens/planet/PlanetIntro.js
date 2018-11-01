@@ -14,14 +14,14 @@ class PlanetIntro extends Component {
   state = {};
 
   render() {
-    const { classes, user } = this.props
+    const { classes, user, changeScreen } = this.props
     const planet = planets[user.currentPlanet]
 
     return (
       <div className={classes.container}>
         <h1>Welcome to planet {planet.name}</h1>
         <Rect
-          onClick={this.props.goToPlanetHomeScreen}
+          onClick={() => changeScreen('PlanetHome')}
           type="good"
         >Continue >></Rect>
         <img
@@ -40,7 +40,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    goToPlanetHomeScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetHome' }),
+    changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
   }
 }
 

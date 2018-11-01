@@ -20,19 +20,10 @@ class Travelling extends Component {
 
   componentDidMount = () => {
     this.travelToPlanet()
-    // When waiting for signature of travelToPlanet transaction, this screen
-    // should say "Waiting for hyperdrive activation...". Then once tx is signed,
-    // the animation starts and message says, "Travelling to..."
-
-    // Wait until TravelComplete event is heard, then set currentPlanet again in state
-    // so that the correct planet is shown in PlanetIntro
-
-    // When event is heard, change to PlanetIntro screen, AND
-    // set data that comes back (currentFuel and currentPlanet)
   }
 
   travelToPlanet = async () => {
-    const { contracts, user } = this.props
+    const { contracts, user, changeScreen, setUserInfo, setDialogContent } = this.props
 
     try {
       contracts.gta.travelToPlanet(user.travellingTo, { from: user.address, gas: 200000 })
@@ -40,16 +31,16 @@ class Travelling extends Component {
         this.setState({ isTravelling: true })
       })
       .on('receipt', receipt => {
-        this.props.setUserInfo({ currentPlanet: user.travellingTo })
-        this.props.goToPlanetIntroScreen()
+        setUserInfo({ currentPlanet: user.travellingTo })
+        changeScreen('PlanetHome')
       })
       .on('error', e => {
-        this.props.setDialogContent(getRevertMsg(e.message))
-        this.props.goToTravelScreen()
+        setDialogContent(getRevertMsg(e.message))
+        changeScreen('Travel')
       })
 
     } catch (e) {
-      this.props.goToTravelScreen()
+      changeScreen('Travel')
       return console.error("Could not travel", e)
     }
   }
@@ -84,9 +75,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    goToTravelScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'Travel' }),
+    changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
-    goToPlanetIntroScreen: () => dispatch({ type: 'CHANGE_SCREEN', screen: 'PlanetIntro' }),
     setDialogContent: content => dispatch({ type: 'SET_DIALOG_CONTENT', content }),
   }
 }
