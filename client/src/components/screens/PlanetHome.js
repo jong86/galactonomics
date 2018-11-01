@@ -21,12 +21,16 @@ const styles = {
     alignItems: 'start',
   },
   planetImg: {
-    width: '100%',
+    width: '60%',
+    padding: '12%',
   },
   top3: {
     alignItems: 'flex-start',
     flexDirection: 'row',
     width: 'fill-available',
+  },
+  icon: {
+    margin: '16px',
   },
 }
 
@@ -44,6 +48,7 @@ class PlanetHome extends Component {
   render() {
     const { classes, user } = this.props
     const planet = planets[user.currentPlanet]
+    const iconSize = 96
 
     return (
       <div className={classes.container}>
@@ -54,7 +59,7 @@ class PlanetHome extends Component {
             isButton
             type="good"
             shape="wide"
-          >Leave {planet.name}</Rect>
+          >Travel (Leave {planet.name})</Rect>
           <Rect
             type="status"
             shape="wide"
@@ -68,7 +73,7 @@ class PlanetHome extends Component {
               type="info"
               shape="square3"
             >
-              <FaBalanceScale size={64} />
+              <FaBalanceScale className={classes.icon} size={iconSize} />
               Marketplace
             </Rect>
             <Rect
@@ -77,7 +82,7 @@ class PlanetHome extends Component {
               type="info"
               shape="square3"
             >
-              <FaChartBar size={64} />
+              <FaChartBar className={classes.icon}size={iconSize} />
               Commodity Prices
             </Rect>
             <Rect
@@ -86,7 +91,7 @@ class PlanetHome extends Component {
               type="info"
               shape="square3"
             >
-              <FaIndustry size={64} />
+              <FaIndustry className={classes.icon} size={iconSize} />
               Industrial Operations
             </Rect>
           </div>
