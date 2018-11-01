@@ -13,11 +13,15 @@ const styles = {
     gridTemplateRows: '1fr',
     gridGap: '1px 1px',
     gridTemplateAreas: ". . .",
+    alignItems: 'start',
 
     '& > div': {
       border: '1px solid red',
     }
-  }
+  },
+  planetImg: {
+    width: '100%',
+  },
 }
 
 class PlanetHome extends Component {
@@ -30,7 +34,11 @@ class PlanetHome extends Component {
     return (
       <div className={classes.container}>
         <div>
-          {/* <img src={planet.img} /> */}
+          <img src={planet.img} className={classes.planetImg} />
+          <Button
+            onClick={this.props.goToTravelScreen}
+            type="good"
+          >Leave {planet.name}</Button>
         </div>
         <div>
           2

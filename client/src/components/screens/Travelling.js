@@ -40,16 +40,11 @@ class Travelling extends Component {
         this.setState({ isTravelling: true })
       })
       .on('receipt', receipt => {
-        console.log('receipt', receipt);
-
         this.props.setUserInfo({ currentPlanet: user.travellingTo })
         this.props.goToPlanetIntroScreen()
       })
       .on('error', e => {
-        console.error('caught error:', e)
-        console.error('caught error message:', e.message)
         this.props.setDialogContent(getRevertMsg(e.message))
-
         this.props.goToTravelScreen()
       })
 
