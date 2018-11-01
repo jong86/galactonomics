@@ -71,6 +71,8 @@ contract("GalacticTransitAuthority", accounts => {
     await gta.travelToPlanet(1, { from: player1 })
     await gta.travelToPlanet(1, { from: player1 })
     await gta.travelToPlanet(1, { from: player1 })
+    await gta.travelToPlanet(1, { from: player1 })
+    await gta.travelToPlanet(1, { from: player1 })
     try {
       await gta.travelToPlanet(1, { from: player1 })
     } catch (e) {

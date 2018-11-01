@@ -23,16 +23,26 @@ const styles = {
   topRightCol: {
     flex: 0.2,
   },
+  children: {
+    padding: '32px',
+  },
   navigation: {
     flexDirection: 'row',
-  }
+  },
 }
+
+const navLinks = [
+  { name: 'PlanetHome', label: '<< Back' },
+  { name: 'PlanetMarketplace', label: 'Marketplace' },
+  { name: 'PlanetPrices', label: 'Prices elsewhere' },
+  { name: 'PlanetIndustrial', label: 'Industrial operations' },
+]
 
 class MPIContainer extends Component {
   state = {};
 
   render() {
-    const { classes, user, changeScreen } = this.props
+    const { classes, user, changeScreen, currentScreen } = this.props
     const planet = planets[user.currentPlanet]
     const iconSize = 96
 
@@ -41,31 +51,30 @@ class MPIContainer extends Component {
         <div className={classes.topRow}>
           {/* Top row */}
           <div className={classes.topLeftCol}>
+            {/* Left col */}
             <CargoMeter current={user.currentCargo} max={user.maxCargo} />
-            <div>{ this.props.children }</div>
+            <div className={classes.children}>{ this.props.children }</div>
           </div>
           <div className={classes.topRightCol}>
+            {/* Right col */}
+            <Rect
+              type="status"
+              size="wide"
+            >Ξ{user.balance}</Rect>
             <div>status/buttons here</div>
           </div>
         </div>
         <div className={classes.navigation}>
           {/* Bottom row */}
-          <Rect
-            isButton
-            onClick={() => changeScreen('PlanetHome')}
-          >{'<< Back'}</Rect>
-          <Rect
-            isButton
-            onClick={() => changeScreen('PlanetMarketplace')}
-          >{'Marketplace'}</Rect>
-          <Rect
-            isButton
-            onClick={() => changeScreen('PlanetPricesd')}
-          >{'Prices elsewhere'}</Rect>
-          <Rect
-            isButton
-            onClick={() => changeScreen('PlanetIndustrial')}
-          >{'Industrial operations'}</Rect>
+          {navLinks.map((link, i) =>
+            <Rect
+              key={i}
+              isButton
+              active={currentScreen === link.name}
+              size="wide4"
+              onClick={() => changeScreen(link.name)}
+            >{link.label}</Rect>
+          )}
         </div>
       </div>
     );
@@ -74,6 +83,7 @@ class MPIContainer extends Component {
 
 const mapStateToProps = state => {
   return {
+    currentScreen: state.view.currentScreen,
     contracts: state.contracts,
     user: state.user,
     web3: state.web3,

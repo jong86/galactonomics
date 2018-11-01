@@ -40,11 +40,7 @@ class PlanetHome extends Component {
   state = {};
 
   componentDidMount = async () => {
-    await getPlayerInfo()
-
-    const { web3, user } = this.props
-    const balance = await web3.eth.getBalance(user.address)
-    this.props.setUserInfo({ balance: web3.utils.fromWei(balance) })
+    getPlayerInfo()
   }
 
   render() {
@@ -60,11 +56,11 @@ class PlanetHome extends Component {
             onClick={() => changeScreen('Travel')}
             isButton
             type="good"
-            shape="wide"
+            size="wide"
           >Travel (Leave {planet.name})</Rect>
           <Rect
             type="status"
-            shape="wide"
+            size="wide"
           >Ξ{user.balance}</Rect>
         </div>
         <div>
@@ -73,7 +69,7 @@ class PlanetHome extends Component {
               onClick={() => changeScreen('PlanetMarketplace')}
               isButton
               type="info"
-              shape="square3"
+              size="wide3"
             >
               <FaBalanceScale className={classes.icon} size={iconSize} />
               Marketplace
@@ -82,7 +78,7 @@ class PlanetHome extends Component {
               onClick={() => changeScreen('PlanetPrices')}
               isButton
               type="info"
-              shape="square3"
+              size="wide3"
             >
               <FaChartBar className={classes.icon}size={iconSize} />
               Commodity Prices
@@ -91,7 +87,7 @@ class PlanetHome extends Component {
               onClick={() => changeScreen('PlanetIndustrial')}
               isButton
               type="info"
-              shape="square3"
+              size="wide3"
             >
               <FaIndustry className={classes.icon} size={iconSize} />
               Industrial Operations

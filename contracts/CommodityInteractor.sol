@@ -13,6 +13,7 @@ contract CommodityInteractor {
     uint miningCost;
     uint amountMinedPerBlock;
     uint mass;
+    uint miningDuration;
   }
 
   CommodityData[7] public commodities;
@@ -24,7 +25,8 @@ contract CommodityInteractor {
         CommodityInterface(_commodityAddresses[i]),
         100,
         1000,
-        2
+        2,
+        8
       );
     }
   }
@@ -33,12 +35,13 @@ contract CommodityInteractor {
   // View functions
 
   function getCommodity(uint8 _commodityId) external view returns (
-    string,
-    string,
-    address,
-    uint,
-    uint,
-    uint
+    string name,
+    string symbol,
+    address addr,
+    uint miningCost,
+    uint amountMinedPerBlock,
+    uint mass,
+    uint miningDuration
   ) {
     CommodityData memory commodityData = commodities[_commodityId];
     Commodity commodity = Commodity(commodityData.addr);
@@ -48,7 +51,8 @@ contract CommodityInteractor {
       commodityData.addr,
       commodityData.miningCost,
       commodityData.amountMinedPerBlock,
-      commodityData.mass
+      commodityData.mass,
+      commodityData.miningDuration
     );
   }
 

@@ -6,12 +6,20 @@ const styles = {
   Rect: {
     textAlign: "center",
     border: ({ type }) => '1px solid ' + colorFromType(type),
-    color: ({ type }) => colorFromType(type),
-    width: ({ shape }) => {
-      switch (shape) {
+    color: ({ type, active }) => {
+      // if (active) return '#000'
+      return colorFromType(type)
+    },
+    backgroundColor: ({ type, active }) => {
+      if (!active) return '#000'
+      return '#444'
+    },
+    width: ({ size }) => {
+      switch (size) {
         case 'wide': return 'fill-available'
         case 'small': return 'fit-content'
-        case 'square3': return '33.33333%'
+        case 'wide3': return '33.33333%'
+        case 'wide4': return '25%'
       }
     },
     borderRadius: 4,

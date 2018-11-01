@@ -73,7 +73,7 @@ class FuelMeter extends Component {
     return (
       <Fragment>
         <Rect
-          shape="wide"
+          size="wide"
         >Fuel</Rect>
         <FaGasPump />
         <div>{currentFuel}/{maxFuel} megalitres</div>
@@ -81,7 +81,7 @@ class FuelMeter extends Component {
         <Rect
           type={isFull ? '' : 'good' }
           isButton={!isFull}
-          shape="wide"
+          size="wide"
           onClick={() => { if (!isFull) this.refuel()}}
         >{isFull ? 'Tank is full' : 'Fill-up tank'}</Rect>
       </Fragment>

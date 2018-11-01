@@ -9,8 +9,6 @@ import "./Commodity.sol";
 contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
-  uint constant public blocksToProduceFor = 8;
-
   struct Investment {
     uint amount;
     uint blocksLeft;
@@ -37,7 +35,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
     require(msg.value == getAmountRequired(_commodityId), "You have not provided enough ether");
     require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
 
-    investments[msg.sender] = Investment(msg.value, blocksToProduceFor);
+    investments[msg.sender] = Investment(msg.value, commodities[_commodityId].miningDuration);
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
@@ -60,7 +58,9 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   // View functions
 
   function getMassOfTotalProductionReturns(uint8 _commodityId) public view returns (uint) {
-    return commodities[_commodityId].amountMinedPerBlock.mul(commodities[_commodityId].mass * blocksToProduceFor);
+    return commodities[_commodityId].amountMinedPerBlock.mul(
+      commodities[_commodityId].mass * commodities[_commodityId].miningDuration
+    );
   }
 
   function getMassOfOneProductionReturn(uint8 _commodityId) public view returns (uint) {
@@ -68,7 +68,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   }
 
   function getAmountRequired(uint8 _commodityId) public view returns (uint) {
-    return commodities[_commodityId].miningCost.mul(blocksToProduceFor);
+    return commodities[_commodityId].miningCost;
   }
 
   function getInvestment(address _address) public view returns (uint, uint) {
