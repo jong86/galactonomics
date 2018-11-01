@@ -11,8 +11,14 @@ const styles = {
       switch (shape) {
         case 'wide': return 'fill-available'
         case 'small': return 'fit-content'
+        case 'square3': return '33.33333%'
       }
     },
+    // height: ({ shape }) => {
+    //   if (shape === 'square3') {
+    //     return 40
+    //   }
+    // },
     borderRadius: 4,
     padding: '4px',
     cursor: ({ isButton }) => isButton ? 'pointer' : 'default',

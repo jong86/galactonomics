@@ -18,6 +18,11 @@ const styles = {
   planetImg: {
     width: '100%',
   },
+  top3: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    width: 'fill-available',
+  },
 }
 
 class PlanetHome extends Component {
@@ -51,29 +56,29 @@ class PlanetHome extends Component {
           >Ξ{user.balance}</Rect>
         </div>
         <div>
-          <Rect
-            onClick={this.props.goToPlanetMarketplacesScreen}
-            isButton
-            type="info"
-            shape="wide"
-          >Marketplace</Rect>
-          <Rect
-            onClick={this.props.goToPlanetPricesScreen}
-            isButton
-            type="info"
-            shape="wide"
-          >Commodity Prices</Rect>
-          <Rect
-            onClick={this.props.goToPlanetMarketplacesScreen}
-            isButton
-            type="info"
-            shape="wide"
-          >Industrial Operations</Rect>
+          <div className={classes.top3}>
+            <Rect
+              onClick={this.props.goToPlanetMarketplacesScreen}
+              isButton
+              type="info"
+              shape="square3"
+            >Marketplace</Rect>
+            <Rect
+              onClick={this.props.goToPlanetPricesScreen}
+              isButton
+              type="info"
+              shape="square3"
+            >Commodity Prices</Rect>
+            <Rect
+              onClick={this.props.goToPlanetMarketplacesScreen}
+              isButton
+              type="info"
+              shape="square3"
+            >Industrial Operations</Rect>
+          </div>
         </div>
         <div>
           <Rect
-            onClick={this.props.goToPlanetIndustrialScreen}
-            isButton
             shape="wide"
           >Fuel</Rect>
         </div>
