@@ -4,6 +4,8 @@ const gtaJSON = require("../build/contracts/GalacticTransitAuthority.json")
 const geaJSON = require("../build/contracts/GalacticEconomicAuthority.json")
 const giaJSON = require("../build/contracts/GalacticIndustrialAuthority.json")
 
+const investments = []
+
 async function init() {
   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"))
 
@@ -52,23 +54,20 @@ async function init() {
 
 
   // Set up listening to InvestmentMade event
-  contracts.gia.InvestmentMade({ from: blockNumber }, (error, result) => {
+  contracts.gia.InvestmentMade({ from: blockNumber }, async (error, result) => {
     if (error) return console.error(error)
     console.log('Received investment:', result.args);
 
-    const { commodityId, from: receiver } = result.args
+    // Add address and blocksLeft to investments array
 
-    contracts.gia.mintCommodityFor(commodityId, receiver, { from: owner })
-    .on('transactionHash', () => {
-      console.log("mintCommodityFor tx sent for", receiver)
-    })
-    .on('receipt', receipt => {
-      console.log("mintCommodityFor tx mined for", receiver)
-    })
-    .on('error', console.log)
   })
 
   console.log("Listening for InvestmentMade event...")
 }
+
+// Should listen for new blocks to be mined.
+// Once new one is mined, server loops through array of investments,
+// and sends a minting tx for the investments that still have blocksLeft.
+// Investments are removed from the array when blocksLeft === 0
 
 init()

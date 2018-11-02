@@ -16,7 +16,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   mapping(address => Investment) investments;
 
-  event InvestmentMade(address from, uint8 commodityId, uint value);
+  event InvestmentMade(address addr, uint blocksLeft);
   event CommodityMinted(address to, uint8 commodityId);
 
   constructor(address[] _commodityAddresses, address _gta)
@@ -34,8 +34,9 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
     require(msg.value == getAmountRequired(_commodityId), "You have not provided enough ether");
     require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
 
-    investments[msg.sender] = Investment(_commodityId, commodities[_commodityId].miningDuration);
-    emit InvestmentMade(msg.sender, _commodityId, msg.value);
+    uint _miningDuration = commodities[_commodityId].miningDuration;
+    investments[msg.sender] = Investment(_commodityId, _miningDuration);
+    emit InvestmentMade(msg.sender, _miningDuration);
   }
 
   function mintCommodityFor(address _for) external onlyOwner {
