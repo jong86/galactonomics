@@ -19,6 +19,8 @@ async function init() {
         const contract = truffleContract(_contract.json)
         contract.setProvider(web3.currentProvider)
 
+        // The next if block is from here:
+        // https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
         if (typeof contract.currentProvider.sendAsync !== "function") {
           contract.currentProvider.sendAsync = function() {
             return contract.currentProvider.send.apply(
@@ -39,8 +41,7 @@ async function init() {
     console.error(e)
   }
 
-  const x = await contracts[1].instance.getCommodity(1)
-  console.log('x', x);
+
 }
 
 init()
