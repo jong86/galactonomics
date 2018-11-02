@@ -43,7 +43,7 @@ class FuelMeter extends Component {
     .on('transactionHash', () => {
       this.setState({ isRefueling: true })
     })
-    .on('receipt', async receipt => {
+    .on('receipt', async () => {
       await getPlayerInfo()
       this.setState({ isRefueling: false })
     })
