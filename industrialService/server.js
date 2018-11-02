@@ -7,15 +7,15 @@ const giaJSON = require("../build/contracts/GalacticIndustrialAuthority.json")
 async function init() {
   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"))
 
-  let contracts = [
+  let contractsArray = [
     { json: gtaJSON, name: 'gta' },
     { json: geaJSON, name: 'gea' },
     { json: giaJSON, name: 'gia' },
   ]
 
   try {
-    contracts = await Promise.all(
-      contracts.map(_contract => new Promise(async (resolve, reject) => {
+    contractsArray = await Promise.all(
+      contractsArray.map(_contract => new Promise(async (resolve, reject) => {
         const contract = truffleContract(_contract.json)
         contract.setProvider(web3.currentProvider)
 
@@ -41,7 +41,16 @@ async function init() {
     console.error(e)
   }
 
+  // Store the contract instances in an object
+  let contracts = {}
+  contractsArray.forEach(contract => contracts[contract.name] = contract.instance)
 
+  // Set up listening to InvestmentMade event
+  contracts.gia.InvestmentMade({}, (error, result) => {
+    if (error) return console.error(error)
+    console.log('result', result);
+  })
+  console.log("Listening for InvestmadeMade event...")
 }
 
 init()
