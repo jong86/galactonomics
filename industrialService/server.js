@@ -45,10 +45,13 @@ async function init() {
   let contracts = {}
   contractsArray.forEach(contract => contracts[contract.name] = contract.instance)
 
+  const blockNumber = await web3.eth.getBlockNumber()
+  console.log('blockNumber', blockNumber);
+
   // Set up listening to InvestmentMade event
-  contracts.gia.InvestmentMade({}, (error, result) => {
+  contracts.gia.InvestmentMade({ from: blockNumber }, (error, result) => {
     if (error) return console.error(error)
-    console.log('result', result);
+    console.log('New investment', result);
   })
   console.log("Listening for InvestmadeMade event...")
 }

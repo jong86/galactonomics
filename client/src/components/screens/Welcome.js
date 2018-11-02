@@ -2,11 +2,10 @@ import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
+import Loader from 'components/reusables/Loader'
 
 const styles = {
-  container: {
-
-  }
+  container: {}
 }
 
 class Welcome extends Component {

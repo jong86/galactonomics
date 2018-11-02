@@ -25,24 +25,18 @@ class Travelling extends Component {
   travelToPlanet = async () => {
     const { contracts, user, changeScreen, setUserInfo, setDialogContent } = this.props
 
-    try {
-      contracts.gta.travelToPlanet(user.travellingTo, { from: user.address, gas: 200000 })
-      .on('transactionHash', () => {
-        this.setState({ isTravelling: true })
-      })
-      .on('receipt', receipt => {
-        setUserInfo({ currentPlanet: user.travellingTo })
-        changeScreen('PlanetIntro')
-      })
-      .on('error', e => {
-        setDialogContent(getRevertMsg(e.message))
-        changeScreen('Travel')
-      })
-
-    } catch (e) {
+    contracts.gta.travelToPlanet(user.travellingTo, { from: user.address, gas: 200000 })
+    .on('transactionHash', () => {
+      this.setState({ isTravelling: true })
+    })
+    .on('receipt', receipt => {
+      setUserInfo({ currentPlanet: user.travellingTo })
+      changeScreen('PlanetIntro')
+    })
+    .on('error', e => {
+      setDialogContent(getRevertMsg(e.message))
       changeScreen('Travel')
-      return console.error("Could not travel", e)
-    }
+    })
   }
 
   render() {

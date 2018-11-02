@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from "react";
 import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
-import colorFromType from 'utils/colorFromType'
 import Rect from 'components/reusables/Rect'
 import { FaGasPump } from 'react-icons/fa';
 import getRevertMsg from 'utils/getRevertMsg'
 import getPlayerInfo from 'utils/getPlayerInfo'
+import Loader from 'components/reusables/Loader'
 
 const styles = {
 }
@@ -39,33 +39,28 @@ class FuelMeter extends Component {
   refuel = async () => {
     const { contracts, user } = this.props
 
-    try {
-      contracts.gta.refuel({ from: user.address, value: this.state.refuelCost })
-      .on('transactionHash', () => {
-        this.setState({ isRefueling: true })
-      })
-      .on('receipt', receipt => {
-        getPlayerInfo()
-      })
-      .on('error', e => {
-        this.props.setDialogContent(getRevertMsg(e.message))
-      })
-
-    } catch (e) {
-      return console.error(e)
-    }
-
-    this.setState({ isRefueling: false })
+    contracts.gta.refuel({ from: user.address, value: this.state.refuelCost })
+    .on('transactionHash', () => {
+      this.setState({ isRefueling: true })
+    })
+    .on('receipt', async receipt => {
+      await getPlayerInfo()
+      this.setState({ isRefueling: false })
+    })
+    .on('error', e => {
+      this.props.setDialogContent(getRevertMsg(e.message))
+    })
   }
   
   render() {
     const { classes, currentFuel, maxFuel, web3 } = this.props
+    const { isRefueling } = this.state
 
     let refuelCost
     try {
       refuelCost = web3.utils.fromWei(this.state.refuelCost.toString())
     } catch (e) {
-      refuelCost = '(loading...)'
+      refuelCost = <Loader />
     }
 
     const isFull = currentFuel === maxFuel
@@ -79,11 +74,11 @@ class FuelMeter extends Component {
         <div>{currentFuel}/{maxFuel} megalitres</div>
         {!isFull && <div>Cost to refuel: Ξ{refuelCost}</div>}
         <Rect
-          type={isFull ? '' : 'good' }
+          type={isRefueling ? 'status' : 'good'}
           isButton={!isFull}
           size="wide"
           onClick={() => { if (!isFull) this.refuel()}}
-        >{isFull ? 'Tank is full' : 'Fill-up tank'}</Rect>
+        >{isRefueling ? <div>Refueling... <Loader type="status" /></div> : (isFull ? 'Tank is full' : 'Fill-up tank')}</Rect>
       </Fragment>
     )
   }
