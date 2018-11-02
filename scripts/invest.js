@@ -14,8 +14,11 @@ module.exports = async function(done) {
 
   const costOfSpaceship = await gta.costOfSpaceship()
 
-  await gta.buySpaceship('a', { from: bob, value: costOfSpaceship })
-  await gta.travelToPlanet(0, { from: bob })
+  // await gta.buySpaceship('a', { from: bob, value: costOfSpaceship })
+  // await gta.travelToPlanet(0, { from: bob })
+
+  await gta.buySpaceship('a', { from: alice, value: costOfSpaceship })
+  await gta.travelToPlanet(0, { from: alice })
 
   done()
 }

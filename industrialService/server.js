@@ -7,7 +7,7 @@ const giaJSON = require("../build/contracts/GalacticIndustrialAuthority.json")
 const investments = []
 
 async function init() {
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"))
+  web3 = new Web3(new Web3.providers.WebsocketProvider("ws://localhost:8545"))
 
   let contractsArray = [
     { json: gtaJSON, name: 'gta' },
@@ -55,14 +55,23 @@ async function init() {
 
   // Set up listening to InvestmentMade event
   contracts.gia.InvestmentMade({ from: blockNumber }, async (error, result) => {
+    // Adds investment info to investments array so we can loop over it
+
     if (error) return console.error(error)
+
     console.log('Received investment:', result.args);
 
-    // Add address and blocksLeft to investments array
+    investments.push({
+      address: result.args.addr,
+      blocksLeft: result.args.blocksLeft,
+    })
 
+    console.log("New investments array:", investments);
   })
 
   console.log("Listening for InvestmentMade event...")
+  
+  web3.eth.subscribe('newBlockHeaders', console.log);
 }
 
 // Should listen for new blocks to be mined.
