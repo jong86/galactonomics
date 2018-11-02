@@ -61,7 +61,7 @@ contract("GalacticIndustrialAuthority", accounts => {
     const amountRequired = await gia.getAmountRequired(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     const currentCargoBefore = await gea.getCurrentCargo(player1)
-    await gia.mintCommodityFor(0, player1)
+    await gia.mintCommodityFor(player1)
     const currentCargoAfter = await gea.getCurrentCargo(player1)
 
     const commodityInfo = await gea.getCommodity(0)
@@ -79,7 +79,7 @@ contract("GalacticIndustrialAuthority", accounts => {
 
   it("should not allow a non-owner to mint commodities for another account", async () => {
     try {
-      await gia.mintCommodityFor(0, player1, { from: eve })
+      await gia.mintCommodityFor(player1, { from: eve })
     } catch (e) {
       return assert(true)
     }
@@ -103,7 +103,7 @@ contract("GalacticIndustrialAuthority", accounts => {
     const amountRequired = await gia.getAmountRequired(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     const response = await gia.getInvestment(player1)
-    assert.equal(response[0].toString(), amountRequired.toString(), "did not record")
+    assert.equal(response[0].toString(), "0", "did not record")
   })
 
   it("prevents player from mining more than one commodity at a time", async () => {
@@ -123,12 +123,12 @@ contract("GalacticIndustrialAuthority", accounts => {
     let blocksLeft = (await gia.getInvestment(player1))[1]
 
     while (blocksLeft > 0) {
-      await gia.mintCommodityFor(0, player1)
+      await gia.mintCommodityFor(player1)
       blocksLeft = (await gia.getInvestment(player1))[1]
     }
 
     try {
-      await gia.mintCommodityFor(0, player1)
+      await gia.mintCommodityFor(player1)
     } catch (e) {
       return assert(true)
     }

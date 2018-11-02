@@ -10,7 +10,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   using SafeMath for uint;
 
   struct Investment {
-    uint amount;
+    uint8 commodityId;
     uint blocksLeft;
   }
 
@@ -18,7 +18,6 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   event InvestmentMade(address from, uint8 commodityId, uint value);
   event CommodityMinted(address to, uint8 commodityId);
-  event Log(uint x, uint y);
 
   constructor(address[] _commodityAddresses, address _gta)
   CommodityInteractor(_commodityAddresses)
@@ -35,18 +34,21 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
     require(msg.value == getAmountRequired(_commodityId), "You have not provided enough ether");
     require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
 
-    investments[msg.sender] = Investment(msg.value, commodities[_commodityId].miningDuration);
+    investments[msg.sender] = Investment(_commodityId, commodities[_commodityId].miningDuration);
     emit InvestmentMade(msg.sender, _commodityId, msg.value);
   }
 
-  function mintCommodityFor(uint8 _commodityId, address _for) external onlyOwner {
+  function mintCommodityFor(address _for) external onlyOwner {
     require(investments[_for].blocksLeft > 0, "There is no more blocks left to mine for this investment");
+
     investments[_for].blocksLeft = investments[_for].blocksLeft.sub(1);
+
+    uint8 _commodityId = investments[_for].commodityId;
 
     // Only mint what can fit on player's ship
     uint amountToMint = commodities[_commodityId].amountMinedPerBlock;
     uint availableCargo = gta.getAvailableCargo(_for, getCurrentCargo(_for));
-    emit Log(amountToMint, availableCargo);
+
     if (amountToMint >= availableCargo) {
       amountToMint = availableCargo;
     }
@@ -71,8 +73,8 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
     return commodities[_commodityId].miningCost;
   }
 
-  function getInvestment(address _address) public view returns (uint, uint) {
-    return (investments[_address].amount, investments[_address].blocksLeft);
+  function getInvestment(address _address) public view returns (uint8, uint) {
+    return (investments[_address].commodityId, investments[_address].blocksLeft);
   }
 
   function() public {}

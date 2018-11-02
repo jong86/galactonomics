@@ -22,7 +22,7 @@ class Travelling extends Component {
     this.travelToPlanet()
   }
 
-  travelToPlanet = async () => {
+  travelToPlanet = () => {
     const { contracts, user, changeScreen, setUserInfo, setDialogContent } = this.props
 
     contracts.gta.travelToPlanet(user.travellingTo, { from: user.address, gas: 200000 })

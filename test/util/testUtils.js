@@ -12,7 +12,7 @@ function fillUpCargoByMinting(gta, gia, player, commodityId) {
     function doMinting() {
       return new Promise(async resolve => {
         try {
-          await gia.mintCommodityFor(commodityId, player)
+          await gia.mintCommodityFor(player)
         } catch (e) {
           reject("Error invoking mintCommodityFor")
         }
@@ -42,7 +42,7 @@ function fillUpCargoByMinting(gta, gia, player, commodityId) {
 function mintCommodityXTimes(gia, commodityId, numTimes, player) {
   return new Promise(async (resolve, reject) => {
     try {
-      await gia.mintCommodityFor(commodityId, player)
+      await gia.mintCommodityFor(player)
     } catch (e) {
       reject("Error invoking mintCommodityFor")
     }
