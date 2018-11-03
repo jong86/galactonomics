@@ -58,24 +58,48 @@ async function init() {
     console.error(e)
   }
 
+  const x = await contracts.gia.getCommodity(0)
+  console.log('x', x);
+  
+  //   // Adds investment info to investments array so we can loop over it
+  //   investments.push({
+  //     address: result.args.addr,
+  //     blocksLeft: result.args.blocksLeft,
+  //   })
 
-  // Set up listening to InvestmentMade event
-  contracts.gia.InvestmentMade({ from: blockNumber }, async (error, result) => {
-    if (error) return console.error(error)
-
-    console.log("Heard InvestmentMade event:", result)
-
-    // Adds investment info to investments array so we can loop over it
-    investments.push({
-      address: result.args.addr,
-      blocksLeft: result.args.blocksLeft,
+  // a list for saving subscribed event instances
+  const subscribedEvents = {}
+  // Subscriber method
+  const subscribeLogEvent = (contract, eventName) => {
+    const eventJsonInterface = web3.utils._.find(
+      contract._jsonInterface,
+      o => o.name === eventName && o.type === 'event',
+    )
+    const subscription = web3.eth.subscribe('logs', {
+      address: contract.address,
+      topics: [eventJsonInterface.signature]
+    }, (error, result) => {
+      if (!error) {
+        const eventObj = web3.eth.abi.decodeLog(
+          eventJsonInterface.inputs,
+          result.data,
+          result.topics.slice(1)
+        )
+        console.log(`New ${eventName}!`, eventObj)
+      }
     })
-  })
+    subscribedEvents[eventName] = subscription
+  }
+
+  subscribeLogEvent(contracts.gia, "InvestmentMade")
+  
 
   console.log("Listening for InvestmentMade event...")
 
 
-  web3.eth.subscribe('newBlockHeaders', async () => {
+  web3.eth.subscribe('newBlockHeaders', async (a, b) => {
+    // console.log("New block headers seen:", a, b)
+
     // Send mint commodity tx for every (active) investment once a new block is mined
     investments.forEach(async (investment) => {
       try {

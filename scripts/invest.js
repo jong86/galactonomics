@@ -9,8 +9,8 @@ module.exports = async function(done) {
   const alice = accounts[2]
   
   const gta = await GalacticTransitAuthority.deployed()
-  // const gea = await GalacticEconomicAuthority.deployed()
-  // const gia = await GalacticIndustrialAuthority.deployed()
+  const gea = await GalacticEconomicAuthority.deployed()
+  const gia = await GalacticIndustrialAuthority.deployed()
 
   const costOfSpaceship = await gta.costOfSpaceship()
 
@@ -19,6 +19,14 @@ module.exports = async function(done) {
 
   await gta.buySpaceship('a', { from: alice, value: costOfSpaceship })
   await gta.travelToPlanet(0, { from: alice })
+
+  const amount = await gia.getAmountRequired(0)
+  try {
+    await gia.investInProduction(0, { from: alice, value: amount })
+  } catch (e) {
+    console.error(e)
+    done('Error investInProduction')
+  }
 
   done()
 }
