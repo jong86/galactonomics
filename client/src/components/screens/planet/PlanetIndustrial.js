@@ -66,6 +66,7 @@ class PlanetIndustrial extends Component {
     .on('receipt', receipt => {
       console.log('receipt', receipt);
       console.log("Production has begun...")
+      this.getInvestment()
     })
     .on('error', e => {
       console.log('e', e);
@@ -80,33 +81,40 @@ class PlanetIndustrial extends Component {
       miningDuration,
       miningCost,
       commodityName,
+      miningCommodityId,
+      miningBlocksLeft,
     } = industrial
     const planet = planets[user.currentPlanet]
+    const miningPlanetName = planets[miningCommodityId || 0].name
 
     return (
       <MPIContainer>
-        <Rect
-          size="wide"
-        >
-          <div>One of the leading industrial contractors on planet {planet.name + " "}
-          has offered you a deal on the production of {commodityName}.</div>
-          <div>Contract details:</div>
-          <div>Upfront cost: Ξ{web3.utils.fromWei(miningCost || '0')}</div>
-          <div>Returns: {amountMinedPerBlock} kg of {commodityName} per block</div>
-          <div>Duration: {miningDuration} blocks</div>
-          <div>Would you like to accept their offer?</div>
-          <div className={classes.acceptDecline}>
-            <Rect
-              isButton
-              type="bad"
-            >Decline</Rect>
-            <Rect
-              isButton
-              type="good"
-              onClick={this.acceptOffer}
-            >Accept</Rect>
-          </div>
-        </Rect>
+        {miningBlocksLeft === '0' ?
+          <Rect
+            size="wide"
+          >
+            <div>One of the leading industrial contractors on planet {planet.name + " "}
+            has offered you a deal on the production of {commodityName}.</div>
+            <div>Contract details:</div>
+            <div>Upfront cost: Ξ{web3.utils.fromWei(miningCost || '0')}</div>
+            <div>Returns: {amountMinedPerBlock} kg of {commodityName} per block</div>
+            <div>Duration: {miningDuration} blocks</div>
+            <div>Would you like to accept their offer?</div>
+            <div className={classes.acceptDecline}>
+              <Rect
+                isButton
+                type="bad"
+              >Decline</Rect>
+              <Rect
+                isButton
+                type="good"
+                onClick={this.acceptOffer}
+              >Accept</Rect>
+            </div>
+          </Rect>
+          :
+          <div>You are already mining {commodityName} on planet {miningPlanetName}. There are {miningBlocksLeft} blocks left.</div>
+        }
       </MPIContainer>
     )
   }
