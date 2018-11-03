@@ -18,6 +18,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   event InvestmentMade(address addr, uint blocksLeft);
   event CommodityMinted(address to, uint8 commodityId);
+  event Log(uint blocksLeft);
 
   constructor(address[] _commodityAddresses, address _gta)
   CommodityInteractor(_commodityAddresses)
@@ -40,7 +41,8 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   }
 
   function mintCommodityFor(address _for) external onlyOwner {
-    require(investments[_for].blocksLeft > 0, "There is no more blocks left to mine for this investment");
+    emit Log(investments[_for].blocksLeft);
+    require(investments[_for].blocksLeft > 0, "There are no more blocks left to mine for this investment");
 
     investments[_for].blocksLeft = investments[_for].blocksLeft.sub(1);
 
@@ -74,7 +76,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
     return commodities[_commodityId].miningCost;
   }
 
-  function getInvestment(address _address) public view returns (uint8, uint) {
+  function getInvestment(address _address) public view returns (uint8 commodityId, uint blocksLeft) {
     return (investments[_address].commodityId, investments[_address].blocksLeft);
   }
 

@@ -16,6 +16,7 @@ const styles = {
   },
   topRow: {
     flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   topLeftCol: {
     flex: 1,

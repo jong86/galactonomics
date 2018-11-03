@@ -12,19 +12,13 @@ const styles = {
 }
 
 class PlanetIndustrial extends Component {
-  state = {
-    amountMinedPerBlock: '',
-    miningDuration: '',
-    miningCost: '',
-    commodityName: '',
-  };
-
   componentDidMount = () => {
     this.getCommodity()
+    this.getInvestment()
   }
 
   getCommodity = async () => {
-    const { user, contracts } = this.props
+    const { user, contracts, setIndustrialState } = this.props
 
     let response
     try {
@@ -33,7 +27,7 @@ class PlanetIndustrial extends Component {
       console.error(e)
     }
 
-    this.setState({
+    setIndustrialState({
       amountMinedPerBlock: response.amountMinedPerBlock.toString(),
       miningDuration: response.miningDuration.toString(),
       miningCost: response.miningCost.toString(),
@@ -41,33 +35,52 @@ class PlanetIndustrial extends Component {
     })
   }
 
+  getInvestment = async () => {
+    const { user, contracts, setIndustrialState } = this.props
+
+    let response
+    try {
+      response = await contracts.gia.getInvestment(user.address, { from: user.address })
+    } catch (e) {
+      console.error(e)
+    }
+
+    setIndustrialState({
+      miningCommodityId: response.commodityId.toString(),
+      miningBlocksLeft: response.blocksLeft.toString(),
+    })
+  }
+
   acceptOffer = () => {
-    const { user, contracts, setDialogContent } = this.props
-    const { miningCost } = this.state
+    const { user, contracts, setDialogContent, industrial } = this.props
+    const { miningCost } = industrial
 
     contracts.gia.investInProduction(
       user.currentPlanet,
       { from: user.address, value: miningCost },
     )
-    .on('transactionHash', () => {
+    .on('transactionHash', txHash => {
+      console.log('txHash', txHash);
       console.log("You accepted the offer")
     })
     .on('receipt', receipt => {
+      console.log('receipt', receipt);
       console.log("Production has begun...")
     })
     .on('error', e => {
+      console.log('e', e);
       setDialogContent("Error with investment. Did you provide enough ether?")
     })
   }
 
   render() {
-    const { classes, user, web3 } = this.props
+    const { classes, user, web3, industrial } = this.props
     const {
       amountMinedPerBlock,
       miningDuration,
       miningCost,
       commodityName,
-    } = this.state
+    } = industrial
     const planet = planets[user.currentPlanet]
 
     return (
@@ -78,7 +91,7 @@ class PlanetIndustrial extends Component {
           <div>One of the leading industrial contractors on planet {planet.name + " "}
           has offered you a deal on the production of {commodityName}.</div>
           <div>Contract details:</div>
-          <div>Upfront cost: Ξ{web3.utils.fromWei(miningCost)}</div>
+          <div>Upfront cost: Ξ{web3.utils.fromWei(miningCost || '0')}</div>
           <div>Returns: {amountMinedPerBlock} kg of {commodityName} per block</div>
           <div>Duration: {miningDuration} blocks</div>
           <div>Would you like to accept their offer?</div>
@@ -104,12 +117,14 @@ const mapStateToProps = state => {
     contracts: state.contracts,
     user: state.user,
     web3: state.web3,
+    industrial: state.industrial,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     setDialogContent: content => dispatch({ type: 'SET_DIALOG_CONTENT', content }),
+    setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
   }
 }
 
