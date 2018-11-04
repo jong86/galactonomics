@@ -41,7 +41,6 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   }
 
   function mintCommodityFor(address _for) external onlyOwner {
-    emit Log(investments[_for].blocksLeft);
     require(investments[_for].blocksLeft > 0, "There are no more blocks left to mine for this investment");
 
     investments[_for].blocksLeft = investments[_for].blocksLeft.sub(1);

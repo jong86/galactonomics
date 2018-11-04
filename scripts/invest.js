@@ -5,6 +5,8 @@ const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAutho
 module.exports = async function(done) {
   const accounts = await web3.eth.accounts
   const owner = accounts[0]
+
+  console.log('owner', owner);
   const bob = accounts[1]
   const alice = accounts[2]
   

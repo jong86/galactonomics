@@ -5,6 +5,9 @@ const giaJSON = require("../build/contracts/GalacticIndustrialAuthority.json")
 
 let investments = []
 let gia
+const owner = web3.eth.accounts[0]
+
+console.log('owner', owner);
 
 function getContract(json) {
   // Helper for initializing contracts
@@ -24,8 +27,9 @@ function initGIA() {
       }
       else {
         console.log('Heard InvestmentMade event')
+        // Add investment data to investments array to iterate over
         const { addr, blocksLeft } = res.args
-
+        investments.push({ address: addr, blocksLeft })
       }
     })
 
@@ -33,45 +37,45 @@ function initGIA() {
   })
 }
 
+function pollForNewBlocks() {
+  let lastBlock
+
+  setInterval(() => {
+    web3.eth.getBlockNumber((error, result) => {
+      if (error) return console.error(error)
+      if (result !== lastBlock) {
+        lastBlock = result
+        tellGIAToMint()
+      }
+    })
+  }, 500)
+}
+
+function tellGIAToMint() {
+  // Send mint commodity tx for every (active) investment once a new block is mined
+  investments.forEach(async investment => {
+    console.log('investment before', investment);
+
+    try {
+      await gia.mintCommodityFor(investment.address, { from: owner })
+      console.log("Minted for", investment.address)
+    } catch (e) {
+      return console.error("Could not mint for", investment.address, e)
+    }
+
+    investment.blocksLeft--
+
+    console.log('investment after', investment);
+  })
+
+  // Remove investments that have blocksLeft === 0
+  investments = investments.filter(investment => investment.blocksLeft > 0)
+}
+
 async function main() {
   await initGIA()
-
-
-
-
-  /* Commented out this logic until I get the event listening working: */
-
-  // let blockNumber
-  // try {
-  //   blockNumber = await web3.eth.getBlockNumber()
-  // } catch (e) {
-  //   console.error(e)
-  // }
-
-  //   // Adds investment info to investments array so we can loop over it
-  //   investments.push({
-  //     address: result.args.addr,
-  //     blocksLeft: result.args.blocksLeft,
-  //   })
-
-  // web3.eth.subscribe('newBlockHeaders', async (a, b) => {
-  //   // console.log("New block headers seen:", a, b)
-
-  //   // Send mint commodity tx for every (active) investment once a new block is mined
-  //   investments.forEach(async (investment) => {
-  //     try {
-  //       await gia.mintCommodityFor(investment.address, { from: owner })
-  //       console.log("Minted for", investment.address)
-  //     } catch (e) {
-  //       return console.error("Could not mint for", investment.address, e)
-  //     }
-
-  //     investment.blocksLeft--
-  //   })
-
-  //   // Remove investments that have blocksLeft === 0
-  //   investments = investments.filter(investment => investment.blocksLeft > 0)
-  // });
+  pollForNewBlocks()
 }
 
 main()
+console.log("Listening for events...")

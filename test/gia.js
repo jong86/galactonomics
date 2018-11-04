@@ -42,9 +42,8 @@ contract("GalacticIndustrialAuthority", accounts => {
     const i = response.logs.findIndex(item => item.event === "InvestmentMade")
     if (i === -1) assert(false, 'event not emitted')
     const { args } = response.logs[i]
-    assert.equal(args.from, player1, 'wrong address logged')
-    assert.equal(args.commodityId, 0, 'wrong commodityId logged')
-    assert.equal(args.value.toString(), amountRequired.toString(), 'wrong value logged')
+    assert.equal(args.addr, player1, 'wrong address logged')
+    assert.equal(args.blocksLeft.toString(), (await gia.getInvestment(args.addr))[1].toString(), 'wrong blocksLeft logged')
   })
 
   it("does not let a non-player invest in production of a commodity", async () => {
