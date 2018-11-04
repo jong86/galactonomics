@@ -16,13 +16,16 @@ function getContract(json) {
 function initGIA() {
   return new Promise(async (resolve, reject) => {
     gia = await getContract(giaJSON, web3)
-    const event = gia.InvestmentMade()
+    const event = gia.InvestmentMade({ fromBlock: 'latest' })
+
     event.watch(async (err, res) => {
       if (err) {
-        console.log('watch error', err)
+        console.log('Watch error', err)
       }
       else {
-        console.log('got an event', res)
+        console.log('Heard InvestmentMade event')
+        const { addr, blocksLeft } = res.args
+
       }
     })
 
