@@ -5,10 +5,36 @@ import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 
-const styles = {}
+const styles = {
+  container: {
+    flexDirection: 'row',
+    width: '100%',
+    '& > div:first-child': {
+      flex: '0.2',
+      border: '1px solid red',
+    },
+    '& > div:last-child': {
+      flex: '0.8',
+      border: '1px solid yellow',
+    },
+  }
+}
 
 class PlanetMarketplaces extends Component {
   state = {};
+
+  componentDidMount = () => {
+    this.getSellOrders()
+  }
+
+  getSellOrders = async () => {
+    const { contracts, user } = this.props
+
+    const numSellOrders = await contracts.gea.getNumSellOrders(user.currentPlanet, { from: user.address })
+    console.log('numSellOrders', numSellOrders);
+
+    const sellOrders = []
+  }
 
   render() {
     const { classes, user } = this.props
@@ -16,7 +42,14 @@ class PlanetMarketplaces extends Component {
 
     return (
       <MPIContainer>
-        PlanetMarketplaces
+        <div className={classes.container}>
+          <div>
+            left
+          </div>
+          <div>
+            right
+          </div>
+        </div>
       </MPIContainer>
     )
   }

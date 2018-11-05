@@ -97,7 +97,7 @@ class PlanetIndustrial extends Component {
             has offered you a deal on the production of {commodityName}.</div>
             <div>Contract details:</div>
             <div>Upfront cost: Ξ{web3.utils.fromWei(miningCost || '0')}</div>
-            <div>Returns: {amountMinedPerBlock} kg of {commodityName} per block</div>
+            <div>Returns: {amountMinedPerBlock} units of {commodityName} per block</div>
             <div>Duration: {miningDuration} blocks</div>
             <div>Would you like to accept their offer?</div>
             <div className={classes.acceptDecline}>

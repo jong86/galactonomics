@@ -91,4 +91,8 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
     uint _mass = sellOrder.quantity.mul(commodities[sellOrder.commodityId].mass);
     return _mass;
   }
+
+  function getNumSellOrders(uint8 _planetId) external view returns(uint) {
+    return marketplaces[_planetId].length;
+  }
 }

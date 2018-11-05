@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
@@ -54,7 +54,9 @@ class MPIContainer extends Component {
           <div className={classes.topLeftCol}>
             {/* Left col */}
             <CargoMeter current={user.currentCargo} max={user.maxCargo} />
-            <div className={classes.children}>{ this.props.children }</div>
+            <Fragment>
+              { this.props.children }
+            </Fragment>
           </div>
           <div className={classes.topRightCol}>
             {/* Right col */}
