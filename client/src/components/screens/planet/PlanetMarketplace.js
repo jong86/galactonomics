@@ -21,9 +21,12 @@ const styles = {
 }
 
 class PlanetMarketplaces extends Component {
-  state = {};
+  state = {
+    commodityNames: []
+  };
 
   componentDidMount = () => {
+    this.getCommoditiesList()
     this.getSellOrders()
   }
 
@@ -34,6 +37,12 @@ class PlanetMarketplaces extends Component {
     console.log('numSellOrders', numSellOrders);
 
     const sellOrders = []
+  }
+
+  getCommoditiesList = async () => {
+    const { contracts, user } = this.props
+    const commoditiesList = await contracts.gea.getCommoditiesList({ from: user.address })
+    this.setState({ commodityNames: Object.values(commoditiesList) })
   }
 
   render() {

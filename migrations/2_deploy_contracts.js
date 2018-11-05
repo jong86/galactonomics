@@ -52,8 +52,8 @@ module.exports = function(deployer) {
     const gta = await GalacticTransitAuthority.deployed()
 
     // Deploy GEA and GIA
-    await deployer.deploy(GalacticEconomicAuthority, commodityAddresses, gta.address)
-    await deployer.deploy(GalacticIndustrialAuthority, commodityAddresses, gta.address)
+    await deployer.deploy(GalacticEconomicAuthority, commodityAddresses, gta.address, { gas: 6000000 } )
+    await deployer.deploy(GalacticIndustrialAuthority, commodityAddresses, gta.address, { gas: 6000000 })
 
     // Set GEA and GIA for permissions
     const gea = await GalacticEconomicAuthority.deployed()

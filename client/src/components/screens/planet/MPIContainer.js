@@ -24,9 +24,6 @@ const styles = {
   topRightCol: {
     flex: 0.2,
   },
-  children: {
-    padding: '32px',
-  },
   navigation: {
     flexDirection: 'row',
   },

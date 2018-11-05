@@ -66,4 +66,24 @@ contract CommodityInteractor {
 
     return currentCargo;
   }
+
+  function getCommoditiesList() external view returns (
+    string,
+    string,
+    string,
+    string,
+    string,
+    string,
+    string
+  ) {
+    return (
+      commodities[0]._interface.name(),
+      commodities[1]._interface.name(),
+      commodities[2]._interface.name(),
+      commodities[3]._interface.name(),
+      commodities[4]._interface.name(),
+      commodities[5]._interface.name(),
+      commodities[6]._interface.name()
+    );
+  }
 }
