@@ -23,6 +23,7 @@ class App extends Component {
   componentDidMount = async () => {
     try {
       await this.initWeb3AndContracts()
+      await this.initEventListening()
 
       let ownsSpaceship
       ownsSpaceship = await this.checkIfOwnsSpaceship()
@@ -30,6 +31,7 @@ class App extends Component {
       if (ownsSpaceship) {
         await getPlayerInfo()
       }
+
 
     } catch (e) {
       console.error(e)
@@ -81,6 +83,21 @@ class App extends Component {
       reject(e)
     }
   })
+
+  initEventListening = () => {
+    const { contracts, user, setIndustrialState } = this.props
+    contracts.gia.CommodityMinted({ fromBlock: 'latest' })
+    .on('data', data => {
+      const { to, blocksLeft } = data.returnValues
+      
+      if (to === user.address) {
+        getPlayerInfo()
+        setIndustrialState({
+          miningBlocksLeft: blocksLeft,
+        })
+      }
+    })
+  }
 
   checkIfOwnsSpaceship = () => new Promise(async (resolve, reject) => {
     const { contracts, user } = this.props
@@ -134,6 +151,7 @@ const mapDispatchToProps = dispatch => {
     addContract: (instance, name) => dispatch({ type: 'ADD_CONTRACT', instance, name }),
     setAddress: (address) => dispatch({ type: 'SET_ADDRESS', address }),
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
+    setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
   }
 }
 

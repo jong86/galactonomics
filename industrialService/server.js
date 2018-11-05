@@ -86,7 +86,7 @@ async function tellGIAToMint() {
         return reject(e)
       }
 
-      investment.blocksLeft = investment.blocksLeft.sub(1)
+      investment.blocksLeft = (await gia.getInvestment(investment.address))[1]
       resolve()
     })))
   } catch (e) {

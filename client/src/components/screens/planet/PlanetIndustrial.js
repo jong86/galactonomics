@@ -70,7 +70,7 @@ class PlanetIndustrial extends Component {
     })
     .on('error', e => {
       console.log('e', e);
-      setDialogContent("Error with investment. Did you provide enough ether?")
+      setDialogContent("Error with investment")
     })
   }
 

@@ -9,6 +9,7 @@ module.exports = async function(done) {
   console.log('owner', owner);
   const bob = accounts[1]
   const alice = accounts[2]
+  const mallory = accounts[3]
 
   const gta = await GalacticTransitAuthority.deployed()
   const gea = await GalacticEconomicAuthority.deployed()

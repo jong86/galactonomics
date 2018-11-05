@@ -17,7 +17,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   mapping(address => Investment) investments;
 
   event InvestmentMade(address addr, uint blocksLeft);
-  event CommodityMinted(address to, uint8 commodityId);
+  event CommodityMinted(address to, uint blocksLeft);
   event Log(uint blocksLeft);
 
   constructor(address[] _commodityAddresses, address _gta)
@@ -56,6 +56,8 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
     }
 
     commodities[_commodityId]._interface.mint(_for, amountToMint);
+
+    emit CommodityMinted(_for, investments[_for].blocksLeft);
   }
 
 
