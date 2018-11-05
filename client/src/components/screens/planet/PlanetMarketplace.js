@@ -22,7 +22,9 @@ const styles = {
 
 class PlanetMarketplaces extends Component {
   state = {
-    commodityNames: []
+    commodityNames: [],
+    sellOrders: [],
+    selectedCommodity: '',
   };
 
   componentDidMount = () => {
@@ -32,11 +34,23 @@ class PlanetMarketplaces extends Component {
 
   getSellOrders = async () => {
     const { contracts, user } = this.props
-
     const numSellOrders = await contracts.gea.getNumSellOrders(user.currentPlanet, { from: user.address })
-    console.log('numSellOrders', numSellOrders);
 
-    const sellOrders = []
+    // Make an incrementing array from 0..n
+    const sellOrderIds = Array.apply(null, {length: numSellOrders}).map(Number.call, Number)
+
+    // Collect all sell orders
+    const sellOrders = await Promise.all(sellOrderIds.map(sellOrderId => new Promise(async (resolve, reject) => {
+      let sellOrder
+      try {
+        sellOrder = await contracts.gea.getSellOrder(user.currentPlanet, sellOrderId, { from: user.address })
+      } catch (e) {
+        reject(e)
+      }
+      resolve(sellOrder)
+    })))
+
+    this.setState({ sellOrders })
   }
 
   getCommoditiesList = async () => {
@@ -47,16 +61,28 @@ class PlanetMarketplaces extends Component {
 
   render() {
     const { classes, user } = this.props
+    const { commodityNames } = this.state
     const planet = planets[user.currentPlanet]
 
     return (
       <MPIContainer>
         <div className={classes.container}>
           <div>
-            left
+            {/* Render commodity names */}
+            {commodityNames.map((name, i) => (
+              <Rect
+                key={i}
+                isButton
+                size="wide"
+                onClick={() => this.setState({ selectedCommodity: name })}
+              >
+                {name}
+              </Rect>
+            ))}
           </div>
           <div>
-            right
+            {/* Render sell orders for currently viewed commodity */}
+
           </div>
         </div>
       </MPIContainer>

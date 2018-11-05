@@ -68,12 +68,12 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
 
   function getSellOrder(uint8 _planetId, uint _orderId) external view
   returns (
-    address,
-    uint8,
-    uint,
-    uint,
-    bool,
-    address
+    address seller,
+    uint8 commodityId,
+    uint quantity,
+    uint price,
+    bool open,
+    address buyer
   ) {
     SellOrder memory sellOrder = marketplaces[_planetId][_orderId];
     return (
