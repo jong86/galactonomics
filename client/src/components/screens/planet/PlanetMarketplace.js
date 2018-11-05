@@ -16,6 +16,9 @@ const styles = {
     '& > div:last-child': {
       flex: '0.8',
       border: '1px solid yellow',
+      '& > div': {
+
+      },
     },
   }
 }
@@ -24,7 +27,7 @@ class PlanetMarketplaces extends Component {
   state = {
     commodityNames: [],
     sellOrders: [],
-    selectedCommodity: '',
+    selectedCommodityId: null,
   };
 
   componentDidMount = () => {
@@ -61,7 +64,7 @@ class PlanetMarketplaces extends Component {
 
   render() {
     const { classes, user } = this.props
-    const { commodityNames } = this.state
+    const { commodityNames, sellOrders, selectedCommodityId } = this.state
     const planet = planets[user.currentPlanet]
 
     return (
@@ -74,7 +77,8 @@ class PlanetMarketplaces extends Component {
                 key={i}
                 isButton
                 size="wide"
-                onClick={() => this.setState({ selectedCommodity: name })}
+                active={selectedCommodityId === i}
+                onClick={() => this.setState({ selectedCommodityId: i })}
               >
                 {name}
               </Rect>
@@ -82,7 +86,15 @@ class PlanetMarketplaces extends Component {
           </div>
           <div>
             {/* Render sell orders for currently viewed commodity */}
-
+            {sellOrders
+            .filter(sellOrder => sellOrder.commodityId == selectedCommodityId)
+            .map((sellOrder, i) => (
+              <div key={i}>
+                {sellOrder.seller}
+                {sellOrder.price.toString()}
+                {sellOrder.quantity.toString()}
+              </div>
+            ))}
           </div>
         </div>
       </MPIContainer>

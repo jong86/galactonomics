@@ -48,6 +48,8 @@ module.exports = async function(done) {
     await gia.mintCommodityFor(user, { from: owner })
     await gia.mintCommodityFor(user, { from: owner })
     await gia.mintCommodityFor(user, { from: owner })
+    await gia.mintCommodityFor(user, { from: owner })
+    await gia.mintCommodityFor(user, { from: owner })
 
     try {
       await gta.travelToPlanet(1, { from: user })
