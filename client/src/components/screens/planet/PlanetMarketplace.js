@@ -31,7 +31,7 @@ class PlanetMarketplaces extends Component {
   };
 
   componentDidMount = () => {
-    this.getCommoditiesList()
+    this.getCommodityNames()
     this.getSellOrders()
   }
 
@@ -39,8 +39,8 @@ class PlanetMarketplaces extends Component {
     const { contracts, user } = this.props
     const numSellOrders = await contracts.gea.getNumSellOrders(user.currentPlanet, { from: user.address })
 
-    // Make an incrementing array from 0..n
-    const sellOrderIds = Array.apply(null, {length: numSellOrders}).map(Number.call, Number)
+    // Make an incrementing array from 0..n, will break if numSellOrders is larger than javascript max num
+    const sellOrderIds = Array.apply(null, {length: parseInt(numSellOrders.toString())}).map(Number.call, Number)
 
     // Collect all sell orders
     const sellOrders = await Promise.all(sellOrderIds.map(sellOrderId => new Promise(async (resolve, reject) => {
@@ -56,10 +56,22 @@ class PlanetMarketplaces extends Component {
     this.setState({ sellOrders })
   }
 
-  getCommoditiesList = async () => {
+  getCommodityNames = async () => {
     const { contracts, user } = this.props
-    const commoditiesList = await contracts.gea.getCommoditiesList({ from: user.address })
-    this.setState({ commodityNames: Object.values(commoditiesList) })
+
+    const commodityIds = Array.apply(null, {length: 7}).map(Number.call, Number)
+
+    const commodityNames = await Promise.all(commodityIds.map((commodityId, i) => new Promise(async (resolve, reject) => {
+      let commodityName
+      try {
+        commodityName = await contracts.gea.getCommodityName(i, { from: user.address })
+      } catch (e) {
+        reject(e)
+      }
+      resolve(commodityName)
+    })))
+
+    this.setState({ commodityNames })
   }
 
   render() {

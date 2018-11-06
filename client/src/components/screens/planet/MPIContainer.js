@@ -12,7 +12,7 @@ const styles = {
     border: '1px solid red',
     '& > div': {
       width: 'fill-available',
-    }
+    },
   },
   topRow: {
     flexDirection: 'row',
@@ -61,14 +61,18 @@ class MPIContainer extends Component {
               type="status"
               size="wide"
             >Ξ{user.balance}</Rect>
-            {sideButtons.map(sideButton => (
-              <Rect
-                isButton
-                onClick={sideButton.fn}
-              >
-                {sideButton.label}
-              </Rect>
-            ))}
+            <div style={{ marginTop: '20%', width: '100%' }}>
+              {sideButtons && sideButtons.map((sideButton, i) => (
+                <Rect
+                  key={i}
+                  isButton
+                  onClick={sideButton.fn}
+                  size="wide"
+                >
+                  {sideButton.label}
+                </Rect>
+              ))}
+            </div>
           </div>
         </div>
         <div className={classes.navigation}>

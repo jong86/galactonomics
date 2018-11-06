@@ -67,23 +67,27 @@ contract CommodityInteractor {
     return currentCargo;
   }
 
-  function getCommoditiesList() external view returns (
-    string,
-    string,
-    string,
-    string,
-    string,
-    string,
-    string
+  function getCommodityName(uint8 _id) external view returns (string) {
+    return commodities[_id]._interface.name();
+  }
+
+  function getAllBalances() external view returns (
+    uint,
+    uint,
+    uint,
+    uint,
+    uint,
+    uint,
+    uint
   ) {
     return (
-      commodities[0]._interface.name(),
-      commodities[1]._interface.name(),
-      commodities[2]._interface.name(),
-      commodities[3]._interface.name(),
-      commodities[4]._interface.name(),
-      commodities[5]._interface.name(),
-      commodities[6]._interface.name()
+      commodities[0]._interface.balanceOf(msg.sender),
+      commodities[1]._interface.balanceOf(msg.sender),
+      commodities[2]._interface.balanceOf(msg.sender),
+      commodities[3]._interface.balanceOf(msg.sender),
+      commodities[4]._interface.balanceOf(msg.sender),
+      commodities[5]._interface.balanceOf(msg.sender),
+      commodities[6]._interface.balanceOf(msg.sender)
     );
   }
 }
