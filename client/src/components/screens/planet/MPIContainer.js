@@ -40,7 +40,7 @@ class MPIContainer extends Component {
   state = {};
 
   render() {
-    const { classes, user, changeScreen, currentScreen } = this.props
+    const { classes, user, changeScreen, currentScreen, sideButtons } = this.props
     const planet = planets[user.currentPlanet]
     const iconSize = 96
 
@@ -61,7 +61,14 @@ class MPIContainer extends Component {
               type="status"
               size="wide"
             >Ξ{user.balance}</Rect>
-            <div>status/buttons here</div>
+            {sideButtons.map(sideButton => (
+              <Rect
+                isButton
+                onClick={sideButton.fn}
+              >
+                {sideButton.label}
+              </Rect>
+            ))}
           </div>
         </div>
         <div className={classes.navigation}>

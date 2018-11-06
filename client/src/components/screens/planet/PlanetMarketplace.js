@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
@@ -67,8 +67,13 @@ class PlanetMarketplaces extends Component {
     const { commodityNames, sellOrders, selectedCommodityId } = this.state
     const planet = planets[user.currentPlanet]
 
+    const sideButtons = [
+      { fn: () => console.log("buying..."), label: 'Buy' },
+      { fn: () => console.log("selling..."), label: 'Sell' },
+    ]
+
     return (
-      <MPIContainer>
+      <MPIContainer sideButtons={sideButtons}>
         <div className={classes.container}>
           <div>
             {/* Render commodity names */}
