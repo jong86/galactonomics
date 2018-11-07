@@ -25,13 +25,13 @@ const styles = {
 
 class PlanetMarketplaces extends Component {
   state = {
-    commodityNames: [],
+    commodities: [],
     sellOrders: [],
     selectedCommodityId: null,
   };
 
   componentDidMount = () => {
-    this.getCommodityNames()
+    this.getCommodities()
     this.getSellOrders()
   }
 
@@ -56,22 +56,58 @@ class PlanetMarketplaces extends Component {
     this.setState({ sellOrders })
   }
 
+  getCommodities = async () => {
+    const commodityNames = await this.getCommodityNames()
+    const commodityBalances = await this.getCommodityBalances()
+    this.setState({
+      commodities: commodityNames.map((commodityName, i) => ({ name: commodityName, myBalance: commodityBalances[i] }))
+    })
+  }
+
   getCommodityNames = async () => {
     const { contracts, user } = this.props
 
     const commodityIds = Array.apply(null, {length: 7}).map(Number.call, Number)
 
-    const commodityNames = await Promise.all(commodityIds.map((commodityId, i) => new Promise(async (resolve, reject) => {
-      let commodityName
+    return new Promise(async (resolve, reject) => {
       try {
-        commodityName = await contracts.gea.getCommodityName(i, { from: user.address })
+        const commodityNames = await Promise.all(commodityIds.map((commodityId, i) => new Promise(async (resolve, reject) => {
+          let commodityName
+          try {
+            commodityName = await contracts.gea.getCommodityName(i, { from: user.address })
+          } catch (e) {
+            reject(e)
+          }
+          resolve(commodityName)
+        })))
+        resolve(commodityNames)
       } catch (e) {
         reject(e)
       }
-      resolve(commodityName)
-    })))
+    })
+  }
 
-    this.setState({ commodityNames })
+  getCommodityBalances = async () => {
+    const { contracts, user } = this.props
+
+    const commodityIds = Array.apply(null, {length: 7}).map(Number.call, Number)
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        const commodityBalances = await Promise.all(commodityIds.map((commodityId, i) => new Promise(async (resolve, reject) => {
+          let commodityBalance
+          try {
+            commodityBalance = await contracts.gea.getCommodityBalance(i, { from: user.address })
+          } catch (e) {
+            reject(e)
+          }
+          resolve(commodityBalance)
+        })))
+        resolve(commodityBalances)
+      } catch (e) {
+        reject(e)
+      }
+    })
   }
 
   buy = () => {
@@ -84,7 +120,7 @@ class PlanetMarketplaces extends Component {
 
   render() {
     const { classes, user } = this.props
-    const { commodityNames, sellOrders, selectedCommodityId } = this.state
+    const { commodities, sellOrders, selectedCommodityId } = this.state
     const planet = planets[user.currentPlanet]
 
     const sideButtons = [
@@ -97,7 +133,7 @@ class PlanetMarketplaces extends Component {
         <div className={classes.container}>
           <div>
             {/* Render commodity names */}
-            {commodityNames.map((name, i) => (
+            {commodities.map((commodity, i) => (
               <Rect
                 key={i}
                 isButton
@@ -105,7 +141,8 @@ class PlanetMarketplaces extends Component {
                 active={selectedCommodityId === i}
                 onClick={() => this.setState({ selectedCommodityId: i })}
               >
-                {name}
+                <div>{commodity.name}</div>
+                <div>{"(Your balance: " + commodity.myBalance.toString() + ")"}</div>
               </Rect>
             ))}
           </div>
