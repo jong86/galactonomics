@@ -74,14 +74,22 @@ class PlanetMarketplaces extends Component {
     this.setState({ commodityNames })
   }
 
+  buy = () => {
+    this.props.setDialogContent('buying')
+  }
+
+  sell = () => {
+    this.props.setDialogContent('selling')
+  }
+
   render() {
     const { classes, user } = this.props
     const { commodityNames, sellOrders, selectedCommodityId } = this.state
     const planet = planets[user.currentPlanet]
 
     const sideButtons = [
-      { fn: () => console.log("buying..."), label: 'Buy' },
-      { fn: () => console.log("selling..."), label: 'Sell' },
+      { fn: this.buy, label: 'Buy' },
+      { fn: this.sell, label: 'Sell' },
     ]
 
     return (
@@ -129,6 +137,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    setDialogContent: content => dispatch({ type: 'SET_DIALOG_CONTENT', content }),
   }
 }
 
