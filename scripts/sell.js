@@ -35,7 +35,7 @@ module.exports = async function(done) {
       console.error(e)
     }
 
-    const amount = await gia.getAmountRequired(0)
+    const amount = await gia.getMiningCost(0)
     try {
       await gia.investInProduction(0, { from: user, value: amount })
     } catch (e) {

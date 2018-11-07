@@ -31,8 +31,8 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   onlyPlayer
   samePlanet(_commodityId)
   // To prevent player from investing if they can't fit the cargo:
-  canFitCargo(msg.sender, getCurrentCargo(msg.sender), getMassOfTotalProductionReturns(_commodityId)) {
-    require(msg.value == getAmountRequired(_commodityId), "You have not provided enough ether");
+  canFitCargo(msg.sender, getCurrentCargo(msg.sender), getTotalProductionReturns(_commodityId)) {
+    require(msg.value == getMiningCost(_commodityId), "You have not provided enough ether");
     require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
 
     uint _miningDuration = commodities[_commodityId].miningDuration;
@@ -63,17 +63,13 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   // View functions
 
-  function getMassOfTotalProductionReturns(uint8 _commodityId) public view returns (uint) {
+  function getTotalProductionReturns(uint8 _commodityId) public view returns (uint) {
     return commodities[_commodityId].amountMinedPerBlock.mul(
       commodities[_commodityId].miningDuration
     );
   }
 
-  function getMassOfOneProductionReturn(uint8 _commodityId) public view returns (uint) {
-    return commodities[_commodityId].amountMinedPerBlock;
-  }
-
-  function getAmountRequired(uint8 _commodityId) public view returns (uint) {
+  function getMiningCost(uint8 _commodityId) public view returns (uint) {
     return commodities[_commodityId].miningCost;
   }
 

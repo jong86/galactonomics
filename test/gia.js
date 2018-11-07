@@ -36,7 +36,7 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("should emit an event when player invests in production of a commodity", async () => {
-    const amountRequired = await gia.getAmountRequired(0)
+    const amountRequired = await gia.getMiningCost(0)
     const response = await gia.investInProduction(0, { from: player1, value: amountRequired })
 
     const i = response.logs.findIndex(item => item.event === "InvestmentMade")
@@ -47,7 +47,7 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("does not let a non-player invest in production of a commodity", async () => {
-    const amountRequired = await gia.getAmountRequired(0)
+    const amountRequired = await gia.getMiningCost(0)
     try {
       await gia.investInProduction(0, { from: nonPlayer, value: amountRequired })
     } catch (e) {
@@ -57,7 +57,7 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("should allow owner to mint commodities for another account", async () => {
-    const amountRequired = await gia.getAmountRequired(0)
+    const amountRequired = await gia.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     const currentCargoBefore = await gea.getCurrentCargo(player1)
     await gia.mintCommodityFor(player1)
@@ -99,14 +99,14 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("records investment in mapping when player invests in production of a commodity", async () => {
-    const amountRequired = await gia.getAmountRequired(0)
+    const amountRequired = await gia.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     const response = await gia.getInvestment(player1)
     assert.equal(response[0].toString(), "0", "did not record")
   })
 
   it("prevents player from mining more than one commodity at a time", async () => {
-    const amountRequired = await gia.getAmountRequired(0)
+    const amountRequired = await gia.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     try {
       await gia.investInProduction(0, { from: player1, value: amountRequired })
@@ -117,7 +117,7 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("prevents owner account from minting more if there are no blocksLeft", async () => {
-    const amountRequired = await gia.getAmountRequired(0)
+    const amountRequired = await gia.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     let blocksLeft = (await gia.getInvestment(player1))[1]
 
