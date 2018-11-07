@@ -65,23 +65,9 @@ contract CommodityInteractor {
     return commodities[_id]._interface.name();
   }
 
-  function getAllBalances() external view returns (
-    uint,
-    uint,
-    uint,
-    uint,
-    uint,
-    uint,
-    uint
-  ) {
+  function getCommodityBalance(uint8 _id) external view returns (uint) {
     return (
-      commodities[0]._interface.balanceOf(msg.sender),
-      commodities[1]._interface.balanceOf(msg.sender),
-      commodities[2]._interface.balanceOf(msg.sender),
-      commodities[3]._interface.balanceOf(msg.sender),
-      commodities[4]._interface.balanceOf(msg.sender),
-      commodities[5]._interface.balanceOf(msg.sender),
-      commodities[6]._interface.balanceOf(msg.sender)
+      commodities[_id]._interface.balanceOf(msg.sender),
     );
   }
 }
