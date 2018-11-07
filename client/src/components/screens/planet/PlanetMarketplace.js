@@ -117,7 +117,7 @@ class PlanetMarketplaces extends Component {
               <div key={i}>
                 {sellOrder.seller}
                 {sellOrder.price.toString()}
-                {sellOrder.quantity.toString()}
+                {sellOrder.amount.toString()}
               </div>
             ))}
           </div>

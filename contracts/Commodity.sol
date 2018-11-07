@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
 import "./ControlledByGEAAndGIA.sol";
 
 // Use of variable name 'value' in here only to be consistent with ERC20 code
-// Elsewhere 'value' is referred to as 'quantity'
+// Elsewhere 'value' is referred to as 'amount'
 contract Commodity is ERC20Detailed, ERC20Mintable, Ownable, ControlledByGEAAndGIA {
   constructor(string _name, string _symbol)
   ERC20Detailed(_name, _symbol, 0)

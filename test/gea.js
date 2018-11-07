@@ -109,21 +109,20 @@ contract("GalacticEconomicAuthority", accounts => {
   it("should fail if player cannot fit the cargo they want to buy", async () => {
     // Fill up player2's cargo
     await fillUpCargoByMinting(gta, gia, player2, 0)
-    // Find a quantity of cargo that will max out player2's cargo
+    // Find a amount of cargo that will max out player2's cargo
     const currentCargo = await gea.getCurrentCargo(player2)
     const availableCargo = await gta.getAvailableCargo(player2, currentCargo)
     const commodity = await gea.getCommodity(0)
-    const maxQuantity = availableCargo
 
     // Create a sell order with player1 that is too much cargo for player2
     const amountRequired = await gia.getAmountRequired(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     const amountMinedPerBlock = commodity[4]
-    const timesToMint = maxQuantity.div(amountMinedPerBlock)
+    const timesToMint = availableCargo.div(amountMinedPerBlock)
     try {
       await mintCommodityXTimes(gia, 0, timesToMint.add(1), player1)
     } catch (e) {}
-    const response = await gea.createSellOrder(0, 0, maxQuantity.add(1), price, { from: player1 })
+    const response = await gea.createSellOrder(0, 0, availableCargo.add(1), price, { from: player1 })
 
     const { orderId } = response.logs[0].args
 
