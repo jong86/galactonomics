@@ -16,9 +16,6 @@ const styles = {
     '& > div:last-child': {
       flex: '0.8',
       border: '1px solid yellow',
-      '& > div': {
-
-      },
     },
   }
 }
@@ -115,7 +112,17 @@ class PlanetMarketplaces extends Component {
   }
 
   sell = () => {
-    this.props.setDialogContent('selling')
+    const { selectedCommodityId, commodities } = this.state
+    const commodityName = commodities[selectedCommodityId].name
+    this.props.setDialogContent(
+      <Fragment>
+        <div>
+          Selling {commodityName}
+        </div>
+        <input placeholder="amount"></input>
+        <input placeholder="price"></input>
+      </Fragment>
+    )
   }
 
   render() {
@@ -132,7 +139,7 @@ class PlanetMarketplaces extends Component {
       <MPIContainer sideButtons={sideButtons}>
         <div className={classes.container}>
           <div>
-            {/* Render commodity names */}
+            {/* Render commodity names and balances */}
             {commodities.map((commodity, i) => (
               <Rect
                 key={i}
