@@ -44,25 +44,20 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   function buySpaceship(string _name) external payable {
     require(msg.value == costOfSpaceship, "You need to provide the correct amount of ether");
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship (for now)");
-
     numSpaceships = numSpaceships.add(1);
     uint _tokenId = numSpaceships;
-
     _mint(msg.sender, _tokenId);
     // currentPlanet 255 means 'not on a planet'
     addressToSpaceship[msg.sender] = Spaceship(_name, 255, 60000, 100, 100);
     addressOwnsSpaceship[msg.sender] = true;
-
     emit SpaceshipBought(msg.sender, _tokenId);
   }
 
   function travelToPlanet(uint8 _planetId) external onlyPlayer {
     require(0 <= _planetId && _planetId <= 6, "planetId must be between 0 and 6, inclusive");
     require(addressToSpaceship[msg.sender].currentFuel >= fuelUsage, "You do not have enough fuel to travel");
-
     addressToSpaceship[msg.sender].currentPlanet = _planetId;
     addressToSpaceship[msg.sender].currentFuel = addressToSpaceship[msg.sender].currentFuel.sub(fuelUsage);
-
     emit TravelComplete(msg.sender, _planetId, addressToSpaceship[msg.sender].currentFuel);
   }
 

@@ -34,7 +34,6 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   canFitCargo(msg.sender, getCurrentCargo(msg.sender), getTotalProductionReturns(_commodityId)) {
     require(msg.value == getMiningCost(_commodityId), "You have not provided enough ether");
     require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
-
     uint _miningDuration = commodities[_commodityId].miningDuration;
     investments[msg.sender] = Investment(_commodityId, _miningDuration);
     emit InvestmentMade(msg.sender, _miningDuration);
@@ -42,21 +41,15 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   function mintCommodityFor(address _for) external {
     require(investments[_for].blocksLeft > 0, "There are no more blocks left to mine for this investment");
-
     investments[_for].blocksLeft = investments[_for].blocksLeft.sub(1);
-
     uint8 _commodityId = investments[_for].commodityId;
-
     // Only mint what can fit on player's ship
     uint amountToMint = commodities[_commodityId].amountMinedPerBlock;
     uint availableCargo = gta.getAvailableCargo(_for, getCurrentCargo(_for));
-
     if (amountToMint >= availableCargo) {
       amountToMint = availableCargo;
     }
-
     commodities[_commodityId]._interface.mint(_for, amountToMint);
-
     emit CommodityMinted(_for, investments[_for].blocksLeft);
   }
 

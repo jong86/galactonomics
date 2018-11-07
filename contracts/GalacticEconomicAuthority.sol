@@ -34,14 +34,11 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
   external
   samePlanet(_planetId) {
     require(commodities[_commodityId]._interface.balanceOf(msg.sender) >= _amount, "You do not own enough of this commodity");
-
     // Arrange transfer of commodity from user to escrow
     SellOrder memory sellOrder = SellOrder(msg.sender, _commodityId, _amount, _price, true, address(0));
     commodities[_commodityId]._interface.transferForPlayer(msg.sender, address(this), _amount);
-
     uint _arrayLength = marketplaces[_planetId].push(sellOrder);
     uint _orderId = _arrayLength.sub(1);
-
     emit sellOrderCreated(_planetId, _orderId);
   }
 
@@ -51,17 +48,13 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
   canFitCargo(msg.sender, getCurrentCargo(msg.sender), marketplaces[_planetId][_orderId].amount) {
     SellOrder memory sellOrder = marketplaces[_planetId][_orderId];
     require(msg.value == sellOrder.amount.mul(sellOrder.price), "You did not send the correct amount of ether");
-
     // Arrange transfer of commodity out of escrow
     commodities[sellOrder.commodityId]._interface.transfer(msg.sender, sellOrder.amount);
     sellOrder.seller.transfer(msg.value);
-
     // Close order
     marketplaces[_planetId][_orderId].open = false;
-
     // Add buyer's name to order for historical purposes
     marketplaces[_planetId][_orderId].buyer = msg.sender;
-
     emit sellOrderPurchased(_planetId, _orderId);
   }
 
