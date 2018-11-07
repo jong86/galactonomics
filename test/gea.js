@@ -40,10 +40,9 @@ contract("GalacticEconomicAuthority", accounts => {
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
     const currentCargoAfter = await gea.getCurrentCargo(player1)
 
-    const cargoTotalMass = (await gea.getCommodity(0))[5].mul(qty)
     assert.equal(
       currentCargoBefore.toString(),
-      currentCargoAfter.add(cargoTotalMass).toString(),
+      currentCargoAfter.add(qty).toString(),
       "cargo levels were not adjusted"
     )
 
@@ -77,8 +76,7 @@ contract("GalacticEconomicAuthority", accounts => {
     await gea.buySellOrder(0, orderId, { from: player2, value: qty * price })
 
     const currentCargoAfter = await gea.getCurrentCargo(player2)
-    const cargoTotalMass = (await gea.getCommodity(0))[5].mul(qty)
-    assert.equal(currentCargoAfter.toString(), cargoTotalMass.toString(), "player2 did not have cargo adjusted")
+    assert.equal(currentCargoAfter.toString(), qty.toString(), "player2 did not have cargo adjusted")
 
     const balancePlayer2 = await commodities[0].balanceOf(player2)
     const player1EthAfter = await web3.eth.getBalance(player1)
@@ -115,8 +113,7 @@ contract("GalacticEconomicAuthority", accounts => {
     const currentCargo = await gea.getCurrentCargo(player2)
     const availableCargo = await gta.getAvailableCargo(player2, currentCargo)
     const commodity = await gea.getCommodity(0)
-    const mass = commodity[5]
-    const maxQuantity = availableCargo.div(mass)
+    const maxQuantity = availableCargo
 
     // Create a sell order with player1 that is too much cargo for player2
     const amountRequired = await gia.getAmountRequired(0)

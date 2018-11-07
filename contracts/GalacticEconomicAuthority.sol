@@ -90,7 +90,7 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
 
   function getMassOfSellOrder(uint8 _planetId, uint _orderId) private view returns (uint) {
     SellOrder memory sellOrder = marketplaces[_planetId][_orderId];
-    uint _mass = sellOrder.quantity.mul(commodities[sellOrder.commodityId].mass);
+    uint _mass = sellOrder.quantity;
     return _mass;
   }
 

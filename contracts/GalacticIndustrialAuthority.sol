@@ -65,12 +65,12 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   function getMassOfTotalProductionReturns(uint8 _commodityId) public view returns (uint) {
     return commodities[_commodityId].amountMinedPerBlock.mul(
-      commodities[_commodityId].mass * commodities[_commodityId].miningDuration
+      commodities[_commodityId].miningDuration
     );
   }
 
   function getMassOfOneProductionReturn(uint8 _commodityId) public view returns (uint) {
-    return commodities[_commodityId].amountMinedPerBlock.mul(commodities[_commodityId].mass);
+    return commodities[_commodityId].amountMinedPerBlock;
   }
 
   function getAmountRequired(uint8 _commodityId) public view returns (uint) {

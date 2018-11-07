@@ -64,7 +64,7 @@ contract("GalacticIndustrialAuthority", accounts => {
     const currentCargoAfter = await gea.getCurrentCargo(player1)
 
     const commodityInfo = await gea.getCommodity(0)
-    const cargoTotalMass = (commodityInfo[4]).mul(commodityInfo[5])
+    const cargoTotalMass = commodityInfo[4]
     assert.equal(
       currentCargoBefore.add(cargoTotalMass).toString(),
       currentCargoAfter.toString(),

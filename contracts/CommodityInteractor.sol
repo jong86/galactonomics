@@ -12,7 +12,6 @@ contract CommodityInteractor {
     CommodityInterface _interface;
     uint miningCost;
     uint amountMinedPerBlock;
-    uint mass;
     uint miningDuration;
   }
 
@@ -25,7 +24,6 @@ contract CommodityInteractor {
         CommodityInterface(_commodityAddresses[i]),
         100,
         1000,
-        2,
         8
       );
     }
@@ -40,7 +38,6 @@ contract CommodityInteractor {
     address addr,
     uint miningCost,
     uint amountMinedPerBlock,
-    uint mass,
     uint miningDuration
   ) {
     CommodityData memory commodityData = commodities[_commodityId];
@@ -51,7 +48,6 @@ contract CommodityInteractor {
       commodityData.addr,
       commodityData.miningCost,
       commodityData.amountMinedPerBlock,
-      commodityData.mass,
       commodityData.miningDuration
     );
   }
@@ -60,7 +56,7 @@ contract CommodityInteractor {
     uint currentCargo;
 
     for (uint8 i = 0; i < commodities.length; i++) {
-      uint cargoToAdd = commodities[i].mass.mul(commodities[i]._interface.balanceOf(_player));
+      uint cargoToAdd = commodities[i]._interface.balanceOf(_player);
       currentCargo = currentCargo.add(cargoToAdd);
     }
 
