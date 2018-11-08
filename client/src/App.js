@@ -130,7 +130,7 @@ class App extends Component {
     return (
       <Fragment>
         { screenMapping(this.props.currentScreen) }
-        <Dialog>{ this.props.dialogContent }</Dialog>
+        <Dialog>{this.props.dialogContent}</Dialog>
       </Fragment>
     )
   }
