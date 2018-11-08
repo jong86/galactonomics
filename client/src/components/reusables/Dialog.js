@@ -19,13 +19,13 @@ const styles = {
   }
 }
 
-let Dialog = ({ classes, children, onConfirm, clearDialogContent }) => (
+let Dialog = ({ classes, children, onConfirm, clearDialogContent, confirmText = "Ok" }) => (
   <div className={classes.Dialog}>
     { children }
     <Rect onClick={() => {
       if (onConfirm) return onConfirm()
       clearDialogContent()
-    }}>Ok</Rect>
+    }}>{confirmText}</Rect>
   </div>
 )
 

@@ -4,6 +4,7 @@ import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
+import handleChange from 'utils/handleChange'
 
 const styles = {
   container: {
@@ -22,14 +23,20 @@ const styles = {
 }
 
 class PlanetMarketplaces extends Component {
-  state = {
-    commodities: [],
-    sellOrders: [],
-    selectedCommodityId: null,
+  constructor(props) {
+    super(props)
 
-    sellAmount: 0,
-    sellPrice: 0,
-  };
+    this.state = {
+      commodities: [],
+      sellOrders: [],
+      selectedCommodityId: null,
+
+      sellAmount: '',
+      sellPrice: '',
+    }
+
+    this.handleChange = handleChange.bind(this);
+  }
 
   componentDidMount = () => {
     this.getCommodities()
@@ -61,7 +68,9 @@ class PlanetMarketplaces extends Component {
     const commodityNames = await this.getCommodityNames()
     const commodityBalances = await this.getCommodityBalances()
     this.setState({
-      commodities: commodityNames.map((commodityName, i) => ({ name: commodityName, myBalance: commodityBalances[i].toString() }))
+      commodities: commodityNames.map((commodityName, i) =>
+        ({name: commodityName, myBalance: commodityBalances[i].toString()})
+      )
     })
   }
 
@@ -146,16 +155,27 @@ class PlanetMarketplaces extends Component {
 
   sell = () => {
     const { selectedCommodityId, commodities, sellAmount, sellPrice } = this.state
-    const commodityName = commodities[selectedCommodityId].name
-    this.props.setDialogContent(
-      <Fragment>
-        <div>
-          Selling {commodityName}
-        </div>
-        <input placeholder="amount" value={sellAmount} type="number"></input>
-        <input placeholder="price" value={sellPrice} type="number"></input>
-      </Fragment>
-    )
+
+    if (selectedCommodityId !== null) {
+      const commodityName = commodities[selectedCommodityId].name
+      this.props.setDialogContent(
+        <Fragment>
+          <div>
+            Selling {commodityName}
+          </div>
+          <label htmlFor="sellAmount">
+            Amount
+            <input name="sellAmount" defaultValue={sellAmount} type="number" onChange={this.handleChange}></input>
+          </label>
+          <label htmlFor="sellPrice">
+            Price
+            <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
+          </label>
+        </Fragment>
+      )
+    } else {
+      this.props.setDialogContent("You need to select a commodity to sell")
+    }
   }
 
   render() {
