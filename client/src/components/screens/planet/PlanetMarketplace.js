@@ -9,6 +9,7 @@ const styles = {
   container: {
     flexDirection: 'row',
     width: '100%',
+    alignItems: 'flex-start',
     '& > div:first-child': {
       flex: '0.2',
       border: '1px solid red',
@@ -25,6 +26,9 @@ class PlanetMarketplaces extends Component {
     commodities: [],
     sellOrders: [],
     selectedCommodityId: null,
+
+    sellAmount: 0,
+    sellPrice: 0,
   };
 
   componentDidMount = () => {
@@ -36,7 +40,7 @@ class PlanetMarketplaces extends Component {
     const { contracts, user } = this.props
     const numSellOrders = await contracts.gea.getNumSellOrders(user.currentPlanet, { from: user.address })
 
-    // Make an incrementing array from 0..n, will break if numSellOrders is larger than javascript max num
+    // Make an incrementing array from 0..n
     const sellOrderIds = Array.apply(null, {length: parseInt(numSellOrders.toString())}).map(Number.call, Number)
 
     // Collect all sell orders
@@ -57,7 +61,7 @@ class PlanetMarketplaces extends Component {
     const commodityNames = await this.getCommodityNames()
     const commodityBalances = await this.getCommodityBalances()
     this.setState({
-      commodities: commodityNames.map((commodityName, i) => ({ name: commodityName, myBalance: commodityBalances[i] }))
+      commodities: commodityNames.map((commodityName, i) => ({ name: commodityName, myBalance: commodityBalances[i].toString() }))
     })
   }
 
@@ -107,20 +111,49 @@ class PlanetMarketplaces extends Component {
     })
   }
 
+  createSellOrder = async () => {
+    const { contracts, user } = this.props
+    const { selectedCommodityId, sellAmount, sellPrice } = this.state
+    let response
+
+    try {
+      response = await contracts.gea.createSellOrder(
+        user.currentPlanet,
+        selectedCommodityId,
+        sellAmount,
+        sellPrice,
+        { from: user.address },
+      )
+    } catch (e) {
+      console.error(e)
+      this.props.setDialogContent("Error creating sell order")
+    }
+  }
+
   buy = () => {
-    this.props.setDialogContent('buying')
+    // const { selectedOrderId, commodities } = this.state
+    // const commodityName = commodities[selectedCommodityId].name
+    // this.props.setDialogContent(
+    //   <Fragment>
+    //     <div>
+    //       Buying {commodityName}
+    //     </div>
+    //     <input placeholder="amount"></input>
+    //     <input placeholder="price"></input>
+    //   </Fragment>
+    // )
   }
 
   sell = () => {
-    const { selectedCommodityId, commodities } = this.state
+    const { selectedCommodityId, commodities, sellAmount, sellPrice } = this.state
     const commodityName = commodities[selectedCommodityId].name
     this.props.setDialogContent(
       <Fragment>
         <div>
           Selling {commodityName}
         </div>
-        <input placeholder="amount"></input>
-        <input placeholder="price"></input>
+        <input placeholder="amount" value={sellAmount} type="number"></input>
+        <input placeholder="price" value={sellPrice} type="number"></input>
       </Fragment>
     )
   }
@@ -155,15 +188,19 @@ class PlanetMarketplaces extends Component {
           </div>
           <div>
             {/* Render sell orders for currently viewed commodity */}
-            {sellOrders
-            .filter(sellOrder => sellOrder.commodityId == selectedCommodityId)
-            .map((sellOrder, i) => (
-              <div key={i}>
-                {sellOrder.seller}
-                {sellOrder.price.toString()}
-                {sellOrder.amount.toString()}
-              </div>
-            ))}
+            {selectedCommodityId !== null ?
+              sellOrders
+              .filter(sellOrder => sellOrder.commodityId == selectedCommodityId)
+              .map((sellOrder, i) => (
+                <div key={i}>
+                  {sellOrder.seller}
+                  {sellOrder.price.toString()}
+                  {sellOrder.amount.toString()}
+                </div>
+              ))
+              :
+              <Fragment>Select a commodity on the left panel to start buying or selling</Fragment>
+            }
           </div>
         </div>
       </MPIContainer>
