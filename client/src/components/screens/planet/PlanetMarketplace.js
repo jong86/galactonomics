@@ -6,6 +6,7 @@ import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import handleChange from 'utils/handleChange'
 import Dialog from 'components/reusables/Dialog'
+import getPlayerInfo from 'utils/getPlayerInfo'
 
 const styles = {
   container: {
@@ -137,7 +138,14 @@ class PlanetMarketplaces extends Component {
     } catch (e) {
       this.setState({ isSellBoxVisible: false })
       this.props.setAlertBoxContent("Error creating sell order")
+      return
     }
+
+    this.setState({ isSellBoxVisible: false })
+    // Refresh list of sell orders
+    this.getSellOrders()
+    // Refresh commodity balances
+    this.getCommodities()
   }
 
   onClickBuy = () => {
@@ -213,6 +221,7 @@ class PlanetMarketplaces extends Component {
           </div>
         </div>
 
+        {/* Sell box */}
         <Dialog type="status" isVisible={isSellBoxVisible}>
           <div>
             Selling {commodityName}
