@@ -68,7 +68,8 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
     uint amount,
     uint price,
     bool open,
-    address buyer
+    address buyer,
+    uint orderId
   ) {
     SellOrder memory sellOrder = marketplaces[_planetId][_orderId];
     return (
@@ -77,7 +78,8 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
       sellOrder.amount,
       sellOrder.price,
       sellOrder.open,
-      sellOrder.buyer
+      sellOrder.buyer,
+      _orderId
     );
   }
 

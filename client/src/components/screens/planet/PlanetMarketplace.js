@@ -6,7 +6,7 @@ import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import handleChange from 'utils/handleChange'
 import Dialog from 'components/reusables/Dialog'
-import getPlayerInfo from 'utils/getPlayerInfo'
+import SellOrder from 'components/reusables/SellOrder'
 
 const styles = {
   container: {
@@ -23,6 +23,8 @@ const styles = {
     },
   }
 }
+
+
 
 class PlanetMarketplaces extends Component {
   constructor(props) {
@@ -212,16 +214,21 @@ class PlanetMarketplaces extends Component {
           </div>
           <div>
             {/* Render sell orders for currently viewed commodity */}
+            <SellOrder isHeader />
             {selectedCommodityId !== null ?
               sellOrders
               .filter(sellOrder => sellOrder.commodityId == selectedCommodityId)
-              .map((sellOrder, i) => (
-                <div key={i}>
-                  {sellOrder.seller}
-                  {sellOrder.price.toString()}
-                  {sellOrder.amount.toString()}
-                </div>
-              ))
+              .map((sellOrder, i) => {
+                return (
+                  <SellOrder
+                    key={i}
+                    onClick={() => console.log(sellOrder)}
+                    seller={sellOrder.seller}
+                    amount={sellOrder.amount.toString()}
+                    price={sellOrder.price.toString()}
+                  />
+                )
+              })
               :
               <Fragment>Select a commodity on the left panel to start buying or selling</Fragment>
             }
