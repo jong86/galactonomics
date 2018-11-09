@@ -32,9 +32,12 @@ class PlanetMarketplaces extends Component {
       commodities: [],
       sellOrders: [],
       selectedCommodityId: null,
+      selectedSellOrderId: null,
 
       sellAmount: '',
       sellPrice: '',
+
+      isSellBoxVisible: false,
     }
 
     this.handleChange = handleChange.bind(this);
@@ -78,7 +81,6 @@ class PlanetMarketplaces extends Component {
 
   getCommodityNames = async () => {
     const { contracts, user } = this.props
-
     const commodityIds = Array.apply(null, {length: 7}).map(Number.call, Number)
 
     return new Promise(async (resolve, reject) => {
@@ -101,7 +103,6 @@ class PlanetMarketplaces extends Component {
 
   getCommodityBalances = async () => {
     const { contracts, user } = this.props
-
     const commodityIds = Array.apply(null, {length: 7}).map(Number.call, Number)
 
     return new Promise(async (resolve, reject) => {
@@ -125,10 +126,9 @@ class PlanetMarketplaces extends Component {
   createSellOrder = async () => {
     const { contracts, user } = this.props
     const { selectedCommodityId, sellAmount, sellPrice } = this.state
-    let response
 
     try {
-      response = await contracts.gea.createSellOrder(
+      await contracts.gea.createSellOrder(
         user.currentPlanet,
         selectedCommodityId,
         sellAmount,
@@ -148,18 +148,25 @@ class PlanetMarketplaces extends Component {
     this.getCommodities()
   }
 
-  onClickBuy = () => {
-    // const { selectedOrderId, commodities } = this.state
-    // const commodityName = commodities[selectedCommodityId].name
-    // this.props.setAlertBoxContent(
-    //   <Fragment>
-    //     <div>
-    //       Buying {commodityName}
-    //     </div>
-    //     <input placeholder="amount"></input>
-    //     <input placeholder="price"></input>
-    //   </Fragment>
-    // )
+  onClickBuy = async () => {
+    const { contracts, user } = this.props
+    const { selectedSellOrderId } = this.state
+
+    try {
+      await contracts.gea.buySellOrder(
+        user.currentPlanet,
+        selectedSellOrderId,
+        { from: user.address },
+      )
+    } catch (e) {
+      this.props.setAlertBoxContent("Error buying order")
+      return
+    }
+
+    // Refresh list of sell orders
+    this.getSellOrders()
+    // Refresh commodity balances
+    this.getCommodities()
   }
 
   onClickSell = () => {
