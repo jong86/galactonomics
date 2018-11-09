@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react"
 import injectSheet from 'react-jss'
+import { connect } from 'react-redux'
 import ellipAddr from 'utils/ellipAddr'
 
 const styles = {
@@ -21,12 +22,12 @@ const styles = {
   }
 }
 
-let SellOrder = ({ classes, onClick, seller, amount, price, isHeader }) => {
+let SellOrder = ({ classes, onClick, seller, amount, price, symbol, isHeader, fromWei }) => {
   let items
   if (isHeader) {
-    items = ['Seller', 'Amount', 'Price', 'Total']
+    items = ['Seller', 'Price (ETH)', `Amount (${symbol})`, 'Total (ETH)']
   } else {
-    items = [ellipAddr(seller), amount, price, amount * price]
+    items = [ellipAddr(seller), fromWei(String(price)), amount, fromWei(String(amount * price))]
   }
 
   return (
@@ -43,5 +44,12 @@ let SellOrder = ({ classes, onClick, seller, amount, price, isHeader }) => {
   )
 }
 
+const mapStateToProps = state => {
+  return {
+    fromWei: state.web3.utils.fromWei,
+  }
+}
+
+SellOrder = connect(mapStateToProps)(SellOrder)
 SellOrder = injectSheet(styles)(SellOrder)
 export default SellOrder

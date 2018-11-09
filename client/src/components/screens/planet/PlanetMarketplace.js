@@ -72,31 +72,33 @@ class PlanetMarketplaces extends Component {
   }
 
   getCommodities = async () => {
-    const commodityNames = await this.getCommodityNames()
+    const commodityInfos = await this.getCommodityInfos()
     const commodityBalances = await this.getCommodityBalances()
     this.setState({
-      commodities: commodityNames.map((commodityName, i) =>
-        ({name: commodityName, myBalance: commodityBalances[i].toString()})
-      )
+      commodities: commodityInfos.map((commodityInfo, i) => ({
+        name: commodityInfo.name,
+        symbol: commodityInfo.symbol,
+        myBalance: commodityBalances[i].toString()
+      }))
     })
   }
 
-  getCommodityNames = async () => {
+  getCommodityInfos = async () => {
     const { contracts, user } = this.props
     const commodityIds = Array.apply(null, {length: 7}).map(Number.call, Number)
 
     return new Promise(async (resolve, reject) => {
       try {
-        const commodityNames = await Promise.all(commodityIds.map((commodityId, i) => new Promise(async (resolve, reject) => {
-          let commodityName
+        const commodityInfos = await Promise.all(commodityIds.map((commodityId, i) => new Promise(async (resolve, reject) => {
+          let commodityInfo
           try {
-            commodityName = await contracts.gea.getCommodityName(i, { from: user.address })
+            commodityInfo = await contracts.gea.getCommodityInfo(i, { from: user.address })
           } catch (e) {
             reject(e)
           }
-          resolve(commodityName)
+          resolve(commodityInfo)
         })))
-        resolve(commodityNames)
+        resolve(commodityInfos)
       } catch (e) {
         reject(e)
       }
@@ -196,10 +198,12 @@ class PlanetMarketplaces extends Component {
       selectedSellOrderId,
       isSellBoxVisible
     } = this.state
-    let commodityName
-    if (commodities.length && selectedCommodityId) {
-      commodityName = commodities[selectedCommodityId].name
+
+    let commodity = { name: '', symbol: '' }
+    if (commodities.length && typeof selectedCommodityId === 'number') {
+      commodity = commodities[selectedCommodityId]
     }
+
     const planet = planets[user.currentPlanet]
 
     const sideButtons = [
@@ -227,24 +231,26 @@ class PlanetMarketplaces extends Component {
           </div>
           <div>
             {/* Render sell orders for currently viewed commodity */}
-            <SellOrder isHeader />
             {selectedCommodityId !== null ?
-              sellOrders
-              .filter(sellOrder => sellOrder.commodityId == selectedCommodityId && sellOrder.open)
-              .map(sellOrder => {
-                return (
-                  <SellOrder
-                    key={uuid()}
-                    onClick={() => this.setState({
-                      selectedSellOrderId: sellOrder.orderId.toString()
-                    })}
-                    seller={sellOrder.seller}
-                    amount={sellOrder.amount.toString()}
-                    price={sellOrder.price.toString()}
-                    isSelected={selectedSellOrderId === sellOrder.orderId.toString()}
-                  />
-                )
-              })
+              <Fragment>
+                <SellOrder isHeader symbol={commodity.symbol} />
+                {sellOrders
+                .filter(sellOrder => sellOrder.commodityId == selectedCommodityId && sellOrder.open)
+                .map(sellOrder => {
+                  return (
+                    <SellOrder
+                      key={uuid()}
+                      onClick={() => this.setState({
+                        selectedSellOrderId: sellOrder.orderId.toString()
+                      })}
+                      seller={sellOrder.seller}
+                      amount={sellOrder.amount.toString()}
+                      price={sellOrder.price.toString()}
+                      isSelected={selectedSellOrderId === sellOrder.orderId.toString()}
+                    />
+                  )
+                })}
+              </Fragment>
               :
               <Fragment>Select a commodity on the left panel to start buying or selling</Fragment>
             }
@@ -254,7 +260,7 @@ class PlanetMarketplaces extends Component {
         {/* Sell box */}
         <Dialog type="status" isVisible={isSellBoxVisible}>
           <div>
-            Selling {commodityName}
+            Selling {commodity.name}
           </div>
           <label htmlFor="sellAmount">
             Amount

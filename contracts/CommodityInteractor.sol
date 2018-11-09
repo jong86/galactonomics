@@ -61,8 +61,8 @@ contract CommodityInteractor {
     return currentCargo;
   }
 
-  function getCommodityName(uint8 _id) external view returns (string) {
-    return commodities[_id]._interface.name();
+  function getCommodityInfo(uint8 _id) external view returns (string name, string symbol) {
+    return (commodities[_id]._interface.name(), commodities[_id]._interface.symbol());
   }
 
   function getCommodityBalance(uint8 _id) external view returns (uint) {
