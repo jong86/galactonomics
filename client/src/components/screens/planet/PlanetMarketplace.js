@@ -208,7 +208,7 @@ class PlanetMarketplaces extends Component {
                 onClick={() => this.setState({ selectedCommodityId: i })}
               >
                 <div>{commodity.name}</div>
-                <div>{"(Your have: " + commodity.myBalance.toString() + " kg)"}</div>
+                <div>{"(You have: " + commodity.myBalance.toString() + " kg)"}</div>
               </Rect>
             ))}
           </div>
