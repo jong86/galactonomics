@@ -1,8 +1,6 @@
 import React from "react";
-import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import colorFromType from 'utils/colorFromType'
-import Rect from 'components/reusables/Rect'
 
 const styles = {
   Dialog: {
@@ -10,39 +8,20 @@ const styles = {
     color: ({ type }) => colorFromType(type),
     width: 'fit-content',
     borderRadius: 4,
-    padding: '4px',
+    padding: '16px',
     textAlign: "center",
-    display: ({ children }) => children ? 'absolute' : 'none',
+    display: ({ isVisible }) => isVisible ? 'absolute' : 'none',
     position: 'absolute',
     zIndex: 2,
     backgroundColor: '#000',
   }
 }
 
-let Dialog = ({ classes, type, children, onConfirm, clearAlertBoxContent, confirmText = "Ok" }) => (
+let Dialog = ({ classes, type, children }) => (
   <div className={classes.Dialog}>
     { children }
-    <Rect
-      isButton
-      onClick={() => {
-        if (onConfirm) return onConfirm()
-        clearAlertBoxContent()
-      }}
-    >{confirmText}</Rect>
   </div>
 )
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    clearAlertBoxContent: () => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content: '' }),
-  }
-}
-
-Dialog = connect(mapStateToProps, mapDispatchToProps)(Dialog)
 Dialog = injectSheet(styles)(Dialog)
 export default Dialog;

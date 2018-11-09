@@ -11,6 +11,7 @@ import truffleContract from "truffle-contract"
 
 import screenMapping from 'utils/screenMapping'
 import Dialog from 'components/reusables/Dialog'
+import Rect from 'components/reusables/Rect'
 
 import getPlayerInfo from 'utils/getPlayerInfo'
 
@@ -31,7 +32,6 @@ class App extends Component {
       if (ownsSpaceship) {
         await getPlayerInfo()
       }
-
 
     } catch (e) {
       console.error(e)
@@ -123,14 +123,26 @@ class App extends Component {
   }
 
   render() {
-    if (!this.state.isInitialized) {
+    const { isInitialized } = this.state
+    const { currentScreen, alertBoxContent, clearAlertBoxContent } = this.props
+
+    if (!isInitialized) {
       return <div>Activating L-337 Nanobulators...</div>
     }
 
     return (
       <Fragment>
-        { screenMapping(this.props.currentScreen) }
-        <Dialog type="info">{this.props.alertBoxContent}</Dialog>
+        {/* Render current screen */}
+        {screenMapping(currentScreen)}
+
+        {/* Global alert dialog box */}
+        <Dialog type="info" isVisible={alertBoxContent}>
+          {alertBoxContent}
+          <Rect
+            isButton
+            onClick={clearAlertBoxContent}
+          >Ok</Rect>
+        </Dialog>
       </Fragment>
     )
   }
@@ -152,6 +164,7 @@ const mapDispatchToProps = dispatch => {
     setAddress: (address) => dispatch({ type: 'SET_ADDRESS', address }),
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
     setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
+    clearAlertBoxContent: () => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content: '' }),
   }
 }
 
