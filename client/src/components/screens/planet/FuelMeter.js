@@ -48,7 +48,7 @@ class FuelMeter extends Component {
       this.setState({ isRefueling: false })
     })
     .on('error', e => {
-      this.props.setDialogContent(getRevertMsg(e.message))
+      this.props.setAlertBoxContent(getRevertMsg(e.message))
     })
   }
   

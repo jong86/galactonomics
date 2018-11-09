@@ -19,13 +19,16 @@ const styles = {
   }
 }
 
-let Dialog = ({ classes, children, onConfirm, clearDialogContent, confirmText = "Ok" }) => (
+let Dialog = ({ classes, type, children, onConfirm, clearAlertBoxContent, confirmText = "Ok" }) => (
   <div className={classes.Dialog}>
     { children }
-    <Rect onClick={() => {
-      if (onConfirm) return onConfirm()
-      clearDialogContent()
-    }}>{confirmText}</Rect>
+    <Rect
+      isButton
+      onClick={() => {
+        if (onConfirm) return onConfirm()
+        clearAlertBoxContent()
+      }}
+    >{confirmText}</Rect>
   </div>
 )
 
@@ -36,7 +39,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    clearDialogContent: () => dispatch({ type: 'SET_DIALOG_CONTENT', content: '' }),
+    clearAlertBoxContent: () => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content: '' }),
   }
 }
 

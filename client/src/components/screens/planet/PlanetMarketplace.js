@@ -135,14 +135,14 @@ class PlanetMarketplaces extends Component {
       )
     } catch (e) {
       console.error(e)
-      this.props.setDialogContent("Error creating sell order")
+      this.props.setAlertBoxContent("Error creating sell order")
     }
   }
 
   buy = () => {
     // const { selectedOrderId, commodities } = this.state
     // const commodityName = commodities[selectedCommodityId].name
-    // this.props.setDialogContent(
+    // this.props.setAlertBoxContent(
     //   <Fragment>
     //     <div>
     //       Buying {commodityName}
@@ -158,7 +158,7 @@ class PlanetMarketplaces extends Component {
 
     if (selectedCommodityId !== null) {
       const commodityName = commodities[selectedCommodityId].name
-      this.props.setDialogContent(
+      this.props.setAlertBoxContent(
         <Fragment>
           <div>
             Selling {commodityName}
@@ -174,7 +174,7 @@ class PlanetMarketplaces extends Component {
         </Fragment>
       )
     } else {
-      this.props.setDialogContent("You need to select a commodity to sell")
+      this.props.setAlertBoxContent("You need to select a commodity to sell")
     }
   }
 
@@ -238,7 +238,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setDialogContent: content => dispatch({ type: 'SET_DIALOG_CONTENT', content }),
+    setAlertBoxContent: content => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content }),
   }
 }
 

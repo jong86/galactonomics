@@ -52,7 +52,7 @@ class PlanetIndustrial extends Component {
   }
 
   acceptOffer = () => {
-    const { user, contracts, setDialogContent, industrial } = this.props
+    const { user, contracts, setAlertBoxContent, industrial } = this.props
     const { miningCost } = industrial
 
     contracts.gia.investInProduction(
@@ -70,7 +70,7 @@ class PlanetIndustrial extends Component {
     })
     .on('error', e => {
       console.log('e', e);
-      setDialogContent("Error with investment")
+      setAlertBoxContent("Error with investment")
     })
   }
 
@@ -131,7 +131,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setDialogContent: content => dispatch({ type: 'SET_DIALOG_CONTENT', content }),
+    setAlertBoxContent: content => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content }),
     setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
   }
 }

@@ -23,7 +23,7 @@ class Travelling extends Component {
   }
 
   travelToPlanet = () => {
-    const { contracts, user, changeScreen, setUserInfo, setDialogContent } = this.props
+    const { contracts, user, changeScreen, setUserInfo, setAlertBoxContent } = this.props
 
     contracts.gta.travelToPlanet(user.travellingTo, { from: user.address, gas: 200000 })
     .on('transactionHash', () => {
@@ -34,7 +34,7 @@ class Travelling extends Component {
       changeScreen('PlanetIntro')
     })
     .on('error', e => {
-      setDialogContent(getRevertMsg(e.message))
+      setAlertBoxContent(getRevertMsg(e.message))
       changeScreen('Travel')
     })
   }
@@ -71,7 +71,7 @@ const mapDispatchToProps = dispatch => {
   return {
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
-    setDialogContent: content => dispatch({ type: 'SET_DIALOG_CONTENT', content }),
+    setAlertBoxContent: content => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content }),
   }
 }
 

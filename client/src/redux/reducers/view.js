@@ -9,12 +9,12 @@ export default (state, action) => {
       }
     }
 
-    case 'SET_DIALOG_CONTENT': {
+    case 'SET_ALERT_BOX_CONTENT': {
       const { content } = action
 
       return {
         ...state,
-        dialogContent: content,
+        alertBoxContent: content,
       }
     }
 

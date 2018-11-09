@@ -130,7 +130,7 @@ class App extends Component {
     return (
       <Fragment>
         { screenMapping(this.props.currentScreen) }
-        <Dialog>{this.props.dialogContent}</Dialog>
+        <Dialog type="info">{this.props.alertBoxContent}</Dialog>
       </Fragment>
     )
   }
@@ -141,7 +141,7 @@ const mapStateToProps = (state, ownProps) => {
     currentScreen: state.view.currentScreen,
     contracts: state.contracts,
     user: state.user,
-    dialogContent: state.view.dialogContent,
+    alertBoxContent: state.view.alertBoxContent,
   }
 }
 
