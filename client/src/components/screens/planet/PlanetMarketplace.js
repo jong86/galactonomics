@@ -83,23 +83,18 @@ class PlanetMarketplaces extends Component {
 
   getCommodityInfos = async () => {
     const { contracts, user } = this.props
-    const commodityIds = Array.apply(null, {length: 7}).map(Number.call, Number)
+    const commodityInfos = []
 
     return new Promise(async (resolve, reject) => {
       try {
-        const commodityInfos = await Promise.all(commodityIds.map((commodityId, i) => new Promise(async (resolve, reject) => {
-          let commodityInfo
-          try {
-            commodityInfo = await contracts.gea.getCommodityInfo(i, { from: user.address })
-          } catch (e) {
-            reject(e)
-          }
-          resolve(commodityInfo)
-        })))
-        resolve(commodityInfos)
+        for (let i = 0; i < 7; i++) {
+          commodityInfos.push(await contracts.gea.getCommodityInfo(i, { from: user.address }))
+        }
       } catch (e) {
-        reject(e)
+        return reject(e)
       }
+
+      resolve(commodityInfos)
     })
   }
 
