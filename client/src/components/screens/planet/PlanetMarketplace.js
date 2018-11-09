@@ -5,6 +5,7 @@ import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import handleChange from 'utils/handleChange'
+import Dialog from 'components/reusables/Dialog'
 
 const styles = {
   container: {
@@ -134,12 +135,12 @@ class PlanetMarketplaces extends Component {
         { from: user.address },
       )
     } catch (e) {
-      console.error(e)
+      this.setState({ isSellBoxVisible: false })
       this.props.setAlertBoxContent("Error creating sell order")
     }
   }
 
-  buy = () => {
+  onClickBuy = () => {
     // const { selectedOrderId, commodities } = this.state
     // const commodityName = commodities[selectedCommodityId].name
     // this.props.setAlertBoxContent(
@@ -153,26 +154,10 @@ class PlanetMarketplaces extends Component {
     // )
   }
 
-  sell = () => {
-    const { selectedCommodityId, commodities, sellAmount, sellPrice } = this.state
-
+  onClickSell = () => {
+    const { selectedCommodityId } = this.state
     if (selectedCommodityId !== null) {
-      const commodityName = commodities[selectedCommodityId].name
-      this.props.setAlertBoxContent(
-        <Fragment>
-          <div>
-            Selling {commodityName}
-          </div>
-          <label htmlFor="sellAmount">
-            Amount
-            <input name="sellAmount" defaultValue={sellAmount} type="number" onChange={this.handleChange}></input>
-          </label>
-          <label htmlFor="sellPrice">
-            Price
-            <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
-          </label>
-        </Fragment>
-      )
+      this.setState({ isSellBoxVisible: true })
     } else {
       this.props.setAlertBoxContent("You need to select a commodity to sell")
     }
@@ -180,12 +165,16 @@ class PlanetMarketplaces extends Component {
 
   render() {
     const { classes, user } = this.props
-    const { commodities, sellOrders, selectedCommodityId } = this.state
+    const { commodities, sellOrders, sellPrice, sellAmount, selectedCommodityId, isSellBoxVisible } = this.state
+    let commodityName
+    if (commodities.length && selectedCommodityId) {
+      commodityName = commodities[selectedCommodityId].name
+    }
     const planet = planets[user.currentPlanet]
 
     const sideButtons = [
-      { fn: this.buy, label: 'Buy' },
-      { fn: this.sell, label: 'Sell' },
+      { fn: this.onClickBuy, label: 'Buy' },
+      { fn: this.onClickSell, label: 'Sell' },
     ]
 
     return (
@@ -202,7 +191,7 @@ class PlanetMarketplaces extends Component {
                 onClick={() => this.setState({ selectedCommodityId: i })}
               >
                 <div>{commodity.name}</div>
-                <div>{"(Your balance: " + commodity.myBalance.toString() + ")"}</div>
+                <div>{"(Your have: " + commodity.myBalance.toString() + " kg)"}</div>
               </Rect>
             ))}
           </div>
@@ -223,6 +212,25 @@ class PlanetMarketplaces extends Component {
             }
           </div>
         </div>
+
+        <Dialog type="status" isVisible={isSellBoxVisible}>
+          <div>
+            Selling {commodityName}
+          </div>
+          <label htmlFor="sellAmount">
+            Amount
+            <input name="sellAmount" defaultValue={sellAmount} type="number" onChange={this.handleChange}></input>
+          </label>
+          <label htmlFor="sellPrice">
+            Price
+            <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
+          </label>
+          <Rect
+            type="status"
+            isButton
+            onClick={this.createSellOrder}
+          >Ok</Rect>
+        </Dialog>
       </MPIContainer>
     )
   }

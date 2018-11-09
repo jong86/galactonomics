@@ -136,9 +136,10 @@ class App extends Component {
         {screenMapping(currentScreen)}
 
         {/* Global alert dialog box */}
-        <Dialog type="info" isVisible={alertBoxContent}>
+        <Dialog type="bad" isVisible={alertBoxContent}>
           {alertBoxContent}
           <Rect
+            type="bad"
             isButton
             onClick={clearAlertBoxContent}
           >Ok</Rect>

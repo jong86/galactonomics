@@ -5,7 +5,7 @@ import colorFromType from 'utils/colorFromType'
 const styles = {
   Dialog: {
     border: ({ type }) => '1px solid ' + colorFromType(type),
-    color: ({ type }) => colorFromType(type),
+    color: '#fff',
     width: 'fit-content',
     borderRadius: 4,
     padding: '16px',

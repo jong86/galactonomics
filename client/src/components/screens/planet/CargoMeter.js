@@ -6,7 +6,7 @@ const styles = {}
 
 let CargoMeter = ({ current = 0, max = 0 }) => (
   <Rect>
-    Cargo: {current.toString()}/{max.toString()}
+    {"Cargo: " + current.toString()}/{max.toString() + " kg"}
   </Rect>
 )
 
