@@ -202,8 +202,6 @@ class PlanetMarketplaces extends Component {
     }
     const planet = planets[user.currentPlanet]
 
-    console.log('sellOrders', sellOrders);
-
     const sideButtons = [
       { fn: this.onClickBuy, label: 'Buy' },
       { fn: this.onClickSell, label: 'Sell' },

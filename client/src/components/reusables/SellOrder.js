@@ -6,11 +6,11 @@ const styles = {
   SellOrder: {
     flexDirection: 'row',
     width: 'fill-available',
-    cursor: ({ isHeader }) => { if (!isHeader) return 'pointer' },
+    cursor: ({ isHeader }) => !isHeader ? 'pointer' : null,
 
     backgroundColor: ({ isSelected }) => isSelected ? '#777' : null,
     '&:hover': {
-      backgroundColor: ({ isSelected }) => isSelected ? '#777' : '#222',
+      backgroundColor: ({ isSelected, isHeader }) => { if (!isHeader) return isSelected ? '#777' : '#222' },
     },
 
     '& > div': {
