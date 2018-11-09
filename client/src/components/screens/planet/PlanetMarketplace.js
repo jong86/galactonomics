@@ -8,6 +8,7 @@ import handleChange from 'utils/handleChange'
 import uuid from 'utils/uuid'
 import Dialog from 'components/reusables/Dialog'
 import SellOrder from 'components/reusables/SellOrder'
+import getPlayerInfo from 'utils/getPlayerInfo'
 
 const styles = {
   container: {
@@ -147,17 +148,20 @@ class PlanetMarketplaces extends Component {
     this.getSellOrders()
     // Refresh commodity balances
     this.getCommodities()
+    // To refresh cargo
+    getPlayerInfo()
   }
 
   onClickBuy = async () => {
     const { contracts, user } = this.props
-    const { selectedSellOrderId } = this.state
+    const { sellOrders, selectedSellOrderId } = this.state
+    const sellOrder = sellOrders[selectedSellOrderId]
 
     try {
       await contracts.gea.buySellOrder(
         user.currentPlanet,
         selectedSellOrderId,
-        { from: user.address },
+        { from: user.address, value: sellOrder.amount.mul(sellOrder.price)},
       )
     } catch (e) {
       this.props.setAlertBoxContent("Error buying order")
@@ -168,6 +172,8 @@ class PlanetMarketplaces extends Component {
     this.getSellOrders()
     // Refresh commodity balances
     this.getCommodities()
+    // To refresh cargo
+    getPlayerInfo()
   }
 
   onClickSell = () => {
@@ -195,6 +201,8 @@ class PlanetMarketplaces extends Component {
       commodityName = commodities[selectedCommodityId].name
     }
     const planet = planets[user.currentPlanet]
+
+    console.log('sellOrders', sellOrders);
 
     const sideButtons = [
       { fn: this.onClickBuy, label: 'Buy' },
@@ -224,7 +232,7 @@ class PlanetMarketplaces extends Component {
             <SellOrder isHeader />
             {selectedCommodityId !== null ?
               sellOrders
-              .filter(sellOrder => sellOrder.commodityId == selectedCommodityId)
+              .filter(sellOrder => sellOrder.commodityId == selectedCommodityId && sellOrder.open)
               .map(sellOrder => {
                 return (
                   <SellOrder
