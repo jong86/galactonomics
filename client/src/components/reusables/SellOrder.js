@@ -8,10 +8,15 @@ const styles = {
     width: 'fill-available',
     cursor: ({ isHeader }) => { if (!isHeader) return 'pointer' },
 
+    backgroundColor: ({ isSelected }) => isSelected ? '#777' : null,
+    '&:hover': {
+      backgroundColor: ({ isSelected }) => isSelected ? '#777' : '#222',
+    },
+
     '& > div': {
       border: '1px solid grey',
       width: '25%',
-      fontWeight: ({ isHeader }) => { if (isHeader) return 'bold' },
+      fontWeight: ({ isHeader }) => isHeader ? 'bold' : null,
     },
   }
 }

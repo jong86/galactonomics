@@ -5,6 +5,7 @@ import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import handleChange from 'utils/handleChange'
+import uuid from 'utils/uuid'
 import Dialog from 'components/reusables/Dialog'
 import SellOrder from 'components/reusables/SellOrder'
 
@@ -24,8 +25,6 @@ const styles = {
   }
 }
 
-
-
 class PlanetMarketplaces extends Component {
   constructor(props) {
     super(props)
@@ -42,7 +41,7 @@ class PlanetMarketplaces extends Component {
       isSellBoxVisible: false,
     }
 
-    this.handleChange = handleChange.bind(this);
+    this.handleChange = handleChange.bind(this)
   }
 
   componentDidMount = () => {
@@ -182,7 +181,15 @@ class PlanetMarketplaces extends Component {
 
   render() {
     const { classes, user } = this.props
-    const { commodities, sellOrders, sellPrice, sellAmount, selectedCommodityId, isSellBoxVisible } = this.state
+    const {
+      commodities,
+      sellOrders,
+      sellPrice,
+      sellAmount,
+      selectedCommodityId,
+      selectedSellOrderId,
+      isSellBoxVisible
+    } = this.state
     let commodityName
     if (commodities.length && selectedCommodityId) {
       commodityName = commodities[selectedCommodityId].name
@@ -218,14 +225,17 @@ class PlanetMarketplaces extends Component {
             {selectedCommodityId !== null ?
               sellOrders
               .filter(sellOrder => sellOrder.commodityId == selectedCommodityId)
-              .map((sellOrder, i) => {
+              .map(sellOrder => {
                 return (
                   <SellOrder
-                    key={i}
-                    onClick={() => console.log(sellOrder)}
+                    key={uuid()}
+                    onClick={() => this.setState({
+                      selectedSellOrderId: sellOrder.orderId.toString()
+                    })}
                     seller={sellOrder.seller}
                     amount={sellOrder.amount.toString()}
                     price={sellOrder.price.toString()}
+                    isSelected={selectedSellOrderId === sellOrder.orderId.toString()}
                   />
                 )
               })
