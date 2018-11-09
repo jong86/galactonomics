@@ -17,11 +17,9 @@ const styles = {
     alignItems: 'flex-start',
     '& > div:first-child': {
       flex: '0.2',
-      border: '1px solid red',
     },
     '& > div:last-child': {
       flex: '0.8',
-      border: '1px solid yellow',
     },
   }
 }

@@ -9,7 +9,6 @@ const styles = {
   outer: {
     height: '100%',
     width: 'fill-available',
-    border: '1px solid red',
     '& > div': {
       width: 'fill-available',
     },
