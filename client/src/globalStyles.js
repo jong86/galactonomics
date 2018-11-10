@@ -1,3 +1,5 @@
+import planets from 'utils/planets'
+
 export default {
   '@global': {
     body: {

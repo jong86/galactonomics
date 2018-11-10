@@ -4,6 +4,7 @@ import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 import CargoMeter from 'components/screens/planet/CargoMeter'
+import PlanetBackground from "./PlanetBackground"
 
 const styles = {
   outer: {
@@ -12,19 +13,19 @@ const styles = {
     '& > div': {
       width: 'fill-available',
     },
-  },
-  topRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  topLeftCol: {
-    flex: 1,
-  },
-  topRightCol: {
-    flex: 0.2,
-  },
-  navigation: {
-    flexDirection: 'row',
+    '& > div:first-child': {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      '& > div:first-child': {
+        flex: 1,
+      },
+      '& > div:last-child': {
+        flex: 0.2,
+      },
+    },
+    '& > div:last-child': {
+      flexDirection: 'row',
+    },
   },
 }
 
@@ -44,49 +45,49 @@ class MPIContainer extends Component {
     const iconSize = 96
 
     return (
-      <div className={classes.outer}>
-        <div className={classes.topRow}>
-          {/* Top row */}
-          <div className={classes.topLeftCol}>
-            {/* Left col */}
-            <CargoMeter current={user.currentCargo} max={user.maxCargo} />
-            <Fragment>
-              { this.props.children }
-            </Fragment>
-          </div>
-          <div className={classes.topRightCol}>
-            {/* Right col */}
-            <Rect
-              type="status"
-              size="wide"
-            >Ξ{user.balance}</Rect>
-            <div style={{ marginTop: '20%', width: '100%' }}>
-              {sideButtons && sideButtons.map((sideButton, i) => (
-                <Rect
-                  key={i}
-                  isButton
-                  onClick={sideButton.fn}
-                  size="wide"
-                >
-                  {sideButton.label}
-                </Rect>
-              ))}
+      <Fragment>
+        <PlanetBackground />
+        <div className={classes.outer}>
+          <div>
+            <div>
+              <CargoMeter current={user.currentCargo} max={user.maxCargo} />
+              <Fragment>
+                { this.props.children }
+              </Fragment>
+            </div>
+            <div >
+              <Rect
+                type="status"
+                size="wide"
+              >Ξ{user.balance}</Rect>
+              <div style={{ marginTop: '20%', width: '100%' }}>
+                {sideButtons && sideButtons.map((sideButton, i) => (
+                  <Rect
+                    key={i}
+                    isButton
+                    onClick={sideButton.fn}
+                    size="wide"
+                  >
+                    {sideButton.label}
+                  </Rect>
+                ))}
+              </div>
             </div>
           </div>
+          <div className={classes.navigation}>
+            {/* Bottom row */}
+            {navLinks.map((link, i) =>
+              <Rect
+                key={i}
+                isButton
+                active={currentScreen === link.name}
+                size="wide4"
+                onClick={() => changeScreen(link.name)}
+              >{link.label}</Rect>
+            )}
+          </div>
         </div>
-        <div className={classes.navigation}>
-          {/* Bottom row */}
-          {navLinks.map((link, i) =>
-            <Rect
-              key={i}
-              isButton
-              active={currentScreen === link.name}
-              size="wide4"
-              onClick={() => changeScreen(link.name)}
-            >{link.label}</Rect>
-          )}
-        </div>
-      </div>
+      </Fragment>
     );
   }
 }

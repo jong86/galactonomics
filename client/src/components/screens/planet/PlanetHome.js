@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
@@ -10,17 +10,30 @@ import {
   FaIndustry,
 } from 'react-icons/fa';
 import getPlayerInfo from 'utils/getPlayerInfo'
+import PlanetBackground from "./PlanetBackground";
 
 const styles = {
-  container: {
-    display: 'grid',
+  PlanetHome: {
     height: '100%',
     width: 'fill-available',
-    gridTemplateColumns: '1.25fr 2.5fr 0.75fr',
-    gridTemplateRows: '1fr',
-    gridGap: '1px 1px',
-    gridTemplateAreas: ". . .",
-    alignItems: 'start',
+    display: 'flex',
+    flexDirection: 'row',
+
+    '& > div': {
+      marginTop: 'auto',
+    },
+
+    '& > div:nth-child(1)': {
+      width: '20%',
+    },
+
+    '& > div:nth-child(2)': {
+      width: '65%',
+    },
+
+    '& > div:nth-child(3)': {
+      width: '15%',
+    },
   },
   planetImg: {
     width: '60%',
@@ -49,21 +62,21 @@ class PlanetHome extends Component {
     const iconSize = 96
 
     return (
-      <div className={classes.container}>
-        <div>
-          <img src={planet.img} className={classes.planetImg} />
-          <Rect
-            onClick={() => changeScreen('Travel')}
-            isButton
-            type="good"
-            size="wide"
-          >Travel (Leave {planet.name})</Rect>
-          <Rect
-            type="status"
-            size="wide"
-          >Ξ{user.balance}</Rect>
-        </div>
-        <div>
+      <Fragment>
+        <PlanetBackground />
+        <div className={classes.PlanetHome}>
+          <div>
+            <Rect
+              onClick={() => changeScreen('Travel')}
+              isButton
+              type="good"
+              size="wide"
+            >Travel (Leave {planet.name})</Rect>
+            <Rect
+              type="status"
+              size="wide"
+            >Ξ{user.balance}</Rect>
+          </div>
           <div className={classes.top3}>
             <Rect
               onClick={() => changeScreen('PlanetMarketplace')}
@@ -93,14 +106,14 @@ class PlanetHome extends Component {
               Industrial Operations
             </Rect>
           </div>
+          <div>
+            <FuelMeter
+              currentFuel={user.currentFuel}
+              maxFuel={user.maxFuel}
+            />
+          </div>
         </div>
-        <div>
-          <FuelMeter
-            currentFuel={user.currentFuel}
-            maxFuel={user.maxFuel}
-          />
-        </div>
-      </div>
+      </Fragment>
     );
   }
 }
