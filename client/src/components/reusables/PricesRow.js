@@ -23,11 +23,11 @@ const styles = {
 }
 
 let PricesRow = ({ classes, onClick, symbol, pricesArray, isHeader, fromWei }) => {
-  let items
+  let items = []
   if (isHeader) {
     items = planets.map(planet => planet.name).unshift('')
   } else {
-    items = pricesArray.unshift(symbol)
+    pricesArray.unshift(symbol)
   }
 
   return (
