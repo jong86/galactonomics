@@ -16,9 +16,6 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
     address buyer;
   }
 
-  // Mapping of planetId to  sell orders array
-  // mapping(uint8 => SellOrder[]) public marketplaces;
-
   // Mapping of planetId to commodityId to sell orders array
   mapping(uint8 => mapping(uint8 => SellOrder[])) public marketplaces;
 
