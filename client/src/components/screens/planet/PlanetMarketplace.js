@@ -232,39 +232,38 @@ class PlanetMarketplaces extends Component {
               </Rect>
             ))}
           </div>
-            {isLoading ?
-              <div>
-                <Loader />
-                Loading orders...
-              </div>
-              :
-              <div>
-                {/* Render sell orders for currently viewed commodity */}
-                {selectedCommodityId !== null ?
-                  <Fragment>
-                    <SellOrder isHeader symbol={commodity.symbol} />
-                    {sellOrders
-                      .filter(sellOrder => sellOrder.open)
-                      .map(sellOrder => (
-                        <SellOrder
-                          key={uuid()}
-                          onClick={() => this.setState({
-                            selectedSellOrderId: sellOrder.orderId.toString()
-                          })}
-                          seller={sellOrder.seller}
-                          amount={sellOrder.amount.toString()}
-                          price={sellOrder.price.toString()}
-                          isSelected={selectedSellOrderId === sellOrder.orderId.toString()}
-                        />
-                      ))
-                    }
-                  </Fragment>
-                  :
-                  'Select a commodity on the left panel to start buying or selling'
-                }
-                </div>
+          {isLoading ?
+            <div>
+              <Loader />
+              Loading orders...
+            </div>
+            :
+            <div>
+              {/* Render sell orders for currently viewed commodity */}
+              {selectedCommodityId !== null ?
+                <Fragment>
+                  <SellOrder isHeader symbol={commodity.symbol} />
+                  {sellOrders
+                    .filter(sellOrder => sellOrder.open)
+                    .map(sellOrder => (
+                      <SellOrder
+                        key={uuid()}
+                        onClick={() => this.setState({
+                          selectedSellOrderId: sellOrder.orderId.toString()
+                        })}
+                        seller={sellOrder.seller}
+                        amount={sellOrder.amount.toString()}
+                        price={sellOrder.price.toString()}
+                        isSelected={selectedSellOrderId === sellOrder.orderId.toString()}
+                      />
+                    ))
+                  }
+                </Fragment>
+                :
+                'Select a commodity on the left panel to start buying or selling'
               }
-            }
+            </div>
+          }
         </div>
 
         {/* Sell box */}
