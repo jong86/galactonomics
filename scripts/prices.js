@@ -2,10 +2,6 @@
   This scripts gets state to point with many orders on each planet, to test viewing of prices on planets
 */
 
-/*
-  This script fast-forwards state to point where user can sell a commodity
-*/
-
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
@@ -13,11 +9,6 @@ const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAutho
 module.exports = async function(done) {
   const accounts = await web3.eth.accounts
   const owner = accounts[0]
-
-  console.log('owner', owner);
-  const bob = accounts[1]
-  const alice = accounts[2]
-  const mallory = accounts[3]
 
   const gta = await GalacticTransitAuthority.deployed()
   const gea = await GalacticEconomicAuthority.deployed()
@@ -49,6 +40,7 @@ module.exports = async function(done) {
           await gia.mintCommodityFor(user, { from: owner })
         }
 
+        console.log(user, 'is now travelling to planet', nextPlanet)
         await gta.travelToPlanet(nextPlanet, { from: user })
         const prevPlanet = planet
 
@@ -57,7 +49,7 @@ module.exports = async function(done) {
 
         const balance = await gea.getCommodityBalance(prevPlanet, { from: user })
 
-        console.log(user, 'is unloading all previously mined commodity in a sell order on next planet')
+        console.log(user, 'is unloading all previously mined commodity in a sell order')
         await gea.createSellOrder(nextPlanet, prevPlanet, balance, 100, { from: user })
 
       } catch (e) {

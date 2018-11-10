@@ -48,25 +48,38 @@ class PlanetMarketplaces extends Component {
     this.getSellOrders()
   }
 
+  componentDidUpdate(_, prevState) {
+    if (this.state.selectedCommodityId !== prevState.selectedCommodityId) {
+      this.getSellOrders()
+    }
+  }
+
   getSellOrders = async () => {
     const { contracts, user } = this.props
-    const numSellOrders = await contracts.gea.getNumSellOrders(user.currentPlanet, { from: user.address })
+    const { selectedCommodityId } = this.state
 
-    // Make an incrementing array from 0..n
-    const sellOrderIds = Array.apply(null, {length: parseInt(numSellOrders.toString())}).map(Number.call, Number)
+    if (selectedCommodityId !== null) {
+      const numSellOrders = await contracts.gea.getNumSellOrders(
+        user.currentPlanet,
+        selectedCommodityId,
+        { from: user.address }
+      )
 
-    // Collect all sell orders
-    const sellOrders = await Promise.all(sellOrderIds.map(sellOrderId => new Promise(async (resolve, reject) => {
-      let sellOrder
-      try {
-        sellOrder = await contracts.gea.getSellOrder(user.currentPlanet, sellOrderId, { from: user.address })
-      } catch (e) {
-        reject(e)
-      }
-      resolve(sellOrder)
-    })))
+      const sellOrderIds = Array.apply(null, {length: parseInt(numSellOrders.toString())}).map(Number.call, Number)
 
-    this.setState({ sellOrders })
+      // Collect all sell orders
+      const sellOrders = await Promise.all(sellOrderIds.map(sellOrderId => new Promise(async (resolve, reject) => {
+        let sellOrder
+        try {
+          sellOrder = await contracts.gea.getSellOrder(user.currentPlanet, selectedCommodityId, sellOrderId, { from: user.address })
+        } catch (e) {
+          reject(e)
+        }
+        resolve(sellOrder)
+      })))
+
+      this.setState({ sellOrders })
+    }
   }
 
   getCommodities = async () => {
@@ -143,12 +156,13 @@ class PlanetMarketplaces extends Component {
 
   onClickBuy = async () => {
     const { contracts, user } = this.props
-    const { sellOrders, selectedSellOrderId } = this.state
+    const { sellOrders, selectedCommodityId, selectedSellOrderId } = this.state
     const sellOrder = sellOrders[selectedSellOrderId]
 
     try {
       await contracts.gea.buySellOrder(
         user.currentPlanet,
+        selectedCommodityId,
         selectedSellOrderId,
         { from: user.address, value: sellOrder.amount.mul(sellOrder.price)},
       )
@@ -222,7 +236,7 @@ class PlanetMarketplaces extends Component {
               <Fragment>
                 <SellOrder isHeader symbol={commodity.symbol} />
                 {sellOrders
-                .filter(sellOrder => sellOrder.commodityId == selectedCommodityId && sellOrder.open)
+                .filter(sellOrder => sellOrder.open)
                 .map(sellOrder => {
                   return (
                     <SellOrder
