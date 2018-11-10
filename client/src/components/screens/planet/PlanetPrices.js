@@ -1,15 +1,17 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import PricesRow from 'components/reusables/PricesRow'
 import uuid from 'utils/uuid'
+import Loader from 'components/reusables/Loader'
 
 const styles = {}
 
 class PlanetPrices extends Component {
   state = {
+    isLoading: true,
     commoditiesMinMaxes: [],
     commodityInfos: [],
   }
@@ -82,23 +84,32 @@ class PlanetPrices extends Component {
     })
 
     console.log('commoditiesMinMaxes', commoditiesMinMaxes);
-    this.setState({ commoditiesMinMaxes })
+    this.setState({ commoditiesMinMaxes, isLoading: false, })
   }
 
   render() {
     const { classes, user } = this.props
-    const { commoditiesMinMaxes, commodityInfos } = this.state
+    const { commoditiesMinMaxes, commodityInfos, isLoading } = this.state
 
     return (
       <MPIContainer>
-        <PricesRow isHeader />
-        {commoditiesMinMaxes.length && commoditiesMinMaxes.map((commodityMinMaxes, i) => (
-          <PricesRow
-            key={uuid()}
-            minMaxes={commodityMinMaxes}
-            symbol={commodityInfos[i].symbol}
-          />
-        ))}
+        {isLoading ?
+          <Fragment>
+            <Loader />
+            Loading prices...
+          </Fragment>
+          :
+          <Fragment>
+            <PricesRow isHeader />
+            {commoditiesMinMaxes.length && commoditiesMinMaxes.map((commodityMinMaxes, i) => (
+              <PricesRow
+                key={uuid()}
+                minMaxes={commodityMinMaxes}
+                symbol={commodityInfos[i].symbol}
+              />
+            ))}
+          </Fragment>
+        }
       </MPIContainer>
     )
   }

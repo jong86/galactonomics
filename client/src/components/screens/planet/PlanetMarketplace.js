@@ -9,6 +9,7 @@ import uuid from 'utils/uuid'
 import Dialog from 'components/reusables/Dialog'
 import SellOrder from 'components/reusables/SellOrder'
 import getPlayerInfo from 'utils/getPlayerInfo'
+import Loader from 'components/reusables/Loader'
 
 const styles = {
   container: {
@@ -38,6 +39,8 @@ class PlanetMarketplaces extends Component {
       sellPrice: '',
 
       isSellBoxVisible: false,
+
+      isLoading: false,
     }
 
     this.handleChange = handleChange.bind(this)
@@ -45,7 +48,6 @@ class PlanetMarketplaces extends Component {
 
   componentDidMount = () => {
     this.getCommodities()
-    this.getSellOrders()
   }
 
   componentDidUpdate(_, prevState) {
@@ -59,6 +61,8 @@ class PlanetMarketplaces extends Component {
     const { selectedCommodityId } = this.state
 
     if (selectedCommodityId !== null) {
+      this.setState({ isLoading: true })
+
       const numSellOrders = await contracts.gea.getNumSellOrders(
         user.currentPlanet,
         selectedCommodityId,
@@ -77,8 +81,7 @@ class PlanetMarketplaces extends Component {
         }
         resolve(sellOrder)
       })))
-
-      this.setState({ sellOrders })
+      this.setState({ sellOrders, isLoading: false })
     }
   }
 
@@ -189,7 +192,7 @@ class PlanetMarketplaces extends Component {
   }
 
   render() {
-    const { classes, user } = this.props
+    const { classes } = this.props
     const {
       commodities,
       sellOrders,
@@ -197,15 +200,14 @@ class PlanetMarketplaces extends Component {
       sellAmount,
       selectedCommodityId,
       selectedSellOrderId,
-      isSellBoxVisible
+      isSellBoxVisible,
+      isLoading,
     } = this.state
 
     let commodity = { name: '', symbol: '' }
     if (commodities.length && typeof selectedCommodityId === 'number') {
       commodity = commodities[selectedCommodityId]
     }
-
-    const planet = planets[user.currentPlanet]
 
     const sideButtons = [
       { fn: this.onClickBuy, label: 'Buy' },
@@ -230,32 +232,39 @@ class PlanetMarketplaces extends Component {
               </Rect>
             ))}
           </div>
-          <div>
-            {/* Render sell orders for currently viewed commodity */}
-            {selectedCommodityId !== null ?
-              <Fragment>
-                <SellOrder isHeader symbol={commodity.symbol} />
-                {sellOrders
-                .filter(sellOrder => sellOrder.open)
-                .map(sellOrder => {
-                  return (
-                    <SellOrder
-                      key={uuid()}
-                      onClick={() => this.setState({
-                        selectedSellOrderId: sellOrder.orderId.toString()
-                      })}
-                      seller={sellOrder.seller}
-                      amount={sellOrder.amount.toString()}
-                      price={sellOrder.price.toString()}
-                      isSelected={selectedSellOrderId === sellOrder.orderId.toString()}
-                    />
-                  )
-                })}
-              </Fragment>
+            {isLoading ?
+              <div>
+                <Loader />
+                Loading orders...
+              </div>
               :
-              <Fragment>Select a commodity on the left panel to start buying or selling</Fragment>
+              <div>
+                {/* Render sell orders for currently viewed commodity */}
+                {selectedCommodityId !== null ?
+                  <Fragment>
+                    <SellOrder isHeader symbol={commodity.symbol} />
+                    {sellOrders
+                      .filter(sellOrder => sellOrder.open)
+                      .map(sellOrder => (
+                        <SellOrder
+                          key={uuid()}
+                          onClick={() => this.setState({
+                            selectedSellOrderId: sellOrder.orderId.toString()
+                          })}
+                          seller={sellOrder.seller}
+                          amount={sellOrder.amount.toString()}
+                          price={sellOrder.price.toString()}
+                          isSelected={selectedSellOrderId === sellOrder.orderId.toString()}
+                        />
+                      ))
+                    }
+                  </Fragment>
+                  :
+                  'Select a commodity on the left panel to start buying or selling'
+                }
+                </div>
+              }
             }
-          </div>
         </div>
 
         {/* Sell box */}
