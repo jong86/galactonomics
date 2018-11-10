@@ -10,12 +10,13 @@ const styles = {}
 
 class PlanetPrices extends Component {
   state = {
-    commodityPrices: [],
+    commoditiesMinMaxes: [],
+    commodityInfos: [],
   }
 
   componentDidMount = async () => {
     const commodityInfos = await this.getCommodityInfos()
-    console.log('commodityInfos', commodityInfos);
+    this.setState({commodityInfos})
     this.getAllSellOrders()
   }
 
@@ -40,7 +41,7 @@ class PlanetPrices extends Component {
     const { contracts, user, web3 } = this.props
 
     // Collect all sell orders for each commodity on each planet
-    let commodityPrices = []
+    let commoditiesPrices = []
     for (let commodityId = 0; commodityId < 7; commodityId++) {
       const planets = []
       for (let planetId = 0; planetId < 7; planetId++) {
@@ -54,11 +55,11 @@ class PlanetPrices extends Component {
         sellOrders = sellOrders.filter(order => order.open)
         planets[planetId] = sellOrders
       }
-      commodityPrices[commodityId] = planets
+      commoditiesPrices[commodityId] = planets
     }
 
     // Change array to only having min/max prices
-    commodityPrices = commodityPrices.map(commodity => {
+    const commoditiesMinMaxes = commoditiesPrices.map(commodity => {
       return commodity.map(planet => {
         if (planet.length) {
           let min = planet[0].price
@@ -75,30 +76,29 @@ class PlanetPrices extends Component {
 
           return { min, max }
         } else {
-          return { min: '-', max: '-' }
+          return { min: '', max: '' }
         }
       })
     })
 
-    console.log('commodityPrices', commodityPrices);
-    this.setState({ commodityPrices })
+    console.log('commoditiesMinMaxes', commoditiesMinMaxes);
+    this.setState({ commoditiesMinMaxes })
   }
 
   render() {
     const { classes, user } = this.props
-    const { planetPrices } = this.state
+    const { commoditiesMinMaxes, commodityInfos } = this.state
 
     return (
       <MPIContainer>
-        {/* {planetPrices.map(planet => {
-          return (
-            <PricesRow
-              key={uuid()}
-              minMax={[1, 2, 3]}
-              symbol={'BTC'}
-            />
-          )
-        })} */}
+        <PricesRow isHeader />
+        {commoditiesMinMaxes.length && commoditiesMinMaxes.map((commodityMinMaxes, i) => (
+          <PricesRow
+            key={uuid()}
+            minMaxes={commodityMinMaxes}
+            symbol={commodityInfos[i].symbol}
+          />
+        ))}
       </MPIContainer>
     )
   }

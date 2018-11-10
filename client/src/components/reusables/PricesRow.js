@@ -1,33 +1,33 @@
-import React from "react"
+import React, { Fragment } from "react"
 import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
 import planets from 'utils/planets'
+import uuid from 'utils/uuid'
 
 const styles = {
   PricesRow: {
     flexDirection: 'row',
     width: 'fill-available',
+    backgroundColor: '#000',
     cursor: ({ isHeader }) => !isHeader ? 'pointer' : null,
-
-    backgroundColor: ({ isSelected }) => isSelected ? '#777' : null,
-    '&:hover': {
-      backgroundColor: ({ isSelected, isHeader }) => { if (!isHeader) return isSelected ? '#777' : '#222' },
-    },
 
     '& > div': {
       border: '1px solid grey',
       width: '25%',
       fontWeight: ({ isHeader }) => isHeader ? 'bold' : null,
+      flexDirection: 'row',
     },
   }
 }
 
-let PricesRow = ({ classes, onClick, symbol, pricesArray, isHeader, fromWei }) => {
+let PricesRow = ({ classes, onClick, symbol, minMaxes, isHeader, fromWei }) => {
   let items = []
   if (isHeader) {
-    items = planets.map(planet => planet.name).unshift('')
+    items = planets.map(planet => planet.name)
+    items.unshift(" ")
   } else {
-    pricesArray.unshift(symbol)
+    items = minMaxes.slice()
+    items.unshift({symbol})
   }
 
   return (
@@ -35,11 +35,29 @@ let PricesRow = ({ classes, onClick, symbol, pricesArray, isHeader, fromWei }) =
       onClick={onClick}
       className={classes.PricesRow}
     >
-      {items.map((item, i) => (
-        <div key={i}>
-          {item}
-        </div>
-      ))}
+      {items.length && items.map((item, i) => {
+        if (isHeader) {
+          return (
+            <div key={uuid()}>
+              {item}
+            </div>
+          )
+        } else {
+          return (i === 0 ? <div key={uuid()}>{item.symbol}</div> :
+            <div key={uuid()}>
+              <span key={uuid()}>
+                {item.min && item.min.toString()}
+              </span>
+              <span key={uuid()}>
+                {' - '}
+              </span>
+              <span key={uuid()}>
+                {item.max && item.max.toString()}
+              </span>
+            </div>
+          )
+        }
+      })}
     </div>
   )
 }

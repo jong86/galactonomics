@@ -9,6 +9,7 @@ const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAutho
 module.exports = async function(done) {
   const accounts = await web3.eth.accounts
   const owner = accounts[0]
+  const sellingAccounts = accounts.slice(0, 4)
 
   const gta = await GalacticTransitAuthority.deployed()
   const gea = await GalacticEconomicAuthority.deployed()
@@ -18,42 +19,54 @@ module.exports = async function(done) {
 
   const planets = [0, 1, 2, 3, 4, 5, 6]
 
-  for (let user of accounts) {
+  for (let user of sellingAccounts) {
     await gta.buySpaceship('a', { from: user, value: costOfSpaceship })
     console.log(user, 'bought a spaceship')
   }
 
-  for (let user of accounts) {
-    console.log(user, 'is now travelling, investing, and creating orders...')
+  for (let xPlanets = 1; xPlanets < planets.length; xPlanets++) {
+    for (let user of sellingAccounts) {
+      console.log(user, 'is now travelling/mining/selling. (Travelling', xPlanets, 'planet indexes at time)')
 
-    await gta.travelToPlanet(0, { from: user })
+      // Start every round of trips at planet 0
+      let planet = 0
+      await gta.travelToPlanet(planet, { from: user })
 
-    for (let planet = 0; planet < planets.length; planet++) {
-      const nextPlanet = planet === 6 ? 0 : planet + 1
+      let tripsLeft = 7
+      while (tripsLeft) {
+        try {
+          // Mine the commodity
+          const amount = await gia.getMiningCost(planet)
+          await gia.investInProduction(planet, { from: user, value: amount })
+          console.log('minting commodity', planet, 'for', user, '...')
+          for (let i = 0; i < 8; i++) {
+            await gia.mintCommodityFor(user, { from: owner })
+          }
 
-      try {
-        const amount = await gia.getMiningCost(planet)
-        await gia.investInProduction(planet, { from: user, value: amount })
+          // Travel to the next planet (and refuel)
+          const prevPlanet = planet
+          planet = planet+xPlanets > 6 ? 0+(xPlanets-1) : planet+xPlanets
+          console.log(user, 'is now travelling to planet', planet)
+          await gta.travelToPlanet(planet, { from: user })
+          const refuelCost = await gta.refuelCost()
+          await gta.refuel({ from: user, value: refuelCost })
 
-        console.log('minting commodity', planet,  'for', user, '...')
-        for (let i = 0; i < 8; i++) {
-          await gia.mintCommodityFor(user, { from: owner })
+          // Unload commodity from previous planet on this new planet
+          const balance = await gea.getCommodityBalance(prevPlanet, { from: user })
+          console.log(user, 'is unloading all previously mined commodity in a sell order')
+          await gea.createSellOrder(
+            planet,
+            prevPlanet,
+            balance,
+            Math.floor(Math.random() * 1000),
+            { from: user }
+          )
+
+        } catch (e) {
+          console.error(e)
         }
 
-        console.log(user, 'is now travelling to planet', nextPlanet)
-        await gta.travelToPlanet(nextPlanet, { from: user })
-        const prevPlanet = planet
-
-        const refuelCost = await gta.refuelCost()
-        await gta.refuel({ from: user, value: refuelCost })
-
-        const balance = await gea.getCommodityBalance(prevPlanet, { from: user })
-
-        console.log(user, 'is unloading all previously mined commodity in a sell order')
-        await gea.createSellOrder(nextPlanet, prevPlanet, balance, 100, { from: user })
-
-      } catch (e) {
-        console.error(e)
+        tripsLeft--
       }
     }
   }
