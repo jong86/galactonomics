@@ -1,6 +1,7 @@
 import { store } from '../redux/store'
 
 export default () => new Promise(async (resolve, reject) => {
+  /* 'Refreshes' user data and saves in redux store */
   const state = store.getState()
   const { contracts, user, web3 } = state
 

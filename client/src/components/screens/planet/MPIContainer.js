@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
 import CargoMeter from 'components/screens/planet/CargoMeter'
-import PlanetBackground from "./PlanetBackground"
+import PlanetBackground from "components/reusables/PlanetBackground"
 
 const styles = {
   MPIContainer: {
@@ -46,6 +46,7 @@ class MPIContainer extends Component {
         <PlanetBackground />
         <div className={classes.MPIContainer}>
           <div>
+            {/* Top Row */}
             <div>
               {/* Top-left */}
               <CargoMeter current={user.currentCargo} max={user.maxCargo} />
@@ -73,7 +74,7 @@ class MPIContainer extends Component {
               </div>
             </div>
           </div>
-          <div className={classes.navigation}>
+          <div>
             {/* Bottom row */}
             {navLinks.map((link, i) =>
               <Rect

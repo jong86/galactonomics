@@ -10,7 +10,7 @@ import {
   FaIndustry,
 } from 'react-icons/fa';
 import getPlayerInfo from 'utils/getPlayerInfo'
-import PlanetBackground from "./PlanetBackground";
+import PlanetBackground from "components/reusables/PlanetBackground";
 
 const styles = {
   PlanetHome: {
