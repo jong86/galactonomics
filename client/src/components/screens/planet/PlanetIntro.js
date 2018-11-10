@@ -5,12 +5,11 @@ import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 
 const styles = {
-  PlanetIntro: {}
+  PlanetIntro: {
+  }
 }
 
 class PlanetIntro extends Component {
-  state = {};
-
   render() {
     const { classes, user, changeScreen } = this.props
     const planet = planets[user.currentPlanet]

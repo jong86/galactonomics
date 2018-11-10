@@ -10,7 +10,8 @@ import {
   FaIndustry,
 } from 'react-icons/fa';
 import getPlayerInfo from 'utils/getPlayerInfo'
-import PlanetBackground from "components/reusables/PlanetBackground";
+import PlanetBackground from "components/reusables/PlanetBackground"
+
 
 const styles = {
   PlanetHome: {
@@ -18,6 +19,7 @@ const styles = {
     width: 'fill-available',
     display: 'flex',
     flexDirection: 'row',
+    marginBottom: '4px',
 
     '& > div': {
       marginTop: 'auto',
@@ -71,11 +73,11 @@ class PlanetHome extends Component {
               isButton
               type="good"
               size="wide"
-            >Travel (Leave {planet.name})</Rect>
+              >Travel (Leave {planet.name})</Rect>
             <Rect
               type="status"
               size="wide"
-            >Ξ{user.balance}</Rect>
+              >Ξ{user.balance}</Rect>
           </div>
           <div className={classes.top3}>
             <Rect
@@ -83,7 +85,7 @@ class PlanetHome extends Component {
               isButton
               type="info"
               size="wide3"
-            >
+              >
               <FaBalanceScale className={classes.icon} size={iconSize} />
               Marketplace
             </Rect>
@@ -92,7 +94,7 @@ class PlanetHome extends Component {
               isButton
               type="info"
               size="wide3"
-            >
+              >
               <FaChartBar className={classes.icon}size={iconSize} />
               Commodity Prices
             </Rect>
@@ -101,7 +103,7 @@ class PlanetHome extends Component {
               isButton
               type="info"
               size="wide3"
-            >
+              >
               <FaIndustry className={classes.icon} size={iconSize} />
               Industrial Operations
             </Rect>
@@ -110,7 +112,7 @@ class PlanetHome extends Component {
             <FuelMeter
               currentFuel={user.currentFuel}
               maxFuel={user.maxFuel}
-            />
+              />
           </div>
         </div>
       </Fragment>

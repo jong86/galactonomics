@@ -59,14 +59,14 @@ class MPIContainer extends Component {
               <Rect
                 type="status"
                 size="wide"
-              >Ξ{user.balance}</Rect>
+                >Ξ{user.balance}</Rect>
               <div style={{ marginTop: '20%', width: '100%' }}>
                 {sideButtons && sideButtons.map((sideButton, i) => (
                   <Rect
-                    key={i}
-                    isButton
-                    onClick={sideButton.fn}
-                    size="wide"
+                  key={i}
+                  isButton
+                  onClick={sideButton.fn}
+                  size="wide"
                   >
                     {sideButton.label}
                   </Rect>
@@ -78,13 +78,13 @@ class MPIContainer extends Component {
             {/* Bottom row */}
             {navLinks.map((link, i) =>
               <Rect
-                key={i}
-                isButton
-                active={currentScreen === link.name}
-                size="wide4"
-                onClick={() => changeScreen(link.name)}
+              key={i}
+              isButton
+              active={currentScreen === link.name}
+              size="wide4"
+              onClick={() => changeScreen(link.name)}
               >{link.label}</Rect>
-            )}
+              )}
           </div>
         </div>
       </Fragment>

@@ -7,6 +7,10 @@ const PWIDTH = 128
 
 const styles = {
   Travel: {
+    justifyContent: 'flex-start',
+    '& h1': {
+      zIndex: 1,
+    }
   },
   planets: {
     width: '100%',

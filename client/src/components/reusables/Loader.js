@@ -30,4 +30,4 @@ let Loader = ({ classes, type, size = 32 }) => (
 )
 
 Loader = injectSheet(styles)(Loader)
-export default Loader;
+export default Loader

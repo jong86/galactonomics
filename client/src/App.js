@@ -15,7 +15,6 @@ import Rect from 'components/reusables/Rect'
 
 import getPlayerInfo from 'utils/getPlayerInfo'
 
-
 class App extends Component {
   state = {
     isInitialized: null,

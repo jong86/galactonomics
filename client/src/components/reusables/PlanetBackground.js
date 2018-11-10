@@ -5,11 +5,12 @@ import planets from 'utils/planets'
 
 const styles = {
   PlanetBackground: {
-    position: 'absolute',
+    position: 'fixed',
+    'min-height': '100%',
+    'min-width': '100%',
     zIndex: -1,
     filter: 'blur(8px)',
-    width: '300%',
-    top: '40%',
+    objectPosition: '0 -200px',
   }
 }
 
@@ -25,4 +26,4 @@ const mapStateToProps = state => {
 
 PlanetBackground = connect(mapStateToProps)(PlanetBackground)
 PlanetBackground = injectSheet(styles)(PlanetBackground)
-export default PlanetBackground;
+export default PlanetBackground
