@@ -40,34 +40,36 @@ class PlanetPrices extends Component {
     const { contracts, user, web3 } = this.props
 
     // Collect all sell orders for each commodity on each planet
-    let planetPrices = []
-    for (let planetId = 0; planetId < 7; planetId++) {
-      const commodities = []
-      for (let commodityId = 0; commodityId < 7; commodityId++) {
+    let commodityPrices = []
+    for (let commodityId = 0; commodityId < 7; commodityId++) {
+      const planets = []
+      for (let planetId = 0; planetId < 7; planetId++) {
         const numSellOrders = await contracts.gea.getNumSellOrders(planetId, commodityId, { from: user.address })
         const sellOrderIds = Array.apply(null, {length: parseInt(numSellOrders.toString())}).map(Number.call, Number)
-        const sellOrders = await Promise.all(sellOrderIds.map(sellOrderId => new Promise(async (resolve, reject) => {
+        let sellOrders = await Promise.all(sellOrderIds.map(sellOrderId => new Promise(async (resolve, reject) => {
           const sellOrder = await contracts.gea.getSellOrder(planetId, commodityId, sellOrderId, { from: user.address })
           resolve(sellOrder)
         })))
-        commodities[commodityId] = sellOrders
+        // Filter out closed orders
+        sellOrders = sellOrders.filter(order => order.open)
+        planets[planetId] = sellOrders
       }
-      planetPrices[planetId] = commodities
+      commodityPrices[commodityId] = planets
     }
 
     // Change array to only having min/max prices
-    planetPrices = planetPrices.map(planet => {
-      return planet.map(commodity => {
-        if (commodity.length) {
-          let min = commodity[0].price
-          let max = commodity[0].price
+    commodityPrices = commodityPrices.map(commodity => {
+      return commodity.map(planet => {
+        if (planet.length) {
+          let min = planet[0].price
+          let max = planet[0].price
 
-          for (let i = 1; i < commodity.length; i++) {
-            if (commodity[i].price.lt(min)) {
-              min = commodity[i].price
+          for (let i = 1; i < planet.length; i++) {
+            if (planet[i].price.lt(min)) {
+              min = planet[i].price
             }
-            if (commodity[i].price.gt(max)) {
-              max = commodity[i].price
+            if (planet[i].price.gt(max)) {
+              max = planet[i].price
             }
           }
 
@@ -78,14 +80,8 @@ class PlanetPrices extends Component {
       })
     })
 
-    // Put the commodities in the parent array
-    // const commodityPrices = planetPrices.map(planet => {
-    //   let
-    //   return
-    // })
-
-    console.log('planetPrices', planetPrices);
-    this.setState({ planetPrices })
+    console.log('commodityPrices', commodityPrices);
+    this.setState({ commodityPrices })
   }
 
   render() {
