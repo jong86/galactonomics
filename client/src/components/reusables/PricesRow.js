@@ -22,7 +22,7 @@ const styles = {
 let PricesRow = ({ classes, onClick, symbol, minMaxes, isHeader, fromWei }) => {
   let items = []
   if (isHeader) {
-    items = planets.map(planet => planet.name)
+    items = planets.slice(0, 7).map(planet => planet.name)
     items.unshift(" ")
   } else {
     items = minMaxes.slice()

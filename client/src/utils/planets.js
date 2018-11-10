@@ -16,5 +16,5 @@ export default [
   { name: "Arrakis",  img: imgPlanet4, x: 82, y: 29 },
   { name: "Kronos",   img: imgPlanet5, x: 94, y: 57 },
   { name: "4546B",    img: imgPlanet6, x: 18, y: 78 },
-  { name: "Temple of Nakamoto", img: imgTemple, x: 20, y: 18 },
+  { name: "Temple of Nakamoto", img: imgTemple, x: 29, y: 12 },
 ]
