@@ -30,22 +30,22 @@ contract Commodity is ERC20Detailed, ERC20Mintable, Ownable, ControlledByGEAAndG
   // Blocked ERC20 functions (not desirable functionality right now)
   // Probably better to just make a new 'partial' erc20 contract to inherit from,
   // but doing this as a quick and easy for now
-  function approve(address spender, uint256 value) public returns (bool) {
+  function approve(address, uint256) public returns (bool) {
     revert("Blocked function");
     return false;
   }
 
-  function transferFrom(address from, address to, uint256 value) public returns (bool) {
+  function transferFrom(address, address, uint256) public returns (bool) {
     revert("Blocked function");
     return false;
   }
 
-  function increaseAllowance(address spender, uint256 value) public returns (bool) {
+  function increaseAllowance(address, uint256) public returns (bool) {
     revert("Blocked function");
     return false;
   }
 
-  function decreaseAllowance(address spender, uint256 subtractedValue) public returns (bool) {
+  function decreaseAllowance(address, uint256) public returns (bool) {
     revert("Blocked function");
     return false;
   }
