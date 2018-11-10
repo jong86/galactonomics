@@ -15,14 +15,12 @@ import PlanetBackground from "components/reusables/PlanetBackground"
 
 const styles = {
   PlanetHome: {
-    height: '100%',
     width: 'fill-available',
-    display: 'flex',
     flexDirection: 'row',
-    marginBottom: '4px',
 
     '& > div': {
-      marginTop: 'auto',
+      height: 'fill-available',
+      justifyContent: 'flex-start',
     },
 
     '& > div:nth-child(1)': {
@@ -65,7 +63,7 @@ class PlanetHome extends Component {
 
     return (
       <Fragment>
-        <PlanetBackground />
+        {/* <PlanetBackground /> */}
         <div className={classes.PlanetHome}>
           <div>
             <Rect

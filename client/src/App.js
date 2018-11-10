@@ -14,6 +14,7 @@ import Dialog from 'components/reusables/Dialog'
 import Rect from 'components/reusables/Rect'
 
 import getPlayerInfo from 'utils/getPlayerInfo'
+import planets from 'utils/planets'
 
 class App extends Component {
   state = {
@@ -123,14 +124,25 @@ class App extends Component {
 
   render() {
     const { isInitialized } = this.state
-    const { currentScreen, alertBoxContent, clearAlertBoxContent } = this.props
+    const { classes, currentScreen, alertBoxContent, clearAlertBoxContent, user } = this.props
 
     if (!isInitialized) {
       return <div>Activating L-337 Nanobulators...</div>
     }
 
+    const bgImage = () => {
+      if (currentScreen.substr(0, 6) === 'Planet' && currentScreen !== 'PlanetIntro') {
+        return {backgroundImage: `url(${planets[user.currentPlanet].img})`}
+      } else {
+        return {}
+      }
+    }
+
     return (
-      <Fragment>
+      <div
+        className={classes.App}
+        style={bgImage()}
+      >
         {/* Render current screen */}
         {screenMapping(currentScreen)}
 
@@ -143,7 +155,7 @@ class App extends Component {
             onClick={clearAlertBoxContent}
           >Ok</Rect>
         </Dialog>
-      </Fragment>
+      </div>
     )
   }
 }

@@ -9,7 +9,7 @@ const styles = {
     width: 'fill-available',
     cursor: ({ isHeader }) => !isHeader ? 'pointer' : null,
 
-    backgroundColor: ({ isSelected }) => isSelected ? '#777' : null,
+    backgroundColor: ({ isSelected }) => isSelected ? '#777' : '#000',
     '&:hover': {
       backgroundColor: ({ isSelected, isHeader }) => { if (!isHeader) return isSelected ? '#777' : '#222' },
     },

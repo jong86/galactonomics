@@ -5,12 +5,14 @@ import planets from 'utils/planets'
 
 const styles = {
   PlanetBackground: {
-    position: 'fixed',
+    position: 'absolute',
+    display: 'block',
     'min-height': '100%',
     'min-width': '100%',
     zIndex: -1,
     filter: 'blur(8px)',
-    objectPosition: '0 -200px',
+    transform: 'scale(1.2)',
+    objectPosition: '0 1000px',
   }
 }
 

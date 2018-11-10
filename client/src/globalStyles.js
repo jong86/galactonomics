@@ -13,7 +13,16 @@ export default {
       justifyContent: 'center',
       alignItems: 'center',
       userSelect: 'none',
+      'backdrop-filter': 'blur(20px)',
     },
+  },
+
+  App: {
+    width: '100%',
+    minHeight: '100vh',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center top',
+    justifyContent: 'flex-start',
   },
 
   '@keyframes vibrate1': {

@@ -43,7 +43,7 @@ class MPIContainer extends Component {
 
     return (
       <Fragment>
-        <PlanetBackground />
+        {/* <PlanetBackground /> */}
         <div className={classes.MPIContainer}>
           <div>
             {/* Top Row */}
