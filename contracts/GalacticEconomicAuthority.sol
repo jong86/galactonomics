@@ -21,7 +21,6 @@ contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteracto
 
   event sellOrderCreated(uint8 planetId, uint orderId);
   event sellOrderPurchased(uint8 planetId, uint orderId);
-  event Log(uint x);
 
   constructor(address[] _commodityAddresses, address _gta)
   CommodityInteractor(_commodityAddresses)

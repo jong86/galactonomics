@@ -31,7 +31,6 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   event SpaceshipBought(address owner, uint tokenId);
   event TravelComplete(address player, uint8 planetId, uint currentFuel);
   event RefuelComplete(address player);
-  event Log(uint x);
 
   modifier onlyPlayer() {
     require(isPlayer(msg.sender), "You need to own a spaceship to call this function");
