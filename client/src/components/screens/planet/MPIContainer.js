@@ -2,12 +2,11 @@ import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
-import planets from 'utils/planets'
 import CargoMeter from 'components/screens/planet/CargoMeter'
 import PlanetBackground from "./PlanetBackground"
 
 const styles = {
-  outer: {
+  MPIContainer: {
     height: '100%',
     width: 'fill-available',
     '& > div': {
@@ -41,21 +40,21 @@ class MPIContainer extends Component {
 
   render() {
     const { classes, user, changeScreen, currentScreen, sideButtons } = this.props
-    const planet = planets[user.currentPlanet]
-    const iconSize = 96
 
     return (
       <Fragment>
         <PlanetBackground />
-        <div className={classes.outer}>
+        <div className={classes.MPIContainer}>
           <div>
             <div>
+              {/* Top-left */}
               <CargoMeter current={user.currentCargo} max={user.maxCargo} />
               <Fragment>
                 { this.props.children }
               </Fragment>
             </div>
             <div >
+              {/* Top-right */}
               <Rect
                 type="status"
                 size="wide"

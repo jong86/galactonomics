@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import planets from 'utils/planets'
@@ -13,14 +13,13 @@ const styles = {
   }
 }
 
-let PlanetBackground = ({ classes, currentPlanet, currentScreen }) => (
+let PlanetBackground = ({ classes, currentPlanet }) => (
   <img className={classes.PlanetBackground} src={planets[currentPlanet].img} />
 )
 
 const mapStateToProps = state => {
   return {
     currentPlanet: state.user.currentPlanet,
-    currentScreen: state.view.currentScreen,
   }
 }
 

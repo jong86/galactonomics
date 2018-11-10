@@ -5,9 +5,7 @@ import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 
 const styles = {
-  container: {
-
-  }
+  PlanetIntro: {}
 }
 
 class PlanetIntro extends Component {
@@ -18,7 +16,7 @@ class PlanetIntro extends Component {
     const planet = planets[user.currentPlanet]
 
     return (
-      <div className={classes.container}>
+      <div className={classes.PlanetIntro}>
         <h1>Welcome to planet {planet.name}</h1>
         <Rect
           isButton

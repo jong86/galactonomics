@@ -6,7 +6,7 @@ import planets from 'utils/planets'
 const PWIDTH = 128
 
 const styles = {
-  container: {
+  Travel: {
   },
   planets: {
     width: '100%',
@@ -44,7 +44,7 @@ class Travel extends Component {
     const { classes, user } = this.props
 
     return (
-      <div className={classes.container}>
+      <div className={classes.Travel}>
         <h1>Choose a planet to travel to</h1>
         <div className={classes.planets}>
           {planets.map((planet, i) =>
