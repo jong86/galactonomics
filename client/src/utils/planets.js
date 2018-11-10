@@ -5,6 +5,7 @@ import imgPlanet3 from 'assets/planet3.png'
 import imgPlanet4 from 'assets/planet4.png'
 import imgPlanet5 from 'assets/planet5.png'
 import imgPlanet6 from 'assets/planet6.png'
+import imgTemple from 'assets/temple.png'
 
 export default [
   // Coordinates are intended to be 0-100% of window dimension
@@ -15,4 +16,5 @@ export default [
   { name: "Arrakis",  img: imgPlanet4, x: 82, y: 29 },
   { name: "Kronos",   img: imgPlanet5, x: 94, y: 57 },
   { name: "4546B",    img: imgPlanet6, x: 18, y: 78 },
+  { name: "Temple of Nakamoto", img: imgTemple, x: 20, y: 18 },
 ]

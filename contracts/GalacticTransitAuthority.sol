@@ -4,6 +4,10 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./ControlledByGEAAndGIA.sol";
 
+/**
+ * @title Galactic Transit Authority
+ * @notice The GTA handles spaceship ownership, fuel and travel
+ */
 contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   using SafeMath for uint;
 
@@ -16,16 +20,20 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   }
 
   uint public constant costOfSpaceship = 0.01 ether;
-  // Hard-coding this for now (plan to implement planet-distances later)
-  uint public constant fuelUsage = 20;
-  // Hard-coding this for now (plan to implement variable refueling costs later)
-  uint public constant refuelCost = 10000000000000000; // 0.01 ether
 
+  // How much fuel is used to travel between planets
+  uint public constant fuelUsage = 20;
+
+  uint public constant refuelCost = 10000000000000000;
+
+  // Number of spaceships in existence
   uint numSpaceships;
 
-  // For looking up spaceship
+  // Mapping of address to spaceship struct
+
   mapping(address => Spaceship) public addressToSpaceship;
-  // For verification that a user is a spaceship-owning player:
+  // Resolves to true is account owns an address
+  
   mapping(address => bool) public addressOwnsSpaceship;
 
   event SpaceshipBought(address owner, uint tokenId);
@@ -38,8 +46,11 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   }
 
 
-  // Action functions
-
+  /**
+   * @notice Creates a spaceship and assigns ownership to sender
+   * @dev Spaceship ownership is a prerequisite for owning commodities
+   * @param _name What to name your spaceship
+   */
   function buySpaceship(string _name) external payable {
     require(msg.value == costOfSpaceship, "You need to provide the correct amount of ether");
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship (for now)");
@@ -52,6 +63,11 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     emit SpaceshipBought(msg.sender, _tokenId);
   }
 
+
+  /**
+   * @notice Changes spaceship's current planet to planet specified
+   * @param _planetId Id of planet to travel to (0 - 6)
+   */
   function travelToPlanet(uint8 _planetId) external onlyPlayer {
     require(0 <= _planetId && _planetId <= 6, "planetId must be between 0 and 6, inclusive");
     require(addressToSpaceship[msg.sender].currentFuel >= fuelUsage, "You do not have enough fuel to travel");
@@ -60,6 +76,10 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     emit TravelComplete(msg.sender, _planetId, addressToSpaceship[msg.sender].currentFuel);
   }
 
+
+  /**
+   * @notice Changes spaceship's current fuel to max fuel, for a fee in ether
+   */
   function refuel() external payable onlyPlayer {
     require(msg.value >= refuelCost, "You need to provide the correct amount of ether to refuel");
     addressToSpaceship[msg.sender].currentFuel = addressToSpaceship[msg.sender].maxFuel;
@@ -84,9 +104,11 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     );
   }
 
+
   function getCurrentPlanet(address _address) public view returns (uint8) {
     return addressToSpaceship[_address].currentPlanet;
   }
+
 
   function checkFuel(address _address) public view returns (uint currentFuel, uint maxFuel) {
     return (
@@ -94,6 +116,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
       addressToSpaceship[_address].maxFuel
     );
   }
+
 
   function getMaxCargo(address _address) public view returns (uint) {
     return addressToSpaceship[_address].maxCargo;
@@ -103,9 +126,11 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     return getMaxCargo(_address).sub(_currentCargo);
   }
 
+
   function isPlayer(address _address) public view returns (bool) {
     return addressOwnsSpaceship[_address];
   }
+
 
   function() public {}
 }

@@ -9,7 +9,6 @@ const styles = {
     flexDirection: 'row',
     width: 'fill-available',
     backgroundColor: '#000',
-    cursor: ({ isHeader }) => !isHeader ? 'pointer' : null,
 
     '& > div': {
       border: '1px solid grey',
