@@ -18,7 +18,6 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   event InvestmentMade(address addr, uint blocksLeft);
   event CommodityMinted(address to, uint blocksLeft);
-  event Log(uint blocksLeft);
 
   constructor(address[] _commodityAddresses, address _gta)
   CommodityInteractor(_commodityAddresses)
