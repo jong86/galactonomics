@@ -9,8 +9,8 @@ const deployCommodities = require('../utils/deployCommodities')
 contract("Commodity", accounts => {
   let gta, gea, gia, commodities, temple
   const owner = accounts[0]
-  const player1 = accounts[3]
-  const player2 = accounts[4]
+  const player1 = accounts[1]
+  const player2 = accounts[2]
 
   beforeEach(async() => {
     commodities = await deployCommodities()
@@ -18,7 +18,7 @@ contract("Commodity", accounts => {
     gta = await GalacticTransitAuthority.new()
     gea = await GalacticEconomicAuthority.new(commodityAddresses, gta.address)
     gia = await GalacticIndustrialAuthority.new(commodityAddresses, gta.address)
-    temple = await TempleAuthority.new(commodityAddresses, gta.address)
+    // temple = await TempleAuthority.new(commodityAddresses, gta.address)
     commodities.forEach(async commodity => await commodity.setGEA(gea.address))
     commodities.forEach(async commodity => await commodity.setGIA(gia.address))
     const costOfSpaceship = await gta.costOfSpaceship()
@@ -28,23 +28,31 @@ contract("Commodity", accounts => {
     await gta.travelToPlanet(0, { from: player2 })
   })
 
-  it("GIA can forge a crystal for a player", async () => {
+  // it("Player can forge a crystal", async () => {
 
-  })
+  // })
 
-  it("Forged crystals get a unique URI", async () => {
+  // it("Player can't forge crystal if doesn't have enough commodities", async () => {
 
-  })
+  // })
 
-  it("Player's commodities get burned after being sent to GIA for forging", async () => {
+  // it("Forged crystals get a unique URI", async () => {
 
-  })
+  // })
 
-  it("Player's commodities get burned after being sent to GIA for forging", async () => {
+  // it("Player's commodities get burned after forging", async () => {
 
-  })
+  // })
 
-  it("GEA can ownership of a crystal to a player", async () => {
+  // it("Player can put a crystal up for sale", async () => {
 
-  })
+  // })
+
+  // it("Player can cancel sale of a crystal", async () => {
+
+  // })
+
+  // it("Player can buy a crystal that is for sale", async () => {
+
+  // })
 })

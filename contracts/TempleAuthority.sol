@@ -8,7 +8,7 @@ import "./utils/GTAInteractor.sol";
 
 /**
  * @title Temple Authority
- * @notice This contract handles Byzantian Crystal creation and ownership
+ * @notice This contract handles Byzantian Crystal creation and trading
  */
 contract TempleAuthority is ERC721Metadata, CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
@@ -29,9 +29,18 @@ contract TempleAuthority is ERC721Metadata, CommodityInteractor, GTAInteractor {
   }
 
   /**
-   * @notice Transfer ownership of a crystal
+   * @notice Put a crystal up for sale
+   * @param _tokenId Id of crystal to sell
    */
-  function transfer(address _to, uint _tokenId) external {
+  function sell(uint _tokenId) external {
+
+  }
+
+  /**
+   * @notice Purchase a crystal
+   * @param _tokenId Id of crystal to purchase
+   */
+  function buy(uint _tokenId) external {
 
   }
 
