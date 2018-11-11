@@ -57,7 +57,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     numSpaceships = numSpaceships.add(1);
     uint _tokenId = numSpaceships;
     _mint(msg.sender, _tokenId);
-    addressToSpaceship[msg.sender] = Spaceship(_name, 255, 72000, 100, 100);
+    addressToSpaceship[msg.sender] = Spaceship(_name, 255, 90000, 100, 100);
     addressOwnsSpaceship[msg.sender] = true;
     emit SpaceshipBought(msg.sender, _tokenId);
   }

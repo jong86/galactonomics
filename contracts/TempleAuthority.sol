@@ -13,6 +13,8 @@ import "./utils/GTAInteractor.sol";
 contract TempleAuthority is ERC721Metadata, CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
+  uint public constant forgingAmount = 10000; // units of each commodity
+
   constructor(address[] _commodityAddresses, address _gta)
   ERC721Metadata("ByzantianCrystals", "BZC")
   CommodityInteractor(_commodityAddresses)
@@ -21,11 +23,10 @@ contract TempleAuthority is ERC721Metadata, CommodityInteractor, GTAInteractor {
 
 
   /**
-   * @notice Creates a new crystal, requires an amount of all 7 commodities
+   * @notice Creates a new crystal, requires forgingAmount in all 7 commodities
    */
-  function forge(address _for) external {
+  function forge() external onlyPlayer samePlanet(255) {
     // Check balance of every commodity to make sure there is enough
-
   }
 
   /**

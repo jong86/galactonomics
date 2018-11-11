@@ -1,5 +1,6 @@
 pragma solidity ^0.4.24;
 
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/CommodityInteractor.sol";
 import "./utils/GTAInteractor.sol";
@@ -10,7 +11,7 @@ import "./Commodity.sol";
  * @title Galactic Industrial Authority (GIA)
  * @notice The GIA handles commodity-mining investments, and minting
  */
-contract GalacticIndustrialAuthority is CommodityInteractor, GTAInteractor {
+contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
   struct Investment {
@@ -43,7 +44,7 @@ contract GalacticIndustrialAuthority is CommodityInteractor, GTAInteractor {
     emit InvestmentMade(msg.sender, _miningDuration);
   }
 
-  function mintCommodityFor(address _for) external {
+  function mintCommodityFor(address _for) external onlyOwner {
     require(investments[_for].blocksLeft > 0, "There are no more blocks left to mine for this investment");
     investments[_for].blocksLeft = investments[_for].blocksLeft.sub(1);
     uint8 _commodityId = investments[_for].commodityId;

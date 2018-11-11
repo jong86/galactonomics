@@ -34,7 +34,7 @@ contract("GalacticEconomicAuthority", accounts => {
     // Mint commodity multiple times for player
     const amountRequired = await gia.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
-    await mintCommodityXTimes(gia, 0, 4, player1)
+    await mintCommodityXTimes(gia, 4, player1)
 
     const currentCargoBefore = await gea.getCurrentCargo(player1)
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
@@ -66,7 +66,7 @@ contract("GalacticEconomicAuthority", accounts => {
     // Mint commodity multiple times for player
     const amountRequired = await gia.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
-    await mintCommodityXTimes(gia, 0, 4, player1)
+    await mintCommodityXTimes(gia, 4, player1)
 
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
 
@@ -95,7 +95,7 @@ contract("GalacticEconomicAuthority", accounts => {
     // Mint commodity multiple times for player
     const amountRequired = await gia.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
-    await mintCommodityXTimes(gia, 0, 4, player1)
+    await mintCommodityXTimes(gia, 4, player1)
 
     await gea.createSellOrder(0, 0, qty, price, { from: player1 })
     try {
@@ -120,7 +120,7 @@ contract("GalacticEconomicAuthority", accounts => {
     const amountMinedPerBlock = commodity[4]
     const timesToMint = availableCargo.div(amountMinedPerBlock)
     try {
-      await mintCommodityXTimes(gia, 0, timesToMint.add(1), player1)
+      await mintCommodityXTimes(gia, timesToMint.add(1), player1)
     } catch (e) {}
     const response = await gea.createSellOrder(0, 0, availableCargo.add(1), price, { from: player1 })
 

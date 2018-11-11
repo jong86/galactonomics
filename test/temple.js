@@ -28,9 +28,34 @@ contract("Commodity", accounts => {
     await gta.travelToPlanet(0, { from: player2 })
   })
 
-  // it("Player can forge a crystal", async () => {
+  it("Player can forge a crystal", async () => {
+    for (let i = 0; i <= 6; i++) {
+      await gta.travelToPlanet(i, { from: player1 })
+      const refuelCost = await gta.refuelCost()
+      await gta.refuel({ from: player1, value: refuelCost })
+      const forgingAmount = await temple.forgingAmount()
+      let commodityBalance = await gea.getCommodityBalance(i, { from: player1 })
 
-  // })
+      while (commodityBalance.lt(forgingAmount)) {
+        const commodity = await gea.getCommodity(i)
+        const miningCost = commodity[3]
+        const miningDuration = commodity[5]
+        await gia.investInProduction(i, { from: player1, value: miningCost })
+        await mintCommodityXTimes(gia, miningDuration.toNumber(), player1)
+        commodityBalance = await gea.getCommodityBalance(i, { from: player1 })
+      }
+
+      // Unload unneeded overflow in a sell order to conserve cargo capacity
+      if (commodityBalance.gt(forgingAmount)) {
+        await gea.createSellOrder(i, i, commodityBalance.sub(forgingAmount), 100, { from: player1 })
+      }
+    }
+
+    await gta.travelToPlanet(255, { from: player1 })
+    await temple.forge({ from: player1 })
+    const balance = await temple.balanceOf(player1)
+    assert.equal(balance.toString(), '1', 'Did not forge a b. crystal for player1')
+  })
 
   // it("Player can't forge crystal if doesn't have enough commodities", async () => {
 
