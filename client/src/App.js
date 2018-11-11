@@ -125,6 +125,7 @@ class App extends Component {
   render() {
     const { isInitialized } = this.state
     const { classes, currentScreen, alertBoxContent, clearAlertBoxContent, user } = this.props
+    const planet = planets.find(planet => planet.id == user.currentPlanet)
 
     if (!isInitialized) {
       return <div>Activating L-337 Nanobulators...</div>
@@ -132,7 +133,7 @@ class App extends Component {
 
     const bgImage = () => {
       if (currentScreen.substr(0, 6) === 'Planet' && currentScreen !== 'PlanetIntro') {
-        return {backgroundImage: `url(${planets[user.currentPlanet].img})`}
+        return {backgroundImage: `url(${planet.img})`}
       } else {
         return {}
       }

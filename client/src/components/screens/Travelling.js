@@ -42,13 +42,14 @@ class Travelling extends Component {
   render() {
     const { classes, travellingTo, user } = this.props
     const { isTravelling } = this.state
+    const planet = planets.find(planet => planet.id == user.travellingTo)
 
     return (
       <div className={classes.container}>
         {!isTravelling ?
           <h1>Waiting for hyperdrive activation...</h1>
           :
-          <h1>Travelling to planet {planets[user.travellingTo].name}...</h1>
+          <h1>Travelling to planet {planet.name}...</h1>
         }
         <img
           src={spaceship}

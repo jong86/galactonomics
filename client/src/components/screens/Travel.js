@@ -59,7 +59,7 @@ class Travel extends Component {
                 left: ((window.innerWidth / 100) * planet.x) - (PWIDTH / 2),
                 bottom: ((window.innerHeight / 100) * planet.y),
               }}
-              onClick={() => this.startTravelling(i)}
+              onClick={() => this.startTravelling(planet.id)}
             >
               <img
                 src={planet.img}
@@ -69,7 +69,7 @@ class Travel extends Component {
               <div>
                 { planet.name }
               </div>
-              {i == user.currentPlanet && '(current)'}
+              {planet.id == user.currentPlanet && '(current)'}
             </div>
           )}
         </div>

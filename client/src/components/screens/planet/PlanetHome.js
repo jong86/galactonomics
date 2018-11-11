@@ -10,7 +10,6 @@ import {
   FaIndustry,
 } from 'react-icons/fa';
 import getPlayerInfo from 'utils/getPlayerInfo'
-import PlanetBackground from "components/reusables/PlanetBackground"
 
 
 const styles = {
@@ -58,12 +57,11 @@ class PlanetHome extends Component {
 
   render() {
     const { classes, user, changeScreen } = this.props
-    const planet = planets[user.currentPlanet]
+    const planet = planets.find(planet => planet.id == user.currentPlanet)
     const iconSize = 96
 
     return (
       <Fragment>
-        {/* <PlanetBackground /> */}
         <div className={classes.PlanetHome}>
           <div>
             <Rect

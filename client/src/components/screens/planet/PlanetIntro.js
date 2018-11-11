@@ -12,7 +12,7 @@ const styles = {
 class PlanetIntro extends Component {
   render() {
     const { classes, user, changeScreen } = this.props
-    const planet = planets[user.currentPlanet]
+    const planet = planets.find(planet => planet.id == user.currentPlanet)
 
     return (
       <div className={classes.PlanetIntro}>

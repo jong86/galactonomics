@@ -84,7 +84,7 @@ class PlanetIndustrial extends Component {
       miningCommodityId,
       miningBlocksLeft,
     } = industrial
-    const planet = planets[user.currentPlanet]
+    const planet = planets.find(planet => planet.id == user.currentPlanet)
     const miningPlanetName = planets[miningCommodityId || 0].name
 
     return (

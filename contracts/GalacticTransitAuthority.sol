@@ -57,7 +57,6 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     numSpaceships = numSpaceships.add(1);
     uint _tokenId = numSpaceships;
     _mint(msg.sender, _tokenId);
-    // currentPlanet 255 means 'not on a planet'
     addressToSpaceship[msg.sender] = Spaceship(_name, 255, 60000, 100, 100);
     addressOwnsSpaceship[msg.sender] = true;
     emit SpaceshipBought(msg.sender, _tokenId);
@@ -66,10 +65,10 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
 
   /**
    * @notice Changes spaceship's current planet to planet specified
-   * @param _planetId Id of planet to travel to (0 - 6)
+   * @param _planetId Id of planet to travel to (0 - 6), or 255 for the 8th planet
    */
   function travelToPlanet(uint8 _planetId) external onlyPlayer {
-    require(0 <= _planetId && _planetId <= 6, "planetId must be between 0 and 6, inclusive");
+    require((0 <= _planetId && _planetId <= 6) || _planetId == 255, "planetId must be between 0 and 6, inclusive, or be equal to 255");
     require(addressToSpaceship[msg.sender].currentFuel >= fuelUsage, "You do not have enough fuel to travel");
     addressToSpaceship[msg.sender].currentPlanet = _planetId;
     addressToSpaceship[msg.sender].currentFuel = addressToSpaceship[msg.sender].currentFuel.sub(fuelUsage);
@@ -79,6 +78,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
 
   /**
    * @notice Changes spaceship's current fuel to max fuel, for a fee in ether
+   * @dev Throws if cost to refuel is not provided
    */
   function refuel() external payable onlyPlayer {
     require(msg.value >= refuelCost, "You need to provide the correct amount of ether to refuel");

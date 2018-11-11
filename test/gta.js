@@ -49,11 +49,23 @@ contract("GalacticTransitAuthority", accounts => {
     assert(false, 'could buy a second spaceship')
   })
 
-  it("should allow a player to travel to other planets", async () => {
+  it("should allow a player to travel to the planets with ids 0 to 6, inclusive", async () => {
     await gta.buySpaceship('Millenium Falcon', { from: player1, value: costOfSpaceship })
-    await gta.travelToPlanet(1, { from: player1 })
+    for (let i = 0; i < 7; i++) {
+      await gta.travelToPlanet(i, { from: player1 })
+      const response = await gta.getInfo({ from: player1 })
+      assert.equal(response[1].toString(), i.toString(), "didn't change planet")
+
+      const refuelCost = await gta.refuelCost()
+      await gta.refuel({ from: player1, value: refuelCost })
+    }
+  })
+
+  it("should allow a player to travel to the planet with id 255", async () => {
+    await gta.buySpaceship('Millenium Falcon', { from: player1, value: costOfSpaceship })
+    await gta.travelToPlanet(255, { from: player1 })
     const response = await gta.getInfo({ from: player1 })
-    assert.equal(response[1].toString(), "1", "didn't change planet")
+    assert.equal(response[1].toString(), (255).toString(), "didn't change planet")
   })
 
   it("travelling to a planet uses fuel", async () => {
@@ -127,7 +139,7 @@ contract("GalacticTransitAuthority", accounts => {
       errorCount++
     }
     try {
-      await gta.travelToPlanet(-1, { from: player1 })
+      await gta.travelToPlanet(128, { from: player1 })
     } catch (e) {
       errorCount++
     }

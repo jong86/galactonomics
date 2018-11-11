@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
 import CargoMeter from 'components/screens/planet/CargoMeter'
-import PlanetBackground from "components/reusables/PlanetBackground"
 
 const styles = {
   MPIContainer: {
@@ -43,7 +42,6 @@ class MPIContainer extends Component {
 
     return (
       <Fragment>
-        {/* <PlanetBackground /> */}
         <div className={classes.MPIContainer}>
           <div>
             {/* Top Row */}

@@ -1,5 +1,5 @@
 export default {
   view: {
-    currentScreen: 'PlanetPrices',
+    currentScreen: 'Welcome',
   },
 }
