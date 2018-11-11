@@ -1,11 +1,10 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/CommodityInteractor.sol";
 import "./utils/GTAInteractor.sol";
 
-contract GalacticEconomicAuthority is Ownable, CommodityInteractor, GTAInteractor {
+contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
   struct SellOrder {

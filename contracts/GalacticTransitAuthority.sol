@@ -54,8 +54,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   function buySpaceship(string _name) external payable {
     require(msg.value == costOfSpaceship, "You need to provide the correct amount of ether");
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship (for now)");
-    numSpaceships = numSpaceships.add(1);
-    uint _tokenId = numSpaceships;
+    uint _tokenId = numSpaceships.add(1);
     _mint(msg.sender, _tokenId);
     addressToSpaceship[msg.sender] = Spaceship(_name, 255, 60000, 100, 100);
     addressOwnsSpaceship[msg.sender] = true;
