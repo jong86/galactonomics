@@ -76,33 +76,67 @@ class PlanetHome extends Component {
               >Ξ{user.balance}</Rect>
           </div>
           <div className={classes.top3}>
-            <Rect
-              onClick={() => changeScreen('PlanetMarketplace')}
-              isButton
-              type="info"
-              size="wide3"
-              >
-              <FaBalanceScale className={classes.icon} size={iconSize} />
-              Marketplace
-            </Rect>
-            <Rect
-              onClick={() => changeScreen('PlanetPrices')}
-              isButton
-              type="info"
-              size="wide3"
-              >
-              <FaChartBar className={classes.icon}size={iconSize} />
-              Commodity Prices
-            </Rect>
-            <Rect
-              onClick={() => changeScreen('PlanetIndustrial')}
-              isButton
-              type="info"
-              size="wide3"
-              >
-              <FaIndustry className={classes.icon} size={iconSize} />
-              Industrial Operations
-            </Rect>
+            {planet.id == 255 ?
+              <Fragment>
+                <Rect
+                  onClick={() => changeScreen('PlanetMarketplace')}
+                  isButton
+                  type="info"
+                  size="wide3"
+                  >
+                  <FaBalanceScale className={classes.icon} size={iconSize} />
+                  Crystal Marketplace
+                </Rect>
+                <Rect
+                  onClick={() => changeScreen('PlanetPrices')}
+                  isButton
+                  type="info"
+                  size="wide3"
+                  >
+                  <FaChartBar className={classes.icon}size={iconSize} />
+                  Commodity Prices
+                </Rect>
+                <Rect
+                  onClick={() => changeScreen('PlanetIndustrial')}
+                  isButton
+                  type="info"
+                  size="wide3"
+                  >
+                  <FaIndustry className={classes.icon} size={iconSize} />
+                  Forge Byzantian Crystals
+                </Rect>
+              </Fragment>
+              :
+              <Fragment>
+                <Rect
+                  onClick={() => changeScreen('PlanetMarketplace')}
+                  isButton
+                  type="info"
+                  size="wide3"
+                  >
+                  <FaBalanceScale className={classes.icon} size={iconSize} />
+                  Marketplace
+                </Rect>
+                <Rect
+                  onClick={() => changeScreen('PlanetPrices')}
+                  isButton
+                  type="info"
+                  size="wide3"
+                  >
+                  <FaChartBar className={classes.icon}size={iconSize} />
+                  Commodity Prices
+                </Rect>
+                <Rect
+                  onClick={() => changeScreen('PlanetIndustrial')}
+                  isButton
+                  type="info"
+                  size="wide3"
+                  >
+                  <FaIndustry className={classes.icon} size={iconSize} />
+                  Industrial Operations
+                </Rect>
+              </Fragment>
+            }
           </div>
           <div>
             <FuelMeter
