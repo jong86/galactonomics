@@ -1,8 +1,8 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./Commodity.sol";
-import "./CommodityInterface.sol";
+import "../Commodity.sol";
+import "../interfaces/CommodityInterface.sol";
 
 contract CommodityInteractor {
   using SafeMath for uint;

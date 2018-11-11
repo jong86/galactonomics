@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
-import "./ControlledByGEAAndGIA.sol";
+import "./utils/ControlledByGEAAndGIA.sol";
 
 // Use of variable name 'value' in here only to be consistent with ERC20 code
 // Elsewhere 'value' is referred to as 'amount'

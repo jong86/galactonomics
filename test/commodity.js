@@ -1,4 +1,4 @@
-const deployCommodities = require('../util/deployCommodities')
+const deployCommodities = require('../utils/deployCommodities')
 
 contract("Commodity", accounts => {
   let commodities

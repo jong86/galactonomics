@@ -2,8 +2,8 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./CommodityInteractor.sol";
-import "./GTAInteractor.sol";
+import "./utils/CommodityInteractor.sol";
+import "./utils/GTAInteractor.sol";
 import "./Commodity.sol";
 
 contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInteractor {

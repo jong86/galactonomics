@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./ControlledByGEAAndGIA.sol";
+import "./utils/ControlledByGEAAndGIA.sol";
 
 /**
  * @title Galactic Transit Authority

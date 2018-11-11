@@ -1,18 +1,18 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./GalacticTransitAuthorityInterface.sol";
+import "../interfaces/GTAInterface.sol";
 
 // @dev Convenience contract to inherit GTA interface and related modifiers
 contract GTAInteractor {
   using SafeMath for uint;
 
-  GalacticTransitAuthorityInterface gta;
+  GTAInterface gta;
 
   event CanFitCargo(uint available, uint incoming);
 
   constructor(address _gta) public {
-    gta = GalacticTransitAuthorityInterface(_gta);
+    gta = GTAInterface(_gta);
   }
 
   modifier onlyPlayer() {
