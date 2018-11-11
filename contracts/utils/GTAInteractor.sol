@@ -3,7 +3,9 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../interfaces/GTAInterface.sol";
 
-// @dev Convenience contract to inherit GTA interface and related modifiers
+/**
+ * @dev Extends a contract with convenient functions for interacting with GTA
+ */
 contract GTAInteractor {
   using SafeMath for uint;
 

@@ -4,6 +4,10 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/CommodityInteractor.sol";
 import "./utils/GTAInteractor.sol";
 
+/**
+ * @title Galactic Economic Authority (GEA)
+ * @notice The GEA handles commodity trading
+ */
 contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 

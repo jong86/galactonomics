@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/ControlledByGEAAndGIA.sol";
 
 /**
- * @title Galactic Transit Authority
+ * @title Galactic Transit Authority (GTA)
  * @notice The GTA handles spaceship ownership, fuel and travel
  */
 contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
@@ -56,7 +56,7 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
     require(balanceOf(msg.sender) == 0, "Accounts can only own one spaceship (for now)");
     uint _tokenId = numSpaceships.add(1);
     _mint(msg.sender, _tokenId);
-    addressToSpaceship[msg.sender] = Spaceship(_name, 255, 60000, 100, 100);
+    addressToSpaceship[msg.sender] = Spaceship(_name, 255, 72000, 100, 100);
     addressOwnsSpaceship[msg.sender] = true;
     emit SpaceshipBought(msg.sender, _tokenId);
   }

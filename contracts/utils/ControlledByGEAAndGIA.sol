@@ -2,6 +2,9 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
+/**
+ * @dev Extends contracts with functions for restricting accessibility to the GEA and GIA
+ */
 contract ControlledByGEAAndGIA is Ownable {
   address public gea;
   address public gia;

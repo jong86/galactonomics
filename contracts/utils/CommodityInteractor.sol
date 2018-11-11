@@ -4,6 +4,9 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../Commodity.sol";
 import "../interfaces/CommodityInterface.sol";
 
+/**
+ * @dev Extends a contract with convenient functions for interacting with Commodity contracts
+ */
 contract CommodityInteractor {
   using SafeMath for uint;
 

@@ -5,6 +5,11 @@ import "./utils/CommodityInteractor.sol";
 import "./utils/GTAInteractor.sol";
 import "./Commodity.sol";
 
+
+/**
+ * @title Galactic Industrial Authority (GIA)
+ * @notice The GIA handles commodity-mining investments, and minting
+ */
 contract GalacticIndustrialAuthority is CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
@@ -20,7 +25,8 @@ contract GalacticIndustrialAuthority is CommodityInteractor, GTAInteractor {
 
   constructor(address[] _commodityAddresses, address _gta)
   CommodityInteractor(_commodityAddresses)
-  GTAInteractor(_gta) public {}
+  GTAInteractor(_gta)
+  public {}
 
 
   // Action functions
