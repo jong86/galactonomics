@@ -2,16 +2,17 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
-import "./utils/ControlledByGEAAndGIA.sol";
+import "./utils/AccessControlled.sol";
 
 
 /**
  * @title Commodity
- * @notice Fungible units used for trading and forging B. Crystals
+ *
+ * @notice Fungible units used for trading and forging Byzantian Crystals
  * @dev Use of variable name 'value' in here only to be consistent with ERC20 code --
  * elsewhere in this project, 'value' is referred to as 'amount'.
  */
-contract Commodity is ERC20Detailed, ERC20Mintable, ControlledByGEAAndGIA {
+contract Commodity is ERC20Detailed, ERC20Mintable, AccessControlled, AccessedByTA {
   constructor(string _name, string _symbol)
   ERC20Detailed(_name, _symbol, 0)
   ERC20Mintable() public {}

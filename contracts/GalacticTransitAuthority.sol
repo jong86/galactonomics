@@ -2,13 +2,13 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./utils/ControlledByGEAAndGIA.sol";
+import "./utils/AccessControlled.sol";
 
 /**
  * @title Galactic Transit Authority (GTA)
  * @notice The GTA handles spaceship ownership, fuel and travel
  */
-contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
+contract GalacticTransitAuthority is ERC721, AccessControlled {
   using SafeMath for uint;
 
   struct Spaceship {
@@ -30,11 +30,11 @@ contract GalacticTransitAuthority is ERC721, ControlledByGEAAndGIA {
   uint numSpaceships;
 
   // Mapping of address to spaceship struct
-
   mapping(address => Spaceship) public addressToSpaceship;
+
   // Resolves to true is account owns an address
-  
   mapping(address => bool) public addressOwnsSpaceship;
+
 
   event SpaceshipBought(address owner, uint tokenId);
   event TravelComplete(address player, uint8 planetId, uint currentFuel);
