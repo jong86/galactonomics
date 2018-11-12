@@ -21,6 +21,7 @@ contract TempleAuthority is ERC721Full, CommodityInteractor, GTAInteractor {
   GTAInteractor(_gta)
   public {}
 
+  event Log(uint x);
 
   /**
    * @notice Creates a new crystal, requires forgingAmount in all 7 commodities
@@ -47,7 +48,7 @@ contract TempleAuthority is ERC721Full, CommodityInteractor, GTAInteractor {
     }
 
     // Mint one token for user
-    uint _tokenId = totalSupply();
+    uint _tokenId = totalSupply() + 1;
     _mint(msg.sender, _tokenId);
 
     // Set URI of token to something unique
@@ -59,7 +60,8 @@ contract TempleAuthority is ERC721Full, CommodityInteractor, GTAInteractor {
    * @notice Returns a list of all token IDs owned by an account
    * @param _owner Address of account to look up
    */
-  function tokensOfOwner(address _owner) external returns (uint[] ownedTokens) {
+  function crystalsOfOwner(address _owner) external view returns (uint[] ownedCrystals) {
+    emit Log(42);
     uint tokenCount = balanceOf(_owner);
 
     if (tokenCount == 0) {
@@ -69,8 +71,9 @@ contract TempleAuthority is ERC721Full, CommodityInteractor, GTAInteractor {
       uint[] memory result = new uint[](tokenCount);
       uint totalCrystals = totalSupply();
       uint resultIndex = 0;
+      uint crystalId;
 
-      for (uint crystalId = 0; crystalId <= totalCrystals; crystalId++) {
+      for (crystalId = 1; crystalId <= totalCrystals; crystalId++) {
         if (ownerOf(crystalId) == _owner) {
           result[resultIndex] = crystalId;
           resultIndex++;

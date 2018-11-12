@@ -92,12 +92,17 @@ contract("TempleAuthority", accounts => {
       assert.equal(balance.toString(), '1', 'did not forge a b. crystal for player1')
     })
 
+    it("can return a list of crystal IDs owned by an account", async () => {
+      const crystals = await temple.crystalsOfOwner(player1, { gas: 6000000 })
+      assert.equal(crystals[0].toString(), '1', 'did not return list')
+    })
+
     it("gives forged crystals a unique URI", async () => {
       await gta.travelToPlanet(255, { from: player2 })
       await temple.forge({ from: player2 })
 
-      const uri1 = await temple.tokenURI(0)
-      const uri2 = await temple.tokenURI(1)
+      const uri1 = await temple.tokenURI(1)
+      const uri2 = await temple.tokenURI(2)
 
       assert(uri1, 'uri1 not defined')
       assert(uri2, 'uri2 not defined')
