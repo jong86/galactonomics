@@ -7,6 +7,8 @@ const deployCommodities = require('../utils/deployCommodities')
 
 contract("Commodity", accounts => {
   let gta, gea, gia, commodities, temple
+  let crystalIndexes1, crystal1
+  let crystalIndexes2, crystal2
   const owner = accounts[0]
   const player1 = accounts[1]
   const player2 = accounts[2]
@@ -84,14 +86,12 @@ contract("Commodity", accounts => {
     await gta.travelToPlanet(255, { from: player2 })
     await temple.forge({ from: player2 })
 
-    let crystalIndexes, crystal
-
-    crystalIndexes = await temple.getOwnedCrystalIndexes(player1)
-    crystal = await temple.getCrystal(crystalIndexes[0])
+    crystalIndexes1 = await temple.getOwnedCrystalIndexes(player1)
+    crystal1 = await temple.getCrystal(crystalIndexes[0])
     const uri1 = await temple.tokenURI(crystal.id)
 
-    crystalIndexes = await temple.getOwnedCrystalIndexes(player2)
-    crystal = await temple.getCrystal(crystalIndexes[0])
+    crystalIndexes2 = await temple.getOwnedCrystalIndexes(player2)
+    crystal2 = await temple.getCrystal(crystalIndexes[0])
     const uri2 = await temple.tokenURI(crystal.id)
 
     assert(uri1, 'uri1 not defined')
@@ -99,19 +99,26 @@ contract("Commodity", accounts => {
     assert(uri1 !== uri2, 'URIs were the same')
   })
 
-  // it("Player's commodities get burned after forging", async () => {
+  it("Player's commodities get burned after forging", async () => {
+    for (let i = 0; i <= 6; i++) {
+      const balance = await gea.getCommodityBalance(i, { from: player1 })
+      assert.equal(balance.toString(), '0', 'commodities did not get burned')
+    }
+  })
 
-  // })
-
-  // it("Player can put a crystal up for sale", async () => {
-
-  // })
+  it("Player can put a crystal up for sale", async () => {
+    await temple.sell(crystal1.id, 1000, { from: player1 })
+    const crystal = await temple.getCrystal(crystal.id)
+    assert(crystal.forSale === true, 'crystal was not made for sale')
+  })
 
   // it("Player can cancel sale of a crystal", async () => {
 
   // })
 
-  // it("Player can buy a crystal that is for sale", async () => {
-
-  // })
+  it("Player can buy a crystal that is for sale", async () => {
+    await temple.buy(crystal1.id, { from: player2, value: 1000 })
+    crystalIndexes2 = await temple.getOwnedCrystalIndexes(player2)
+    assert(crystalIndexes2.includes(crystal1.id), 'crystal was not bought')
+  })
 })
