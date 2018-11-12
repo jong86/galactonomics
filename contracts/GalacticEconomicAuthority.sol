@@ -39,7 +39,7 @@ contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
 
     // Arrange transfer of commodity from user to escrow
     SellOrder memory sellOrder = SellOrder(msg.sender, _amount, _price, true, address(0));
-    commodities[_commodityId]._interface.transferForPlayer(msg.sender, address(this), _amount);
+    commodities[_commodityId]._interface.transferToEscrow(msg.sender, _amount);
     // Store order in array
     uint _arrayLength = marketplaces[_planetId][_commodityId].push(sellOrder);
     uint _orderId = _arrayLength.sub(1);
