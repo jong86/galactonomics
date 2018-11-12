@@ -1,6 +1,7 @@
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
+const ByzantianCrystal = artifacts.require("./ByzantianCrystal.sol")
 const TempleAuthority = artifacts.require("./TempleAuthority.sol")
 const { fillUpCargoByMinting, mintCommodityXTimes } = require('./util/testUtils')
 const deployCommodities = require('../utils/deployCommodities')
@@ -19,7 +20,8 @@ contract("TempleAuthority", accounts => {
     gta = await GalacticTransitAuthority.new()
     gea = await GalacticEconomicAuthority.new(commodityAddresses, gta.address)
     gia = await GalacticIndustrialAuthority.new(commodityAddresses, gta.address)
-    temple = await TempleAuthority.new(commodityAddresses, gta.address)
+    bCrystal = await ByzantianCrystal.new()
+    temple = await TempleAuthority.new(commodityAddresses, gta.address, bCrystal.address)
     commodities.forEach(async commodity => await commodity.setGEA(gea.address))
     commodities.forEach(async commodity => await commodity.setGIA(gia.address))
     commodities.forEach(async commodity => await commodity.setTA(temple.address))
@@ -117,9 +119,11 @@ contract("TempleAuthority", accounts => {
     })
 
     it("allows player to list a crystal for sale", async () => {
-      await temple.sell(crystal1.id, 1000, { from: player1 })
-      const crystal = await temple.getCrystal(crystal.id)
-      assert(crystal.forSale === true, 'crystal was not made for sale')
+      await temple.sell(1, 1000, { from: player1 })
+      let crystalsForSale = await temple.getCrystalsForSale()
+      crystalsForSale = crystalsForSale.map(crystalIdBN => crystalIdBN.toString())
+      console.log('crystalsForSale', crystalsForSale);
+      assert(crystalsForSale.includes('1'), 'crystal was not made for sale')
     })
 
     // it("Player can cancel sale of a crystal", async () => {
@@ -127,9 +131,12 @@ contract("TempleAuthority", accounts => {
     // })
 
     it("allows player to purchase a crystal that is for sale", async () => {
-      await temple.buy(crystal1.id, { from: player2, value: 1000 })
-      crystalIndexes2 = await temple.getOwnedCrystalIndexes(player2)
-      assert(crystalIndexes2.includes(crystal1.id), 'crystal was not bought')
+      console.log('player1, player2', player1, player2);
+      await temple.buy(1, { from: player2, value: 1000, gas: 7000000 })
+      let ownedCrystals = await temple.crystalsOfOwner(player2)
+      ownedCrystals = ownedCrystals.map(crystalIdBN => crystalIdBN.toString())
+      console.log('ownedCrystals', ownedCrystals);
+      assert(ownedCrystals.includes('1'), 'crystal was not bought')
     })
   })
 })

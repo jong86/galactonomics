@@ -2,26 +2,36 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./utils/AccessControlled.sol";
 import "./utils/CommodityInteractor.sol";
 import "./utils/GTAInteractor.sol";
+import "./interfaces/ByzantianCrystalInterface.sol";
 
 /**
  * @title Temple Authority
- * @notice This contract handles Byzantian Crystal creation and trading
+ * @notice This contract handles Byzantian Crystal forging and trading
  */
-contract TempleAuthority is ERC721Full, CommodityInteractor, GTAInteractor {
+contract TempleAuthority is CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
-  uint public constant forgingAmount = 10000; // units of each commodity
+  // Units of each commodity required to forge a crystal
+  uint public constant forgingAmount = 10000;
 
-  constructor(address[] _commodityAddresses, address _gta)
+  // Array storing IDs of all crystals that are for sale
+  uint[] public crystalsForSale;
+
+  // Mapping of token IDs to sale price
+  mapping(uint => uint) tokenIdToPrice;
+
+  constructor(address[] _commodityAddresses, address _gta, address _bCrystal)
   ERC721Full("ByzantianCrystals", "BZC")
   CommodityInteractor(_commodityAddresses)
   GTAInteractor(_gta)
-  public {}
+  public {
+    bCrystal = ByzantianCrystalInterface(_bCrystal);
+  }
 
-  event Log(uint x);
+  event Address(address addr);
+  event Number(uint number);
 
   /**
    * @notice Creates a new crystal, requires forgingAmount in all 7 commodities
@@ -61,7 +71,6 @@ contract TempleAuthority is ERC721Full, CommodityInteractor, GTAInteractor {
    * @param _owner Address of account to look up
    */
   function crystalsOfOwner(address _owner) external view returns (uint[] ownedCrystals) {
-    emit Log(42);
     uint tokenCount = balanceOf(_owner);
 
     if (tokenCount == 0) {
@@ -87,17 +96,56 @@ contract TempleAuthority is ERC721Full, CommodityInteractor, GTAInteractor {
   /**
    * @notice Put a crystal up for sale
    * @param _tokenId Id of crystal to sell
+   * @param _price Price in wei to sell crystal for
    */
-  function sell(uint _tokenId) external {
+  function sell(uint _tokenId, uint _price) external {
+    require(ownerOf(_tokenId) == msg.sender, "You must own a crystal in order to sell it");
 
+    // Add crystal to list of crystals for sale
+    crystalsForSale.push(_tokenId);
+    // Store price in a mapping
+    tokenIdToPrice[_tokenId] = _price;
+    // Approve this contract for transferring this token when purchased
+    approve(address(this), _tokenId);
   }
 
   /**
    * @notice Purchase a crystal
    * @param _tokenId Id of crystal to purchase
    */
-  function buy(uint _tokenId) external {
+  function buy(uint _tokenId) external payable {
+    emit Address(getApproved(_tokenId));
+    emit Address(address(this));
+    emit Address(ownerOf(_tokenId));
+    emit Number(msg.value);
+    emit Number(_tokenId);
+    // require(msg.value == tokenIdToPrice[_tokenId], "You did not provide the correct amount of ether");
 
+    // Remove crystal from list of crystals for sale
+    // uint numForSale = crystalsForSale.length;
+    // for (uint i = 0; i < numForSale; i++) {
+    //   if (crystalsForSale[i] == _tokenId) {
+    //     // If in here then we found the index this token is at, now for array management:
+    //     // Move last crystal in list to bought token's spot
+    //     crystalsForSale[i] = crystalsForSale[numForSale - 1];
+    //     // Delete last item
+    //     delete crystalsForSale[numForSale - 1];
+    //     // Shorten list of crystals for sale by 1
+    //     crystalsForSale.length--;
+    //     break;
+    //   }
+    // }
+
+    // Transfer token ownership to buyer
+    // transferFrom(ownerOf(_tokenId), msg.sender, _tokenId);
+  }
+
+
+  /**
+   * @notice Getter function for crystalsForSale array
+   */
+  function getCrystalsForSale() external view returns (uint[]) {
+    return crystalsForSale;
   }
 
   /**
@@ -120,4 +168,6 @@ contract TempleAuthority is ERC721Full, CommodityInteractor, GTAInteractor {
     if (_b < 10) return byte(uint8(_b) + 0x30);
     else return byte(uint8(_b) + 0x57);
   }
+
+  function() external payable {}
 }
