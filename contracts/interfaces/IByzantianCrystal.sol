@@ -1,5 +1,5 @@
 pragma solidity ^0.4.24;
 
-contract ByzantianCrystalInterface {
+contract IByzantianCrystal {
   function create() public pure {}
 }

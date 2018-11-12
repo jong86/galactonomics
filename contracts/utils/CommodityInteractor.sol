@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../Commodity.sol";
-import "../interfaces/CommodityInterface.sol";
+import "../interfaces/ICommodity.sol";
 
 /**
  * @dev Extends a contract with convenient functions for interacting with Commodity contracts
@@ -12,7 +12,7 @@ contract CommodityInteractor {
 
   struct CommodityData {
     address addr;
-    CommodityInterface _interface;
+    ICommodity _interface;
     uint miningCost;
     uint amountMinedPerBlock;
     uint miningDuration;
@@ -24,7 +24,7 @@ contract CommodityInteractor {
     for (uint8 i = 0; i < commodities.length; i++) {
       commodities[i] = CommodityData(
         _commodityAddresses[i],
-        CommodityInterface(_commodityAddresses[i]),
+        ICommodity(_commodityAddresses[i]),
         100,
         1000,
         8

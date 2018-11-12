@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-contract CommodityInterface {
+contract ICommodity {
   function transferToEscrow(address, uint256) public pure returns (bool) {}
   function transfer(address, uint256) public pure returns (bool) {}
   function mint(address, uint256) public pure returns (bool) {}

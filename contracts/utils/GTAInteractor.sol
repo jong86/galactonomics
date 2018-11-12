@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../interfaces/GTAInterface.sol";
+import "../interfaces/IGTA.sol";
 
 /**
  * @dev Extends a contract with convenient functions for interacting with GTA
@@ -9,12 +9,12 @@ import "../interfaces/GTAInterface.sol";
 contract GTAInteractor {
   using SafeMath for uint;
 
-  GTAInterface gta;
+  IGTA gta;
 
   event CanFitCargo(uint available, uint incoming);
 
   constructor(address _gta) public {
-    gta = GTAInterface(_gta);
+    gta = IGTA(_gta);
   }
 
   modifier onlyPlayer() {

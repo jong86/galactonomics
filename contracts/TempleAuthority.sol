@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/CommodityInteractor.sol";
 import "./utils/GTAInteractor.sol";
-import "./interfaces/ByzantianCrystalInterface.sol";
+import "./interfaces/IByzantianCrystal.sol";
 
 /**
  * @title Temple Authority
@@ -27,7 +27,7 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
   CommodityInteractor(_commodityAddresses)
   GTAInteractor(_gta)
   public {
-    bCrystal = ByzantianCrystalInterface(_bCrystal);
+    bCrystal = IByzantianCrystal(_bCrystal);
   }
 
   event Address(address addr);
