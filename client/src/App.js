@@ -132,18 +132,19 @@ class App extends Component {
     }
 
     const bgImage = () => {
+      const styleObject = {}
       if (currentScreen.substr(0, 6) === 'Planet' && currentScreen !== 'PlanetIntro') {
-        return {backgroundImage: `url(${planet.img})`}
-      } else {
-        return {}
+        styleObject.backgroundImage = `url(${planet.img})`
       }
+      if (user.currentPlanet == '255') {
+        styleObject.backgroundPosition = '50% 40%'
+        styleObject.backgroundSize = '50%'
+      }
+      return styleObject
     }
 
     return (
-      <div
-        className={classes.App}
-        style={bgImage()}
-      >
+      <div className={classes.App} style={bgImage()}>
         {/* Render current screen */}
         {screenMapping(currentScreen)}
 

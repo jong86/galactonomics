@@ -16,7 +16,7 @@ class PlanetIntro extends Component {
 
     return (
       <div className={classes.PlanetIntro}>
-        <h1>Welcome to planet {planet.name}</h1>
+        <h1>Welcome to {planet.id != '255' && 'planet '}{planet.name}</h1>
         <Rect
           isButton
           onClick={() => changeScreen('PlanetHome')}

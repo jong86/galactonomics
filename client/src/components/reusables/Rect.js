@@ -27,6 +27,11 @@ const styles = {
     margin: '4px',
     cursor: ({ isButton }) => isButton ? 'pointer' : 'default',
     userSelect: 'none',
+
+    '&:hover': {
+      color: ({ isButton }) => isButton ? '#000' : null,
+      backgroundColor: ({ isButton, type }) => isButton ? colorFromType(type) : null,
+    }
   }
 }
 

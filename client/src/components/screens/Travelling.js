@@ -49,7 +49,7 @@ class Travelling extends Component {
         {!isTravelling ?
           <h1>Waiting for hyperdrive activation...</h1>
           :
-          <h1>Travelling to planet {planet.name}...</h1>
+          <h1>Travelling to {planet.id != '255' && 'planet '}{planet.name}...</h1>
         }
         <img
           src={spaceship}

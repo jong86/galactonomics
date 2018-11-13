@@ -8,7 +8,10 @@ import {
   FaBalanceScale,
   FaChartBar,
   FaIndustry,
+  FaHammer,
+  FaEthereum,
 } from 'react-icons/fa';
+import { MdBusinessCenter } from 'react-icons/md'
 import getPlayerInfo from 'utils/getPlayerInfo'
 
 
@@ -79,12 +82,12 @@ class PlanetHome extends Component {
             {planet.id == 255 ?
               <Fragment>
                 <Rect
-                  onClick={() => changeScreen('PlanetMarketplace')}
+                  onClick={() => changeScreen('TempleMarketplace')}
                   isButton
                   type="info"
                   size="wide3"
                   >
-                  <FaBalanceScale className={classes.icon} size={iconSize} />
+                  <MdBusinessCenter className={classes.icon} size={iconSize} />
                   Crystal Marketplace
                 </Rect>
                 <Rect
@@ -97,13 +100,22 @@ class PlanetHome extends Component {
                   Commodity Prices
                 </Rect>
                 <Rect
-                  onClick={() => changeScreen('PlanetIndustrial')}
+                  onClick={() => changeScreen('TempleIndustrial')}
                   isButton
                   type="info"
                   size="wide3"
                   >
-                  <FaIndustry className={classes.icon} size={iconSize} />
+                  <FaHammer className={classes.icon} size={iconSize} />
                   Forge Byzantian Crystals
+                </Rect>
+                <Rect
+                  onClick={() => changeScreen('ViewCrystals')}
+                  isButton
+                  type="info"
+                  size="wide3"
+                  >
+                  <FaEthereum className={classes.icon} size={iconSize} />
+                  View My Crystals
                 </Rect>
               </Fragment>
               :

@@ -6,6 +6,7 @@ export default {
       backgroundColor: 'black',
       color: 'white',
       fontFamily: 'Verdana',
+      margin: 0,
     },
     div: {
       display: 'flex',
@@ -20,9 +21,11 @@ export default {
   App: {
     width: '100%',
     minHeight: '100vh',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center top',
     justifyContent: 'flex-start',
+
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: '50% 0%',
+    backgroundSize: '100%',
   },
 
   '@keyframes vibrate1': {
