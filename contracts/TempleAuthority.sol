@@ -13,6 +13,8 @@ import "./interfaces/IByzantianCrystal.sol";
 contract TempleAuthority is CommodityInteractor, GTAInteractor {
   using SafeMath for uint;
 
+  IByzantianCrystal bCrystal;
+
   // Units of each commodity required to forge a crystal
   uint public constant forgingAmount = 10000;
 
@@ -23,15 +25,11 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
   mapping(uint => uint) tokenIdToPrice;
 
   constructor(address[] _commodityAddresses, address _gta, address _bCrystal)
-  ERC721Full("ByzantianCrystals", "BZC")
   CommodityInteractor(_commodityAddresses)
   GTAInteractor(_gta)
   public {
     bCrystal = IByzantianCrystal(_bCrystal);
   }
-
-  event Address(address addr);
-  event Number(uint number);
 
   /**
    * @notice Creates a new crystal, requires forgingAmount in all 7 commodities
@@ -57,13 +55,8 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
       );
     }
 
-    // Mint one token for user
-    uint _tokenId = totalSupply() + 1;
-    _mint(msg.sender, _tokenId);
-
-    // Set URI of token to something unique
-    string memory _uri = bytes32ToString(keccak256(_tokenId, now, msg.sender));
-    _setTokenURI(_tokenId, _uri);
+    uint _tokenId = bCrystal.create(msg.sender);
+    return _tokenId;
   }
 
   /**
@@ -71,19 +64,19 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
    * @param _owner Address of account to look up
    */
   function crystalsOfOwner(address _owner) external view returns (uint[] ownedCrystals) {
-    uint tokenCount = balanceOf(_owner);
+    uint tokenCount = bCrystal.balanceOf(_owner);
 
     if (tokenCount == 0) {
       // Return an empty array
       return new uint[](0);
     } else {
       uint[] memory result = new uint[](tokenCount);
-      uint totalCrystals = totalSupply();
+      uint totalCrystals = bCrystal.totalSupply();
       uint resultIndex = 0;
       uint crystalId;
 
       for (crystalId = 1; crystalId <= totalCrystals; crystalId++) {
-        if (ownerOf(crystalId) == _owner) {
+        if (bCrystal.ownerOf(crystalId) == _owner) {
           result[resultIndex] = crystalId;
           resultIndex++;
         }
@@ -99,14 +92,14 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
    * @param _price Price in wei to sell crystal for
    */
   function sell(uint _tokenId, uint _price) external {
-    require(ownerOf(_tokenId) == msg.sender, "You must own a crystal in order to sell it");
+    require(bCrystal.ownerOf(_tokenId) == msg.sender, "You cannot sell a crystal you do not own");
 
     // Add crystal to list of crystals for sale
     crystalsForSale.push(_tokenId);
     // Store price in a mapping
     tokenIdToPrice[_tokenId] = _price;
-    // Approve this contract for transferring this token when purchased
-    approve(address(this), _tokenId);
+    // Transfer token from owner to this contract (acting as escrow)
+    bCrystal.transferToEscrow(msg.sender, _tokenId);
   }
 
   /**
@@ -114,59 +107,32 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
    * @param _tokenId Id of crystal to purchase
    */
   function buy(uint _tokenId) external payable {
-    emit Address(getApproved(_tokenId));
-    emit Address(address(this));
-    emit Address(ownerOf(_tokenId));
-    emit Number(msg.value);
-    emit Number(_tokenId);
-    // require(msg.value == tokenIdToPrice[_tokenId], "You did not provide the correct amount of ether");
+    require(msg.value == tokenIdToPrice[_tokenId], "You did not provide the correct amount of ether");
 
     // Remove crystal from list of crystals for sale
-    // uint numForSale = crystalsForSale.length;
-    // for (uint i = 0; i < numForSale; i++) {
-    //   if (crystalsForSale[i] == _tokenId) {
-    //     // If in here then we found the index this token is at, now for array management:
-    //     // Move last crystal in list to bought token's spot
-    //     crystalsForSale[i] = crystalsForSale[numForSale - 1];
-    //     // Delete last item
-    //     delete crystalsForSale[numForSale - 1];
-    //     // Shorten list of crystals for sale by 1
-    //     crystalsForSale.length--;
-    //     break;
-    //   }
-    // }
+    uint numForSale = crystalsForSale.length;
+    for (uint i = 0; i < numForSale; i++) {
+      if (crystalsForSale[i] == _tokenId) {
+        // If in here then we found the index this token is at, now for array management:
+        // Move last crystal in list to bought token's spot
+        crystalsForSale[i] = crystalsForSale[numForSale - 1];
+        // Delete last item
+        delete crystalsForSale[numForSale - 1];
+        // Shorten list of crystals for sale by 1
+        crystalsForSale.length--;
+        break;
+      }
+    }
 
     // Transfer token ownership to buyer
-    // transferFrom(ownerOf(_tokenId), msg.sender, _tokenId);
+    bCrystal.transferFromEscrow(msg.sender, _tokenId);
   }
-
 
   /**
    * @notice Getter function for crystalsForSale array
    */
   function getCrystalsForSale() external view returns (uint[]) {
     return crystalsForSale;
-  }
-
-  /**
-   * @notice Helper function that converts a byte array to string
-   * @param _data bytes32 to convert
-   */
-  function bytes32ToString(bytes32 _data) public pure returns (string) {
-    bytes memory _s = new bytes(40);
-    for (uint i = 0; i < 20; i++) {
-      byte _b = byte(uint8(uint(_data) / (2**(8*(19 - i)))));
-      byte _hi = byte(uint8(_b) / 16);
-      byte _lo = byte(uint8(_b) - 16 * uint8(_hi));
-      _s[2*i] = char(_hi);
-      _s[2*i+1] = char(_lo);
-    }
-    return string(_s);
-  }
-
-  function char(byte _b) internal pure returns (byte c) {
-    if (_b < 10) return byte(uint8(_b) + 0x30);
-    else return byte(uint8(_b) + 0x57);
   }
 
   function() external payable {}

@@ -7,9 +7,7 @@ const { fillUpCargoByMinting, mintCommodityXTimes } = require('./util/testUtils'
 const deployCommodities = require('../utils/deployCommodities')
 
 contract("TempleAuthority", accounts => {
-  let gta, gea, gia, commodities, temple
-  let crystalIndexes1, crystal1
-  let crystalIndexes2, crystal2
+  let gta, gea, gia, commodities, bCrystal, temple
   const owner = accounts[0]
   const player1 = accounts[1]
   const player2 = accounts[2]
@@ -22,6 +20,7 @@ contract("TempleAuthority", accounts => {
     gia = await GalacticIndustrialAuthority.new(commodityAddresses, gta.address)
     bCrystal = await ByzantianCrystal.new()
     temple = await TempleAuthority.new(commodityAddresses, gta.address, bCrystal.address)
+    await bCrystal.setTA(temple.address)
     commodities.forEach(async commodity => await commodity.setGEA(gea.address))
     commodities.forEach(async commodity => await commodity.setGIA(gia.address))
     commodities.forEach(async commodity => await commodity.setTA(temple.address))
@@ -41,7 +40,7 @@ contract("TempleAuthority", accounts => {
 
       let balance
       try {
-        balance = await temple.balanceOf(player1)
+        balance = await bCrystal.balanceOf(player1)
       } catch (e) {}
       assert.equal(balance.toString(), '0', 'player could forge')
     })
@@ -86,11 +85,8 @@ contract("TempleAuthority", accounts => {
 
     it("allows player to forge a crystal", async () => {
       await gta.travelToPlanet(255, { from: player1 })
-      for (let i = 0; i <= 6; i++) {
-        const balance = await gea.getCommodityBalance(i, { from: player1 })
-      }
       await temple.forge({ from: player1 })
-      const balance = await temple.balanceOf(player1)
+      const balance = await bCrystal.balanceOf(player1)
       assert.equal(balance.toString(), '1', 'did not forge a b. crystal for player1')
     })
 
@@ -103,8 +99,8 @@ contract("TempleAuthority", accounts => {
       await gta.travelToPlanet(255, { from: player2 })
       await temple.forge({ from: player2 })
 
-      const uri1 = await temple.tokenURI(1)
-      const uri2 = await temple.tokenURI(2)
+      const uri1 = await bCrystal.tokenURI(1)
+      const uri2 = await bCrystal.tokenURI(2)
 
       assert(uri1, 'uri1 not defined')
       assert(uri2, 'uri2 not defined')
@@ -119,10 +115,9 @@ contract("TempleAuthority", accounts => {
     })
 
     it("allows player to list a crystal for sale", async () => {
-      await temple.sell(1, 1000, { from: player1 })
+      await temple.sell(1, 1000, { from: player1, gas: 6000000 })
       let crystalsForSale = await temple.getCrystalsForSale()
       crystalsForSale = crystalsForSale.map(crystalIdBN => crystalIdBN.toString())
-      console.log('crystalsForSale', crystalsForSale);
       assert(crystalsForSale.includes('1'), 'crystal was not made for sale')
     })
 
@@ -131,12 +126,15 @@ contract("TempleAuthority", accounts => {
     // })
 
     it("allows player to purchase a crystal that is for sale", async () => {
-      console.log('player1, player2', player1, player2);
-      await temple.buy(1, { from: player2, value: 1000, gas: 7000000 })
+      await temple.buy(1, { from: player2, value: 1000, gas: 6000000 })
       let ownedCrystals = await temple.crystalsOfOwner(player2)
       ownedCrystals = ownedCrystals.map(crystalIdBN => crystalIdBN.toString())
-      console.log('ownedCrystals', ownedCrystals);
       assert(ownedCrystals.includes('1'), 'crystal was not bought')
+
+      // Make sure crystal no longer listed for sale
+      let crystalsForSale = await temple.getCrystalsForSale()
+      crystalsForSale = crystalsForSale.map(crystalIdBN => crystalIdBN.toString())
+      assert(!crystalsForSale.includes('1'), 'crystal still listed for sale')
     })
   })
 })
