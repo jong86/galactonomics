@@ -24,7 +24,7 @@ const styles = {
   }
 }
 
-class PlanetMarketplaces extends Component {
+class PlanetMarketplace extends Component {
   constructor(props) {
     super(props)
 
@@ -318,6 +318,6 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-PlanetMarketplaces = connect(mapStateToProps, mapDispatchToProps)(PlanetMarketplaces)
-PlanetMarketplaces = injectSheet(styles)(PlanetMarketplaces)
-export default PlanetMarketplaces;
+PlanetMarketplace = connect(mapStateToProps, mapDispatchToProps)(PlanetMarketplace)
+PlanetMarketplace = injectSheet(styles)(PlanetMarketplace)
+export default PlanetMarketplace;

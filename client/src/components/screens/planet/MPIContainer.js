@@ -27,18 +27,29 @@ const styles = {
   },
 }
 
-const navLinks = [
-  { name: 'PlanetHome', label: '<< Back' },
-  { name: 'PlanetMarketplace', label: 'Marketplace' },
-  { name: 'PlanetPrices', label: 'Prices elsewhere' },
-  { name: 'PlanetIndustrial', label: 'Industrial operations' },
-]
-
 class MPIContainer extends Component {
   state = {};
 
   render() {
     const { classes, user, changeScreen, currentScreen, sideButtons } = this.props
+
+    let navLinks
+    if (user.currentPlanet != 255) {
+      navLinks = [
+        { name: 'PlanetHome', label: '<< Back' },
+        { name: 'PlanetMarketplace', label: 'Marketplace' },
+        { name: 'PlanetPrices', label: 'Prices elsewhere' },
+        { name: 'PlanetIndustrial', label: 'Industrial operations' },
+      ]
+    } else {
+      navLinks = [
+        { name: 'PlanetHome', label: '<< Back' },
+        { name: 'TempleMarketplace', label: 'Crystal marketplace' },
+        { name: 'PlanetPrices', label: 'Prices elsewhere' },
+        { name: 'TempleIndustrial', label: 'Forge Byzantian Crystals' },
+        { name: 'ViewCrystals', label: 'View My Crystals' },
+      ]
+    }
 
     return (
       <Fragment>
