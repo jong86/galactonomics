@@ -45,9 +45,11 @@ const styles = {
     alignItems: 'flex-start',
     flexDirection: 'row',
     width: 'fill-available',
-  },
-  icon: {
-    margin: '16px',
+    '@global': {
+      svg: {
+        margin: '16px',
+      }
+    }
   },
 }
 
@@ -72,11 +74,11 @@ class PlanetHome extends Component {
               isButton
               type="good"
               size="wide"
-              >Travel (Leave {planet.name})</Rect>
+            >Travel (Leave {planet.name})</Rect>
             <Rect
               type="status"
               size="wide"
-              >Ξ{user.balance}</Rect>
+            >Ξ{user.balance}</Rect>
           </div>
           <div className={classes.top3}>
             {planet.id == 255 ?
@@ -86,8 +88,8 @@ class PlanetHome extends Component {
                   isButton
                   type="info"
                   size="wide3"
-                  >
-                  <MdBusinessCenter className={classes.icon} size={iconSize} />
+                >
+                  <MdBusinessCenter size={iconSize} />
                   Crystal Marketplace
                 </Rect>
                 <Rect
@@ -95,8 +97,8 @@ class PlanetHome extends Component {
                   isButton
                   type="info"
                   size="wide3"
-                  >
-                  <FaChartBar className={classes.icon}size={iconSize} />
+                >
+                  <FaChartBar size={iconSize} />
                   Commodity Prices
                 </Rect>
                 <Rect
@@ -104,8 +106,8 @@ class PlanetHome extends Component {
                   isButton
                   type="info"
                   size="wide3"
-                  >
-                  <FaHammer className={classes.icon} size={iconSize} />
+                >
+                  <FaHammer size={iconSize} />
                   Forge Byzantian Crystals
                 </Rect>
                 <Rect
@@ -113,8 +115,8 @@ class PlanetHome extends Component {
                   isButton
                   type="info"
                   size="wide3"
-                  >
-                  <FaEthereum className={classes.icon} size={iconSize} />
+                >
+                  <FaEthereum size={iconSize} />
                   View My Crystals
                 </Rect>
               </Fragment>
@@ -125,8 +127,8 @@ class PlanetHome extends Component {
                   isButton
                   type="info"
                   size="wide3"
-                  >
-                  <FaBalanceScale className={classes.icon} size={iconSize} />
+                >
+                  <FaBalanceScale size={iconSize} />
                   Marketplace
                 </Rect>
                 <Rect
@@ -134,7 +136,7 @@ class PlanetHome extends Component {
                   isButton
                   type="info"
                   size="wide3"
-                  >
+                >
                   <FaChartBar className={classes.icon}size={iconSize} />
                   Commodity Prices
                 </Rect>
@@ -143,8 +145,8 @@ class PlanetHome extends Component {
                   isButton
                   type="info"
                   size="wide3"
-                  >
-                  <FaIndustry className={classes.icon} size={iconSize} />
+                >
+                  <FaIndustry size={iconSize} />
                   Industrial Operations
                 </Rect>
               </Fragment>

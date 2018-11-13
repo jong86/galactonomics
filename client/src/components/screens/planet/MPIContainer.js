@@ -28,8 +28,6 @@ const styles = {
 }
 
 class MPIContainer extends Component {
-  state = {};
-
   render() {
     const { classes, user, changeScreen, currentScreen, sideButtons } = this.props
 
@@ -59,9 +57,8 @@ class MPIContainer extends Component {
             <div>
               {/* Top-left */}
               <CargoMeter current={user.currentCargo} max={user.maxCargo} />
-              <Fragment>
-                { this.props.children }
-              </Fragment>
+              {/* Main screen content goes here */}
+              <Fragment>{this.props.children}</Fragment>
             </div>
             <div >
               {/* Top-right */}
@@ -72,13 +69,11 @@ class MPIContainer extends Component {
               <div style={{ marginTop: '20%', width: '100%' }}>
                 {sideButtons && sideButtons.map((sideButton, i) => (
                   <Rect
-                  key={i}
-                  isButton
-                  onClick={sideButton.fn}
-                  size="wide"
-                  >
-                    {sideButton.label}
-                  </Rect>
+                    key={i}
+                    isButton
+                    onClick={sideButton.fn}
+                    size="wide"
+                  >{sideButton.label}</Rect>
                 ))}
               </div>
             </div>
@@ -87,13 +82,13 @@ class MPIContainer extends Component {
             {/* Bottom row */}
             {navLinks.map((link, i) =>
               <Rect
-              key={i}
-              isButton
-              active={currentScreen === link.name}
-              size="wide4"
-              onClick={() => changeScreen(link.name)}
+                key={i}
+                isButton
+                active={currentScreen === link.name}
+                size="wide4"
+                onClick={() => changeScreen(link.name)}
               >{link.label}</Rect>
-              )}
+            )}
           </div>
         </div>
       </Fragment>
