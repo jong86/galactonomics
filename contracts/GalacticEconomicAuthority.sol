@@ -6,6 +6,7 @@ import "./utils/GTAInteractor.sol";
 
 /**
  * @title Galactic Economic Authority (GEA)
+ *
  * @notice The GEA handles commodity trading
  */
 contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
@@ -19,6 +20,9 @@ contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
     address buyer;
   }
 
+  // Mapping of planetId to array containing the commodity Ids that are sold on that planet
+  mapping(uint8 => uint[]) public planetIdToCommodityIdsTraded;
+
   // Mapping of planetId to commodityId to sell orders array
   mapping(uint8 => mapping(uint8 => SellOrder[])) public marketplaces;
 
@@ -27,11 +31,23 @@ contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
 
   constructor(address[] _commodityAddresses, address _gta)
   CommodityInteractor(_commodityAddresses)
-  GTAInteractor(_gta) public {}
+  GTAInteractor(_gta) public {
+    planetIdToCommodityIdsTraded[0] = [1, 4, 5];
+    planetIdToCommodityIdsTraded[1] = [0, 2, 4, 6];
+    planetIdToCommodityIdsTraded[2] = [3, 6];
+    planetIdToCommodityIdsTraded[3] = [0, 2, 5];
+    planetIdToCommodityIdsTraded[4] = [0, 1, 3];
+    planetIdToCommodityIdsTraded[5] = [2, 6];
+    planetIdToCommodityIdsTraded[6] = [1, 3, 4, 5];
+  }
 
-
-  // Action functions
-
+  /**
+   * @notice To sell a commodity on a planet
+   * @param _planetId ID of planet to sell commodity on
+   * @param _commodityId ID of commodity to sell
+   * @param _amount Quantity of commodity to sell
+   * @param _price Price per unit of commodity
+   */
   function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _amount, uint _price)
   external
   samePlanet(_planetId) {
@@ -47,6 +63,12 @@ contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
     emit sellOrderCreated(_planetId, _orderId);
   }
 
+  /**
+   * @notice To purchase a commodity that is for sale
+   * @param _planetId ID of planet that sell order is on
+   * @param _commodityId ID of commodity to buy
+   * @param _orderId ID of order to purchase
+   */
   function buySellOrder(uint8 _planetId, uint8 _commodityId, uint _orderId) external payable
   onlyPlayer
   samePlanet(_planetId)
@@ -65,9 +87,12 @@ contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
     emit sellOrderPurchased(_planetId, _orderId);
   }
 
-
-  // View functions
-
+  /**
+   * @notice Returns all data on specified sell order
+   * @param _planetId ID of planet that sell order is on
+   * @param _commodityId ID of commodity being sold
+   * @param _orderId ID of sell order
+   */
   function getSellOrder(uint8 _planetId, uint8 _commodityId, uint _orderId) external view
   returns (
     address seller,
@@ -88,7 +113,20 @@ contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
     );
   }
 
+  /**
+   * @notice Returns the number of sell orders that exist for a specified planet and commodity
+   * @param _planetId ID of planet that sell order is on
+   * @param _commodityId ID of commodity being sold
+   */
   function getNumSellOrders(uint8 _planetId, uint8 _commodityId) external view returns(uint) {
     return marketplaces[_planetId][_commodityId].length;
+  }
+
+  /**
+   * @notice Returns an array containing the IDs of the commodoties sold on a particular planet
+   * @param _planetId ID of planet that sell order is on
+   */
+  function getCommoditiesTraded(uint8 _planetId) external view returns (uint[] commoditiesTraded) {
+    return planetIdToCommodityIdsTraded[_planetId];
   }
 }

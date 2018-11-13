@@ -6,9 +6,9 @@ import "./utils/CommodityInteractor.sol";
 import "./utils/GTAInteractor.sol";
 import "./Commodity.sol";
 
-
 /**
  * @title Galactic Industrial Authority (GIA)
+ *
  * @notice The GIA handles commodity-mining investments, and minting
  */
 contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInteractor {

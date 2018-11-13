@@ -35,7 +35,6 @@ contract GalacticTransitAuthority is ERC721, AccessControlled {
   // Resolves to true is account owns an address
   mapping(address => bool) public addressOwnsSpaceship;
 
-
   event SpaceshipBought(address owner, uint tokenId);
   event TravelComplete(address player, uint8 planetId, uint currentFuel);
   event RefuelComplete(address player);
@@ -44,7 +43,6 @@ contract GalacticTransitAuthority is ERC721, AccessControlled {
     require(isPlayer(msg.sender), "You need to own a spaceship to call this function");
     _;
   }
-
 
   /**
    * @notice Creates a spaceship and assigns ownership to sender
@@ -62,9 +60,9 @@ contract GalacticTransitAuthority is ERC721, AccessControlled {
     emit SpaceshipBought(msg.sender, _tokenId);
   }
 
-
   /**
    * @notice Changes spaceship's current planet to planet specified
+   * @dev This function is responsible for deciding which planet IDs are valid planets
    * @param _planetId Id of planet to travel to (0 - 6), or 255 for the 8th planet
    */
   function travelToPlanet(uint8 _planetId) external onlyPlayer {
@@ -75,7 +73,6 @@ contract GalacticTransitAuthority is ERC721, AccessControlled {
     emit TravelComplete(msg.sender, _planetId, addressToSpaceship[msg.sender].currentFuel);
   }
 
-
   /**
    * @notice Changes spaceship's current fuel to max fuel, for a fee in ether
    * @dev Throws if cost to refuel is not provided
@@ -85,9 +82,10 @@ contract GalacticTransitAuthority is ERC721, AccessControlled {
     addressToSpaceship[msg.sender].currentFuel = addressToSpaceship[msg.sender].maxFuel;
   }
 
-
-  // View functions
-
+  /**
+   * @notice Returns player's spaceship info
+   * @dev Does not include currentCargo (that's handled by CommodityInteractor)
+   */
   function getInfo() external view returns (
     string spaceshipName,
     uint8 currentPlanet,
@@ -104,11 +102,9 @@ contract GalacticTransitAuthority is ERC721, AccessControlled {
     );
   }
 
-
   function getCurrentPlanet(address _address) public view returns (uint8) {
     return addressToSpaceship[_address].currentPlanet;
   }
-
 
   function checkFuel(address _address) public view returns (uint currentFuel, uint maxFuel) {
     return (
@@ -116,7 +112,6 @@ contract GalacticTransitAuthority is ERC721, AccessControlled {
       addressToSpaceship[_address].maxFuel
     );
   }
-
 
   function getMaxCargo(address _address) public view returns (uint) {
     return addressToSpaceship[_address].maxCargo;
@@ -126,11 +121,9 @@ contract GalacticTransitAuthority is ERC721, AccessControlled {
     return getMaxCargo(_address).sub(_currentCargo);
   }
 
-
   function isPlayer(address _address) public view returns (bool) {
     return addressOwnsSpaceship[_address];
   }
-
 
   function() public {}
 }
