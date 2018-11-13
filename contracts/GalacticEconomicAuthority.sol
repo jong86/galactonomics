@@ -42,6 +42,30 @@ contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
   }
 
   /**
+   * @dev Modifier that ensures a commodity ID is valid
+   */
+  modifier commodityExists(uint8 _commodityId) {
+    require(0 <= _commodityId && _commodityId <= 6, "That commodity does not exist");
+    _;
+  }
+
+  /**
+   * @dev Modifier that ensures that a commodity is traded on a planet
+   */
+  modifier commodityTradedOnPlanet(uint8 _planetId, uint8 _commodityId) {
+    uint length = planetIdToCommodityIdsTraded[_planetId].length;
+    bool isTraded;
+    for (uint i = 0; i < length; i++) {
+      if (planetIdToCommodityIdsTraded[_planetId][i] == _commodityId) {
+        isTraded = true;
+        break;
+      }
+    }
+    require(isTraded, "This commodity is not traded on this planet");
+    _;
+  }
+
+  /**
    * @notice To sell a commodity on a planet
    * @param _planetId ID of planet to sell commodity on
    * @param _commodityId ID of commodity to sell
@@ -50,6 +74,8 @@ contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
    */
   function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _amount, uint _price)
   external
+  // commodityExists(_commodityId)
+  // commodityTradedOnPlanet(_planetId, _commodityId)
   samePlanet(_planetId) {
     require(commodities[_commodityId]._interface.balanceOf(msg.sender) >= _amount, "You do not own enough of this commodity");
 
@@ -71,6 +97,7 @@ contract GalacticEconomicAuthority is CommodityInteractor, GTAInteractor {
    */
   function buySellOrder(uint8 _planetId, uint8 _commodityId, uint _orderId) external payable
   onlyPlayer
+  commodityExists(_commodityId)
   samePlanet(_planetId)
   canFitCargo(msg.sender, getCurrentCargo(msg.sender), marketplaces[_planetId][_commodityId][_orderId].amount) {
     SellOrder memory sellOrder = marketplaces[_planetId][_commodityId][_orderId];

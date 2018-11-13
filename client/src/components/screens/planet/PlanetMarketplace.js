@@ -86,46 +86,61 @@ class PlanetMarketplaces extends Component {
   }
 
   getCommodities = async () => {
-    const commodityInfos = await this.getCommodityInfos()
-    const commodityBalances = await this.getCommodityBalances()
+    const commoditiesTraded = await this.getCommoditiesTraded()
+    const commodityInfos = await this.getCommodityInfos(commoditiesTraded)
+    const commodityBalances = await this.getCommodityBalances(commoditiesTraded)
+    console.log('commodityBalances', commodityBalances);
     this.setState({
       commodities: commodityInfos.map((commodityInfo, i) => ({
+        id: commoditiesTraded[i],
         name: commodityInfo.name,
         symbol: commodityInfo.symbol,
-        myBalance: commodityBalances[i].toString()
+        myBalance: commodityBalances[i]
       }))
     })
   }
 
-  getCommodityInfos = async () => {
+  getCommoditiesTraded = async () => {
     const { contracts, user } = this.props
-    const commodityInfos = []
-
+    let commoditiesTraded
     return new Promise(async (resolve, reject) => {
       try {
-        for (let i = 0; i < 7; i++) {
-          commodityInfos.push(await contracts.gea.getCommodityInfo(i, { from: user.address }))
+        commoditiesTraded = await contracts.gea.getCommoditiesTraded(user.currentPlanet, { from: user.address })
+      } catch (e) {
+        return reject(e)
+      }
+      commoditiesTraded = commoditiesTraded.map(commodityIdBN => commodityIdBN.toNumber())
+      resolve(commoditiesTraded)
+    })
+  }
+
+  getCommodityInfos = async commodityIds => {
+    const { contracts, user } = this.props
+    const commodityInfos = []
+    return new Promise(async (resolve, reject) => {
+      try {
+        for (let id of commodityIds) {
+          commodityInfos.push(await contracts.gea.getCommodityInfo(id, { from: user.address }))
         }
       } catch (e) {
         return reject(e)
       }
-
       resolve(commodityInfos)
     })
   }
 
-  getCommodityBalances = async () => {
+  getCommodityBalances = async commodityIds => {
     const { contracts, user } = this.props
-    const commodityBalances = []
-
+    let commodityBalances = []
     return new Promise(async (resolve, reject) => {
       try {
-        for (let i = 0; i < 7; i++) {
-          commodityBalances.push(await contracts.gea.getCommodityBalance(i, { from: user.address }))
+        for (let id of commodityIds) {
+          commodityBalances.push(await contracts.gea.getCommodityBalance(id, { from: user.address }))
         }
       } catch (e) {
         reject(e)
       }
+      commodityBalances = commodityBalances.map(commodityIdBN => commodityIdBN.toNumber())
       resolve(commodityBalances)
     })
   }
@@ -153,7 +168,7 @@ class PlanetMarketplaces extends Component {
     this.getSellOrders()
     // Refresh commodity balances
     this.getCommodities()
-    // To refresh cargo
+    // Refresh cargo
     getPlayerInfo()
   }
 
@@ -178,7 +193,7 @@ class PlanetMarketplaces extends Component {
     this.getSellOrders()
     // Refresh commodity balances
     this.getCommodities()
-    // To refresh cargo
+    // Refresh cargo
     getPlayerInfo()
   }
 
@@ -206,7 +221,7 @@ class PlanetMarketplaces extends Component {
 
     let commodity = { name: '', symbol: '' }
     if (commodities.length && typeof selectedCommodityId === 'number') {
-      commodity = commodities[selectedCommodityId]
+      commodity = commodities[commodities.findIndex(commodity => commodity.id === selectedCommodityId)]
     }
 
     const sideButtons = [
@@ -224,8 +239,8 @@ class PlanetMarketplaces extends Component {
                 key={i}
                 isButton
                 size="wide"
-                active={selectedCommodityId === i}
-                onClick={() => this.setState({ selectedCommodityId: i })}
+                active={selectedCommodityId === commodity.id}
+                onClick={() => this.setState({ selectedCommodityId: commodities[i].id })}
               >
                 <div>{commodity.name}</div>
                 <div>{"(You have: " + commodity.myBalance.toString() + " kg)"}</div>

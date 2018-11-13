@@ -37,17 +37,6 @@ function initGIA() {
       }
     })
 
-    const evtLog = gia.Log({ fromBlock: 'latest' })
-    evtLog.watch(async (err, res) => {
-      if (err) {
-        console.log('Watch error', err)
-      }
-      else {
-        console.log('Heard Log event')
-        console.log('res', res);
-      }
-    })
-
     resolve()
   })
 }
