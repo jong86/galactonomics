@@ -61,7 +61,6 @@ class ViewCrystals extends Component {
 
     // Take first 6 characters of URI string and use for the colour
     const color = eval('0x' + uri.substr(0, 6))
-    console.log('color', color);
     var light = new THREE.PointLight(color, 25, 100);
     light.position.set(50, 50, 50);
     scene.add(light);
