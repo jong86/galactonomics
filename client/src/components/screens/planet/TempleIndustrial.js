@@ -1,9 +1,11 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
+import getPlayerInfo from 'utils/getPlayerInfo'
+import Loader from 'components/reusables/Loader'
 
 const styles = {
   acceptDecline: {
@@ -12,11 +14,31 @@ const styles = {
 }
 
 class TempleIndustrial extends Component {
-  componentDidMount = () => {
+  constructor() {
+    super()
+    this.state = {
+      isForging: false,
+    }
+  }
+
+  forge = async () => {
+    const { contracts, user } = this.props
+    this.setState({ isForging: true })
+
+    try {
+      await contracts.temple.forge({ from: user.address })
+    } catch (e) {
+      console.error(e)
+    }
+
+    await getPlayerInfo()
+
+    this.setState({ isForging: false })
   }
 
   render() {
     const { classes, user, web3 } = this.props
+    const { isForging } = this.state
     const planet = planets.find(planet => planet.id == user.currentPlanet)
 
     return (
@@ -25,17 +47,23 @@ class TempleIndustrial extends Component {
           size="wide"
         >
           <div>Would like to forge a crystal?</div>
-          <div>(Requires ____ kg of all 7 commodities)</div>
+          <div>(Requires 10,000 kg of all 7 commodities)</div>
           <div className={classes.acceptDecline}>
-            <Rect
-              isButton
-              type="bad"
-            >Decline</Rect>
-            <Rect
-              isButton
-              type="good"
-              onClick={this.acceptOffer}
-            >Accept</Rect>
+            {isForging ?
+              <Loader />
+              :
+              <Fragment>
+                <Rect
+                  isButton
+                  type="bad"
+                >Decline</Rect>
+                <Rect
+                  isButton
+                  type="good"
+                  onClick={this.forge}
+                >Accept</Rect>
+              </Fragment>
+            }
           </div>
         </Rect>
       </MPIContainer>

@@ -68,6 +68,9 @@ module.exports = function(deployer) {
     await deployer.deploy(ByzantianCrystal, { gas: 6000000 })
     const bCrystal = await ByzantianCrystal.deployed()
     // Deploy TA
-    return deployer.deploy(TempleAuthority, commodityAddresses, gta.address, bCrystal.address, { gas: 6000000 })
+    await deployer.deploy(TempleAuthority, commodityAddresses, gta.address, bCrystal.address, { gas: 6000000 })
+    const temple = await TempleAuthority.deployed()
+    await bCrystal.setTA(temple.address)
+    return Promise.all(commodityInstances.map(instance => instance.setTA(temple.address)))
   })
 };

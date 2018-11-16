@@ -59,7 +59,10 @@ module.exports = async function(done) {
   } catch (e) {
     console.error(e)
   }
-  
+
+  await gta.travelToPlanet(255, { from: bob })
+
+  console.log("Minted all 7 commodities and now on planet 255")
 
   done()
 }

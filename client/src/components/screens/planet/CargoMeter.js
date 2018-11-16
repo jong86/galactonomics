@@ -13,8 +13,8 @@ let CargoMeter = ({ classes, current = 0, max = 0, cargoPerCommodity = [] }) => 
     <Rect>
       {"Total cargo: " + current.toString()}/{max.toString() + " kg"}
     </Rect>
-    {cargoPerCommodity.map(commodity =>
-      <Rect type="dark">
+    {cargoPerCommodity.map((commodity, i) =>
+      <Rect key={i} type="dark">
         {commodity.symbol} {commodity.amount}
       </Rect>
     )}
