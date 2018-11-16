@@ -25,6 +25,31 @@ const styles = {
 }
 
 class ViewCrystals extends Component {
+  componentDidMount = () => {
+    this.crystalsOfOwner()
+  }
+
+  crystalsOfOwner = async () => {
+    const { contracts, user } = this.props
+    const crystals = []
+
+    try {
+      const crystalIds = await contracts.temple.crystalsOfOwner(user.address, { from: user.address })
+      if (crystalIds && crystalIds.length) {
+        for (let id of crystalIds) {
+          crystals.push({
+            id,
+            uri: await contracts.temple.crystalURI(id, { from:user.address })
+          })
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
+
+    console.log('crystals', crystals);
+  }
+
   render() {
     const { classes } = this.props
 

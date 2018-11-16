@@ -87,6 +87,17 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
     }
   }
 
+
+  /**
+   * @notice Returns URI of ERC-721 token
+   * @param _tokenId Address of account to look up
+   * @dev This function exists so the front-end doesn't have to import
+   *  the B. Crystal contract
+   */
+  function crystalURI(uint _tokenId) external view returns (string) {
+    return bCrystal.tokenURI(_tokenId);
+  }
+
   /**
    * @notice Put a crystal up for sale
    * @param _tokenId Id of crystal to sell
