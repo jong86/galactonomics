@@ -24,6 +24,8 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
   event InvestmentMade(address addr, uint blocksLeft);
   event CommodityMinted(address to, uint blocksLeft);
 
+  event Hash(bytes32 data);
+
   constructor(address[] _commodityAddresses, address _gta)
   CommodityInteractor(_commodityAddresses)
   GTAInteractor(_gta)
@@ -56,6 +58,17 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
     }
     commodities[_commodityId]._interface.mint(_for, amountToMint);
     emit CommodityMinted(_for, investments[_for].blocksLeft);
+  }
+
+  /**
+   * @notice Mints new commodity tokens for a player
+   * @param _nonce Value found that when hashed (using SHA-256) with the previous proof-of-work hash found for a
+   *  specified commodity, results in an acceptable hash according to current difficulty for that commodity
+   * @param _commodityId Commodity to mint
+   */
+  function submitProofOfWork(string _nonce, uint8 _commodityId) external onlyPlayer samePlanet(_commodityId) {
+    bytes32 _hash = sha256(abi.encodePacked(_nonce));
+    emit Hash(_hash);
   }
 
 

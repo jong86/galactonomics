@@ -29,7 +29,7 @@ const styles = {
 
 class MPIContainer extends Component {
   render() {
-    const { classes, user, changeScreen, currentScreen, sideButtons } = this.props
+    const { classes, user, changeScreen, currentScreen, sideButtons, cargoPerCommodity } = this.props
 
     let navLinks
     if (user.currentPlanet != 255) {
@@ -56,7 +56,7 @@ class MPIContainer extends Component {
             {/* Top Row */}
             <div>
               {/* Top-left */}
-              <CargoMeter current={user.currentCargo} max={user.maxCargo} />
+              <CargoMeter current={user.currentCargo} max={user.maxCargo} cargoPerCommodity={user.cargoPerCommodity} />
               {/* Main screen content goes here */}
               <Fragment>{this.props.children}</Fragment>
             </div>

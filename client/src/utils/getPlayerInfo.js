@@ -14,6 +14,19 @@ export default () => new Promise(async (resolve, reject) => {
     return reject(e)
   }
 
+  const cargoPerCommodity = await Promise.all([0, 1, 2, 3, 4, 5, 6].map(id => new Promise(async (resolve, reject) => {
+    let amount, symbol
+    try {
+      amount = (await contracts.gea.getCommodityBalance(id, { from: user.address })).toString()
+      symbol = (await contracts.gea.getCommodityInfo(id, { from: user.address })).symbol
+    } catch (e) {
+      reject(e)
+    }
+    resolve({ amount, symbol })
+  })))
+
+  console.log('cargoPerCommodity', cargoPerCommodity);
+
   store.dispatch({
     type: 'SET_USER_INFO',
     info: {
@@ -24,6 +37,7 @@ export default () => new Promise(async (resolve, reject) => {
       maxFuel: playerInfo.maxFuel.toString(),
       spaceshipName: playerInfo.spaceshipName.toString(),
       balance: web3.utils.fromWei(balance),
+      cargoPerCommodity: cargoPerCommodity,
     }
   })
 
