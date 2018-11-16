@@ -1,6 +1,8 @@
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
+const ByzantianCrystal = artifacts.require('./ByzantianCrystal.sol')
+const TempleAuthority = artifacts.require('./TempleAuthority.sol')
 const Commodity0 = artifacts.require("./commodities/Commodity0.sol")
 const Commodity1 = artifacts.require("./commodities/Commodity1.sol")
 const Commodity2 = artifacts.require("./commodities/Commodity2.sol")
@@ -42,7 +44,6 @@ module.exports = function(deployer) {
       })
     ))
 
-
     // Get commodity contract addresses for sending to constructors of GEA and GIA
     const commodityAddresses = commodityInstances.map(commodityInstance => commodityInstance.address)
 
@@ -61,6 +62,12 @@ module.exports = function(deployer) {
     await gta.setGEA(gea.address)
     await gta.setGIA(gia.address)
     await Promise.all(commodityInstances.map(instance => instance.setGEA(gea.address)))
-    return Promise.all(commodityInstances.map(instance => instance.setGIA(gia.address)))
+    await Promise.all(commodityInstances.map(instance => instance.setGIA(gia.address)))
+
+    // Deploy B. Crystal
+    await deployer.deploy(ByzantianCrystal, { gas: 6000000 })
+    const bCrystal = await ByzantianCrystal.deployed()
+    // Deploy TA
+    return deployer.deploy(TempleAuthority, commodityAddresses, gta.address, bCrystal.address, { gas: 6000000 })
   })
 };

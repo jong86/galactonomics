@@ -8,6 +8,7 @@ import "./interfaces/IByzantianCrystal.sol";
 
 /**
  * @title Temple Authority
+ *
  * @notice This contract handles Byzantian Crystal forging and trading
  */
 contract TempleAuthority is CommodityInteractor, GTAInteractor {

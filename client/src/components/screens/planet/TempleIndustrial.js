@@ -21,23 +21,23 @@ class TempleIndustrial extends Component {
 
     return (
       <MPIContainer>
-          <Rect
-            size="wide"
-          >
-            <div>Would like to forge a crystal?</div>
-            <div>(Requires ____ megagrams of all 7 commodities)</div>
-            <div className={classes.acceptDecline}>
-              <Rect
-                isButton
-                type="bad"
-              >Decline</Rect>
-              <Rect
-                isButton
-                type="good"
-                onClick={this.acceptOffer}
-              >Accept</Rect>
-            </div>
-          </Rect>
+        <Rect
+          size="wide"
+        >
+          <div>Would like to forge a crystal?</div>
+          <div>(Requires ____ kg of all 7 commodities)</div>
+          <div className={classes.acceptDecline}>
+            <Rect
+              isButton
+              type="bad"
+            >Decline</Rect>
+            <Rect
+              isButton
+              type="good"
+              onClick={this.acceptOffer}
+            >Accept</Rect>
+          </div>
+        </Rect>
       </MPIContainer>
     )
   }
