@@ -11,18 +11,14 @@ import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
 import * as THREE from 'three'
 
-
 const styles = {
-  container: {
+  crystal: {
     flexDirection: 'row',
-    width: '100%',
     alignItems: 'flex-start',
-    '& > div:first-child': {
-      flex: '0.2',
-    },
-    '& > div:last-child': {
-      flex: '0.8',
-    },
+    '& > div': {
+      border: '1px solid grey',
+      padding: 8,
+    }
   }
 }
 
@@ -40,29 +36,40 @@ class ViewCrystals extends Component {
 
   componentDidUpdate = (_, prevState) => {
     if (prevState.crystals.length !== this.state.crystals.length) {
-      this.renderCrystal()
+      this.state.crystals.forEach((crystal, i) => this.renderCrystal(i, crystal.uri))
     }
   }
 
-  renderCrystal = () => {
+  renderCrystal = (id, uri) => {
     var scene = new THREE.Scene();
     var cam = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 0.1, 1000);
     var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(150, 120);
 
-    const div = document.getElementById(1)
-    renderer.setSize(150, 100);
-    div.appendChild( renderer.domElement );
+    const div = document.getElementById(id)
+    div.appendChild(renderer.domElement);
 
-    var box = new THREE.SphereGeometry(2, 10, -30);
-    var mesh = new THREE.MeshBasicMaterial({
-    wireframe: false,
-      color: 0x562399
+    var box = new THREE.SphereGeometry(2, 6, 1);
+    var mesh = new THREE.MeshLambertMaterial({
+      reflectivity: 1000,
     });
     var cube = new THREE.Mesh(box, mesh);
     scene.add(cube);
-    cam.position.z = 3;
-    var render = function () {
-      requestAnimationFrame( render );
+
+    var directionalLight = new THREE.DirectionalLight(0xffffff, 0.25);
+    scene.add(directionalLight);
+
+    // Take first 6 characters of URI string and use for the colour
+    const color = eval('0x' + uri.substr(0, 6))
+    console.log('color', color);
+    var light = new THREE.PointLight(color, 25, 100);
+    light.position.set(50, 50, 50);
+    scene.add(light);
+
+    cam.position.z = 2.75;
+    cube.rotation.x = 0.05;
+    var render = function() {
+      requestAnimationFrame(render);
       cube.rotation.y += 0.01;
       renderer.render(scene, cam);
     };
@@ -99,8 +106,15 @@ class ViewCrystals extends Component {
       <MPIContainer>
         <div className={classes.container}>
           {crystals.map((crystal, i) =>
-            <div key={i} id="1">
-              {crystal.id}-{crystal.uri}
+            <div key={i} className={classes.crystal}>
+              <div>
+                {crystal.id}
+              </div>
+              <div>
+                {crystal.uri}
+              </div>
+              <div id={i}>
+              </div>
             </div>
           )}
         </div>
