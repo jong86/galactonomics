@@ -87,7 +87,6 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
     }
   }
 
-
   /**
    * @notice Returns URI of ERC-721 token
    * @param _tokenId Address of account to look up

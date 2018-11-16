@@ -25,6 +25,13 @@ const styles = {
 }
 
 class ViewCrystals extends Component {
+  constructor() {
+    super()
+    this.state = {
+      crystals: [],
+    }
+  }
+
   componentDidMount = () => {
     this.crystalsOfOwner()
   }
@@ -38,7 +45,7 @@ class ViewCrystals extends Component {
       if (crystalIds && crystalIds.length) {
         for (let id of crystalIds) {
           crystals.push({
-            id,
+            id: id.toString(),
             uri: await contracts.temple.crystalURI(id, { from:user.address })
           })
         }
@@ -48,15 +55,21 @@ class ViewCrystals extends Component {
     }
 
     console.log('crystals', crystals);
+    this.setState({ crystals })
   }
 
   render() {
     const { classes } = this.props
+    const { crystals } = this.state
 
     return (
       <MPIContainer>
         <div className={classes.container}>
-          Viewing my crystals
+          {crystals.map((crystal, i) =>
+            <div key={i}>
+              {crystal.id}-{crystal.uri}
+            </div>
+          )}
         </div>
       </MPIContainer>
     )
