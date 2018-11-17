@@ -21,6 +21,14 @@ const styles = {
     '& > div:last-child': {
       flex: '0.8',
     },
+  },
+  crystal: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    '& > div': {
+      border: '1px solid grey',
+      padding: 8,
+    }
   }
 }
 
@@ -28,8 +36,9 @@ class TempleMarketplace extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isLoading: false,
       crystals: [],
+      selectedCrystalId: null,
+      isLoading: false,
     }
   }
 
@@ -39,23 +48,32 @@ class TempleMarketplace extends Component {
 
   getCrystalsForSale = async () => {
     const { contracts, user } = this.props
-    let crystals
+
     try {
-      crystals = await contracts.temple.getCrystalsForSale({ from: user.address })
+      // Get the IDs of each crystal for sale, then get their URIs
+      const crystalIds = await contracts.temple.getCrystalsForSale({ from: user.address })
+      if (crystalIds.length) {
+        const crystals = []
+
+        for (let id of crystalIds) {
+          crystals.push({
+            id: id.toString(),
+            uri: await contracts.temple.crystalURI(id, { from: user.address }),
+          })
+        }
+
+        this.setState({ crystals })
+      }
     } catch (e) {
       console.error(e)
     }
-    console.log('crystals', crystals);
-  }
-
-  onClickBuy = async () => {
   }
 
   buy = async () => {
     const { contracts, user } = this.props
     const { selectedCrystalId } = this.state
     try {
-      await contracts.temple.buy(selectedCrystalId, { from: user })
+      await contracts.temple.buy(selectedCrystalId, { from: user.address })
     } catch (e) {
       console.error(e)
     }
@@ -63,10 +81,13 @@ class TempleMarketplace extends Component {
 
   render() {
     const { classes } = this.props
-    const { crystals } = this.state
+    const {
+      crystals,
+      selectedCrystalId,
+    } = this.state
 
     const sideButtons = [
-      { fn: this.onClickBuy, label: 'Buy' },
+      { fn: this.buy, label: 'Buy' },
     ]
 
     return (
@@ -74,9 +95,23 @@ class TempleMarketplace extends Component {
         <div className={classes.container}>
           Temple Marketplace
         </div>
-        {crystals.map(crystal => (
-          <div>
-            a crystal here
+        {crystals.map((crystal, i) => (
+          <div
+            key={crystal.id}
+            className={classes.crystal}
+            onClick={() => this.setState({ selectedCrystalId: crystal.id })}
+          >
+            <div style={{
+              backgroundColor: selectedCrystalId === crystal.id ? '#fff' : null,
+              color: selectedCrystalId === crystal.id ? '#000' : null,
+            }}>
+              {crystal.id}
+            </div>
+            <div>
+              {crystal.uri}
+            </div>
+            {/* <div id={i}>
+            </div> */}
           </div>
         ))}
       </MPIContainer>
