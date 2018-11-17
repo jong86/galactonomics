@@ -121,12 +121,20 @@ contract("TempleAuthority", accounts => {
       assert(crystalsForSale.includes('1'), 'crystal was not made for sale')
     })
 
-    // it("Player can cancel sale of a crystal", async () => {
-
-    // })
+    it("stores seller and price of crystal that is for sale", async () => {
+      const sellData = await temple.getCrystalSellData('1')
+      console.log('sellData', sellData);
+      assert.equal(sellData[0], player1, 'did not record seller address')
+      assert.equal(sellData[1].toNumber(), 1000, 'did not record price')
+    })
 
     it("allows player to purchase a crystal that is for sale", async () => {
-      await temple.buy(1, { from: player2, value: 1000, gas: 6000000 })
+      // For balance comparison
+      const p1BalanceBefore = await web3.eth.getBalance(player1)
+      const p2BalanceBefore = await web3.eth.getBalance(player2)
+
+      // Execute purchase
+      const receipt = await temple.buy(1, { from: player2, value: 1000, gas: 6000000 })
       let ownedCrystals = await temple.crystalsOfOwner(player2)
       ownedCrystals = ownedCrystals.map(crystalIdBN => crystalIdBN.toString())
       assert(ownedCrystals.includes('1'), 'crystal was not bought')
@@ -135,6 +143,22 @@ contract("TempleAuthority", accounts => {
       let crystalsForSale = await temple.getCrystalsForSale()
       crystalsForSale = crystalsForSale.map(crystalIdBN => crystalIdBN.toString())
       assert(!crystalsForSale.includes('1'), 'crystal still listed for sale')
+
+      // For balance comparison
+      const p1BalanceAfter = await web3.eth.getBalance(player1)
+      const p2BalanceAfter = await web3.eth.getBalance(player2)
+
+      const gasPrice = (await web3.eth.getTransaction(receipt.tx)).gasPrice
+      const p2TotalFee = web3.toBigNumber(gasPrice).mul(receipt.receipt.gasUsed)
+
+      assert.equal(web3.eth.getBalance(player1).toString(), p1BalanceBefore.add(1000).toString(), 'seller did not receive ether from sale')
+      assert.equal(web3.eth.getBalance(player2).toString(), p2BalanceBefore.sub(1000).sub(p2TotalFee).toString(), 'buyer did not have ether withdrawn from account')
     })
+
+    // it("Player can cancel sale of a crystal", async () => {
+
+    // })
+
+
   })
 })

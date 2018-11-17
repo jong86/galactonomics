@@ -22,8 +22,13 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
   // Array storing IDs of all crystals that are for sale
   uint[] public crystalsForSale;
 
-  // Mapping of token IDs to sale price
-  mapping(uint => uint) tokenIdToPrice;
+  // Mapping of token IDs to SellData struct
+  mapping(uint => SellData) tokenIdToSellData;
+
+  struct SellData {
+    address seller;
+    uint price;
+  }
 
   constructor(address[] _commodityAddresses, address _gta, address _bCrystal)
   CommodityInteractor(_commodityAddresses)
@@ -97,8 +102,8 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
 
     // Add crystal to list of crystals for sale
     crystalsForSale.push(_tokenId);
-    // Store price in a mapping
-    tokenIdToPrice[_tokenId] = _price;
+    // Store seller address and price in mapping
+    tokenIdToSellData[_tokenId] = SellData(msg.sender, _price);
     // Transfer token from owner to this contract (acting as escrow)
     bCrystal.transferToEscrow(msg.sender, _tokenId);
   }
@@ -108,7 +113,7 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
    * @param _tokenId Id of crystal to purchase
    */
   function buy(uint _tokenId) external payable {
-    require(msg.value == tokenIdToPrice[_tokenId], "You did not provide the correct amount of ether");
+    require(msg.value == tokenIdToSellData[_tokenId].price, "You did not provide the correct amount of ether");
 
     // Remove crystal from list of crystals for sale
     uint numForSale = crystalsForSale.length;
@@ -125,10 +130,11 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
       }
     }
 
+    // Transfer money to seller
+    tokenIdToSellData[_tokenId].seller.transfer(msg.value);
+
     // Transfer token ownership to buyer
     bCrystal.transferFromEscrow(msg.sender, _tokenId);
-    // Transfer money to seller
-
   }
 
   /**
@@ -146,6 +152,15 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
    */
   function crystalURI(uint _tokenId) external view returns (string) {
     return bCrystal.tokenURI(_tokenId);
+  }
+
+  /**
+   * @notice Returns seller and price of crystal that is for sale
+   * @param _tokenId Address of account to look up
+   */
+  function getCrystalSellData(uint _tokenId) external view returns (address seller, uint price) {
+    SellData memory sellData = tokenIdToSellData[_tokenId];
+    return (sellData.seller, sellData.price);
   }
 
   function() external payable {}
