@@ -8,6 +8,7 @@ const commodities = require('../utils/commodities')
 
 module.exports = function(deployer) {
   deployer.then(async () => {
+    // Deploy all commodities
     const commodityInstances = []
     for (let commodity of commodities) {
       commodityInstance = await deployer.deploy(Commodity, commodity.name, commodity.symbol);
@@ -22,8 +23,8 @@ module.exports = function(deployer) {
     const gta = await GalacticTransitAuthority.deployed()
 
     // Deploy GEA and GIA
-    await deployer.deploy(GalacticEconomicAuthority, commodityAddresses, gta.address, { gas: 6000000 } )
-    await deployer.deploy(GalacticIndustrialAuthority, commodityAddresses, gta.address, { gas: 6000000 })
+    await deployer.deploy(GalacticEconomicAuthority, commodityAddresses, gta.address)
+    await deployer.deploy(GalacticIndustrialAuthority, commodityAddresses, gta.address)
     const gea = await GalacticEconomicAuthority.deployed()
     const gia = await GalacticIndustrialAuthority.deployed()
 
@@ -34,11 +35,11 @@ module.exports = function(deployer) {
     await Promise.all(commodityInstances.map(instance => instance.setGIA(gia.address)))
 
     // Deploy B. Crystal
-    await deployer.deploy(ByzantianCrystal, { gas: 6000000 })
+    await deployer.deploy(ByzantianCrystal)
     const bCrystal = await ByzantianCrystal.deployed()
 
     // Deploy TA
-    await deployer.deploy(TempleAuthority, commodityAddresses, gta.address, bCrystal.address, { gas: 6000000 })
+    await deployer.deploy(TempleAuthority, commodityAddresses, gta.address, bCrystal.address)
     const temple = await TempleAuthority.deployed()
 
     // Set TA access control
