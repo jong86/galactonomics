@@ -62,6 +62,12 @@ class TempleMarketplace extends Component {
           })
         }
 
+        for (let [i, crystal] of crystals.entries()) {
+          const sellData = await contracts.temple.getCrystalSellData(crystal.id, { from: user.address })
+          crystals[i].price = sellData.price.toString()
+          crystals[i].seller = sellData.seller
+        }
+
         this.setState({ crystals })
       }
     } catch (e) {
