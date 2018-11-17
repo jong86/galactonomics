@@ -137,6 +137,8 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
 
     // Transfer token ownership to buyer
     bCrystal.transferFromEscrow(msg.sender, _tokenId);
+    // Transfer money to seller
+    
   }
 
   /**

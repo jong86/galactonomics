@@ -27,37 +27,46 @@ const styles = {
 class TempleMarketplace extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
-      sellAmount: '',
-      sellPrice: '',
-
-      isSellBoxVisible: false,
-
       isLoading: false,
+      crystals: [],
     }
+  }
 
-    this.handleChange = handleChange.bind(this)
+  componentDidMount = () => {
+    this.getCrystalsForSale()
+  }
+
+  getCrystalsForSale = async () => {
+    const { contracts, user } = this.props
+    let crystals
+    try {
+      crystals = await contracts.temple.getCrystalsForSale({ from: user.address })
+    } catch (e) {
+      console.error(e)
+    }
+    console.log('crystals', crystals);
   }
 
   onClickBuy = async () => {
   }
 
-  onClickSell = () => {
+  buy = async () => {
+    const { contracts, user } = this.props
+    const { selectedCrystalId } = this.state
+    try {
+      await contracts.temple.buy(selectedCrystalId, { from: user })
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   render() {
     const { classes } = this.props
-    const {
-      sellAmount,
-      sellPrice,
-      isSellBoxVisible,
-      isLoading,
-    } = this.state
+    const { crystals } = this.state
 
     const sideButtons = [
       { fn: this.onClickBuy, label: 'Buy' },
-      { fn: this.onClickSell, label: 'Sell' },
     ]
 
     return (
@@ -65,26 +74,11 @@ class TempleMarketplace extends Component {
         <div className={classes.container}>
           Temple Marketplace
         </div>
-
-        {/* Sell box */}
-        <Dialog type="status" isVisible={isSellBoxVisible}>
+        {crystals.map(crystal => (
           <div>
-            Sell your level __ Byzantian Crystal with ID __________________
+            a crystal here
           </div>
-          <label htmlFor="sellAmount">
-            Amount
-            <input name="sellAmount" defaultValue={sellAmount} type="number" onChange={this.handleChange}></input>
-          </label>
-          <label htmlFor="sellPrice">
-            Price
-            <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
-          </label>
-          <Rect
-            type="status"
-            isButton
-            onClick={this.createSellOrder}
-          >Ok</Rect>
-        </Dialog>
+        ))}
       </MPIContainer>
     )
   }

@@ -27,7 +27,13 @@ class ViewCrystals extends Component {
     super()
     this.state = {
       crystals: [],
+      sellAmount: '',
+      sellPrice: '',
+      isSellBoxVisible: false,
+      isLoading: false,
+      selectedCrystalId: null,
     }
+    this.handleChange = handleChange.bind(this)
   }
 
   componentDidMount = () => {
@@ -97,16 +103,52 @@ class ViewCrystals extends Component {
     this.setState({ crystals })
   }
 
+  onClickSell = () => {
+    this.setState({ isSellBoxVisible: true })
+  }
+
+  sell = async () => {
+    const { contracts, user } = this.props
+    const { selectedCrystalId, sellPrice } = this.state
+
+    try {
+      await contracts.temple.sell(selectedCrystalId, sellPrice, { from: user.address })
+    } catch (e) {
+      console.error(e)
+    }
+
+    this.crystalsOfOwner()
+    this.setState({ isSellBoxVisible: false })
+  }
+
   render() {
     const { classes } = this.props
-    const { crystals } = this.state
+    const {
+      crystals,
+      sellAmount,
+      sellPrice,
+      isSellBoxVisible,
+      isLoading,
+      selectedCrystalId,
+    } = this.state
+
+    const sideButtons = [
+      { fn: this.onClickSell, label: 'Sell' },
+    ]
 
     return (
-      <MPIContainer>
+      <MPIContainer sideButtons={sideButtons}>
         <div className={classes.container}>
           {crystals.map((crystal, i) =>
-            <div key={i} className={classes.crystal}>
-              <div>
+            <div
+              key={i}
+              className={classes.crystal}
+              onClick={() => this.setState({ selectedCrystalId: crystal.id })}
+            >
+              <div style={{
+                backgroundColor: selectedCrystalId === crystal.id ? '#fff' : null,
+                color: selectedCrystalId === crystal.id ? '#000' : null,
+              }}>
                 {crystal.id}
               </div>
               <div>
@@ -117,6 +159,22 @@ class ViewCrystals extends Component {
             </div>
           )}
         </div>
+
+        {/* Sell box */}
+        <Dialog type="status" isVisible={isSellBoxVisible}>
+          <div>
+            Sell crystal with id {selectedCrystalId}
+          </div>
+          <label htmlFor="sellPrice">
+            Price
+            <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
+          </label>
+          <Rect
+            type="status"
+            isButton
+            onClick={this.sell}
+          >Ok</Rect>
+        </Dialog>
       </MPIContainer>
     )
   }
