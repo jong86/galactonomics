@@ -3,45 +3,16 @@ const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const ByzantianCrystal = artifacts.require('./ByzantianCrystal.sol')
 const TempleAuthority = artifacts.require('./TempleAuthority.sol')
-const Commodity0 = artifacts.require("./commodities/Commodity0.sol")
-const Commodity1 = artifacts.require("./commodities/Commodity1.sol")
-const Commodity2 = artifacts.require("./commodities/Commodity2.sol")
-const Commodity3 = artifacts.require("./commodities/Commodity3.sol")
-const Commodity4 = artifacts.require("./commodities/Commodity4.sol")
-const Commodity5 = artifacts.require("./commodities/Commodity5.sol")
-const Commodity6 = artifacts.require("./commodities/Commodity6.sol")
+const Commodity = artifacts.require("./Commodity.sol")
+const commodities = require('../utils/commodities')
 
 module.exports = function(deployer) {
   deployer.then(async () => {
-    // There are separate contracts for each commodity because truffle doesn't seem to work
-    // with multiple copies of the same contract at the current date
-    // https://github.com/trufflesuite/truffle/issues/237
-    const commodityArtifacts = [
-      Commodity0,
-      Commodity1,
-      Commodity2,
-      Commodity3,
-      Commodity4,
-      Commodity5,
-      Commodity6,
-    ]
-
-    // Deploy each commodity contract
-    await Promise.all(
-      commodityArtifacts.map(artifact => deployer.deploy(artifact)
-    ))
-
-    // Store instances of each commodity contract
-    const commodityInstances = await Promise.all(
-      commodityArtifacts.map(artifact => new Promise(async (resolve, reject) => {
-        try {
-          instance = await artifact.deployed()
-          resolve(instance)
-        } catch (e) {
-          reject("Could not deploy commodity")
-        }
-      })
-    ))
+    const commodityInstances = []
+    for (let commodity of commodities) {
+      commodityInstance = await deployer.deploy(Commodity, commodity.name, commodity.symbol);
+      commodityInstances.push(commodityInstance);
+    }
 
     // Get commodity contract addresses for sending to constructors of GEA and GIA
     const commodityAddresses = commodityInstances.map(commodityInstance => commodityInstance.address)

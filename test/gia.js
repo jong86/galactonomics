@@ -145,10 +145,10 @@ contract("GalacticIndustrialAuthority", accounts => {
     console.log('response.logs[0].args', response.logs[0].args);
     let nonce = 0
     let hash = sha256(String(nonce))
-    while (hash.substr(0, 5) !== '00000') {
-      hash = sha256(String(nonce))
-      nonce++
-      console.log('***', hash)
-    }
+    // while (hash.substr(0, 5) !== '00000') {
+    //   hash = sha256(String(nonce))
+    //   nonce++
+    //   console.log('***', hash)
+    // }
   })
 })
