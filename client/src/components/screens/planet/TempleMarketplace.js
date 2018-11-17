@@ -116,6 +116,12 @@ class TempleMarketplace extends Component {
             <div>
               {crystal.uri}
             </div>
+            <div>
+              {crystal.price}
+            </div>
+            <div>
+              {crystal.seller}
+            </div>
             {/* <div id={i}>
             </div> */}
           </div>
