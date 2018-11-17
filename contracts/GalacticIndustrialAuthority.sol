@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/CommodityInteractor.sol";
 import "./utils/GTAInteractor.sol";
-import "./Commodity.sol";
+import "./items/Commodity.sol";
 
 /**
  * @title Galactic Industrial Authority (GIA)

@@ -1,4 +1,4 @@
-const Commodity = artifacts.require("./Commodity.sol")
+const Commodity = artifacts.require("./items/Commodity.sol")
 const commodities = require('../utils/commodities')
 
 function deployCommodities() {

@@ -1,7 +1,7 @@
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
-const ByzantianCrystal = artifacts.require("./ByzantianCrystal.sol")
+const ByzantianCrystal = artifacts.require("./items/ByzantianCrystal.sol")
 const TempleAuthority = artifacts.require("./TempleAuthority.sol")
 const { fillUpCargoByMinting, mintCommodityXTimes } = require('./util/testUtils')
 const deployCommodities = require('../utils/deployCommodities')

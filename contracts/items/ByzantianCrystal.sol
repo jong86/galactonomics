@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./utils/AccessControlled.sol";
+import "../utils/AccessControlled.sol";
 
 /**
  * @title Byzantian Crystal
