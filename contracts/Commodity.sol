@@ -4,7 +4,6 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
 import "./utils/AccessControlled.sol";
 
-
 /**
  * @title Commodity
  *
@@ -64,29 +63,5 @@ contract Commodity is ERC20Detailed, ERC20Mintable, AccessControlled {
   function burn(address _account, uint _value) public onlyTA returns (bool) {
     _burn(_account, _value);
     return true;
-  }
-
-
-  // Blocked ERC20 functions (not desirable functionality right now)
-  // Probably better to just make a new 'partial' erc20 contract to inherit from,
-  // but doing this as a quick and easy for now
-  function approve(address, uint256) public returns (bool) {
-    revert("Blocked function");
-    return false;
-  }
-
-  function transferFrom(address, address, uint256) public returns (bool) {
-    revert("Blocked function");
-    return false;
-  }
-
-  function increaseAllowance(address, uint256) public returns (bool) {
-    revert("Blocked function");
-    return false;
-  }
-
-  function decreaseAllowance(address, uint256) public returns (bool) {
-    revert("Blocked function");
-    return false;
   }
 }

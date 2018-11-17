@@ -77,12 +77,14 @@ class TempleMarketplace extends Component {
 
   buy = async () => {
     const { contracts, user } = this.props
-    const { selectedCrystalId } = this.state
+    const { crystals, selectedCrystalId } = this.state
+    const crystal = crystals[crystals.findIndex(crystal => crystal.id === selectedCrystalId)]
     try {
-      await contracts.temple.buy(selectedCrystalId, { from: user.address })
+      await contracts.temple.buy(selectedCrystalId, { from: user.address, value: crystal.price })
     } catch (e) {
       console.error(e)
     }
+    this.getCrystalsForSale()
   }
 
   render() {
