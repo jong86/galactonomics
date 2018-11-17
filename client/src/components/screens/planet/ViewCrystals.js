@@ -44,7 +44,7 @@ class ViewCrystals extends Component {
     var scene = new THREE.Scene();
     var cam = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 0.1, 1000);
     var renderer = new THREE.WebGLRenderer();
-    renderer.setSize(150, 120);
+    renderer.setSize(90, 120);
 
     const div = document.getElementById(id)
     div.appendChild(renderer.domElement);
