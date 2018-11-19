@@ -3,6 +3,7 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
 import "../utils/AccessControlled.sol";
+import "../interfaces/ICommodity.sol";
 
 /**
  * @title Commodity
@@ -11,7 +12,7 @@ import "../utils/AccessControlled.sol";
  * @dev Use of variable name 'value' in this contract is to be consistent with ERC20 code --
  * elsewhere in this project, 'value' is referred to as 'amount'.
  */
-contract Commodity is ERC20Detailed, ERC20Mintable, AccessControlled {
+contract Commodity is ERC20Detailed, ERC20Mintable, AccessControlled, ICommodity {
   constructor(string _name, string _symbol)
   ERC20Detailed(_name, _symbol, 0)
   ERC20Mintable() public {}

@@ -3,6 +3,7 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../utils/AccessControlled.sol";
+import "../interfaces/IByzantianCrystal.sol";
 
 /**
  * @title Byzantian Crystal
@@ -26,7 +27,7 @@ contract ByzantianCrystal is ERC721Full, AccessControlled {
     _mint(_for, _tokenId);
 
     // Set URI of token to something unique
-    string memory _uri = bytes32ToString(keccak256(_tokenId, now, _for));
+    string memory _uri = bytes32ToString(keccak256(abi.encodePacked(_tokenId, now, _for)));
     _setTokenURI(_tokenId, _uri);
 
     return _tokenId;
