@@ -3,12 +3,14 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/AccessControlled.sol";
+import "./interfaces/IGalacticTransitAuthority.sol";
 
 /**
  * @title Galactic Transit Authority (GTA)
+ *
  * @notice The GTA handles spaceship ownership, fuel and travel
  */
-contract GalacticTransitAuthority is ERC721, AccessControlled {
+contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitAuthority {
   using SafeMath for uint;
 
   struct Spaceship {
@@ -123,6 +125,12 @@ contract GalacticTransitAuthority is ERC721, AccessControlled {
 
   function isPlayer(address _address) public view returns (bool) {
     return addressOwnsSpaceship[_address];
+  }
+
+  function canFitCargo(address _player, uint _currentCargo, uint _incomingCargo) external returns (bool) {
+    uint _maxCargo = getMaxCargo(_player);
+    uint _cargoAvailable = _maxCargo.sub(_currentCargo);
+    return _cargoAvailable >= _incomingCargo;
   }
 
   function() public {}

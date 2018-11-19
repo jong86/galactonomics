@@ -137,7 +137,6 @@ contract("GalacticIndustrialAuthority", accounts => {
   // })
 
   // it("if player does not have enough cargo space for minted commodity, player does not receive overflow", async () => {
-  //   assert(false, "this test not implemented")
   // })
 
   it("mints commodity for player when player submits valid proof-of-work", async () => {

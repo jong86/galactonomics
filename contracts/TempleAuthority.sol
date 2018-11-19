@@ -3,18 +3,19 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/CommodityInteractor.sol";
-import "./utils/GTAInteractor.sol";
 import "./interfaces/IByzantianCrystal.sol";
+import "./interfaces/IGalacticTransitAuthority.sol";
 
 /**
  * @title Temple Authority
  *
  * @notice This contract handles Byzantian Crystal forging and trading
  */
-contract TempleAuthority is CommodityInteractor, GTAInteractor {
+contract TempleAuthority is CommodityInteractor {
   using SafeMath for uint;
 
   IByzantianCrystal bCrystal;
+  IGalacticTransitAuthority gta;
 
   // Units of each commodity required to forge a crystal
   uint public constant forgingAmount = 10000;
@@ -32,9 +33,15 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
 
   constructor(address[] _commodityAddresses, address _gta, address _bCrystal)
   CommodityInteractor(_commodityAddresses)
-  GTAInteractor(_gta)
   public {
+    gta = IGalacticTransitAuthority(_gta);
     bCrystal = IByzantianCrystal(_bCrystal);
+  }
+
+  modifier onlyPlayerAtTemple() {
+    require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
+    require(gta.getCurrentPlanet(msg.sender) == 255, "You are not on the correct planet");
+    _;
   }
 
   /**
@@ -42,7 +49,7 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
    * @dev Burns a quantity of all 7 of an account's commodities
    * @return tokenId of newly created crystal
    */
-  function forge() external onlyPlayer samePlanet(255) returns (uint) {
+  function forge() external onlyPlayerAtTemple returns (uint) {
     uint i;
 
     // Check balance of every commodity to make sure there is enough
@@ -97,7 +104,7 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
    * @param _tokenId Id of crystal to sell
    * @param _price Price in wei to sell crystal for
    */
-  function sell(uint _tokenId, uint _price) external {
+  function sell(uint _tokenId, uint _price) external onlyPlayerAtTemple {
     require(bCrystal.ownerOf(_tokenId) == msg.sender, "You cannot sell a crystal you do not own");
 
     // Add crystal to list of crystals for sale
@@ -112,7 +119,7 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
    * @notice Purchase a crystal
    * @param _tokenId Id of crystal to purchase
    */
-  function buy(uint _tokenId) external payable {
+  function buy(uint _tokenId) external payable onlyPlayerAtTemple {
     require(msg.value == tokenIdToSellData[_tokenId].price, "You did not provide the correct amount of ether");
 
     // Remove crystal from list of crystals for sale
@@ -132,7 +139,6 @@ contract TempleAuthority is CommodityInteractor, GTAInteractor {
 
     // Transfer money to seller
     tokenIdToSellData[_tokenId].seller.transfer(msg.value);
-
     // Transfer token ownership to buyer
     bCrystal.transferFromEscrow(msg.sender, _tokenId);
   }

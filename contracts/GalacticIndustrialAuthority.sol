@@ -3,16 +3,18 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/CommodityInteractor.sol";
-import "./utils/GTAInteractor.sol";
 import "./items/Commodity.sol";
+import "./interfaces/IGalacticTransitAuthority.sol";
 
 /**
  * @title Galactic Industrial Authority (GIA)
  *
  * @notice The GIA handles commodity-mining investments, and minting
  */
-contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInteractor {
+contract GalacticIndustrialAuthority is Ownable, CommodityInteractor {
   using SafeMath for uint;
+
+  IGalacticTransitAuthority gta;
 
   struct Investment {
     uint8 commodityId;
@@ -28,19 +30,20 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   constructor(address[] _commodityAddresses, address _gta)
   CommodityInteractor(_commodityAddresses)
-  GTAInteractor(_gta)
-  public {}
+  public {
+    gta = IGalacticTransitAuthority(_gta);
+  }
 
 
   // Action functions
 
-  function investInProduction(uint8 _commodityId) external payable
-  onlyPlayer
-  samePlanet(_commodityId)
-  // To prevent player from investing if they can't fit the cargo:
-  canFitCargo(msg.sender, getCurrentCargo(msg.sender), getTotalProductionReturns(_commodityId)) {
+  function investInProduction(uint8 _commodityId) external payable {
+    require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
+    require(gta.getCurrentPlanet(msg.sender) == _commodityId, "You are not on the correct planet");
+    require(gta.canFitCargo(msg.sender, getCurrentCargo(msg.sender), getTotalProductionReturns(_commodityId)), "Not enough cargo space");
     require(msg.value == getMiningCost(_commodityId), "You have not provided enough ether");
     require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
+
     uint _miningDuration = commodities[_commodityId].miningDuration;
     investments[msg.sender] = Investment(_commodityId, _miningDuration);
     emit InvestmentMade(msg.sender, _miningDuration);
@@ -48,6 +51,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
 
   function mintCommodityFor(address _for) external onlyOwner {
     require(investments[_for].blocksLeft > 0, "There are no more blocks left to mine for this investment");
+
     investments[_for].blocksLeft = investments[_for].blocksLeft.sub(1);
     uint8 _commodityId = investments[_for].commodityId;
     // Only mint what can fit on player's ship
@@ -66,7 +70,10 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor, GTAInterac
    *  specified commodity, results in an acceptable hash according to current difficulty for that commodity
    * @param _commodityId Commodity to mint
    */
-  function submitProofOfWork(string _nonce, uint8 _commodityId) external onlyPlayer samePlanet(_commodityId) {
+  function submitProofOfWork(string _nonce, uint8 _commodityId) external {
+    require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
+    require(gta.getCurrentPlanet(msg.sender) == _commodityId, "You are not on the correct planet");
+    
     bytes32 _hash = sha256(abi.encodePacked(_nonce));
     emit Hash(_hash);
   }
