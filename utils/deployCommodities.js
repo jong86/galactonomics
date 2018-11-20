@@ -7,7 +7,7 @@ function deployCommodities() {
 
     try {
       for (let commodity of commodities) {
-        commodityInstance = await Commodity.new(commodity.name, commodity.symbol);
+        commodityInstance = await Commodity.new(commodity.name, commodity.symbol, { gas: 6000000 });
         commodityInstances.push(commodityInstance);
       }
     } catch (e) {

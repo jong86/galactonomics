@@ -69,6 +69,7 @@ contract("GalacticEconomicAuthority", accounts => {
     await mintCommodityXTimes(gia, 4, player1)
 
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
+    const balanceGEA = await commodities[0].balanceOf(gea.address)
 
     const player1EthBefore = await web3.eth.getBalance(player1)
     const { orderId } = response.logs[0].args

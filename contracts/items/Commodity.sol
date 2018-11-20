@@ -12,10 +12,10 @@ import "../interfaces/ICommodity.sol";
  * @dev Use of variable name 'value' in this contract is to be consistent with ERC20 code --
  * elsewhere in this project, 'value' is referred to as 'amount'.
  */
-contract Commodity is ERC20Detailed, ERC20Mintable, AccessControlled, ICommodity {
+contract Commodity is ERC20, ERC20Detailed, AccessControlled, ICommodity {
   constructor(string _name, string _symbol)
   ERC20Detailed(_name, _symbol, 0)
-  ERC20Mintable() public {}
+  public {}
 
   /**
    * @notice Creates more of a token for an account
@@ -37,19 +37,7 @@ contract Commodity is ERC20Detailed, ERC20Mintable, AccessControlled, ICommodity
    * @return boolean true on success
    */
   function transferToEscrow(address _from, uint _value) public onlyGEA returns (bool) {
-    super._transfer(_from, geaAddress, _value);
-    return true;
-  }
-
-  /**
-   * @notice Transfers ownership of token
-   * @dev Called when token is purchased and it is taken out of escrow
-   * @param _to Address of account to transfer to
-   * @param _value Quantity of token to transfer
-   * @return boolean true on success
-   */
-  function transfer(address _to, uint _value) public onlyGEA returns (bool) {
-    super.transfer(_to, _value);
+    _transfer(_from, geaAddress, _value);
     return true;
   }
 

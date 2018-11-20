@@ -56,24 +56,4 @@ contract("Commodity", accounts => {
     const p1Bal = await commodities[3].balanceOf(player1)
     assert.equal(p1Bal.toString(), "0", "could mint to player1")
   })
-
-  it("allows GEA to transfer token to a player", async () => {
-    await commodities[3].setGEA(gea)
-    await commodities[3].setGIA(gia)
-    await commodities[3].mint(gea, 500, { from: gia })
-    await commodities[3].transfer(player1, 500, { from: gea })
-    const p1Bal = await commodities[3].balanceOf(player1)
-    assert.equal(p1Bal.toString(), "500", "Did not transfer to player1")
-  })
-
-  it("non-GEA cannot transfer token directly to a player (must be proxied through GEA)", async () => {
-    await commodities[3].setGEA(gea)
-    await commodities[3].setGIA(gia)
-    await commodities[3].mint(player2, 500, { from: gia })
-    try {
-      await commodities[3].transfer(player1, 500, { from: player2 })
-    } catch (e) {}
-    const p1Bal = await commodities[3].balanceOf(player1)
-    assert.equal(p1Bal.toString(), "0", "could transfer directly")
-  })
 })

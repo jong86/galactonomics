@@ -111,6 +111,7 @@ contract GalacticEconomicAuthority is CommodityInteractor {
 
     // Arrange transfer of commodity out of escrow
     commodities[_commodityId]._interface.transfer(msg.sender, sellOrder.amount);
+    // Transfer eth from buyer to seller
     sellOrder.seller.transfer(msg.value);
     // Close order
     marketplaces[_planetId][_commodityId][_orderId].open = false;
