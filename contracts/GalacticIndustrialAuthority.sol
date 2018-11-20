@@ -11,7 +11,7 @@ import "./interfaces/IGalacticTransitAuthority.sol";
  *
  * @notice The GIA handles commodity-mining investments, and minting
  */
-contract GalacticIndustrialAuthority is Ownable, CommodityInteractor {
+contract GalacticIndustrialAuthority is Ownable {
   using SafeMath for uint;
 
   IGalacticTransitAuthority gta;
@@ -28,9 +28,7 @@ contract GalacticIndustrialAuthority is Ownable, CommodityInteractor {
 
   event Hash(bytes32 data);
 
-  constructor(address[] _commodityAddresses, address _gta)
-  CommodityInteractor(_commodityAddresses)
-  public {
+  constructor(address[] _commodityAddresses, address _gta) public {
     gta = IGalacticTransitAuthority(_gta);
   }
 

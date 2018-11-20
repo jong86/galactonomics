@@ -10,7 +10,7 @@ import "./utils/CommodityInteractor.sol";
  *
  * @notice The GEA handles commodity trading
  */
-contract GalacticEconomicAuthority is CommodityInteractor {
+contract GalacticEconomicAuthority {
   using SafeMath for uint;
 
   IGalacticTransitAuthority gta;
@@ -32,8 +32,7 @@ contract GalacticEconomicAuthority is CommodityInteractor {
   event sellOrderCreated(uint8 planetId, uint orderId);
   event sellOrderPurchased(uint8 planetId, uint orderId);
 
-  constructor(address[] _commodityAddresses, address _gta)
-  CommodityInteractor(_commodityAddresses) {
+  constructor(address[] _commodityAddresses, address _gta) {
     gta = IGalacticTransitAuthority(_gta);
     planetIdToCommodityIdsTraded[0] = [1, 4, 5];
     planetIdToCommodityIdsTraded[1] = [0, 2, 4, 6];

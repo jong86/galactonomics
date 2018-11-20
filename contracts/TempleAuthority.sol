@@ -11,7 +11,7 @@ import "./interfaces/IGalacticTransitAuthority.sol";
  *
  * @notice This contract handles Byzantian Crystal forging and trading
  */
-contract TempleAuthority is CommodityInteractor {
+contract TempleAuthority {
   using SafeMath for uint;
 
   IByzantianCrystal bCrystal;
@@ -31,9 +31,7 @@ contract TempleAuthority is CommodityInteractor {
     uint price;
   }
 
-  constructor(address[] _commodityAddresses, address _gta, address _bCrystal)
-  CommodityInteractor(_commodityAddresses)
-  public {
+  constructor(address[] _commodityAddresses, address _gta, address _bCrystal) public {
     gta = IGalacticTransitAuthority(_gta);
     bCrystal = IByzantianCrystal(_bCrystal);
   }
