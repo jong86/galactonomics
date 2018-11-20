@@ -28,7 +28,7 @@ function fillUpCargoByMinting(gta, gia, player, commodityId) {
 
     await doMinting()
 
-    const currentCargo = await gia.getCurrentCargo(player)
+    const currentCargo = await gta.getCurrentCargo(player)
     const totalProductionReturns = await gia.getTotalProductionReturns(commodityId)
 
     if (maxCargo.sub(currentCargo).cmp(totalProductionReturns) === 1) {

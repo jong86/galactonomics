@@ -29,7 +29,7 @@ class PlanetPrices extends Component {
     return new Promise(async (resolve, reject) => {
       try {
         for (let i = 0; i < 7; i++) {
-          commodityInfos.push(await contracts.gea.getCommodityInfo(i, { from: user.address }))
+          commodityInfos.push(await contracts.gta.getCommodityInfo(i, { from: user.address }))
         }
       } catch (e) {
         return reject(e)

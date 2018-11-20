@@ -32,7 +32,7 @@ contract("GalacticIndustrialAuthority", accounts => {
 
   it("should store all the commodities", async () => {
     for (let i = 0; i < commodities.length; i++) {
-      const commodity = await gia.getCommodity(i)
+      const commodity = await gta.getCommodity(i)
       assert.equal(commodity[0], await commodities[i].name(), 'not stored')
     }
   })
@@ -61,11 +61,11 @@ contract("GalacticIndustrialAuthority", accounts => {
   it("should allow owner to mint commodities for another account", async () => {
     const amountRequired = await gia.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
-    const currentCargoBefore = await gea.getCurrentCargo(player1)
+    const currentCargoBefore = await gta.getCurrentCargo(player1)
     await gia.mintCommodityFor(player1)
-    const currentCargoAfter = await gea.getCurrentCargo(player1)
+    const currentCargoAfter = await gta.getCurrentCargo(player1)
 
-    const commodityInfo = await gea.getCommodity(0)
+    const commodityInfo = await gta.getCommodity(0)
     const cargoTotalMass = commodityInfo[4]
     assert.equal(
       currentCargoBefore.add(cargoTotalMass).toString(),
@@ -74,7 +74,7 @@ contract("GalacticIndustrialAuthority", accounts => {
     )
 
     const balancePlayer1 = await commodities[0].balanceOf(player1)
-    const amtMinedPerBlock = (await gia.getCommodity(0))[4]
+    const amtMinedPerBlock = (await gta.getCommodity(0))[4]
     assert.equal(amtMinedPerBlock.toString(), balancePlayer1.toString(), 'did not mint')
   })
 

@@ -102,7 +102,7 @@ contract GalacticEconomicAuthority {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
     require(gta.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
     require(
-      gta.canFitCargo(msg.sender, getCurrentCargo(msg.sender), marketplaces[_planetId][_commodityId][_orderId].amount),
+      gta.canFitCargo(msg.sender, gta.getCurrentCargo(msg.sender), marketplaces[_planetId][_commodityId][_orderId].amount),
       "Cannot fit this cargo on spaceship"
     );
     SellOrder memory sellOrder = marketplaces[_planetId][_commodityId][_orderId];

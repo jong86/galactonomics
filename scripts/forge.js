@@ -39,16 +39,16 @@ module.exports = async function(done) {
       await gta.refuel({ from: bob, value: refuelCost })
 
       const forgingAmount = await temple.forgingAmount()
-      let commodityBalance = await gea.getCommodityBalance(i, { from: bob })
+      let commodityBalance = await gta.getCommodityBalance(i, { from: bob })
 
       // Mint commodity until user has enough to forge
       while (commodityBalance.lt(forgingAmount)) {
-        const commodity = await gea.getCommodity(i)
+        const commodity = await gta.getCommodity(i)
         const miningCost = commodity[3]
         const miningDuration = commodity[5]
         await gia.investInProduction(i, { from: bob, value: miningCost })
         await mintCommodityXTimes(gia, miningDuration.toNumber(), bob)
-        commodityBalance = await gea.getCommodityBalance(i, { from: bob })
+        commodityBalance = await gta.getCommodityBalance(i, { from: bob })
       }
 
       // Unload unneeded overflow in a sell order, each iteration, to conserve cargo capacity

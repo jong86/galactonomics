@@ -119,7 +119,7 @@ class PlanetMarketplace extends Component {
     return new Promise(async (resolve, reject) => {
       try {
         for (let id of commodityIds) {
-          commodityInfos.push(await contracts.gea.getCommodityInfo(id, { from: user.address }))
+          commodityInfos.push(await contracts.gta.getCommodityInfo(id, { from: user.address }))
         }
       } catch (e) {
         return reject(e)
@@ -134,7 +134,7 @@ class PlanetMarketplace extends Component {
     return new Promise(async (resolve, reject) => {
       try {
         for (let id of commodityIds) {
-          commodityBalances.push(await contracts.gea.getCommodityBalance(id, { from: user.address }))
+          commodityBalances.push(await contracts.gta.getCommodityBalance(id, { from: user.address }))
         }
       } catch (e) {
         reject(e)

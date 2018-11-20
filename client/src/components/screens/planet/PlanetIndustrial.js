@@ -22,7 +22,7 @@ class PlanetIndustrial extends Component {
 
     let response
     try {
-      response = await contracts.gia.getCommodity(user.currentPlanet, { from: user.address })
+      response = await contracts.gta.getCommodity(user.currentPlanet, { from: user.address })
     } catch (e) {
       console.error(e)
     }

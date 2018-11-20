@@ -8,7 +8,7 @@ export default () => new Promise(async (resolve, reject) => {
   let playerInfo, currentCargo, balance
   try {
     playerInfo = await contracts.gta.getInfo({ from: user.address })
-    currentCargo = await contracts.gea.getCurrentCargo(user.address, { from: user.address })
+    currentCargo = await contracts.gta.getCurrentCargo(user.address, { from: user.address })
     balance = await web3.eth.getBalance(user.address)
   } catch (e) {
     return reject(e)
@@ -17,8 +17,8 @@ export default () => new Promise(async (resolve, reject) => {
   const cargoPerCommodity = await Promise.all([0, 1, 2, 3, 4, 5, 6].map(id => new Promise(async (resolve, reject) => {
     let amount, symbol
     try {
-      amount = (await contracts.gea.getCommodityBalance(id, { from: user.address })).toString()
-      symbol = (await contracts.gea.getCommodityInfo(id, { from: user.address })).symbol
+      amount = (await contracts.gta.getCommodityBalance(id, { from: user.address })).toString()
+      symbol = (await contracts.gta.getCommodityInfo(id, { from: user.address })).symbol
     } catch (e) {
       reject(e)
     }

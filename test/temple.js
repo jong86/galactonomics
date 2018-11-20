@@ -59,16 +59,16 @@ contract("TempleAuthority", accounts => {
             await gta.refuel({ from: player, value: refuelCost })
 
             const forgingAmount = await temple.forgingAmount()
-            let commodityBalance = await gea.getCommodityBalance(i, { from: player })
+            let commodityBalance = await gta.getCommodityBalance(i, { from: player })
 
             // Mint commodity until user has enough to forge
             while (commodityBalance.lt(forgingAmount)) {
-              const commodity = await gea.getCommodity(i)
+              const commodity = await gta.getCommodity(i)
               const miningCost = commodity[3]
               const miningDuration = commodity[5]
               await gia.investInProduction(i, { from: player, value: miningCost })
               await mintCommodityXTimes(gia, miningDuration.toNumber(), player)
-              commodityBalance = await gea.getCommodityBalance(i, { from: player })
+              commodityBalance = await gta.getCommodityBalance(i, { from: player })
             }
 
             // Unload unneeded overflow in a sell order, each iteration, to conserve cargo capacity
@@ -109,7 +109,7 @@ contract("TempleAuthority", accounts => {
 
     it("burns player's commodities after forging", async () => {
       for (let i = 0; i <= 6; i++) {
-        const balance = await gea.getCommodityBalance(i, { from: player1 })
+        const balance = await gta.getCommodityBalance(i, { from: player1 })
         assert.equal(balance.toString(), '0', 'commodities did not get burned')
       }
     })

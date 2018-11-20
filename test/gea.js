@@ -36,9 +36,9 @@ contract("GalacticEconomicAuthority", accounts => {
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     await mintCommodityXTimes(gia, 4, player1)
 
-    const currentCargoBefore = await gea.getCurrentCargo(player1)
+    const currentCargoBefore = await gta.getCurrentCargo(player1)
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
-    const currentCargoAfter = await gea.getCurrentCargo(player1)
+    const currentCargoAfter = await gta.getCurrentCargo(player1)
 
     assert.equal(
       currentCargoBefore.toString(),
@@ -76,7 +76,7 @@ contract("GalacticEconomicAuthority", accounts => {
 
     await gea.buySellOrder(0, 0, orderId, { from: player2, value: qty * price })
 
-    const currentCargoAfter = await gea.getCurrentCargo(player2)
+    const currentCargoAfter = await gta.getCurrentCargo(player2)
     assert.equal(currentCargoAfter.toString(), qty.toString(), "player2 did not have cargo adjusted")
 
     const balancePlayer2 = await commodities[0].balanceOf(player2)
@@ -111,9 +111,9 @@ contract("GalacticEconomicAuthority", accounts => {
     // Fill up player2's cargo
     await fillUpCargoByMinting(gta, gia, player2, 0)
     // Find a amount of cargo that will max out player2's cargo
-    const currentCargo = await gea.getCurrentCargo(player2)
+    const currentCargo = await gta.getCurrentCargo(player2)
     const availableCargo = await gta.getAvailableCargo(player2, currentCargo)
-    const commodity = await gea.getCommodity(0)
+    const commodity = await gta.getCommodity(0)
 
     // Create a sell order with player1 that is too much cargo for player2
     const amountRequired = await gia.getMiningCost(0)

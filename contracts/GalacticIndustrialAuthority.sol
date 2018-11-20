@@ -38,7 +38,7 @@ contract GalacticIndustrialAuthority is Ownable {
   function investInProduction(uint8 _commodityId) external payable {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
     require(gta.getCurrentPlanet(msg.sender) == _commodityId, "You are not on the correct planet");
-    require(gta.canFitCargo(msg.sender, getCurrentCargo(msg.sender), getTotalProductionReturns(_commodityId)), "Not enough cargo space");
+    require(gta.canFitCargo(msg.sender, gta.getCurrentCargo(msg.sender), getTotalProductionReturns(_commodityId)), "Not enough cargo space");
     require(msg.value == getMiningCost(_commodityId), "You have not provided enough ether");
     require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
 
@@ -54,7 +54,7 @@ contract GalacticIndustrialAuthority is Ownable {
     uint8 _commodityId = investments[_for].commodityId;
     // Only mint what can fit on player's ship
     uint amountToMint = commodities[_commodityId].amountMinedPerBlock;
-    uint availableCargo = gta.getAvailableCargo(_for, getCurrentCargo(_for));
+    uint availableCargo = gta.getAvailableCargo(_for, gta.getCurrentCargo(_for));
     if (amountToMint >= availableCargo) {
       amountToMint = availableCargo;
     }
