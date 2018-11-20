@@ -28,7 +28,7 @@ class PlanetIndustrial extends Component {
     }
 
     setIndustrialState({
-      amountMinedPerBlock: response.amountMinedPerBlock.toString(),
+      miningAmount: response.miningAmount.toString(),
       miningDuration: response.miningDuration.toString(),
       miningCost: response.miningCost.toString(),
       commodityName: response.name,
@@ -77,7 +77,7 @@ class PlanetIndustrial extends Component {
   render() {
     const { classes, user, web3, industrial } = this.props
     const {
-      amountMinedPerBlock,
+      miningAmount,
       miningDuration,
       miningCost,
       commodityName,
@@ -97,7 +97,7 @@ class PlanetIndustrial extends Component {
             has offered you a deal on the production of {commodityName}.</div>
             <div>Contract details:</div>
             <div>Upfront cost: Ξ{web3.utils.fromWei(miningCost || '0')}</div>
-            <div>Returns: {amountMinedPerBlock} units of {commodityName} per block</div>
+            <div>Returns: {miningAmount} units of {commodityName} per block</div>
             <div>Duration: {miningDuration} blocks</div>
             <div>Would you like to accept their offer?</div>
             <div className={classes.acceptDecline}>

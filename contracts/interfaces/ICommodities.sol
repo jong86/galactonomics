@@ -9,11 +9,9 @@ contract ICommodities {
 
   function getCommodityInfo(uint8 _id) external view returns (string name, string symbol) {}
 
-  function getMiningCost(uint8 _id) external view returns (uint) {}
+  function getMiningAmount(uint8 _id) external view returns (uint) {}
 
-  function getAmountMinedPerBlock(uint8 _id) external view returns (uint) {}
-
-  function getMiningDuration(uint8 _id) external view returns (uint) {}
+  function getMiningTarget(uint8 _id) external view returns (bytes32) {}
 
   function getBalance(uint8 _id) external view returns (uint) {}
 

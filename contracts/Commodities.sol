@@ -14,11 +14,9 @@ contract Commodities is ICommodities {
   using SafeMath for uint;
 
   struct CommodityData {
-    address addr;
     ICommodity _interface;
-    uint miningCost;
-    uint amountMinedPerBlock;
-    uint miningDuration;
+    uint miningAmount;
+    bytes32 miningTarget;
   }
 
   // Array storing all info for each commodity
@@ -27,11 +25,9 @@ contract Commodities is ICommodities {
   constructor(address[] _commodityAddresses) public {
     for (uint8 i = 0; i < commodities.length; i++) {
       commodities[i] = CommodityData(
-        _commodityAddresses[i],
         ICommodity(_commodityAddresses[i]),
-        100,
-        1000,
-        8
+        8000,
+        bytes32(0x0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)
       );
     }
   }
@@ -57,16 +53,12 @@ contract Commodities is ICommodities {
     return commodities[_id]._interface.symbol();
   }
 
-  function getMiningCost(uint8 _id) external view returns (uint) {
-    return commodities[_id].miningCost;
+  function getMiningAmount(uint8 _id) external view returns (uint) {
+    return commodities[_id].miningAmount;
   }
 
-  function getAmountMinedPerBlock(uint8 _id) external view returns (uint) {
-    return commodities[_id].amountMinedPerBlock;
-  }
-
-  function getMiningDuration(uint8 _id) external view returns (uint) {
-    return commodities[_id].miningDuration;
+  function getMiningTarget(uint8 _id) external view returns (bytes32) {
+    return commodities[_id].miningTarget;
   }
 
   function getBalance(uint8 _id) external view returns (uint) {

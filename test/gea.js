@@ -124,8 +124,8 @@ contract("GalacticEconomicAuthority", accounts => {
     // Create a sell order with player1 that is too much cargo for player2
     const amountRequired = await commodities.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
-    const amountMinedPerBlock = commodity[4]
-    const timesToMint = availableCargo.div(amountMinedPerBlock)
+    const miningAmount = commodity[4]
+    const timesToMint = availableCargo.div(miningAmount)
     try {
       await mintCommodityXTimes(gia, timesToMint.add(1), player1)
     } catch (e) {}
