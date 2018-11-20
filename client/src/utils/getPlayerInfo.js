@@ -8,7 +8,7 @@ export default () => new Promise(async (resolve, reject) => {
   let playerInfo, currentCargo, balance
   try {
     playerInfo = await contracts.gta.getInfo({ from: user.address })
-    currentCargo = await contracts.gta.getCurrentCargo(user.address, { from: user.address })
+    currentCargo = await contracts.commodities.getCurrentCargo(user.address, { from: user.address })
     balance = await web3.eth.getBalance(user.address)
   } catch (e) {
     return reject(e)

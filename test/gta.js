@@ -1,25 +1,30 @@
+const Commodities = artifacts.require("./Commodities.sol")
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const deployCommodities = require('../utils/deployCommodities')
 
 contract("GalacticTransitAuthority", accounts => {
-  let gta, costOfSpaceship
+  let gta, costOfSpaceship, commodities
   const owner = accounts[0]
   const player1 = accounts[1]
   const player2 = accounts[2]
   const nonPlayer = accounts[3]
 
   beforeEach(async() => {
-    commodities = await deployCommodities()
-    const commodityAddresses = commodities.map(commodity => commodity.address)
+    // Deploy individual commodity addresses
+    const allCommodities = await deployCommodities()
+    const commodityAddresses = allCommodities.map(commodity => commodity.address)
+    // Deploy main contracts
+    commodities = await Commodities.new(commodityAddresses)
     gta = await GalacticTransitAuthority.new()
-    gea = await GalacticEconomicAuthority.new(commodityAddresses, gta.address)
-    gia = await GalacticIndustrialAuthority.new(commodityAddresses, gta.address)
+    gea = await GalacticEconomicAuthority.new(commodities.address, gta.address)
+    gia = await GalacticIndustrialAuthority.new(commodities.address, gta.address)
     await gta.setGEA(gea.address)
     await gta.setGIA(gia.address)
-    commodities.forEach(async commodity => await commodity.setGEA(gea.address))
-    commodities.forEach(async commodity => await commodity.setGIA(gia.address))
+    allCommodities.forEach(async commodity => await commodity.setGEA(gea.address))
+    allCommodities.forEach(async commodity => await commodity.setGIA(gia.address))
+
     costOfSpaceship = await gta.costOfSpaceship()
   })
 

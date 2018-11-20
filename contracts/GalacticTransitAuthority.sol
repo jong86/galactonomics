@@ -3,9 +3,8 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/AccessControlled.sol";
+import "./items/Commodity.sol";
 import "./interfaces/IGalacticTransitAuthority.sol";
-import "../items/Commodity.sol";
-import "../interfaces/ICommodity.sol";
 
 /**
  * @title Galactic Transit Authority (GTA)
@@ -23,14 +22,6 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
     uint maxFuel;
   }
 
-  struct CommodityData {
-    address addr;
-    ICommodity _interface;
-    uint miningCost;
-    uint amountMinedPerBlock;
-    uint miningDuration;
-  }
-
   uint public constant costOfSpaceship = 0.01 ether;
   // How much fuel is used to travel between planets
   uint public constant fuelUsage = 20;
@@ -42,21 +33,6 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
   mapping(address => Spaceship) public addressToSpaceship;
   // Resolves to true if account owns an address
   mapping(address => bool) public addressOwnsSpaceship;
-
-  // Array storing all info for each commodity
-  CommodityData[7] public commodities;
-
-  constructor(address[] _commodityAddresses) public {
-    for (uint8 i = 0; i < commodities.length; i++) {
-      commodities[i] = CommodityData(
-        _commodityAddresses[i],
-        ICommodity(_commodityAddresses[i]),
-        100,
-        1000,
-        8
-      );
-    }
-  }
 
   event SpaceshipBought(address owner, uint tokenId);
   event TravelComplete(address player, uint8 planetId, uint currentFuel);
@@ -107,7 +83,6 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
 
   /**
    * @notice Returns player's spaceship info
-   * @dev Does not include currentCargo (that's handled by CommodityInteractor)
    */
   function getInfo() external view returns (
     string spaceshipName,
@@ -140,15 +115,6 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
     );
   }
 
-  function getCurrentCargo(address _player) public view returns (uint) {
-    uint currentCargo;
-    for (uint8 i = 0; i < commodities.length; i++) {
-      uint cargoToAdd = commodities[i]._interface.balanceOf(_player);
-      currentCargo = currentCargo.add(cargoToAdd);
-    }
-    return currentCargo;
-  }
-
   function getMaxCargo(address _address) public view returns (uint) {
     return addressToSpaceship[_address].maxCargo;
   }
@@ -161,36 +127,6 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
     uint _maxCargo = getMaxCargo(_player);
     uint _cargoAvailable = _maxCargo.sub(_currentCargo);
     return _cargoAvailable >= _incomingCargo;
-  }
-
-  function getCommodity(uint8 _commodityId) external view returns (
-    string name,
-    string symbol,
-    address addr,
-    uint miningCost,
-    uint amountMinedPerBlock,
-    uint miningDuration
-  ) {
-    CommodityData memory commodityData = commodities[_commodityId];
-    Commodity commodity = Commodity(commodityData.addr);
-    return (
-      commodity.name(),
-      commodity.symbol(),
-      commodityData.addr,
-      commodityData.miningCost,
-      commodityData.amountMinedPerBlock,
-      commodityData.miningDuration
-    );
-  }
-
-  function getCommodityInfo(uint8 _id) external view returns (string name, string symbol) {
-    return (commodities[_id]._interface.name(), commodities[_id]._interface.symbol());
-  }
-
-  function getCommodityBalance(uint8 _id) external view returns (uint) {
-    return (
-      commodities[_id]._interface.balanceOf(msg.sender),
-    );
   }
 
   function() public {}

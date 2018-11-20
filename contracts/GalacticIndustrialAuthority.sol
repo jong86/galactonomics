@@ -2,9 +2,9 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./utils/CommodityInteractor.sol";
 import "./items/Commodity.sol";
 import "./interfaces/IGalacticTransitAuthority.sol";
+import "./interfaces/ICommodities.sol";
 
 /**
  * @title Galactic Industrial Authority (GIA)
@@ -15,6 +15,7 @@ contract GalacticIndustrialAuthority is Ownable {
   using SafeMath for uint;
 
   IGalacticTransitAuthority gta;
+  ICommodities commodities;
 
   struct Investment {
     uint8 commodityId;
@@ -28,7 +29,8 @@ contract GalacticIndustrialAuthority is Ownable {
 
   event Hash(bytes32 data);
 
-  constructor(address[] _commodityAddresses, address _gta) public {
+  constructor(address _commodities, address _gta) public {
+    commodities = ICommodities(_commodities);
     gta = IGalacticTransitAuthority(_gta);
   }
 
@@ -38,11 +40,15 @@ contract GalacticIndustrialAuthority is Ownable {
   function investInProduction(uint8 _commodityId) external payable {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
     require(gta.getCurrentPlanet(msg.sender) == _commodityId, "You are not on the correct planet");
-    require(gta.canFitCargo(msg.sender, gta.getCurrentCargo(msg.sender), getTotalProductionReturns(_commodityId)), "Not enough cargo space");
-    require(msg.value == getMiningCost(_commodityId), "You have not provided enough ether");
+    require(
+      gta.canFitCargo(msg.sender, commodities.getCurrentCargo(msg.sender),
+      getTotalProductionReturns(_commodityId)),
+      "Not enough cargo space"
+    );
+    require(msg.value == commodities.getMiningCost(_commodityId), "You have not provided enough ether");
     require(investments[msg.sender].blocksLeft == 0, "You can only mine one commodity at a time");
 
-    uint _miningDuration = commodities[_commodityId].miningDuration;
+    uint _miningDuration = commodities.getMiningDuration(_commodityId);
     investments[msg.sender] = Investment(_commodityId, _miningDuration);
     emit InvestmentMade(msg.sender, _miningDuration);
   }
@@ -53,12 +59,12 @@ contract GalacticIndustrialAuthority is Ownable {
     investments[_for].blocksLeft = investments[_for].blocksLeft.sub(1);
     uint8 _commodityId = investments[_for].commodityId;
     // Only mint what can fit on player's ship
-    uint amountToMint = commodities[_commodityId].amountMinedPerBlock;
-    uint availableCargo = gta.getAvailableCargo(_for, gta.getCurrentCargo(_for));
+    uint amountToMint = commodities.getAmountMinedPerBlock(_commodityId);
+    uint availableCargo = gta.getAvailableCargo(_for, commodities.getCurrentCargo(_for));
     if (amountToMint >= availableCargo) {
       amountToMint = availableCargo;
     }
-    commodities[_commodityId]._interface.mint(_for, amountToMint);
+    commodities.getInterface(_commodityId).mint(_for, amountToMint);
     emit CommodityMinted(_for, investments[_for].blocksLeft);
   }
 
@@ -80,13 +86,9 @@ contract GalacticIndustrialAuthority is Ownable {
   // View functions
 
   function getTotalProductionReturns(uint8 _commodityId) public view returns (uint) {
-    return commodities[_commodityId].amountMinedPerBlock.mul(
-      commodities[_commodityId].miningDuration
+    return commodities.getAmountMinedPerBlock(_commodityId).mul(
+      commodities.getMiningDuration(_commodityId)
     );
-  }
-
-  function getMiningCost(uint8 _commodityId) public view returns (uint) {
-    return commodities[_commodityId].miningCost;
   }
 
   function getInvestment(address _address) public view returns (uint8 commodityId, uint blocksLeft) {

@@ -2,7 +2,7 @@ function fillUpCargoByMinting(gta, gia, player, commodityId) {
   /* Fills cargo up by investments (will stop when another investment would be too much cargo) */
   return new Promise(async resolve => {
     const maxCargo = (await gta.addressToSpaceship(player))[2]
-    const amountRequired = await gia.getMiningCost(commodityId)
+    const amountRequired = await commodities.getMiningCost(commodityId)
     try {
       await gia.investInProduction(commodityId, { from: player, value: amountRequired })
     } catch (e) {
@@ -28,7 +28,7 @@ function fillUpCargoByMinting(gta, gia, player, commodityId) {
 
     await doMinting()
 
-    const currentCargo = await gta.getCurrentCargo(player)
+    const currentCargo = await commodities.getCurrentCargo(player)
     const totalProductionReturns = await gia.getTotalProductionReturns(commodityId)
 
     if (maxCargo.sub(currentCargo).cmp(totalProductionReturns) === 1) {

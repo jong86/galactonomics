@@ -1,3 +1,4 @@
+const Commodities = artifacts.require("./Commodities.sol")
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
@@ -14,15 +15,20 @@ contract("GalacticEconomicAuthority", accounts => {
   const price = 20
 
   beforeEach(async() => {
-    commodities = await deployCommodities()
-    const commodityAddresses = commodities.map(commodity => commodity.address)
+    // Deploy individual commodity addresses
+    const allCommodities = await deployCommodities()
+    const commodityAddresses = allCommodities.map(commodity => commodity.address)
+    // Deploy main contracts
+    commodities = await Commodities.new(commodityAddresses)
     gta = await GalacticTransitAuthority.new()
-    gea = await GalacticEconomicAuthority.new(commodityAddresses, gta.address)
-    gia = await GalacticIndustrialAuthority.new(commodityAddresses, gta.address)
+    gea = await GalacticEconomicAuthority.new(commodities.address, gta.address)
+    gia = await GalacticIndustrialAuthority.new(commodities.address, gta.address)
+    // Set access roles
     await gta.setGEA(gea.address)
     await gta.setGIA(gia.address)
-    commodities.forEach(async commodity => await commodity.setGEA(gea.address))
-    commodities.forEach(async commodity => await commodity.setGIA(gia.address))
+    allCommodities.forEach(async commodity => await commodity.setGEA(gea.address))
+    allCommodities.forEach(async commodity => await commodity.setGIA(gia.address))
+
     const costOfSpaceship = await gta.costOfSpaceship()
     await gta.buySpaceship("A", { from: player1, value: costOfSpaceship })
     await gta.buySpaceship("B", { from: player2, value: costOfSpaceship })
@@ -32,13 +38,13 @@ contract("GalacticEconomicAuthority", accounts => {
 
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {
     // Mint commodity multiple times for player
-    const amountRequired = await gia.getMiningCost(0)
+    const amountRequired = await commodities.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     await mintCommodityXTimes(gia, 4, player1)
 
-    const currentCargoBefore = await gta.getCurrentCargo(player1)
+    const currentCargoBefore = await commodities.getCurrentCargo(player1)
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
-    const currentCargoAfter = await gta.getCurrentCargo(player1)
+    const currentCargoAfter = await commodities.getCurrentCargo(player1)
 
     assert.equal(
       currentCargoBefore.toString(),
@@ -64,7 +70,7 @@ contract("GalacticEconomicAuthority", accounts => {
 
   it("should let player2 buy player1's sell order", async () => {
     // Mint commodity multiple times for player
-    const amountRequired = await gia.getMiningCost(0)
+    const amountRequired = await commodities.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     await mintCommodityXTimes(gia, 4, player1)
 
@@ -76,7 +82,7 @@ contract("GalacticEconomicAuthority", accounts => {
 
     await gea.buySellOrder(0, 0, orderId, { from: player2, value: qty * price })
 
-    const currentCargoAfter = await gta.getCurrentCargo(player2)
+    const currentCargoAfter = await commodities.getCurrentCargo(player2)
     assert.equal(currentCargoAfter.toString(), qty.toString(), "player2 did not have cargo adjusted")
 
     const balancePlayer2 = await commodities[0].balanceOf(player2)
@@ -94,7 +100,7 @@ contract("GalacticEconomicAuthority", accounts => {
 
   it("should not let non-player buy player1's sell order", async () => {
     // Mint commodity multiple times for player
-    const amountRequired = await gia.getMiningCost(0)
+    const amountRequired = await commodities.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     await mintCommodityXTimes(gia, 4, player1)
 
@@ -111,12 +117,12 @@ contract("GalacticEconomicAuthority", accounts => {
     // Fill up player2's cargo
     await fillUpCargoByMinting(gta, gia, player2, 0)
     // Find a amount of cargo that will max out player2's cargo
-    const currentCargo = await gta.getCurrentCargo(player2)
+    const currentCargo = await commodities.getCurrentCargo(player2)
     const availableCargo = await gta.getAvailableCargo(player2, currentCargo)
     const commodity = await gta.getCommodity(0)
 
     // Create a sell order with player1 that is too much cargo for player2
-    const amountRequired = await gia.getMiningCost(0)
+    const amountRequired = await commodities.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
     const amountMinedPerBlock = commodity[4]
     const timesToMint = availableCargo.div(amountMinedPerBlock)

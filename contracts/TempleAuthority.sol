@@ -2,9 +2,9 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./utils/CommodityInteractor.sol";
 import "./interfaces/IByzantianCrystal.sol";
 import "./interfaces/IGalacticTransitAuthority.sol";
+import "./interfaces/ICommodities.sol";
 
 /**
  * @title Temple Authority
@@ -16,6 +16,7 @@ contract TempleAuthority {
 
   IByzantianCrystal bCrystal;
   IGalacticTransitAuthority gta;
+  ICommodities commodities;
 
   // Units of each commodity required to forge a crystal
   uint public constant forgingAmount = 10000;
@@ -31,7 +32,8 @@ contract TempleAuthority {
     uint price;
   }
 
-  constructor(address[] _commodityAddresses, address _gta, address _bCrystal) public {
+  constructor(address _commodities, address _gta, address _bCrystal) public {
+    commodities = ICommodities(_commodities);
     gta = IGalacticTransitAuthority(_gta);
     bCrystal = IByzantianCrystal(_bCrystal);
   }
@@ -48,12 +50,12 @@ contract TempleAuthority {
    * @return tokenId of newly created crystal
    */
   function forge() external onlyPlayerAtTemple returns (uint) {
-    uint i;
+    uint8 i;
 
     // Check balance of every commodity to make sure there is enough
     for (i = 0; i <= 6; i++) {
       require(
-        commodities[i]._interface.balanceOf(msg.sender) >= forgingAmount,
+        commodities.getInterface(i).balanceOf(msg.sender) >= forgingAmount,
         "You do not have enough commodities to forge"
       );
     }
@@ -61,7 +63,7 @@ contract TempleAuthority {
     // Burn x amount of all 7 of user's commodities
     for (i = 0; i <= 6; i++) {
       require(
-        commodities[i]._interface.burn(msg.sender, forgingAmount),
+        commodities.getInterface(i).burn(msg.sender, forgingAmount),
         "Error burning commodity"
       );
     }

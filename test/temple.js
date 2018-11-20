@@ -1,3 +1,4 @@
+const Commodities = artifacts.require("./Commodities.sol")
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
@@ -13,17 +14,22 @@ contract("TempleAuthority", accounts => {
   const player2 = accounts[2]
 
   before('Deploy contracts and set up', async() => {
-    commodities = await deployCommodities()
-    const commodityAddresses = commodities.map(commodity => commodity.address)
+    // Deploy individual commodity addresses
+    const allCommodities = await deployCommodities()
+    const commodityAddresses = allCommodities.map(commodity => commodity.address)
+    // Deploy main contracts
+    commodities = await Commodities.new(commodityAddresses)
     gta = await GalacticTransitAuthority.new()
-    gea = await GalacticEconomicAuthority.new(commodityAddresses, gta.address)
-    gia = await GalacticIndustrialAuthority.new(commodityAddresses, gta.address)
+    gea = await GalacticEconomicAuthority.new(commodities.address, gta.address)
+    gia = await GalacticIndustrialAuthority.new(commodities.address, gta.address)
     bCrystal = await ByzantianCrystal.new()
-    temple = await TempleAuthority.new(commodityAddresses, gta.address, bCrystal.address)
+    temple = await TempleAuthority.new(commodities.address, gta.address, bCrystal.address)
+    // Set access roles
     await bCrystal.setTA(temple.address)
-    commodities.forEach(async commodity => await commodity.setGEA(gea.address))
-    commodities.forEach(async commodity => await commodity.setGIA(gia.address))
-    commodities.forEach(async commodity => await commodity.setTA(temple.address))
+    allCommodities.forEach(async commodity => await commodity.setGEA(gea.address))
+    allCommodities.forEach(async commodity => await commodity.setGIA(gia.address))
+    allCommodities.forEach(async commodity => await commodity.setTA(temple.address))
+
     const costOfSpaceship = await gta.costOfSpaceship()
     await gta.buySpaceship("A", { from: player1, value: costOfSpaceship })
     await gta.buySpaceship("B", { from: player2, value: costOfSpaceship })
@@ -59,16 +65,15 @@ contract("TempleAuthority", accounts => {
             await gta.refuel({ from: player, value: refuelCost })
 
             const forgingAmount = await temple.forgingAmount()
-            let commodityBalance = await gta.getCommodityBalance(i, { from: player })
+            let commodityBalance = await commodities.getBalance(i, { from: player })
 
             // Mint commodity until user has enough to forge
             while (commodityBalance.lt(forgingAmount)) {
-              const commodity = await gta.getCommodity(i)
-              const miningCost = commodity[3]
-              const miningDuration = commodity[5]
+              const miningCost = commodities.getMiningCost(i)
+              const miningDuration = commodities.getMiningDuration(i)
               await gia.investInProduction(i, { from: player, value: miningCost })
               await mintCommodityXTimes(gia, miningDuration.toNumber(), player)
-              commodityBalance = await gta.getCommodityBalance(i, { from: player })
+              commodityBalance = await commodities.getBalance(i, { from: player })
             }
 
             // Unload unneeded overflow in a sell order, each iteration, to conserve cargo capacity

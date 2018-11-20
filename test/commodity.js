@@ -40,20 +40,4 @@ contract("Commodity", accounts => {
     const giaFromContract = await commodities[3].giaAddress()
     assert(giaFromContract !== gia, "could set GIA")
   })
-
-  it("allows GIA to mint tokens to a player", async () => {
-    await commodities[3].setGIA(gia)
-    await commodities[3].mint(player1, 500, { from: gia })
-    const p1Bal = await commodities[3].balanceOf(player1)
-    assert.equal(p1Bal.toString(), "500", "Did not mint to player1")
-  })
-
-  it("non-GIA cannot mint tokens to a player", async () => {
-    await commodities[3].setGIA(gia)
-    try {
-      await commodities[3].mint(player1, 500, { from: owner })
-    } catch (e) {}
-    const p1Bal = await commodities[3].balanceOf(player1)
-    assert.equal(p1Bal.toString(), "0", "could mint to player1")
-  })
 })

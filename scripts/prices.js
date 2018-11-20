@@ -36,7 +36,7 @@ module.exports = async function(done) {
       while (tripsLeft) {
         try {
           // Mine the commodity
-          const amount = await gia.getMiningCost(planet)
+          const amount = await commodities.getMiningCost(planet)
           await gia.investInProduction(planet, { from: user, value: amount })
           console.log('minting commodity', planet, 'for', user, '...')
           for (let i = 0; i < 8; i++) {
