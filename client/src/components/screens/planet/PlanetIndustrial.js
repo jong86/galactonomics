@@ -35,6 +35,10 @@ class PlanetIndustrial extends Component {
     })
   }
 
+  startMining = () => {
+    console.log('starting')
+  }
+
   render() {
     const { classes, user, web3, industrial } = this.props
     const {
@@ -50,7 +54,12 @@ class PlanetIndustrial extends Component {
           <Rect
             size="wide"
           >
-            test
+            <Rect
+              isButton
+              onClick={this.startMining}
+            >
+              Mine
+            </Rect>
           </Rect>
       </MPIContainer>
     )

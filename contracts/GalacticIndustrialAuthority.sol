@@ -35,12 +35,9 @@ contract GalacticIndustrialAuthority {
     require(gta.getCurrentPlanet(msg.sender) == _commodityId, "You are not on the correct planet");
 
     bytes32 _hash = sha256(_nonce);
-    emit Hash(_hash);
-    emit Nonce(_nonce);
-
-    if (_hash < commodities.getMiningTarget(_commodityId)) {
-      emit Log("you win");
-    }
+    require(_hash < commodities.getMiningTarget(_commodityId), "That is not a valid proof-of-work");
+    emit Log("logged!");
+    commodities.getInterface(_commodityId).mint(msg.sender, commodities.getMiningAmount(_commodityId));
   }
 
   function() public {}
