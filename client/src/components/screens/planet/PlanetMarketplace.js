@@ -9,6 +9,7 @@ import Dialog from 'components/reusables/Dialog'
 import SellOrder from 'components/reusables/SellOrder'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
+import commodities from 'utils/commodities'
 
 const styles = {
   container: {
@@ -92,8 +93,8 @@ class PlanetMarketplace extends Component {
     this.setState({
       commodities: commodityInfos.map((commodityInfo, i) => ({
         id: commoditiesTraded[i],
-        name: commodityInfo.name,
-        symbol: commodityInfo.symbol,
+        name: commodities[i].name,
+        symbol: commodities[i].symbol,
         myBalance: commodityBalances[i]
       }))
     })
@@ -119,7 +120,10 @@ class PlanetMarketplace extends Component {
     return new Promise(async (resolve, reject) => {
       try {
         for (let id of commodityIds) {
-          commodityInfos.push(await contracts.gta.getCommodityInfo(id, { from: user.address }))
+          commodityInfos.push({
+            name: await contracts.commodities.getName(id, { from: user.address }),
+            symbol: await contracts.commodities.getSymbol(id, { from: user.address }),
+          })
         }
       } catch (e) {
         return reject(e)
@@ -134,7 +138,7 @@ class PlanetMarketplace extends Component {
     return new Promise(async (resolve, reject) => {
       try {
         for (let id of commodityIds) {
-          commodityBalances.push(await contracts.gta.getCommodityBalance(id, { from: user.address }))
+          commodityBalances.push(await contracts.commodities.getBalance(id, { from: user.address }))
         }
       } catch (e) {
         reject(e)

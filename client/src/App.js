@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import globalStyles from 'globalStyles'
 
+import commoditiesJSON from "contracts/Commodities.json"
 import gtaJSON from "contracts/GalacticTransitAuthority.json"
 import geaJSON from "contracts/GalacticEconomicAuthority.json"
 import giaJSON from "contracts/GalacticIndustrialAuthority.json"
 import templeJSON from "contracts/TempleAuthority.json"
+
 import getWeb3 from "utils/getWeb3"
 import truffleContract from "truffle-contract"
 
@@ -35,7 +37,7 @@ class App extends Component {
       }
 
     } catch (e) {
-      console.error(e)
+      return console.error(e)
     }
 
     this.setState({ isInitialized: true })
@@ -53,6 +55,7 @@ class App extends Component {
 
       // Get all contract instances
       let contracts = [
+        { json: commoditiesJSON, name: 'commodities' },
         { json: gtaJSON, name: 'gta' },
         { json: geaJSON, name: 'gea' },
         { json: giaJSON, name: 'gia' },
@@ -90,17 +93,17 @@ class App extends Component {
     const { contracts, user, setIndustrialState } = this.props
 
     // Listen for 'commodity-minted' events
-    contracts.gia.CommodityMinted({ fromBlock: 'latest' })
-    .on('data', data => {
-      const { to, blocksLeft } = data.returnValues
+    // contracts.gia.CommodityMinted({ fromBlock: 'latest' })
+    // .on('data', data => {
+    //   const { to, blocksLeft } = data.returnValues
 
-      if (to === user.address) {
-        getPlayerInfo()
-        setIndustrialState({
-          miningBlocksLeft: blocksLeft,
-        })
-      }
-    })
+    //   if (to === user.address) {
+    //     getPlayerInfo()
+    //     setIndustrialState({
+    //       miningBlocksLeft: blocksLeft,
+    //     })
+    //   }
+    // })
   }
 
   checkIfOwnsSpaceship = () => new Promise(async (resolve, reject) => {

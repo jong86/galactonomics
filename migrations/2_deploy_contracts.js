@@ -11,8 +11,9 @@ module.exports = function(deployer) {
   deployer.then(async () => {
     // Deploy all commodities
     const commodityInstances = []
-    for (let commodity of commodityNames) {
-      commodityInstance = await deployer.deploy(Commodity, commodity.name, commodity.symbol);
+    for (const commodity of commodityNames) {
+      await deployer.deploy(Commodity, commodity.name, commodity.symbol)
+      const commodityInstance = await Commodity.deployed()
       commodityInstances.push(commodityInstance);
     }
 

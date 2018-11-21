@@ -114,7 +114,7 @@ contract("TempleAuthority", accounts => {
 
     it("burns player's commodities after forging", async () => {
       for (let i = 0; i <= 6; i++) {
-        const balance = await gta.getCommodityBalance(i, { from: player1 })
+        const balance = await commodities.getBalance(i, { from: player1 })
         assert.equal(balance.toString(), '0', 'commodities did not get burned')
       }
     })

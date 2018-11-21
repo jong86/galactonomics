@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import injectSheet from 'react-jss'
+import commodities from 'utils/commodities'
 import Rect from 'components/reusables/Rect'
 
 const styles = {
@@ -15,7 +16,7 @@ let CargoMeter = ({ classes, current = 0, max = 0, cargoPerCommodity = [] }) => 
     </Rect>
     {cargoPerCommodity.map((commodity, i) =>
       <Rect key={i} type="dark">
-        {commodity.symbol} {commodity.amount}
+        {commodities[i].symbol} {commodity.amount}
       </Rect>
     )}
   </div>

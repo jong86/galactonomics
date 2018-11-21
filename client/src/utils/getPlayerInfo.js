@@ -1,4 +1,5 @@
 import { store } from '../redux/store'
+import commodities from 'utils/commodities'
 
 export default () => new Promise(async (resolve, reject) => {
   /* 'Refreshes' user data and saves in redux store */
@@ -17,15 +18,12 @@ export default () => new Promise(async (resolve, reject) => {
   const cargoPerCommodity = await Promise.all([0, 1, 2, 3, 4, 5, 6].map(id => new Promise(async (resolve, reject) => {
     let amount, symbol
     try {
-      amount = (await contracts.gta.getCommodityBalance(id, { from: user.address })).toString()
-      symbol = (await contracts.gta.getCommodityInfo(id, { from: user.address })).symbol
+      amount = (await contracts.commodities.getBalance(id, { from: user.address })).toString()
     } catch (e) {
-      reject(e)
+      return reject(e)
     }
-    resolve({ amount, symbol })
+    resolve({ amount, symbol: commodities[id].symbol })
   })))
-
-  console.log('cargoPerCommodity', cargoPerCommodity);
 
   store.dispatch({
     type: 'SET_USER_INFO',

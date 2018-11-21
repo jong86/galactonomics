@@ -52,7 +52,7 @@ module.exports = async function(done) {
           await gta.refuel({ from: user, value: refuelCost })
 
           // Unload commodity from previous planet on this new planet
-          const balance = await gta.getCommodityBalance(prevPlanet, { from: user })
+          const balance = await commodities.getBalance(prevPlanet, { from: user })
           console.log(user, 'is unloading all previously mined commodity in a sell order')
           await gea.createSellOrder(
             planet,

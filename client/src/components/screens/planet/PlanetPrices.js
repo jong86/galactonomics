@@ -6,6 +6,7 @@ import MPIContainer from 'components/screens/planet/MPIContainer'
 import PricesRow from 'components/reusables/PricesRow'
 import uuid from 'utils/uuid'
 import Loader from 'components/reusables/Loader'
+import commodities from 'utils/commodities'
 
 const styles = {}
 
@@ -29,7 +30,10 @@ class PlanetPrices extends Component {
     return new Promise(async (resolve, reject) => {
       try {
         for (let i = 0; i < 7; i++) {
-          commodityInfos.push(await contracts.gta.getCommodityInfo(i, { from: user.address }))
+          commodityInfos.push({
+            name: commodities[i].name,
+            symbol: commodities[i].symbol,
+          })
         }
       } catch (e) {
         return reject(e)

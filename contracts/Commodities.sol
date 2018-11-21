@@ -41,8 +41,18 @@ contract Commodities is ICommodities {
     return currentCargo;
   }
 
-  function getCommodityInfo(uint8 _id) external view returns (string name, string symbol) {
-    return (commodities[_id]._interface.name(), commodities[_id]._interface.symbol());
+  function get(uint8 _id) external view returns (
+    string name,
+    string symbol,
+    uint miningAmount,
+    bytes32 miningTarget
+  ) {
+    return (
+      commodities[_id]._interface.name(),
+      commodities[_id]._interface.symbol(),
+      commodities[_id].miningAmount,
+      commodities[_id].miningTarget
+    );
   }
 
   function getName(uint8 _id) external view returns (string) {
