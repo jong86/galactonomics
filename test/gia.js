@@ -107,10 +107,15 @@ contract("GalacticIndustrialAuthority", accounts => {
 
     console.log('hash in js:', hash);
     console.log('sending nonce', nonce);
-    await gia.submitProofOfWork(String(nonce), 0, { from: player1 })
+    const powRes = await gia.submitProofOfWork(String(nonce), { from: player1 })
+    console.log('powRes', powRes.receipt.logs);
 
     const balance = await commodities.getBalance(0, { from: player1 })
     const miningAmount = await commodities.getMiningAmount(0)
+
+    const response = await commodities.get(0)
+    console.log('response', response);
+
 
     assert.equal(balance.toString(), miningAmount.toString(), "did not receive mining reward")
   })

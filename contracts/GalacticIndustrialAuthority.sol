@@ -20,24 +20,24 @@ contract GalacticIndustrialAuthority {
     gta = IGalacticTransitAuthority(_gta);
   }
 
-  event Log(string msg);
+  event Log(address msg);
   event Hash(bytes32 hsh);
   event Nonce(string nonce);
 
   /**
    * @notice Mints new commodity tokens for a player
    * @param _nonce Value found that when hashed (using SHA-256) with the previous proof-of-work hash found for a
-   *  specified commodity, results in an acceptable hash according to current difficulty for that commodity
-   * @param _commodityId Commodity to mint
+   *  specified commodity, results in an acceptable hash according to current target for that commodity
    */
-  function submitProofOfWork(string _nonce, uint8 _commodityId) external {
+  function submitProofOfWork(string _nonce) external {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
-    require(gta.getCurrentPlanet(msg.sender) == _commodityId, "You are not on the correct planet");
 
-    bytes32 _hash = sha256(_nonce);
+    uint8 _commodityId = gta.getCurrentPlanet(msg.sender);
+
+    bytes32 _hash = sha256(abi.encodePacked(_nonce));
     require(_hash < commodities.getMiningTarget(_commodityId), "That is not a valid proof-of-work");
-    emit Log("logged!");
-    commodities.getInterface(_commodityId).mint(msg.sender, commodities.getMiningAmount(_commodityId));
+    emit Log(commodities.getAddress(_commodityId));
+    require(commodities.getInterface(_commodityId).mint(msg.sender, commodities.getMiningAmount(_commodityId)), "Error minting");
   }
 
   function() public {}

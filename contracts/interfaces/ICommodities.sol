@@ -16,4 +16,6 @@ contract ICommodities {
   function getBalance(uint8 _id) external view returns (uint) {}
 
   function getInterface(uint8 _id) external view returns (ICommodity) {}
+
+  function getAddress(uint8 _id) external view returns (address) {}
 }
