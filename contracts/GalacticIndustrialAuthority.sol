@@ -21,8 +21,6 @@ contract GalacticIndustrialAuthority {
   }
 
   event Log(address msg);
-  event Hash(bytes32 hsh);
-  event Nonce(string nonce);
 
   /**
    * @notice Mints new commodity tokens for a player
@@ -36,7 +34,7 @@ contract GalacticIndustrialAuthority {
 
     bytes32 _hash = sha256(abi.encodePacked(_nonce));
     require(_hash < commodities.getMiningTarget(_commodityId), "That is not a valid proof-of-work");
-    emit Log(commodities.getAddress(_commodityId));
+
     require(commodities.getInterface(_commodityId).mint(msg.sender, commodities.getMiningAmount(_commodityId)), "Error minting");
   }
 

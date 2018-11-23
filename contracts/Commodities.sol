@@ -27,16 +27,16 @@ contract Commodities is ICommodities, Ownable {
   CommodityData[7] public commodities;
 
   // Array storing all contracts of commodities
-  Commodity[7] public contracts;
+  Commodity[2] public contracts;
 
   constructor() public {
     contracts[0] = new Commodity("Iodine", "IOD");
     contracts[1] = new Commodity("Neon gas", "NEG");
-    contracts[2] = new Commodity("Iron ore", "IRN");
-    contracts[3] = new Commodity("Platinum ore", "PLT");
-    contracts[4] = new Commodity("Gold ore", "GLD");
-    contracts[5] = new Commodity("Petroleum", "PET");
-    contracts[6] = new Commodity("Water", "WTR");
+    // contracts[2] = new Commodity("Iron ore", "IRN");
+    // contracts[3] = new Commodity("Platinum ore", "PLT");
+    // contracts[4] = new Commodity("Gold ore", "GLD");
+    // contracts[5] = new Commodity("Petroleum", "PET");
+    // contracts[6] = new Commodity("Water", "WTR");
 
     for (uint i = 0; i < contracts.length; i++) {
       commodities[i] = CommodityData(
@@ -102,7 +102,7 @@ contract Commodities is ICommodities, Ownable {
   }
 
   function setAccessForAll(address _geaAddress, address _giaAddress, address _taAddress) external {
-    for (uint i = 0; i < commodities.length; i++) {
+    for (uint i = 0; i < contracts.length; i++) {
       commodities[i]._interface.setGEA(_geaAddress);
       commodities[i]._interface.setGIA(_giaAddress);
       commodities[i]._interface.setTA(_taAddress);

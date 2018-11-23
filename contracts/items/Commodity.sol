@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../utils/AccessControlled.sol";
 import "../interfaces/ICommodity.sol";
 
@@ -13,8 +13,6 @@ import "../interfaces/ICommodity.sol";
  * elsewhere in this project, 'value' is referred to as 'amount'.
  */
 contract Commodity is ERC20, ERC20Detailed, AccessControlled, ICommodity {
-  event Mint(address to, uint value);
-
   constructor(string _name, string _symbol)
   ERC20Detailed(_name, _symbol, 0)
   public {}
@@ -28,7 +26,6 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled, ICommodity {
    */
   function mint(address _to, uint _value) public returns (bool) {
     _mint(_to, _value);
-    emit Mint(_to, _value);
     return true;
   }
 

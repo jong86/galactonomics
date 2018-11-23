@@ -2,7 +2,6 @@ const Commodities = artifacts.require("./Commodities.sol")
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
-const deployCommodities = require('../utils/deployCommodities')
 const { fillUpCargoByMinting, mintCommodityXTimes } = require('./util/testUtils')
 const sha256 = require('js-sha256');
 
@@ -18,7 +17,7 @@ contract("GalacticIndustrialAuthority", accounts => {
   const price = 350
 
   beforeEach(async() => {
-    commodities = await Commodities.new()
+    commodities = await Commodities.new({ gas: maxGas })
     gta = await GalacticTransitAuthority.new()
     gea = await GalacticEconomicAuthority.new(commodities.address, gta.address)
     gia = await GalacticIndustrialAuthority.new(commodities.address, gta.address)
