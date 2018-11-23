@@ -8,4 +8,8 @@ contract ICommodity {
   function balanceOf(address) public view returns (uint) {}
   function name() public view returns(string) {}
   function symbol() public view returns(string) {}
+
+  function setGEA(address) public {}
+  function setGIA(address) public {}
+  function setTA(address) public {}
 }

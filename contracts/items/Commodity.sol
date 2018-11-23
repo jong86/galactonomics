@@ -13,14 +13,11 @@ import "../interfaces/ICommodity.sol";
  * elsewhere in this project, 'value' is referred to as 'amount'.
  */
 contract Commodity is ERC20, ERC20Detailed, AccessControlled, ICommodity {
-  event Log(string x);
   event Mint(address to, uint value);
 
   constructor(string _name, string _symbol)
   ERC20Detailed(_name, _symbol, 0)
-  public {
-    emit Log(_name);
-  }
+  public {}
 
   /**
    * @notice Creates more of a token for an account
@@ -29,7 +26,7 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled, ICommodity {
    * @param _value Quantity of token to transfer
    * @return boolean true on success
    */
-  function mint(address _to, uint _value) public onlyGIA returns (bool) {
+  function mint(address _to, uint _value) public returns (bool) {
     _mint(_to, _value);
     emit Mint(_to, _value);
     return true;
