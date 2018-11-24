@@ -9,7 +9,7 @@ import "./interfaces/ICommodities.sol";
 /**
  * @title Commodities
  *
- * @notice This contracts holds all data on the commodities
+ * @notice This contracts is for convenient access to the commodities
  */
 contract Commodities is ICommodities, Ownable {
   using SafeMath for uint;
