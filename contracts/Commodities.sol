@@ -14,7 +14,7 @@ import "./interfaces/ICommodities.sol";
 contract Commodities is ICommodities, Ownable {
   using SafeMath for uint;
 
-  event LogAddr(address addr);
+  event LogAddr1(address addr);
 
   struct CommodityData {
     address addr;
@@ -39,6 +39,7 @@ contract Commodities is ICommodities, Ownable {
     // contracts[6] = new Commodity("Water", "WTR");
 
     for (uint i = 0; i < contracts.length; i++) {
+      LogAddr1(address(contracts[i]));
       commodities[i] = CommodityData(
         address(contracts[i]),
         ICommodity(address(contracts[i])),

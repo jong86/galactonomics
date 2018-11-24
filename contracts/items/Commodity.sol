@@ -12,7 +12,7 @@ import "../interfaces/ICommodity.sol";
  * @dev Use of variable name 'value' in this contract is to be consistent with ERC20 code --
  * elsewhere in this project, 'value' is referred to as 'amount'.
  */
-contract Commodity is ERC20, ERC20Detailed, AccessControlled, ICommodity {
+contract Commodity is ERC20, ERC20Detailed, AccessControlled {
   constructor(string _name, string _symbol)
   ERC20Detailed(_name, _symbol, 0)
   public {}
