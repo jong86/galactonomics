@@ -2,7 +2,7 @@ const Commodities = artifacts.require("./Commodities.sol")
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
-const deployCommodities = require('./utils/deployCommodities')
+const deployCommodities = require('./util/deployCommodities')
 
 contract("GalacticTransitAuthority", accounts => {
   let gta, costOfSpaceship, commodities

@@ -1,49 +1,30 @@
-function fillUpCargoByMinting(gta, gia, player, commodityId) {
+function fillUpCargoByMining(commodities, gta, gia, player, commodityId) {
   /* Fills cargo up by investments (will stop when another investment would be too much cargo) */
-  return new Promise(async resolve => {
-    const maxCargo = (await gta.addressToSpaceship(player))[2]
-    const amountRequired = await commodities.getMiningCost(commodityId)
-    try {
-      await gia.investInProduction(commodityId, { from: player, value: amountRequired })
-    } catch (e) {
-      reject("Error invoking investInProduction")
-    }
+  return new Promise(async (resolve, reject) => {
+    let maxCargo, currentCargo, miningReward
 
-    function doMinting() {
-      return new Promise(async resolve => {
-        try {
-          await gia.mintCommodityFor(player)
-        } catch (e) {
-          reject("Error invoking mintCommodityFor")
-        }
+    do {
+      try {
+        await gia.submitProofOfWork(commodityId, { from: player })
+      } catch (e) {
+        reject("Error invoking submitProofOfWork")
+      }
 
-        const blocksLeft = (await gia.getInvestment(player))[1]
-        if (blocksLeft > 0) {
-          resolve(await doMinting())
-        } else {
-          resolve()
-        }
-      })
-    }
+      maxCargo = (await gta.addressToSpaceship(player))[2]
+      currentCargo = await commodities.getCurrentCargo(player)
+      miningReward = await commodities.getMiningReward(commodityId)
 
-    await doMinting()
+    } while (maxCargo.sub(currentCargo).gt(miningReward))
 
-    const currentCargo = await commodities.getCurrentCargo(player)
-    const totalProductionReturns = await gia.getTotalProductionReturns(commodityId)
-
-    if (maxCargo.sub(currentCargo).cmp(totalProductionReturns) === 1) {
-      resolve(await fillUpCargoByMinting(gta, gia, player, commodityId))
-    } else {
-      resolve()
-    }
+    resolve()
   })
 }
 
-function mintCommodityXTimes(gia, numTimes, player) {
+function mineCommodityXTimes(gia, numTimes, player) {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < numTimes; i++) {
       try {
-        await gia.mintCommodityFor(player)
+        await gia.submitProofOfWork(0, { from: player })
       } catch (e) {
         reject(e)
       }
@@ -53,6 +34,6 @@ function mintCommodityXTimes(gia, numTimes, player) {
 }
 
 module.exports = {
-  fillUpCargoByMinting: fillUpCargoByMinting,
-  mintCommodityXTimes: mintCommodityXTimes,
+  fillUpCargoByMining: fillUpCargoByMining,
+  mineCommodityXTimes: mineCommodityXTimes,
 }

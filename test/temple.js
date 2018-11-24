@@ -4,18 +4,18 @@ const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const ByzantianCrystal = artifacts.require("./items/ByzantianCrystal.sol")
 const TempleAuthority = artifacts.require("./TempleAuthority.sol")
-const { fillUpCargoByMinting, mintCommodityXTimes } = require('./util/testUtils')
-const deployCommodities = require('./utils/deployCommodities')
+const { fillUpCargoByMining, mineCommodityXTimes } = require('./util/testUtils')
+const deployCommodities = require('./util/deployCommodities')
 
 contract("TempleAuthority", accounts => {
-  let gta, gea, gia, commodities, bCrystal, temple
+  let gta, gea, gia, commodities, allCommodities, bCrystal, temple
   const owner = accounts[0]
   const player1 = accounts[1]
   const player2 = accounts[2]
 
   before('Deploy contracts and set up', async() => {
     // Deploy individual commodity addresses
-    const allCommodities = await deployCommodities()
+    allCommodities = await deployCommodities()
     const commodityAddresses = allCommodities.map(commodity => commodity.address)
     // Deploy main contracts
     commodities = await Commodities.new(commodityAddresses)
@@ -55,7 +55,6 @@ contract("TempleAuthority", accounts => {
   describe('After players have commodities...', () => {
     before('Mint commodities', async () => {
       // Give players enough of each commodity to be able to forge a crystal
-      console.log('Minting commodities for 2 players, this may take a while...')
       await Promise.all([player1, player2].map(player => new Promise(async (resolve, reject) => {
         try {
           // Move player to each planet so can mine each commodity
@@ -69,10 +68,9 @@ contract("TempleAuthority", accounts => {
 
             // Mint commodity until user has enough to forge
             while (commodityBalance.lt(forgingAmount)) {
-              const miningCost = commodities.getMiningCost(i)
-              const miningDuration = commodities.getMiningDuration(i)
-              await gia.investInProduction(i, { from: player, value: miningCost })
-              await mintCommodityXTimes(gia, miningDuration.toNumber(), player)
+              const miningReward = await commodities.getMiningReward(i)
+              const timesToMine = forgingAmount.div(miningReward).toNumber()
+              await mineCommodityXTimes(gia, timesToMine, player)
               commodityBalance = await commodities.getBalance(i, { from: player })
             }
 
@@ -128,7 +126,6 @@ contract("TempleAuthority", accounts => {
 
     it("stores seller and price of crystal that is for sale", async () => {
       const sellData = await temple.getCrystalSellData('1')
-      console.log('sellData', sellData);
       assert.equal(sellData[0], player1, 'did not record seller address')
       assert.equal(sellData[1].toNumber(), 1000, 'did not record price')
     })
