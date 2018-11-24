@@ -48,7 +48,7 @@ contract("GalacticIndustrialAuthority", accounts => {
     let hash
     do {
       nonce++
-      hash = sha256(String(nonce) + timesMined.toString() + prevHash.substring(2, 42) + player1.substring(2))
+      hash = sha256(nonce.toString() + timesMined.toString() + prevHash + player1.substring(2))
     } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
 
     console.log('hash', hash);

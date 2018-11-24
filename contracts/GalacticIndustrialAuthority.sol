@@ -29,14 +29,12 @@ contract GalacticIndustrialAuthority {
   event ProofFound(bytes32 _hash, address miner);
 
   event LogBytes(bytes32 b);
-  event LogAddr(address a);
-  event LogInt(uint i);
   event LogString(string s);
 
   /**
    * @notice Mints new commodity tokens for a player
    * @param _nonce Value found that when hashed (using SHA-256) with the previous proof-of-work hash found for a
-   *  specified commodity, results in an acceptable hash according to current target for that commodity
+   *  commodity, results in an acceptable hash according to current target for that commodity
    */
   function submitProofOfWork(string _nonce) external {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
@@ -44,10 +42,15 @@ contract GalacticIndustrialAuthority {
 
     string memory _timesMined = commodities.getInterface(_commodityId).timesMined().toString();
     string memory _prevHash = commodities.getInterface(_commodityId).prevMiningHash().toString();
+    // bytes32 _prevHashB = commodities.getInterface(_commodityId).prevMiningHash();
+    // emit LogBytes(_prevHashB);
 
     bytes32 _hash = sha256(abi.encodePacked(_nonce, _timesMined, _prevHash, msg.sender.toString()));
 
-    require(_hash < commodities.getMiningTarget(_commodityId), "That is not a valid proof-of-work");
+    emit LogString(_timesMined);
+    emit LogString(_prevHash);
+
+    // require(_hash < commodities.getMiningTarget(_commodityId), "That is not a valid proof-of-work");
 
     require(commodities.getInterface(_commodityId).dispenseReward(msg.sender, _hash), "Error doing reward");
     emit ProofFound(_hash, msg.sender);
@@ -60,7 +63,7 @@ contract GalacticIndustrialAuthority {
     uint miningReward,
     bytes32 miningTarget,
     uint timesMined,
-    bytes32 prevHash
+    string prevHash
   ) {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
     uint8 _commodityId = gta.getCurrentPlanet(msg.sender);
@@ -69,7 +72,7 @@ contract GalacticIndustrialAuthority {
       commodities.getInterface(_commodityId).miningReward(),
       commodities.getInterface(_commodityId).miningTarget(),
       commodities.getInterface(_commodityId).timesMined(),
-      commodities.getInterface(_commodityId).prevMiningHash()
+      commodities.getInterface(_commodityId).prevMiningHash().toString()
     );
   }
 
