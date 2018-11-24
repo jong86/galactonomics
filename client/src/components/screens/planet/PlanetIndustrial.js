@@ -27,10 +27,20 @@ class PlanetIndustrial extends Component {
   }
 
   componentDidUpdate = prevProps => {
-    const { isMining } = this.props.industrial
+    const { setIndustrialState } = this.props
+    const { isMining, nonce, areaStart, areaEnd } = this.props.industrial
 
+    // When mining is started... (an area is clicked)
     if (!prevProps.industrial.isMining && isMining) {
       window.requestAnimationFrame(this.step)
+    }
+
+    // When finished mining an area...
+    if (prevProps.industrial.nonce !== nonce && nonce >= areaEnd) {
+      setIndustrialState({
+        nonce: undefined,
+        isMining: false,
+      })
     }
   }
 
@@ -58,26 +68,28 @@ class PlanetIndustrial extends Component {
     const { user, setIndustrialState } = this.props
     const { miningTarget, prevMiningHash, nonce, isMining } = this.props.industrial
 
-    const hash = sha256(
-      nonce.toString() +
-      user.currentPlanet.toString() +
-      prevMiningHash +
-      user.address.substring(2).toLowerCase()
-    )
-    setIndustrialState({ hash })
+    if (typeof nonce === 'number') {
+      const hash = sha256(
+        nonce.toString() +
+        user.currentPlanet.toString() +
+        prevMiningHash +
+        user.address.substring(2).toLowerCase()
+      )
+      setIndustrialState({ hash })
 
-    const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
+      const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
 
-    if (validProofFound)
-      return setIndustrialState({
-        isMining: false,
-        hasValidProof: true,
-      })
+      if (validProofFound)
+        return setIndustrialState({
+          isMining: false,
+          hasValidProof: true,
+        })
 
-      setIndustrialState({ nonce: nonce + 1 })
+        setIndustrialState({ nonce: nonce + 1 })
 
-    if (isMining)
-      window.requestAnimationFrame(this.step)
+      if (isMining)
+        window.requestAnimationFrame(this.step)
+    }
   }
 
   stopMining = () => {

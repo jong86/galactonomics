@@ -52,7 +52,7 @@ class MiningPad extends Component {
                 onClick={() => this.mineArea(areaStart, areaEnd)}
                 onMouseEnter={e => {
                   e.stopPropagation()
-                  setIndustrialState({ areaStart, areaEnd })
+                  setIndustrialState({ areaStart, areaEnd, nonce: areaStart })
                 }}
                 onMouseLeave={e => {
                   e.stopPropagation()
