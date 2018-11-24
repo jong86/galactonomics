@@ -26,7 +26,7 @@ contract Commodities is ICommodities, Ownable {
   function getCurrentCargo(address _player) external view returns (uint) {
     uint currentCargo;
     for (uint8 i = 0; i < commodities.length; i++) {
-      uint cargoToAdd = commodities[i]._interface.balanceOf(_player);
+      uint cargoToAdd = commodities[i].balanceOf(_player);
       currentCargo = currentCargo.add(cargoToAdd);
     }
     return currentCargo;
@@ -39,35 +39,35 @@ contract Commodities is ICommodities, Ownable {
     bytes32 miningTarget
   ) {
     return (
-      commodities[_id]._interface.name(),
-      commodities[_id]._interface.symbol(),
-      commodities[_id]._interface.miningReward(),
-      commodities[_id]._interface.miningTarget()
+      commodities[_id].name(),
+      commodities[_id].symbol(),
+      commodities[_id].miningReward(),
+      commodities[_id].miningTarget()
     );
   }
 
   function getName(uint8 _id) external view returns (string) {
-    return commodities[_id]._interface.name();
+    return commodities[_id].name();
   }
 
   function getSymbol(uint8 _id) external view returns (string) {
-    return commodities[_id]._interface.symbol();
+    return commodities[_id].symbol();
   }
 
   function getMiningReward(uint8 _id) external view returns (uint) {
-    return commodities[_id].miningReward;
+    return commodities[_id].miningReward();
   }
 
   function getMiningTarget(uint8 _id) external view returns (bytes32) {
-    return commodities[_id].miningTarget;
+    return commodities[_id].miningTarget();
   }
 
   function getBalance(uint8 _id) external view returns (uint) {
-    return commodities[_id]._interface.balanceOf(msg.sender);
+    return commodities[_id].balanceOf(msg.sender);
   }
 
   function getInterface(uint8 _id) external view returns (ICommodity) {
-    return commodities[_id]._interface;
+    return commodities[_id];
   }
 
   function() public {}

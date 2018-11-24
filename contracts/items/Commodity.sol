@@ -13,10 +13,10 @@ import "../interfaces/ICommodity.sol";
  * elsewhere in this project, 'value' is referred to as 'amount'.
  */
 contract Commodity is ERC20, ERC20Detailed, AccessControlled {
-  uint miningReward;
-  uint miningTarget;
+  uint public miningReward;
+  bytes32 public miningTarget;
 
-  constructor(string _name, string _symbol, uint _miningReward, uint _miningTarget)
+  constructor(string _name, string _symbol, uint _miningReward, bytes32 _miningTarget)
   ERC20Detailed(_name, _symbol, 0)
   public {
     miningReward = _miningReward;
@@ -57,5 +57,14 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled {
   function burn(address _account, uint _value) public onlyTA returns (bool) {
     _burn(_account, _value);
     return true;
+  }
+
+
+  function miningReward() public returns (uint) {
+    return miningReward;
+  }
+
+  function miningTarget() public returns (bytes32) {
+    return miningTarget;
   }
 }
