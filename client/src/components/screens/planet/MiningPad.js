@@ -2,14 +2,24 @@ import React, { Component, Fragment } from "react";
 import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
 import LaserFrame from 'components/reusables/LaserFrame'
-import { MdLinearScale } from "react-icons/md";
 
 const styles = {
   MiningPad: {
     flexDirection: 'row',
     display: 'grid',
-    'grid-template-columns': 'repeat(64, 0.1% 1fr)',
+    'grid-template-columns': 'repeat(128, 1fr)',
     'grid-template-rows': 'auto',
+    'grid-row-gap': '4px',
+    fontSize: 16,
+  },
+  area: {
+    zIndex: 1,
+    backgroundColor: '#44',
+    width: 'min-content',
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#aaa',
+    }
   },
 }
 
@@ -27,9 +37,11 @@ class MiningPad extends Component {
       >
         <div className={classes.MiningPad}>
           {Array(4096).fill().map((_, i) =>
-            <div
+            <span
+              className={classes.area}
+              key={i}
               onClick={() => this.mineArea(i * 1024, i * 1024 + 1024)}
-            >0</div>
+            >?</span>
           )}
         </div>
       </LaserFrame>
@@ -41,7 +53,7 @@ const mapStateToProps = state => {
   return {
     contracts: state.contracts,
     user: state.user,
-    web3: state.web3,
+    industrial: state.industrial,
   }
 }
 

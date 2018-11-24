@@ -11,7 +11,7 @@ const styles = {
       return colorFromType(type)
     },
     backgroundColor: ({ type, active }) => {
-      if (!active) return '#000'
+      if (!active) return 'rgba(0, 0, 0, 0.75)'
       return '#444'
     },
     width: ({ size }) => {
