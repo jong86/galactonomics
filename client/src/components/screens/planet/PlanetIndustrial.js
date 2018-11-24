@@ -17,7 +17,6 @@ const styles = {
 function checkIfHashUnderTarget(hash, target) {
   hash = parseInt('0x' + String(hash), 16)
   target = parseInt(target, 16)
-  console.log('hash, target', hash, target);
   return hash < target
 }
 
@@ -64,15 +63,17 @@ class PlanetIndustrial extends Component {
   step = () => {
     const { user } = this.props
     const { nonce } = this.state
-    const { miningTarget, timesMined, prevMiningHash } = this.props.industrial
+    const { miningTarget, prevMiningHash } = this.props.industrial
 
     const hash = sha256(
       nonce.toString() +
-      timesMined.toString() +
+      user.currentPlanet.toString() +
       prevMiningHash +
       user.address.substring(2).toLowerCase()
     )
     this.setState({ hash })
+
+    console.log('nonce', nonce);
 
     const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
 

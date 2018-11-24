@@ -16,7 +16,7 @@ contract GalacticIndustrialAuthority {
   using SafeMath for uint;
   using AddressCast for address;
   using BytesCast for bytes32;
-  using UintCast for uint;
+  using UintCast for uint8;
 
   IGalacticTransitAuthority gta;
   ICommodities commodities;
@@ -40,14 +40,11 @@ contract GalacticIndustrialAuthority {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
     uint8 _commodityId = gta.getCurrentPlanet(msg.sender);
 
-    string memory _timesMined = commodities.getInterface(_commodityId).timesMined().toString();
     string memory _prevHash = commodities.getInterface(_commodityId).prevMiningHash().toString();
-    // bytes32 _prevHashB = commodities.getInterface(_commodityId).prevMiningHash();
-    // emit LogBytes(_prevHashB);
 
-    bytes32 _hash = sha256(abi.encodePacked(_nonce, _timesMined, _prevHash, msg.sender.toString()));
+    bytes32 _hash = sha256(abi.encodePacked(_nonce, _commodityId.toString(), _prevHash, msg.sender.toString()));
 
-    emit LogString(_timesMined);
+    emit LogString(_commodityId.toString());
     emit LogString(_prevHash);
 
     // require(_hash < commodities.getMiningTarget(_commodityId), "That is not a valid proof-of-work");
