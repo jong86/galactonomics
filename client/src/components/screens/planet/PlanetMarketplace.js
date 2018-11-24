@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Rect from 'components/reusables/Rect'
+import Laserframe from 'components/reusables/Laserframe'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import handleChange from 'utils/handleChange'
 import uuid from 'utils/uuid'
@@ -237,7 +237,7 @@ class PlanetMarketplace extends Component {
           <div>
             {/* Render commodity names and balances */}
             {commodities.map((commodity, i) => (
-              <Rect
+              <Laserframe
                 key={i}
                 isButton
                 size="wide"
@@ -246,7 +246,7 @@ class PlanetMarketplace extends Component {
               >
                 <div>{commodity.name}</div>
                 <div>{"(You have: " + commodity.myBalance.toString() + " kg)"}</div>
-              </Rect>
+              </Laserframe>
             ))}
           </div>
           {isLoading ?
@@ -296,11 +296,11 @@ class PlanetMarketplace extends Component {
             Price
             <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
           </label>
-          <Rect
+          <Laserframe
             type="status"
             isButton
             onClick={this.createSellOrder}
-          >Ok</Rect>
+          >Ok</Laserframe>
         </Dialog>
       </MPIContainer>
     )

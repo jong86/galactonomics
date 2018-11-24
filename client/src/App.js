@@ -14,7 +14,7 @@ import truffleContract from "truffle-contract"
 
 import screenMapping from 'utils/screenMapping'
 import Dialog from 'components/reusables/Dialog'
-import Rect from 'components/reusables/Rect'
+import Laserframe from 'components/reusables/Laserframe'
 
 import getPlayerInfo from 'utils/getPlayerInfo'
 import planets from 'utils/planets'
@@ -159,11 +159,11 @@ class App extends Component {
         {/* Global alert dialog box */}
         <Dialog type="bad" isVisible={alertBoxContent}>
           {alertBoxContent}
-          <Rect
+          <Laserframe
             type="bad"
             isButton
             onClick={clearAlertBoxContent}
-          >Ok</Rect>
+          >Ok</Laserframe>
         </Dialog>
       </div>
     )

@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Rect from 'components/reusables/Rect'
+import Laserframe from 'components/reusables/Laserframe'
 import spaceship from 'assets/spaceship.jpg'
 import Loader from 'components/reusables/Loader'
 import getRevertMsg from 'utils/getRevertMsg'
@@ -47,10 +47,10 @@ class SpaceshipDealer extends Component {
         <h1>Would you like to purchase a spaceship?</h1>
         <h3>WARNING: Spaceship ownership is required by law to handle commodities in this galactic region</h3>
         <img src={spaceship} />
-        <Rect
+        <Laserframe
           onClick={this.buySpaceship}
           type="good"
-        >{isLoading ? <div>{loadingText} <Loader type="good" /></div> : 'Okay'}</Rect>
+        >{isLoading ? <div>{loadingText} <Loader type="good" /></div> : 'Okay'}</Laserframe>
       </div>
     );
   }

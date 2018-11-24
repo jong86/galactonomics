@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Rect from 'components/reusables/Rect'
+import Laserframe from 'components/reusables/Laserframe'
 import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import sha256 from 'js-sha256'
@@ -121,31 +121,31 @@ class PlanetIndustrial extends Component {
 
     return (
       <MPIContainer>
-          <Rect
+          <Laserframe
             size="wide"
           >
             {!isMining && !hasValidProof &&
-              <Rect
+              <Laserframe
                 isButton
                 onClick={this.startMining}
               >
                 Mine
-              </Rect>
+              </Laserframe>
             }
             {isMining &&
               <Fragment>
                 <div>
                   Mining...
                 </div>
-                <Rect type='bad'>
+                <Laserframe type='bad'>
                   { hash }
-                </Rect>
-                <Rect
+                </Laserframe>
+                <Laserframe
                   isButton
                   onClick={this.stopMining}
                 >
                   Stop mining
-                </Rect>
+                </Laserframe>
               </Fragment>
             }
             {!isMining && hasValidProof &&
@@ -153,18 +153,18 @@ class PlanetIndustrial extends Component {
               <div>
                 Valid proof of work hash found!
               </div>
-              <Rect type='good'>
+              <Laserframe type='good'>
                 { hash }
-              </Rect>
-              <Rect
+              </Laserframe>
+              <Laserframe
                 isButton
                 onClick={this.submitProof}
               >
                 {!isSubmitting ? 'Submit proof of work' : <Loader />}
-              </Rect>
+              </Laserframe>
             </Fragment>
             }
-          </Rect>
+          </Laserframe>
       </MPIContainer>
     )
   }

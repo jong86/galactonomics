@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import injectSheet from 'react-jss'
 import commodities from 'utils/commodities'
-import Rect from 'components/reusables/Rect'
+import Laserframe from 'components/reusables/Laserframe'
 
 const styles = {
   CargoMeter: {
@@ -11,13 +11,13 @@ const styles = {
 
 let CargoMeter = ({ classes, current = 0, max = 0, cargoPerCommodity = [] }) => (
   <div className={classes.CargoMeter}>
-    <Rect>
+    <Laserframe>
       {"Total cargo: " + current.toString()}/{max.toString() + " kg"}
-    </Rect>
+    </Laserframe>
     {cargoPerCommodity.map((commodity, i) =>
-      <Rect key={i} type="dark">
+      <Laserframe key={i} type="dark">
         {commodities[i].symbol} {commodity.amount}
-      </Rect>
+      </Laserframe>
     )}
   </div>
 )
