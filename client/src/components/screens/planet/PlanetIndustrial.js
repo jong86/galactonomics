@@ -1,12 +1,13 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Laserframe from 'components/reusables/Laserframe'
+import LaserFrame from 'components/reusables/LaserFrame'
 import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import sha256 from 'js-sha256'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
+import MiningPad from 'components/screens/planet/MiningPad'
 
 const styles = {
   acceptDecline: {
@@ -21,16 +22,6 @@ function checkIfHashUnderTarget(hash, target) {
 }
 
 class PlanetIndustrial extends Component {
-  constructor() {
-    super()
-    this.state = {
-      isMining: false,
-      hash: '',
-      isSubmitting: false,
-      nonce: 0,
-    }
-  }
-
   componentDidMount = () => {
     this.getCommodity()
   }
@@ -56,14 +47,13 @@ class PlanetIndustrial extends Component {
   }
 
   startMining = () => {
-    this.setState({ isMining: true })
+    this.props.setIndustrialState({ isMining: true })
     window.requestAnimationFrame(this.step)
   }
 
   step = () => {
-    const { user } = this.props
-    const { nonce } = this.state
-    const { miningTarget, prevMiningHash } = this.props.industrial
+    const { user, setIndustrialState } = this.props
+    const { miningTarget, prevMiningHash, nonce, isMining } = this.props.industrial
 
     const hash = sha256(
       nonce.toString() +
@@ -71,31 +61,29 @@ class PlanetIndustrial extends Component {
       prevMiningHash +
       user.address.substring(2).toLowerCase()
     )
-    this.setState({ hash })
-
-    console.log('nonce', nonce);
+    setIndustrialState({ hash })
 
     const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
 
     if (validProofFound)
-      return this.setState({
+      return setIndustrialState({
         isMining: false,
         hasValidProof: true,
       })
 
-    this.setState({ nonce: nonce + 1 })
+      setIndustrialState({ nonce: nonce + 1 })
 
-    if (this.state.isMining)
+    if (isMining)
       window.requestAnimationFrame(this.step)
   }
 
   stopMining = () => {
-    this.setState({ isMining: false })
+    this.props.setIndustrialState({ isMining: false })
   }
 
   submitProof = async () => {
     const { user, contracts, setIndustrialState } = this.props
-    const { nonce } = this.state
+    const { nonce } = this.props.industrial
 
     try {
       await contracts.gia.submitProofOfWork(String(nonce), { from: user.address })
@@ -105,47 +93,53 @@ class PlanetIndustrial extends Component {
 
     getPlayerInfo()
     this.getCommodity()
-    this.setState({ isMining: false, hasValidProof: false, hash: '', nonce: 0, })
+    setIndustrialState({ isMining: false, hasValidProof: false, hash: '', nonce: 0, })
   }
 
   render() {
     const { classes, user, web3, industrial } = this.props
     const {
+      isMining,
+      hash,
+      hasValidProof,
+      isSubmitting,
       miningReward,
       miningTarget,
       commodityName,
       commoditySymbol,
     } = industrial
     const planet = planets.find(planet => planet.id == user.currentPlanet)
-    const { isMining, hash, hasValidProof, isSubmitting } = this.state
 
     return (
       <MPIContainer>
-          <Laserframe
+          <LaserFrame
             size="wide"
           >
             {!isMining && !hasValidProof &&
-              <Laserframe
-                isButton
-                onClick={this.startMining}
-              >
-                Mine
-              </Laserframe>
+              <Fragment>
+                <MiningPad />
+                <LaserFrame
+                  isButton
+                  onClick={this.startMining}
+                >
+                  Mine
+                </LaserFrame>
+              </Fragment>
             }
             {isMining &&
               <Fragment>
                 <div>
                   Mining...
                 </div>
-                <Laserframe type='bad'>
+                <LaserFrame type='bad'>
                   { hash }
-                </Laserframe>
-                <Laserframe
+                </LaserFrame>
+                <LaserFrame
                   isButton
                   onClick={this.stopMining}
                 >
                   Stop mining
-                </Laserframe>
+                </LaserFrame>
               </Fragment>
             }
             {!isMining && hasValidProof &&
@@ -153,18 +147,18 @@ class PlanetIndustrial extends Component {
               <div>
                 Valid proof of work hash found!
               </div>
-              <Laserframe type='good'>
+              <LaserFrame type='good'>
                 { hash }
-              </Laserframe>
-              <Laserframe
+              </LaserFrame>
+              <LaserFrame
                 isButton
                 onClick={this.submitProof}
               >
                 {!isSubmitting ? 'Submit proof of work' : <Loader />}
-              </Laserframe>
+              </LaserFrame>
             </Fragment>
             }
-          </Laserframe>
+          </LaserFrame>
       </MPIContainer>
     )
   }

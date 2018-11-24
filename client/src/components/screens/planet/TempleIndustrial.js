@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Laserframe from 'components/reusables/Laserframe'
+import LaserFrame from 'components/reusables/LaserFrame'
 import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import getPlayerInfo from 'utils/getPlayerInfo'
@@ -43,7 +43,7 @@ class TempleIndustrial extends Component {
 
     return (
       <MPIContainer>
-        <Laserframe
+        <LaserFrame
           size="wide"
         >
           <div>Would like to forge a crystal?</div>
@@ -53,19 +53,19 @@ class TempleIndustrial extends Component {
               <Loader />
               :
               <Fragment>
-                <Laserframe
+                <LaserFrame
                   isButton
                   type="bad"
-                >Decline</Laserframe>
-                <Laserframe
+                >Decline</LaserFrame>
+                <LaserFrame
                   isButton
                   type="good"
                   onClick={this.forge}
-                >Accept</Laserframe>
+                >Accept</LaserFrame>
               </Fragment>
             }
           </div>
-        </Laserframe>
+        </LaserFrame>
       </MPIContainer>
     )
   }

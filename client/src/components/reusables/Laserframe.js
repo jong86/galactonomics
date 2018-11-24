@@ -3,7 +3,7 @@ import injectSheet from 'react-jss'
 import colorFromType from 'utils/colorFromType'
 
 const styles = {
-  Laserframe: {
+  LaserFrame: {
     textAlign: "center",
     border: ({ type }) => '1px solid ' + colorFromType(type),
     color: ({ type, active }) => {
@@ -35,11 +35,11 @@ const styles = {
   }
 }
 
-let Laserframe = ({ classes, children, onClick }) => (
-  <div className={classes.Laserframe} onClick={onClick}>
+let LaserFrame = ({ classes, children, onClick }) => (
+  <div className={classes.LaserFrame} onClick={onClick}>
     { children }
   </div>
 )
 
-Laserframe = injectSheet(styles)(Laserframe)
-export default Laserframe;
+LaserFrame = injectSheet(styles)(LaserFrame)
+export default LaserFrame;

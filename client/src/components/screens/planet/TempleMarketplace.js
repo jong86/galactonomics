@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Laserframe from 'components/reusables/Laserframe'
+import LaserFrame from 'components/reusables/LaserFrame'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import handleChange from 'utils/handleChange'
 import uuid from 'utils/uuid'

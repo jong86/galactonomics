@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Laserframe from 'components/reusables/Laserframe'
+import LaserFrame from 'components/reusables/LaserFrame'
 import FuelMeter from 'components/screens/planet/FuelMeter'
 import planets from 'utils/planets'
 import {
@@ -69,21 +69,21 @@ class PlanetHome extends Component {
       <Fragment>
         <div className={classes.PlanetHome}>
           <div>
-            <Laserframe
+            <LaserFrame
               onClick={() => changeScreen('Travel')}
               isButton
               type="good"
               size="wide"
-            >Travel (Leave {planet.name})</Laserframe>
-            <Laserframe
+            >Travel (Leave {planet.name})</LaserFrame>
+            <LaserFrame
               type="status"
               size="wide"
-            >Ξ{user.balance}</Laserframe>
+            >Ξ{user.balance}</LaserFrame>
           </div>
           <div className={classes.top3}>
             {planet.id == 255 ?
               <Fragment>
-                <Laserframe
+                <LaserFrame
                   onClick={() => changeScreen('TempleMarketplace')}
                   isButton
                   type="info"
@@ -91,8 +91,8 @@ class PlanetHome extends Component {
                 >
                   <MdBusinessCenter size={iconSize} />
                   Crystal Marketplace
-                </Laserframe>
-                <Laserframe
+                </LaserFrame>
+                <LaserFrame
                   onClick={() => changeScreen('PlanetPrices')}
                   isButton
                   type="info"
@@ -100,8 +100,8 @@ class PlanetHome extends Component {
                 >
                   <FaChartBar size={iconSize} />
                   Commodity Prices
-                </Laserframe>
-                <Laserframe
+                </LaserFrame>
+                <LaserFrame
                   onClick={() => changeScreen('TempleIndustrial')}
                   isButton
                   type="info"
@@ -109,8 +109,8 @@ class PlanetHome extends Component {
                 >
                   <FaHammer size={iconSize} />
                   Forge Byzantian Crystals
-                </Laserframe>
-                <Laserframe
+                </LaserFrame>
+                <LaserFrame
                   onClick={() => changeScreen('ViewCrystals')}
                   isButton
                   type="info"
@@ -118,11 +118,11 @@ class PlanetHome extends Component {
                 >
                   <FaEthereum size={iconSize} />
                   View My Crystals
-                </Laserframe>
+                </LaserFrame>
               </Fragment>
               :
               <Fragment>
-                <Laserframe
+                <LaserFrame
                   onClick={() => changeScreen('PlanetMarketplace')}
                   isButton
                   type="info"
@@ -130,8 +130,8 @@ class PlanetHome extends Component {
                 >
                   <FaBalanceScale size={iconSize} />
                   Marketplace
-                </Laserframe>
-                <Laserframe
+                </LaserFrame>
+                <LaserFrame
                   onClick={() => changeScreen('PlanetPrices')}
                   isButton
                   type="info"
@@ -139,8 +139,8 @@ class PlanetHome extends Component {
                 >
                   <FaChartBar className={classes.icon}size={iconSize} />
                   Commodity Prices
-                </Laserframe>
-                <Laserframe
+                </LaserFrame>
+                <LaserFrame
                   onClick={() => changeScreen('PlanetIndustrial')}
                   isButton
                   type="info"
@@ -148,7 +148,7 @@ class PlanetHome extends Component {
                 >
                   <FaIndustry size={iconSize} />
                   Industrial Operations
-                </Laserframe>
+                </LaserFrame>
               </Fragment>
             }
           </div>
