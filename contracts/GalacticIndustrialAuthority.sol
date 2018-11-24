@@ -33,7 +33,7 @@ contract GalacticIndustrialAuthority {
     bytes32 _hash = sha256(abi.encodePacked(_nonce));
     require(_hash < commodities.getMiningTarget(_commodityId), "That is not a valid proof-of-work");
 
-    require(commodities.getInterface(_commodityId).dispenseReward(msg.sender), "Error minting");
+    require(commodities.getInterface(_commodityId).dispenseReward(msg.sender), "Error doing reward");
   }
 
   function() public {}
