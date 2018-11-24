@@ -3,6 +3,7 @@ const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.s
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const { fillUpCargoByMinting, mintCommodityXTimes } = require('./util/testUtils')
+const deployCommodities = require('../utils/deployCommodities')
 const sha256 = require('js-sha256');
 
 const maxGas = 7000000
@@ -17,15 +18,19 @@ contract("GalacticIndustrialAuthority", accounts => {
   const price = 350
 
   beforeEach(async() => {
-    commodities = await Commodities.new({ gas: maxGas })
+    // Deploy individual commodity addresses
+    const allCommodities = await deployCommodities()
+    const commodityAddresses = allCommodities.map(commodity => commodity.address)
+    // Deploy main contracts
+    commodities = await Commodities.new(commodityAddresses)
     gta = await GalacticTransitAuthority.new()
     gea = await GalacticEconomicAuthority.new(commodities.address, gta.address)
     gia = await GalacticIndustrialAuthority.new(commodities.address, gta.address)
-
     // Set access roles
-    // await commodities.setAccessForAll(gea.address, gia.address, gia.address, { gas: maxGas })
     await gta.setGEA(gea.address)
     await gta.setGIA(gia.address)
+    allCommodities.forEach(async commodity => await commodity.setGEA(gea.address))
+    allCommodities.forEach(async commodity => await commodity.setGIA(gia.address))
 
     const costOfSpaceship = await gta.costOfSpaceship()
     await gta.buySpaceship("A", { from: player1, value: costOfSpaceship })

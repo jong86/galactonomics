@@ -14,8 +14,6 @@ import "./interfaces/ICommodities.sol";
 contract Commodities is ICommodities, Ownable {
   using SafeMath for uint;
 
-  event LogAddr1(address addr);
-
   struct CommodityData {
     address addr;
     ICommodity _interface;
@@ -26,23 +24,11 @@ contract Commodities is ICommodities, Ownable {
   // Array storing all info for each commodity
   CommodityData[7] public commodities;
 
-  // Array storing all contracts of commodities
-  Commodity[2] public contracts;
-
-  constructor() public {
-    contracts[0] = new Commodity("Iodine", "IOD");
-    contracts[1] = new Commodity("Neon gas", "NEG");
-    // contracts[2] = new Commodity("Iron ore", "IRN");
-    // contracts[3] = new Commodity("Platinum ore", "PLT");
-    // contracts[4] = new Commodity("Gold ore", "GLD");
-    // contracts[5] = new Commodity("Petroleum", "PET");
-    // contracts[6] = new Commodity("Water", "WTR");
-
-    for (uint i = 0; i < contracts.length; i++) {
-      LogAddr1(address(contracts[i]));
+  constructor(address[] _commodities) public {
+    for (uint i = 0; i < _commodities.length; i++) {
       commodities[i] = CommodityData(
-        address(contracts[i]),
-        ICommodity(address(contracts[i])),
+        _commodities[i],
+        ICommodity(_commodities[i]),
         8000,
         bytes32(0x0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)
       );
@@ -100,14 +86,6 @@ contract Commodities is ICommodities, Ownable {
 
   function getAddress(uint8 _id) external view returns (address) {
     return commodities[_id].addr;
-  }
-
-  function setAccessForAll(address _geaAddress, address _giaAddress, address _taAddress) external {
-    for (uint i = 0; i < contracts.length; i++) {
-      commodities[i]._interface.setGEA(_geaAddress);
-      commodities[i]._interface.setGIA(_giaAddress);
-      commodities[i]._interface.setTA(_taAddress);
-    }
   }
 
   function() public {}
