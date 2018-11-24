@@ -4,6 +4,12 @@ import { connect } from 'react-redux'
 import LaserFrame from 'components/reusables/LaserFrame'
 
 const styles = {
+  MiningPad: {
+    flexDirection: 'row',
+    display: 'grid',
+    'grid-template-columns': 'repeat(64, 0.1% 1fr)',
+    'grid-template-rows': 'auto',
+  },
 }
 
 class MiningPad extends Component {
@@ -14,6 +20,11 @@ class MiningPad extends Component {
       <LaserFrame
         size="wide"
       >
+        <div className={classes.MiningPad}>
+          {Array(4096).fill().map((_, i) => {
+            return <div>0</div>
+          })}
+        </div>
       </LaserFrame>
     )
   }
