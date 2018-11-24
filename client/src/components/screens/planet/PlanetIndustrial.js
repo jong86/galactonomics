@@ -26,6 +26,14 @@ class PlanetIndustrial extends Component {
     this.getCommodity()
   }
 
+  componentDidUpdate = prevProps => {
+    const { isMining } = this.props.industrial
+
+    if (!prevProps.industrial.isMining && isMining) {
+      window.requestAnimationFrame(this.step)
+    }
+  }
+
   getCommodity = async () => {
     const { user, contracts, setIndustrialState } = this.props
     let commodity
@@ -44,11 +52,6 @@ class PlanetIndustrial extends Component {
       timesMined: commodity.timesMined.toString(),
       prevMiningHash: commodity.prevMiningHash,
     })
-  }
-
-  startMining = () => {
-    this.props.setIndustrialState({ isMining: true })
-    window.requestAnimationFrame(this.step)
   }
 
   step = () => {
@@ -107,6 +110,8 @@ class PlanetIndustrial extends Component {
       miningTarget,
       commodityName,
       commoditySymbol,
+      areaStart,
+      areaEnd,
     } = industrial
     const planet = planets.find(planet => planet.id == user.currentPlanet)
 
@@ -117,19 +122,19 @@ class PlanetIndustrial extends Component {
           >
             {!isMining && !hasValidProof &&
               <Fragment>
+                Click an area to start mining...
                 <MiningPad />
                 <LaserFrame
-                  isButton
-                  onClick={this.startMining}
+                  type='status'
                 >
-                  Mine
+                  {areaStart && areaEnd ? `Area ${areaStart} to ${areaEnd}` : 'Waiting...'}
                 </LaserFrame>
               </Fragment>
             }
             {isMining &&
               <Fragment>
                 <div>
-                  Mining...
+                  Mining in area {areaStart} to {areaEnd}...
                 </div>
                 <LaserFrame type='bad'>
                   { hash }
