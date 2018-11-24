@@ -27,7 +27,7 @@ class PlanetIndustrial extends Component {
       isMining: false,
       hash: '',
       isSubmitting: false,
-      nonce: 3500,
+      nonce: 0,
     }
   }
 

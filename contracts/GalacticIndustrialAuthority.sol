@@ -42,7 +42,14 @@ contract GalacticIndustrialAuthority {
 
     string memory _prevHash = commodities.getInterface(_commodityId).prevMiningHash().toString();
 
-    bytes32 _hash = sha256(abi.encodePacked(_nonce, _commodityId.toString(), _prevHash, msg.sender.toString()));
+    bytes32 _hash = sha256(
+      abi.encodePacked(
+        _nonce,
+        _commodityId.toString(),
+        _prevHash,
+        msg.sender.toString()
+      )
+    );
 
     emit LogString(_commodityId.toString());
     emit LogString(_prevHash);
