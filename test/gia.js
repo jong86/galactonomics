@@ -44,12 +44,15 @@ contract("GalacticIndustrialAuthority", accounts => {
     const timesMined = miningData[2]
     const prevHash = miningData[3]
 
-    let nonce = 0
+    let nonce = 3500
     let hash
     do {
       nonce++
-      hash = sha256(String(nonce) + String(timesMined) + prevHash.substring(2, 42) + player1.substring(2))
+      hash = sha256(String(nonce) + timesMined.toString() + prevHash.substring(2, 42) + player1.substring(2))
     } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
+
+    console.log('hash', hash);
+    console.log(String(nonce), timesMined.toString(), prevHash.substring(2, 42), player1.substring(2))
 
     const response = await gia.submitProofOfWork(String(nonce), { from: player1 })
     const hashFromSolidity = response.logs.find(log => log.event === 'ProofFound').args._hash

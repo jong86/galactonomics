@@ -17,6 +17,7 @@ const styles = {
 function checkIfHashUnderTarget(hash, target) {
   hash = parseInt('0x' + String(hash), 16)
   target = parseInt(target, 16)
+  console.log('hash, target', hash, target);
   return hash < target
 }
 
@@ -27,7 +28,7 @@ class PlanetIndustrial extends Component {
       isMining: false,
       hash: '',
       isSubmitting: false,
-      nonce: 0,
+      nonce: 3500,
     }
   }
 
@@ -46,10 +47,12 @@ class PlanetIndustrial extends Component {
     }
 
     setIndustrialState({
-      miningReward: commodity.miningReward.toString(),
-      miningTarget: commodity.miningTarget.toString(),
       commodityName: commodity.name,
       commoditySymbol: commodity.symbol,
+      miningReward: commodity.miningReward.toString(),
+      miningTarget: commodity.miningTarget.toString(),
+      timesMined: commodity.timesMined.toString(),
+      prevMiningHash: commodity.prevMiningHash,
     })
   }
 
@@ -59,12 +62,14 @@ class PlanetIndustrial extends Component {
   }
 
   step = () => {
+    const { user } = this.props
     const { nonce } = this.state
+    const { miningTarget, timesMined, prevMiningHash } = this.props.industrial
 
-    const hash = sha256(String(nonce))
+    const hash = sha256(String(nonce) + timesMined.toString() + prevMiningHash.substring(2, 42) + user.address.substring(2).toLowerCase())
     this.setState({ hash })
 
-    const validProofFound = checkIfHashUnderTarget(hash, this.props.industrial.miningTarget)
+    const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
 
     if (validProofFound)
       return this.setState({
@@ -93,6 +98,7 @@ class PlanetIndustrial extends Component {
     }
 
     getPlayerInfo()
+    this.getCommodity()
     this.setState({ isMining: false, hasValidProof: false, hash: '', nonce: 0, })
   }
 

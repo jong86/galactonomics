@@ -24,6 +24,7 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled {
   public {
     miningReward = _miningReward;
     miningTarget = _miningTarget;
+    // prevMiningHash = sha256(0);
   }
 
   /**

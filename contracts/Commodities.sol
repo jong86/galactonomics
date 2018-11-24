@@ -36,13 +36,17 @@ contract Commodities is ICommodities, Ownable {
     string name,
     string symbol,
     uint miningReward,
-    bytes32 miningTarget
+    bytes32 miningTarget,
+    uint timesMined,
+    bytes32 prevMiningHash
   ) {
     return (
       commodities[_id].name(),
       commodities[_id].symbol(),
       commodities[_id].miningReward(),
-      commodities[_id].miningTarget()
+      commodities[_id].miningTarget(),
+      commodities[_id].timesMined(),
+      commodities[_id].prevMiningHash()
     );
   }
 

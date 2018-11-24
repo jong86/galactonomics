@@ -11,7 +11,7 @@ function deployCommodities() {
           commodity.name,
           commodity.symbol,
           commodity.startingReward,
-          '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+          '0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
         )
         commodityInstances.push(commodityInstance)
       }
