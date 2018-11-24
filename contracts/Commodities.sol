@@ -30,7 +30,7 @@ contract Commodities is ICommodities, Ownable {
         _commodities[i],
         ICommodity(_commodities[i]),
         8000,
-        bytes32(0x0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)
+        bytes32(0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)
       );
     }
   }

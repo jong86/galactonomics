@@ -5,6 +5,8 @@ import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import sha256 from 'js-sha256'
+import getPlayerInfo from 'utils/getPlayerInfo'
+import Loader from 'components/reusables/Loader'
 
 const styles = {
   acceptDecline: {
@@ -12,7 +14,11 @@ const styles = {
   }
 }
 
-let nonce = 0
+function checkIfHashUnderTarget(hash, target) {
+  hash = parseInt('0x' + String(hash), 16)
+  target = parseInt(target, 16)
+  return hash < target
+}
 
 class PlanetIndustrial extends Component {
   constructor() {
@@ -20,6 +26,8 @@ class PlanetIndustrial extends Component {
     this.state = {
       isMining: false,
       hash: '',
+      isSubmitting: false,
+      nonce: 0,
     }
   }
 
@@ -51,10 +59,20 @@ class PlanetIndustrial extends Component {
   }
 
   step = () => {
+    const { nonce } = this.state
+
     const hash = sha256(String(nonce))
     this.setState({ hash })
 
-    nonce++
+    const validProofFound = checkIfHashUnderTarget(hash, this.props.industrial.miningTarget)
+
+    if (validProofFound)
+      return this.setState({
+        isMining: false,
+        hasValidProof: true,
+      })
+
+    this.setState({ nonce: nonce + 1 })
 
     if (this.state.isMining)
       window.requestAnimationFrame(this.step)
@@ -62,6 +80,20 @@ class PlanetIndustrial extends Component {
 
   stopMining = () => {
     this.setState({ isMining: false })
+  }
+
+  submitProof = async () => {
+    const { user, contracts, setIndustrialState } = this.props
+    const { nonce } = this.state
+
+    try {
+      await contracts.gia.submitProofOfWork(String(nonce), { from: user.address })
+    } catch (e) {
+      console.error(e)
+    }
+
+    getPlayerInfo()
+    this.setState({ isMining: false, hasValidProof: false, hash: '', nonce: 0, })
   }
 
   render() {
@@ -73,21 +105,22 @@ class PlanetIndustrial extends Component {
       commoditySymbol,
     } = industrial
     const planet = planets.find(planet => planet.id == user.currentPlanet)
-    const { isMining, hash } = this.state
+    const { isMining, hash, hasValidProof, isSubmitting } = this.state
 
     return (
       <MPIContainer>
           <Rect
             size="wide"
           >
-            {!isMining ?
+            {!isMining && !hasValidProof &&
               <Rect
                 isButton
                 onClick={this.startMining}
               >
                 Mine
               </Rect>
-              :
+            }
+            {isMining &&
               <Fragment>
                 <div>
                   Mining...
@@ -102,6 +135,22 @@ class PlanetIndustrial extends Component {
                   Stop mining
                 </Rect>
               </Fragment>
+            }
+            {!isMining && hasValidProof &&
+              <Fragment>
+              <div>
+                Valid proof of work hash found!
+              </div>
+              <Rect type='good'>
+                { hash }
+              </Rect>
+              <Rect
+                isButton
+                onClick={this.submitProof}
+              >
+                {!isSubmitting ? 'Submit proof of work' : <Loader />}
+              </Rect>
+            </Fragment>
             }
           </Rect>
       </MPIContainer>
