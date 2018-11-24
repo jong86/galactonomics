@@ -164,14 +164,14 @@
     "absolutePath": "/Users/jongaspar/Documents/coding/galactonomics/contracts/utils/AccessControlled.sol",
     "exportedSymbols": {
       "AccessControlled": [
-        760
+        742
       ]
     },
-    "id": 761,
+    "id": 743,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 634,
+        "id": 616,
         "literals": [
           "solidity",
           "^",
@@ -184,10 +184,10 @@
       {
         "absolutePath": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
         "file": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
-        "id": 635,
+        "id": 617,
         "nodeType": "ImportDirective",
-        "scope": 761,
-        "sourceUnit": 998,
+        "scope": 743,
+        "sourceUnit": 980,
         "src": "26:63:6",
         "symbolAliases": [],
         "unitAlias": ""
@@ -198,41 +198,41 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 636,
+              "id": 618,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 997,
+              "referencedDeclaration": 979,
               "src": "209:7:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$997",
+                "typeIdentifier": "t_contract$_Ownable_$979",
                 "typeString": "contract Ownable"
               }
             },
-            "id": 637,
+            "id": 619,
             "nodeType": "InheritanceSpecifier",
             "src": "209:7:6"
           }
         ],
         "contractDependencies": [
-          997
+          979
         ],
         "contractKind": "contract",
         "documentation": "@dev Extends contracts with identity setters and access-restriction modifiers",
         "fullyImplemented": true,
-        "id": 760,
+        "id": 742,
         "linearizedBaseContracts": [
-          760,
-          997
+          742,
+          979
         ],
         "name": "AccessControlled",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 639,
+            "id": 621,
             "name": "geaAddress",
             "nodeType": "VariableDeclaration",
-            "scope": 760,
+            "scope": 742,
             "src": "221:25:6",
             "stateVariable": true,
             "storageLocation": "default",
@@ -241,7 +241,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 638,
+              "id": 620,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "221:7:6",
@@ -255,10 +255,10 @@
           },
           {
             "constant": false,
-            "id": 641,
+            "id": 623,
             "name": "giaAddress",
             "nodeType": "VariableDeclaration",
-            "scope": 760,
+            "scope": 742,
             "src": "250:25:6",
             "stateVariable": true,
             "storageLocation": "default",
@@ -267,7 +267,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 640,
+              "id": 622,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "250:7:6",
@@ -281,10 +281,10 @@
           },
           {
             "constant": false,
-            "id": 643,
+            "id": 625,
             "name": "taAddress",
             "nodeType": "VariableDeclaration",
-            "scope": 760,
+            "scope": 742,
             "src": "279:24:6",
             "stateVariable": true,
             "storageLocation": "default",
@@ -293,7 +293,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 642,
+              "id": 624,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "279:7:6",
@@ -307,7 +307,7 @@
           },
           {
             "body": {
-              "id": 654,
+              "id": 636,
               "nodeType": "Block",
               "src": "392:116:6",
               "statements": [
@@ -321,7 +321,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 649,
+                        "id": 631,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -330,18 +330,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 646,
+                            "id": 628,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1583,
+                            "referencedDeclaration": 1565,
                             "src": "406:3:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 647,
+                          "id": 629,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -359,11 +359,11 @@
                         "operator": "==",
                         "rightExpression": {
                           "argumentTypes": null,
-                          "id": 648,
+                          "id": 630,
                           "name": "geaAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 639,
+                          "referencedDeclaration": 621,
                           "src": "420:10:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -379,7 +379,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4f6e6c79207468652047616c61637469632045636f6e6f6d696320417574686f72697479206d61792061636365737320746869732066756e6374696f6e",
-                        "id": 650,
+                        "id": 632,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -406,21 +406,21 @@
                           "typeString": "literal_string \"Only the Galactic Economic Authority may access this function\""
                         }
                       ],
-                      "id": 645,
+                      "id": 627,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "398:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 651,
+                    "id": 633,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -434,23 +434,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 652,
+                  "id": 634,
                   "nodeType": "ExpressionStatement",
                   "src": "398:98:6"
                 },
                 {
-                  "id": 653,
+                  "id": 635,
                   "nodeType": "PlaceholderStatement",
                   "src": "502:1:6"
                 }
               ]
             },
             "documentation": "@dev Access modifier for GEA-only functionality",
-            "id": 655,
+            "id": 637,
             "name": "onlyGEA",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 644,
+              "id": 626,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "389:2:6"
@@ -460,7 +460,7 @@
           },
           {
             "body": {
-              "id": 666,
+              "id": 648,
               "nodeType": "Block",
               "src": "596:118:6",
               "statements": [
@@ -474,7 +474,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 661,
+                        "id": 643,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -483,18 +483,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 658,
+                            "id": 640,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1583,
+                            "referencedDeclaration": 1565,
                             "src": "610:3:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 659,
+                          "id": 641,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -512,11 +512,11 @@
                         "operator": "==",
                         "rightExpression": {
                           "argumentTypes": null,
-                          "id": 660,
+                          "id": 642,
                           "name": "giaAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 641,
+                          "referencedDeclaration": 623,
                           "src": "624:10:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -532,7 +532,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4f6e6c79207468652047616c616374696320496e647573747269616c20417574686f72697479206d61792061636365737320746869732066756e6374696f6e",
-                        "id": 662,
+                        "id": 644,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -559,21 +559,21 @@
                           "typeString": "literal_string \"Only the Galactic Industrial Authority may access this function\""
                         }
                       ],
-                      "id": 657,
+                      "id": 639,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "602:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 663,
+                    "id": 645,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -587,23 +587,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 664,
+                  "id": 646,
                   "nodeType": "ExpressionStatement",
                   "src": "602:100:6"
                 },
                 {
-                  "id": 665,
+                  "id": 647,
                   "nodeType": "PlaceholderStatement",
                   "src": "708:1:6"
                 }
               ]
             },
             "documentation": "@dev Access modifier for GEA-only functionality",
-            "id": 667,
+            "id": 649,
             "name": "onlyGIA",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 656,
+              "id": 638,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "593:2:6"
@@ -613,7 +613,7 @@
           },
           {
             "body": {
-              "id": 683,
+              "id": 665,
               "nodeType": "Block",
               "src": "816:195:6",
               "statements": [
@@ -627,7 +627,7 @@
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
                         },
-                        "id": 678,
+                        "id": 660,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -638,7 +638,7 @@
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           },
-                          "id": 673,
+                          "id": 655,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -647,18 +647,18 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 670,
+                              "id": 652,
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1583,
+                              "referencedDeclaration": 1565,
                               "src": "837:3:6",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
                                 "typeString": "msg"
                               }
                             },
-                            "id": 671,
+                            "id": 653,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -676,11 +676,11 @@
                           "operator": "==",
                           "rightExpression": {
                             "argumentTypes": null,
-                            "id": 672,
+                            "id": 654,
                             "name": "geaAddress",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 639,
+                            "referencedDeclaration": 621,
                             "src": "851:10:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -701,7 +701,7 @@
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           },
-                          "id": 677,
+                          "id": 659,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -710,18 +710,18 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 674,
+                              "id": 656,
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1583,
+                              "referencedDeclaration": 1565,
                               "src": "865:3:6",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
                                 "typeString": "msg"
                               }
                             },
-                            "id": 675,
+                            "id": 657,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -739,11 +739,11 @@
                           "operator": "==",
                           "rightExpression": {
                             "argumentTypes": null,
-                            "id": 676,
+                            "id": 658,
                             "name": "giaAddress",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 641,
+                            "referencedDeclaration": 623,
                             "src": "879:10:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -765,7 +765,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4f6e6c79207468652047616c61637469632045636f6e6f6d696320417574686f72697479206f722047616c616374696320496e647573747269616c20417574686f72697479206d61792061636365737320746869732066756e6374696f6e",
-                        "id": 679,
+                        "id": 661,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -792,21 +792,21 @@
                           "typeString": "literal_string \"Only the Galactic Economic Authority or Galactic Industrial Authority may access this function\""
                         }
                       ],
-                      "id": 669,
+                      "id": 651,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "822:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 680,
+                    "id": 662,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -820,23 +820,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 681,
+                  "id": 663,
                   "nodeType": "ExpressionStatement",
                   "src": "822:177:6"
                 },
                 {
-                  "id": 682,
+                  "id": 664,
                   "nodeType": "PlaceholderStatement",
                   "src": "1005:1:6"
                 }
               ]
             },
             "documentation": "@dev Access modifier giving permission to both GEA and GIA",
-            "id": 684,
+            "id": 666,
             "name": "onlyGEAOrGIA",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 668,
+              "id": 650,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "816:0:6"
@@ -846,7 +846,7 @@
           },
           {
             "body": {
-              "id": 695,
+              "id": 677,
               "nodeType": "Block",
               "src": "1097:104:6",
               "statements": [
@@ -860,7 +860,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 690,
+                        "id": 672,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -869,18 +869,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 687,
+                            "id": 669,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1583,
+                            "referencedDeclaration": 1565,
                             "src": "1111:3:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 688,
+                          "id": 670,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -898,11 +898,11 @@
                         "operator": "==",
                         "rightExpression": {
                           "argumentTypes": null,
-                          "id": 689,
+                          "id": 671,
                           "name": "taAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 643,
+                          "referencedDeclaration": 625,
                           "src": "1125:9:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -918,7 +918,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4f6e6c79207468652054656d706c6520417574686f72697479206d61792061636365737320746869732066756e6374696f6e",
-                        "id": 691,
+                        "id": 673,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -945,21 +945,21 @@
                           "typeString": "literal_string \"Only the Temple Authority may access this function\""
                         }
                       ],
-                      "id": 686,
+                      "id": 668,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "1103:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 692,
+                    "id": 674,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -973,23 +973,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 693,
+                  "id": 675,
                   "nodeType": "ExpressionStatement",
                   "src": "1103:86:6"
                 },
                 {
-                  "id": 694,
+                  "id": 676,
                   "nodeType": "PlaceholderStatement",
                   "src": "1195:1:6"
                 }
               ]
             },
             "documentation": "@dev Access modifier for TA-only functionality",
-            "id": 696,
+            "id": 678,
             "name": "onlyTA",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 685,
+              "id": 667,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1094:2:6"
@@ -999,7 +999,7 @@
           },
           {
             "body": {
-              "id": 716,
+              "id": 698,
               "nodeType": "Block",
               "src": "1404:114:6",
               "statements": [
@@ -1013,18 +1013,18 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 708,
+                        "id": 690,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "argumentTypes": null,
-                          "id": 704,
+                          "id": 686,
                           "name": "_geaAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 698,
+                          "referencedDeclaration": 680,
                           "src": "1418:11:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -1039,7 +1039,7 @@
                             {
                               "argumentTypes": null,
                               "hexValue": "30",
-                              "id": 706,
+                              "id": 688,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -1062,7 +1062,7 @@
                                 "typeString": "int_const 0"
                               }
                             ],
-                            "id": 705,
+                            "id": 687,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -1075,7 +1075,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 707,
+                          "id": 689,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -1098,7 +1098,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4e657720616464726573732063616e6e6f74206265207a65726f2061646472657373",
-                        "id": 709,
+                        "id": 691,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1125,21 +1125,21 @@
                           "typeString": "literal_string \"New address cannot be zero address\""
                         }
                       ],
-                      "id": 703,
+                      "id": 685,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "1410:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 710,
+                    "id": 692,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1153,25 +1153,25 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 711,
+                  "id": 693,
                   "nodeType": "ExpressionStatement",
                   "src": "1410:72:6"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 714,
+                    "id": 696,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 712,
+                      "id": 694,
                       "name": "geaAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 639,
+                      "referencedDeclaration": 621,
                       "src": "1489:10:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -1182,11 +1182,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 713,
+                      "id": 695,
                       "name": "_geaAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 698,
+                      "referencedDeclaration": 680,
                       "src": "1502:11:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -1199,28 +1199,28 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 715,
+                  "id": 697,
                   "nodeType": "ExpressionStatement",
                   "src": "1489:24:6"
                 }
               ]
             },
             "documentation": "@dev Assigns address of the Galactic Economic Authority\n@param _geaAddress Address of Galactic Economic Authority contract",
-            "id": 717,
+            "id": 699,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [
               {
                 "arguments": null,
-                "id": 701,
+                "id": 683,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 700,
+                  "id": 682,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 931,
+                  "referencedDeclaration": 913,
                   "src": "1394:9:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1234,15 +1234,15 @@
             "name": "setGEA",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 699,
+              "id": 681,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 698,
+                  "id": 680,
                   "name": "_geaAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 717,
+                  "scope": 699,
                   "src": "1366:19:6",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1251,7 +1251,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 697,
+                    "id": 679,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1366:7:6",
@@ -1268,12 +1268,12 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 702,
+              "id": 684,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1404:0:6"
             },
-            "scope": 760,
+            "scope": 742,
             "src": "1350:168:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1281,7 +1281,7 @@
           },
           {
             "body": {
-              "id": 737,
+              "id": 719,
               "nodeType": "Block",
               "src": "1725:114:6",
               "statements": [
@@ -1295,18 +1295,18 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 729,
+                        "id": 711,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "argumentTypes": null,
-                          "id": 725,
+                          "id": 707,
                           "name": "_giaAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 719,
+                          "referencedDeclaration": 701,
                           "src": "1739:11:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -1321,7 +1321,7 @@
                             {
                               "argumentTypes": null,
                               "hexValue": "30",
-                              "id": 727,
+                              "id": 709,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -1344,7 +1344,7 @@
                                 "typeString": "int_const 0"
                               }
                             ],
-                            "id": 726,
+                            "id": 708,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -1357,7 +1357,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 728,
+                          "id": 710,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -1380,7 +1380,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4e657720616464726573732063616e6e6f74206265207a65726f2061646472657373",
-                        "id": 730,
+                        "id": 712,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1407,21 +1407,21 @@
                           "typeString": "literal_string \"New address cannot be zero address\""
                         }
                       ],
-                      "id": 724,
+                      "id": 706,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "1731:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 731,
+                    "id": 713,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1435,25 +1435,25 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 732,
+                  "id": 714,
                   "nodeType": "ExpressionStatement",
                   "src": "1731:72:6"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 735,
+                    "id": 717,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 733,
+                      "id": 715,
                       "name": "giaAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 641,
+                      "referencedDeclaration": 623,
                       "src": "1810:10:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -1464,11 +1464,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 734,
+                      "id": 716,
                       "name": "_giaAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 719,
+                      "referencedDeclaration": 701,
                       "src": "1823:11:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -1481,28 +1481,28 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 736,
+                  "id": 718,
                   "nodeType": "ExpressionStatement",
                   "src": "1810:24:6"
                 }
               ]
             },
             "documentation": "@dev Assigns address of the Galactic Industrial Authority\n@param _giaAddress Address of Galactic Industrial Authority contract",
-            "id": 738,
+            "id": 720,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [
               {
                 "arguments": null,
-                "id": 722,
+                "id": 704,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 721,
+                  "id": 703,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 931,
+                  "referencedDeclaration": 913,
                   "src": "1715:9:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1516,15 +1516,15 @@
             "name": "setGIA",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 720,
+              "id": 702,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 719,
+                  "id": 701,
                   "name": "_giaAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 738,
+                  "scope": 720,
                   "src": "1687:19:6",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1533,7 +1533,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 718,
+                    "id": 700,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1687:7:6",
@@ -1550,12 +1550,12 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 723,
+              "id": 705,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1725:0:6"
             },
-            "scope": 760,
+            "scope": 742,
             "src": "1671:168:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -1563,7 +1563,7 @@
           },
           {
             "body": {
-              "id": 758,
+              "id": 740,
               "nodeType": "Block",
               "src": "2017:111:6",
               "statements": [
@@ -1577,18 +1577,18 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 750,
+                        "id": 732,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "argumentTypes": null,
-                          "id": 746,
+                          "id": 728,
                           "name": "_taAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 740,
+                          "referencedDeclaration": 722,
                           "src": "2031:10:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -1603,7 +1603,7 @@
                             {
                               "argumentTypes": null,
                               "hexValue": "30",
-                              "id": 748,
+                              "id": 730,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -1626,7 +1626,7 @@
                                 "typeString": "int_const 0"
                               }
                             ],
-                            "id": 747,
+                            "id": 729,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -1639,7 +1639,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 749,
+                          "id": 731,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -1662,7 +1662,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4e657720616464726573732063616e6e6f74206265207a65726f2061646472657373",
-                        "id": 751,
+                        "id": 733,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1689,21 +1689,21 @@
                           "typeString": "literal_string \"New address cannot be zero address\""
                         }
                       ],
-                      "id": 745,
+                      "id": 727,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "2023:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 752,
+                    "id": 734,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1717,25 +1717,25 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 753,
+                  "id": 735,
                   "nodeType": "ExpressionStatement",
                   "src": "2023:71:6"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 756,
+                    "id": 738,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 754,
+                      "id": 736,
                       "name": "taAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 643,
+                      "referencedDeclaration": 625,
                       "src": "2101:9:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -1746,11 +1746,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 755,
+                      "id": 737,
                       "name": "_taAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 740,
+                      "referencedDeclaration": 722,
                       "src": "2113:10:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -1763,28 +1763,28 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 757,
+                  "id": 739,
                   "nodeType": "ExpressionStatement",
                   "src": "2101:22:6"
                 }
               ]
             },
             "documentation": "@dev Assigns address of the Temple Authority\n@param _taAddress Address of Temple Authority contract",
-            "id": 759,
+            "id": 741,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [
               {
                 "arguments": null,
-                "id": 743,
+                "id": 725,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 742,
+                  "id": 724,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 931,
+                  "referencedDeclaration": 913,
                   "src": "2007:9:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1798,15 +1798,15 @@
             "name": "setTA",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 741,
+              "id": 723,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 740,
+                  "id": 722,
                   "name": "_taAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 759,
+                  "scope": 741,
                   "src": "1980:18:6",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1815,7 +1815,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 739,
+                    "id": 721,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1980:7:6",
@@ -1832,19 +1832,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 744,
+              "id": 726,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2017:0:6"
             },
-            "scope": 760,
+            "scope": 742,
             "src": "1965:163:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 761,
+        "scope": 743,
         "src": "180:1950:6"
       }
     ],
@@ -1854,14 +1854,14 @@
     "absolutePath": "/Users/jongaspar/Documents/coding/galactonomics/contracts/utils/AccessControlled.sol",
     "exportedSymbols": {
       "AccessControlled": [
-        760
+        742
       ]
     },
-    "id": 761,
+    "id": 743,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 634,
+        "id": 616,
         "literals": [
           "solidity",
           "^",
@@ -1874,10 +1874,10 @@
       {
         "absolutePath": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
         "file": "openzeppelin-solidity/contracts/ownership/Ownable.sol",
-        "id": 635,
+        "id": 617,
         "nodeType": "ImportDirective",
-        "scope": 761,
-        "sourceUnit": 998,
+        "scope": 743,
+        "sourceUnit": 980,
         "src": "26:63:6",
         "symbolAliases": [],
         "unitAlias": ""
@@ -1888,41 +1888,41 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 636,
+              "id": 618,
               "name": "Ownable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 997,
+              "referencedDeclaration": 979,
               "src": "209:7:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Ownable_$997",
+                "typeIdentifier": "t_contract$_Ownable_$979",
                 "typeString": "contract Ownable"
               }
             },
-            "id": 637,
+            "id": 619,
             "nodeType": "InheritanceSpecifier",
             "src": "209:7:6"
           }
         ],
         "contractDependencies": [
-          997
+          979
         ],
         "contractKind": "contract",
         "documentation": "@dev Extends contracts with identity setters and access-restriction modifiers",
         "fullyImplemented": true,
-        "id": 760,
+        "id": 742,
         "linearizedBaseContracts": [
-          760,
-          997
+          742,
+          979
         ],
         "name": "AccessControlled",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 639,
+            "id": 621,
             "name": "geaAddress",
             "nodeType": "VariableDeclaration",
-            "scope": 760,
+            "scope": 742,
             "src": "221:25:6",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1931,7 +1931,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 638,
+              "id": 620,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "221:7:6",
@@ -1945,10 +1945,10 @@
           },
           {
             "constant": false,
-            "id": 641,
+            "id": 623,
             "name": "giaAddress",
             "nodeType": "VariableDeclaration",
-            "scope": 760,
+            "scope": 742,
             "src": "250:25:6",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1957,7 +1957,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 640,
+              "id": 622,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "250:7:6",
@@ -1971,10 +1971,10 @@
           },
           {
             "constant": false,
-            "id": 643,
+            "id": 625,
             "name": "taAddress",
             "nodeType": "VariableDeclaration",
-            "scope": 760,
+            "scope": 742,
             "src": "279:24:6",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1983,7 +1983,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 642,
+              "id": 624,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "279:7:6",
@@ -1997,7 +1997,7 @@
           },
           {
             "body": {
-              "id": 654,
+              "id": 636,
               "nodeType": "Block",
               "src": "392:116:6",
               "statements": [
@@ -2011,7 +2011,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 649,
+                        "id": 631,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2020,18 +2020,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 646,
+                            "id": 628,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1583,
+                            "referencedDeclaration": 1565,
                             "src": "406:3:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 647,
+                          "id": 629,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2049,11 +2049,11 @@
                         "operator": "==",
                         "rightExpression": {
                           "argumentTypes": null,
-                          "id": 648,
+                          "id": 630,
                           "name": "geaAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 639,
+                          "referencedDeclaration": 621,
                           "src": "420:10:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -2069,7 +2069,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4f6e6c79207468652047616c61637469632045636f6e6f6d696320417574686f72697479206d61792061636365737320746869732066756e6374696f6e",
-                        "id": 650,
+                        "id": 632,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2096,21 +2096,21 @@
                           "typeString": "literal_string \"Only the Galactic Economic Authority may access this function\""
                         }
                       ],
-                      "id": 645,
+                      "id": 627,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "398:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 651,
+                    "id": 633,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2124,23 +2124,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 652,
+                  "id": 634,
                   "nodeType": "ExpressionStatement",
                   "src": "398:98:6"
                 },
                 {
-                  "id": 653,
+                  "id": 635,
                   "nodeType": "PlaceholderStatement",
                   "src": "502:1:6"
                 }
               ]
             },
             "documentation": "@dev Access modifier for GEA-only functionality",
-            "id": 655,
+            "id": 637,
             "name": "onlyGEA",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 644,
+              "id": 626,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "389:2:6"
@@ -2150,7 +2150,7 @@
           },
           {
             "body": {
-              "id": 666,
+              "id": 648,
               "nodeType": "Block",
               "src": "596:118:6",
               "statements": [
@@ -2164,7 +2164,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 661,
+                        "id": 643,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2173,18 +2173,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 658,
+                            "id": 640,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1583,
+                            "referencedDeclaration": 1565,
                             "src": "610:3:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 659,
+                          "id": 641,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2202,11 +2202,11 @@
                         "operator": "==",
                         "rightExpression": {
                           "argumentTypes": null,
-                          "id": 660,
+                          "id": 642,
                           "name": "giaAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 641,
+                          "referencedDeclaration": 623,
                           "src": "624:10:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -2222,7 +2222,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4f6e6c79207468652047616c616374696320496e647573747269616c20417574686f72697479206d61792061636365737320746869732066756e6374696f6e",
-                        "id": 662,
+                        "id": 644,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2249,21 +2249,21 @@
                           "typeString": "literal_string \"Only the Galactic Industrial Authority may access this function\""
                         }
                       ],
-                      "id": 657,
+                      "id": 639,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "602:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 663,
+                    "id": 645,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2277,23 +2277,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 664,
+                  "id": 646,
                   "nodeType": "ExpressionStatement",
                   "src": "602:100:6"
                 },
                 {
-                  "id": 665,
+                  "id": 647,
                   "nodeType": "PlaceholderStatement",
                   "src": "708:1:6"
                 }
               ]
             },
             "documentation": "@dev Access modifier for GEA-only functionality",
-            "id": 667,
+            "id": 649,
             "name": "onlyGIA",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 656,
+              "id": 638,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "593:2:6"
@@ -2303,7 +2303,7 @@
           },
           {
             "body": {
-              "id": 683,
+              "id": 665,
               "nodeType": "Block",
               "src": "816:195:6",
               "statements": [
@@ -2317,7 +2317,7 @@
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
                         },
-                        "id": 678,
+                        "id": 660,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2328,7 +2328,7 @@
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           },
-                          "id": 673,
+                          "id": 655,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2337,18 +2337,18 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 670,
+                              "id": 652,
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1583,
+                              "referencedDeclaration": 1565,
                               "src": "837:3:6",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
                                 "typeString": "msg"
                               }
                             },
-                            "id": 671,
+                            "id": 653,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2366,11 +2366,11 @@
                           "operator": "==",
                           "rightExpression": {
                             "argumentTypes": null,
-                            "id": 672,
+                            "id": 654,
                             "name": "geaAddress",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 639,
+                            "referencedDeclaration": 621,
                             "src": "851:10:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -2391,7 +2391,7 @@
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           },
-                          "id": 677,
+                          "id": 659,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2400,18 +2400,18 @@
                             "argumentTypes": null,
                             "expression": {
                               "argumentTypes": null,
-                              "id": 674,
+                              "id": 656,
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 1583,
+                              "referencedDeclaration": 1565,
                               "src": "865:3:6",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
                                 "typeString": "msg"
                               }
                             },
-                            "id": 675,
+                            "id": 657,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -2429,11 +2429,11 @@
                           "operator": "==",
                           "rightExpression": {
                             "argumentTypes": null,
-                            "id": 676,
+                            "id": 658,
                             "name": "giaAddress",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 641,
+                            "referencedDeclaration": 623,
                             "src": "879:10:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
@@ -2455,7 +2455,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4f6e6c79207468652047616c61637469632045636f6e6f6d696320417574686f72697479206f722047616c616374696320496e647573747269616c20417574686f72697479206d61792061636365737320746869732066756e6374696f6e",
-                        "id": 679,
+                        "id": 661,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2482,21 +2482,21 @@
                           "typeString": "literal_string \"Only the Galactic Economic Authority or Galactic Industrial Authority may access this function\""
                         }
                       ],
-                      "id": 669,
+                      "id": 651,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "822:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 680,
+                    "id": 662,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2510,23 +2510,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 681,
+                  "id": 663,
                   "nodeType": "ExpressionStatement",
                   "src": "822:177:6"
                 },
                 {
-                  "id": 682,
+                  "id": 664,
                   "nodeType": "PlaceholderStatement",
                   "src": "1005:1:6"
                 }
               ]
             },
             "documentation": "@dev Access modifier giving permission to both GEA and GIA",
-            "id": 684,
+            "id": 666,
             "name": "onlyGEAOrGIA",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 668,
+              "id": 650,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "816:0:6"
@@ -2536,7 +2536,7 @@
           },
           {
             "body": {
-              "id": 695,
+              "id": 677,
               "nodeType": "Block",
               "src": "1097:104:6",
               "statements": [
@@ -2550,7 +2550,7 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 690,
+                        "id": 672,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2559,18 +2559,18 @@
                           "argumentTypes": null,
                           "expression": {
                             "argumentTypes": null,
-                            "id": 687,
+                            "id": 669,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1583,
+                            "referencedDeclaration": 1565,
                             "src": "1111:3:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
                             }
                           },
-                          "id": 688,
+                          "id": 670,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2588,11 +2588,11 @@
                         "operator": "==",
                         "rightExpression": {
                           "argumentTypes": null,
-                          "id": 689,
+                          "id": 671,
                           "name": "taAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 643,
+                          "referencedDeclaration": 625,
                           "src": "1125:9:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -2608,7 +2608,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4f6e6c79207468652054656d706c6520417574686f72697479206d61792061636365737320746869732066756e6374696f6e",
-                        "id": 691,
+                        "id": 673,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2635,21 +2635,21 @@
                           "typeString": "literal_string \"Only the Temple Authority may access this function\""
                         }
                       ],
-                      "id": 686,
+                      "id": 668,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "1103:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 692,
+                    "id": 674,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2663,23 +2663,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 693,
+                  "id": 675,
                   "nodeType": "ExpressionStatement",
                   "src": "1103:86:6"
                 },
                 {
-                  "id": 694,
+                  "id": 676,
                   "nodeType": "PlaceholderStatement",
                   "src": "1195:1:6"
                 }
               ]
             },
             "documentation": "@dev Access modifier for TA-only functionality",
-            "id": 696,
+            "id": 678,
             "name": "onlyTA",
             "nodeType": "ModifierDefinition",
             "parameters": {
-              "id": 685,
+              "id": 667,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1094:2:6"
@@ -2689,7 +2689,7 @@
           },
           {
             "body": {
-              "id": 716,
+              "id": 698,
               "nodeType": "Block",
               "src": "1404:114:6",
               "statements": [
@@ -2703,18 +2703,18 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 708,
+                        "id": 690,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "argumentTypes": null,
-                          "id": 704,
+                          "id": 686,
                           "name": "_geaAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 698,
+                          "referencedDeclaration": 680,
                           "src": "1418:11:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -2729,7 +2729,7 @@
                             {
                               "argumentTypes": null,
                               "hexValue": "30",
-                              "id": 706,
+                              "id": 688,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -2752,7 +2752,7 @@
                                 "typeString": "int_const 0"
                               }
                             ],
-                            "id": 705,
+                            "id": 687,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -2765,7 +2765,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 707,
+                          "id": 689,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -2788,7 +2788,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4e657720616464726573732063616e6e6f74206265207a65726f2061646472657373",
-                        "id": 709,
+                        "id": 691,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -2815,21 +2815,21 @@
                           "typeString": "literal_string \"New address cannot be zero address\""
                         }
                       ],
-                      "id": 703,
+                      "id": 685,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "1410:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 710,
+                    "id": 692,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2843,25 +2843,25 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 711,
+                  "id": 693,
                   "nodeType": "ExpressionStatement",
                   "src": "1410:72:6"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 714,
+                    "id": 696,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 712,
+                      "id": 694,
                       "name": "geaAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 639,
+                      "referencedDeclaration": 621,
                       "src": "1489:10:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -2872,11 +2872,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 713,
+                      "id": 695,
                       "name": "_geaAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 698,
+                      "referencedDeclaration": 680,
                       "src": "1502:11:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -2889,28 +2889,28 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 715,
+                  "id": 697,
                   "nodeType": "ExpressionStatement",
                   "src": "1489:24:6"
                 }
               ]
             },
             "documentation": "@dev Assigns address of the Galactic Economic Authority\n@param _geaAddress Address of Galactic Economic Authority contract",
-            "id": 717,
+            "id": 699,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [
               {
                 "arguments": null,
-                "id": 701,
+                "id": 683,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 700,
+                  "id": 682,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 931,
+                  "referencedDeclaration": 913,
                   "src": "1394:9:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -2924,15 +2924,15 @@
             "name": "setGEA",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 699,
+              "id": 681,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 698,
+                  "id": 680,
                   "name": "_geaAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 717,
+                  "scope": 699,
                   "src": "1366:19:6",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2941,7 +2941,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 697,
+                    "id": 679,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1366:7:6",
@@ -2958,12 +2958,12 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 702,
+              "id": 684,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1404:0:6"
             },
-            "scope": 760,
+            "scope": 742,
             "src": "1350:168:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -2971,7 +2971,7 @@
           },
           {
             "body": {
-              "id": 737,
+              "id": 719,
               "nodeType": "Block",
               "src": "1725:114:6",
               "statements": [
@@ -2985,18 +2985,18 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 729,
+                        "id": 711,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "argumentTypes": null,
-                          "id": 725,
+                          "id": 707,
                           "name": "_giaAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 719,
+                          "referencedDeclaration": 701,
                           "src": "1739:11:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -3011,7 +3011,7 @@
                             {
                               "argumentTypes": null,
                               "hexValue": "30",
-                              "id": 727,
+                              "id": 709,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -3034,7 +3034,7 @@
                                 "typeString": "int_const 0"
                               }
                             ],
-                            "id": 726,
+                            "id": 708,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -3047,7 +3047,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 728,
+                          "id": 710,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3070,7 +3070,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4e657720616464726573732063616e6e6f74206265207a65726f2061646472657373",
-                        "id": 730,
+                        "id": 712,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -3097,21 +3097,21 @@
                           "typeString": "literal_string \"New address cannot be zero address\""
                         }
                       ],
-                      "id": 724,
+                      "id": 706,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "1731:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 731,
+                    "id": 713,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3125,25 +3125,25 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 732,
+                  "id": 714,
                   "nodeType": "ExpressionStatement",
                   "src": "1731:72:6"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 735,
+                    "id": 717,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 733,
+                      "id": 715,
                       "name": "giaAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 641,
+                      "referencedDeclaration": 623,
                       "src": "1810:10:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -3154,11 +3154,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 734,
+                      "id": 716,
                       "name": "_giaAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 719,
+                      "referencedDeclaration": 701,
                       "src": "1823:11:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -3171,28 +3171,28 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 736,
+                  "id": 718,
                   "nodeType": "ExpressionStatement",
                   "src": "1810:24:6"
                 }
               ]
             },
             "documentation": "@dev Assigns address of the Galactic Industrial Authority\n@param _giaAddress Address of Galactic Industrial Authority contract",
-            "id": 738,
+            "id": 720,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [
               {
                 "arguments": null,
-                "id": 722,
+                "id": 704,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 721,
+                  "id": 703,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 931,
+                  "referencedDeclaration": 913,
                   "src": "1715:9:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -3206,15 +3206,15 @@
             "name": "setGIA",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 720,
+              "id": 702,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 719,
+                  "id": 701,
                   "name": "_giaAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 738,
+                  "scope": 720,
                   "src": "1687:19:6",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3223,7 +3223,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 718,
+                    "id": 700,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1687:7:6",
@@ -3240,12 +3240,12 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 723,
+              "id": 705,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1725:0:6"
             },
-            "scope": 760,
+            "scope": 742,
             "src": "1671:168:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
@@ -3253,7 +3253,7 @@
           },
           {
             "body": {
-              "id": 758,
+              "id": 740,
               "nodeType": "Block",
               "src": "2017:111:6",
               "statements": [
@@ -3267,18 +3267,18 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 750,
+                        "id": 732,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "argumentTypes": null,
-                          "id": 746,
+                          "id": 728,
                           "name": "_taAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 740,
+                          "referencedDeclaration": 722,
                           "src": "2031:10:6",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -3293,7 +3293,7 @@
                             {
                               "argumentTypes": null,
                               "hexValue": "30",
-                              "id": 748,
+                              "id": 730,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -3316,7 +3316,7 @@
                                 "typeString": "int_const 0"
                               }
                             ],
-                            "id": 747,
+                            "id": 729,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -3329,7 +3329,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 749,
+                          "id": 731,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -3352,7 +3352,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "4e657720616464726573732063616e6e6f74206265207a65726f2061646472657373",
-                        "id": 751,
+                        "id": 733,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -3379,21 +3379,21 @@
                           "typeString": "literal_string \"New address cannot be zero address\""
                         }
                       ],
-                      "id": 745,
+                      "id": 727,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1586,
-                        1587
+                        1568,
+                        1569
                       ],
-                      "referencedDeclaration": 1587,
+                      "referencedDeclaration": 1569,
                       "src": "2023:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 752,
+                    "id": 734,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -3407,25 +3407,25 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 753,
+                  "id": 735,
                   "nodeType": "ExpressionStatement",
                   "src": "2023:71:6"
                 },
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 756,
+                    "id": 738,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 754,
+                      "id": 736,
                       "name": "taAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 643,
+                      "referencedDeclaration": 625,
                       "src": "2101:9:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -3436,11 +3436,11 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-                      "id": 755,
+                      "id": 737,
                       "name": "_taAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 740,
+                      "referencedDeclaration": 722,
                       "src": "2113:10:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -3453,28 +3453,28 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 757,
+                  "id": 739,
                   "nodeType": "ExpressionStatement",
                   "src": "2101:22:6"
                 }
               ]
             },
             "documentation": "@dev Assigns address of the Temple Authority\n@param _taAddress Address of Temple Authority contract",
-            "id": 759,
+            "id": 741,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [
               {
                 "arguments": null,
-                "id": 743,
+                "id": 725,
                 "modifierName": {
                   "argumentTypes": null,
-                  "id": 742,
+                  "id": 724,
                   "name": "onlyOwner",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 931,
+                  "referencedDeclaration": 913,
                   "src": "2007:9:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -3488,15 +3488,15 @@
             "name": "setTA",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 741,
+              "id": 723,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 740,
+                  "id": 722,
                   "name": "_taAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 759,
+                  "scope": 741,
                   "src": "1980:18:6",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -3505,7 +3505,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 739,
+                    "id": 721,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1980:7:6",
@@ -3522,19 +3522,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 744,
+              "id": 726,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2017:0:6"
             },
-            "scope": 760,
+            "scope": 742,
             "src": "1965:163:6",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 761,
+        "scope": 743,
         "src": "180:1950:6"
       }
     ],
@@ -3546,5 +3546,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-11-24T05:21:14.319Z"
+  "updatedAt": "2018-11-24T06:45:03.117Z"
 }
