@@ -13,7 +13,10 @@ import "../interfaces/ICommodity.sol";
  * elsewhere in this project, 'value' is referred to as 'amount'.
  */
 contract Commodity is ERC20, ERC20Detailed, AccessControlled {
-  constructor(string _name, string _symbol)
+  uint miningReward;
+  uint miningTarget;
+
+  constructor(string _name, string _symbol, uint _miningReward, uint _miningTarget)
   ERC20Detailed(_name, _symbol, 0)
   public {}
 

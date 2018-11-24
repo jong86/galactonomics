@@ -109,8 +109,8 @@ contract("GalacticIndustrialAuthority", accounts => {
     await gia.submitProofOfWork(String(nonce), { from: player1 })
 
     const balance = await commodities.getBalance(0, { from: player1 })
-    const miningAmount = await commodities.getMiningAmount(0)
+    const miningReward = await commodities.getMiningReward(0)
 
-    assert.equal(balance.toString(), miningAmount.toString(), "did not receive mining reward")
+    assert.equal(balance.toString(), miningReward.toString(), "did not receive mining reward")
   })
 })

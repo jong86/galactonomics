@@ -17,7 +17,7 @@ contract Commodities is ICommodities, Ownable {
   struct CommodityData {
     address addr;
     ICommodity _interface;
-    uint miningAmount;
+    uint miningReward;
     bytes32 miningTarget;
   }
 
@@ -48,14 +48,14 @@ contract Commodities is ICommodities, Ownable {
     address addr,
     string name,
     string symbol,
-    uint miningAmount,
+    uint miningReward,
     bytes32 miningTarget
   ) {
     return (
       commodities[_id].addr,
       commodities[_id]._interface.name(),
       commodities[_id]._interface.symbol(),
-      commodities[_id].miningAmount,
+      commodities[_id].miningReward,
       commodities[_id].miningTarget
     );
   }
@@ -68,8 +68,8 @@ contract Commodities is ICommodities, Ownable {
     return commodities[_id]._interface.symbol();
   }
 
-  function getMiningAmount(uint8 _id) external view returns (uint) {
-    return commodities[_id].miningAmount;
+  function getMiningReward(uint8 _id) external view returns (uint) {
+    return commodities[_id].miningReward;
   }
 
   function getMiningTarget(uint8 _id) external view returns (bytes32) {

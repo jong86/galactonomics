@@ -46,7 +46,7 @@ class PlanetIndustrial extends Component {
     }
 
     setIndustrialState({
-      miningAmount: commodity.miningAmount.toString(),
+      miningReward: commodity.miningReward.toString(),
       miningTarget: commodity.miningTarget.toString(),
       commodityName: commodity.name,
       commoditySymbol: commodity.symbol,
@@ -99,7 +99,7 @@ class PlanetIndustrial extends Component {
   render() {
     const { classes, user, web3, industrial } = this.props
     const {
-      miningAmount,
+      miningReward,
       miningTarget,
       commodityName,
       commoditySymbol,

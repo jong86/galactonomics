@@ -5,13 +5,13 @@ const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const ByzantianCrystal = artifacts.require('./items/ByzantianCrystal.sol')
 const TempleAuthority = artifacts.require('./TempleAuthority.sol')
-const commodityNames = require('../utils/commodityNames')
+const commodityData = require('../utils/commodityData')
 
 module.exports = function(deployer) {
   deployer.then(async () => {
     // Deploy each Commodity
     commodityInstances = []
-    for (const commodity of commodityNames) {
+    for (const commodity of commodityData) {
       await deployer.deploy(Commodity, commodity.name, commodity.symbol);
       commodityInstance = await Commodity.deployed()
       commodityInstances.push(commodityInstance);

@@ -38,7 +38,6 @@ contract("GalacticEconomicAuthority", accounts => {
 
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {
     // Mint commodity multiple times for player
-    const amountRequired = await commodities.getMiningCost(0)
     await mintCommodityXTimes(gia, 4, player1)
 
     const currentCargoBefore = await commodities.getCurrentCargo(player1)
@@ -123,8 +122,8 @@ contract("GalacticEconomicAuthority", accounts => {
     // Create a sell order with player1 that is too much cargo for player2
     const amountRequired = await commodities.getMiningCost(0)
     await gia.investInProduction(0, { from: player1, value: amountRequired })
-    const miningAmount = commodity[4]
-    const timesToMint = availableCargo.div(miningAmount)
+    const miningReward = commodity[4]
+    const timesToMint = availableCargo.div(miningReward)
     try {
       await mintCommodityXTimes(gia, timesToMint.add(1), player1)
     } catch (e) {}

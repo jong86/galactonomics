@@ -1,5 +1,5 @@
 module.exports = [
-  { name: 'Iodine', symbol: 'IOD' },
+  { name: 'Iodine', symbol: 'IOD', startingReward: '',  startingTarget: '' },
   { name: 'Neon gas', symbol: 'NEG' },
   { name: 'Iron ore', symbol: 'IRN' },
   { name: 'Platinum ore', symbol: 'PLT' },
