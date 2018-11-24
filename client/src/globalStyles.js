@@ -1,11 +1,12 @@
 import planets from 'utils/planets'
+import telegrama from 'fonts/telegrama.woff'
 
 export default {
   '@global': {
     body: {
       backgroundColor: 'black',
       color: 'white',
-      fontFamily: 'Verdana',
+      fontFamily: 'telegrama',
       margin: 0,
     },
     div: {
@@ -16,6 +17,10 @@ export default {
       userSelect: 'none',
       'backdrop-filter': 'blur(20px)',
     },
+  },
+  '@font-face': {
+    fontFamily: 'telegrama',
+    src: `url(${telegrama}) format("woff")`,
   },
 
   App: {

@@ -9,7 +9,6 @@ import Dialog from 'components/reusables/Dialog'
 import SellOrder from 'components/reusables/SellOrder'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
-import commodities from 'utils/commodities'
 
 const styles = {
   container: {
@@ -89,12 +88,12 @@ class PlanetMarketplace extends Component {
     const commoditiesTraded = await this.getCommoditiesTraded()
     const commodityInfos = await this.getCommodityInfos(commoditiesTraded)
     const commodityBalances = await this.getCommodityBalances(commoditiesTraded)
-    console.log('commodityBalances', commodityBalances);
+
     this.setState({
       commodities: commodityInfos.map((commodityInfo, i) => ({
         id: commoditiesTraded[i],
-        name: commodities[i].name,
-        symbol: commodities[i].symbol,
+        name: commodityInfo.name,
+        symbol: commodityInfo.symbol,
         myBalance: commodityBalances[i]
       }))
     })

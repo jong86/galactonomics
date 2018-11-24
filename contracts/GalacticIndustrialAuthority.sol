@@ -20,8 +20,6 @@ contract GalacticIndustrialAuthority {
     gta = IGalacticTransitAuthority(_gta);
   }
 
-  event Log(address msg);
-
   /**
    * @notice Mints new commodity tokens for a player
    * @param _nonce Value found that when hashed (using SHA-256) with the previous proof-of-work hash found for a

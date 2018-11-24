@@ -1,10 +1,10 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Rect from 'components/reusables/Rect'
 import planets from 'utils/planets'
-import commodities from 'utils/commodities'
 import MPIContainer from 'components/screens/planet/MPIContainer'
+import sha256 from 'js-sha256'
 
 const styles = {
   acceptDecline: {
@@ -12,7 +12,17 @@ const styles = {
   }
 }
 
+let nonce = 0
+
 class PlanetIndustrial extends Component {
+  constructor() {
+    super()
+    this.state = {
+      isMining: false,
+      hash: '',
+    }
+  }
+
   componentDidMount = () => {
     this.getCommodity()
   }
@@ -30,13 +40,28 @@ class PlanetIndustrial extends Component {
     setIndustrialState({
       miningAmount: commodity.miningAmount.toString(),
       miningTarget: commodity.miningTarget.toString(),
-      commodityName: commodities[user.currentPlanet].name,
-      commoditySymbol: commodities[user.currentPlanet].symbol,
+      commodityName: commodity.name,
+      commoditySymbol: commodity.symbol,
     })
   }
 
   startMining = () => {
-    console.log('starting')
+    this.setState({ isMining: true })
+    window.requestAnimationFrame(this.step)
+  }
+
+  step = () => {
+    const hash = sha256(String(nonce))
+    this.setState({ hash })
+
+    nonce++
+
+    if (this.state.isMining)
+      window.requestAnimationFrame(this.step)
+  }
+
+  stopMining = () => {
+    this.setState({ isMining: false })
   }
 
   render() {
@@ -48,18 +73,36 @@ class PlanetIndustrial extends Component {
       commoditySymbol,
     } = industrial
     const planet = planets.find(planet => planet.id == user.currentPlanet)
+    const { isMining, hash } = this.state
 
     return (
       <MPIContainer>
           <Rect
             size="wide"
           >
-            <Rect
-              isButton
-              onClick={this.startMining}
-            >
-              Mine
-            </Rect>
+            {!isMining ?
+              <Rect
+                isButton
+                onClick={this.startMining}
+              >
+                Mine
+              </Rect>
+              :
+              <Fragment>
+                <div>
+                  Mining...
+                </div>
+                <Rect type='bad'>
+                  { hash }
+                </Rect>
+                <Rect
+                  isButton
+                  onClick={this.stopMining}
+                >
+                  Stop mining
+                </Rect>
+              </Fragment>
+            }
           </Rect>
       </MPIContainer>
     )

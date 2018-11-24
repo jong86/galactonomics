@@ -92,6 +92,7 @@ class App extends Component {
   initEventListening = () => {
     const { contracts, user, setIndustrialState } = this.props
 
+    /* Not used anymore, but keeping code here if event listening needed later */
     // Listen for 'commodity-minted' events
     // contracts.gia.CommodityMinted({ fromBlock: 'latest' })
     // .on('data', data => {
