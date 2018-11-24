@@ -47,12 +47,6 @@ contract GalacticIndustrialAuthority {
 
     bytes32 _hash = sha256(abi.encodePacked(_nonce, _timesMined, _prevHash, msg.sender.toString()));
 
-    emit LogBytes(_hash);
-    emit LogString(_nonce);
-    emit LogString(_timesMined);
-    emit LogString(_prevHash);
-    emit LogString(msg.sender.toString());
-
     require(_hash < commodities.getMiningTarget(_commodityId), "That is not a valid proof-of-work");
 
     require(commodities.getInterface(_commodityId).dispenseReward(msg.sender, _hash), "Error doing reward");

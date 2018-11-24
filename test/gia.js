@@ -39,7 +39,6 @@ contract("GalacticIndustrialAuthority", accounts => {
 
   it("mints commodity for player when player submits valid proof-of-work", async () => {
     const miningData = await gia.getMiningData({ from: player1 })
-    console.log('miningData', miningData);
     const miningReward = miningData[0]
     const miningTarget = miningData[1]
     const timesMined = miningData[2]
@@ -52,20 +51,10 @@ contract("GalacticIndustrialAuthority", accounts => {
       hash = sha256(String(nonce) + String(timesMined) + prevHash.substring(2, 42) + player1.substring(2))
     } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
 
-    console.log('hash', hash);
-    console.log('nonce', nonce);
-    console.log('timesMined', timesMined);
-    console.log('prevHash', prevHash.substring(2) );
-    console.log('player1', player1.substring(2) );
-
     const response = await gia.submitProofOfWork(String(nonce), { from: player1 })
     const hashFromSolidity = response.logs.find(log => log.event === 'ProofFound').args._hash
-    console.log('hashFromSolidity', hashFromSolidity);
 
     const balance = await commodities.getBalance(0, { from: player1 })
-
-    console.log('balance', balance);
-    console.log('miningReward', miningReward);
 
     assert.equal(balance.toString(), miningReward.toString(), "did not receive mining reward")
     assert.equal('0x' + hash, hashFromSolidity, "hash from javascript does not match hash from solidity")
