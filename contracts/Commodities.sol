@@ -14,24 +14,12 @@ import "./interfaces/ICommodities.sol";
 contract Commodities is ICommodities, Ownable {
   using SafeMath for uint;
 
-  struct CommodityData {
-    address addr;
-    ICommodity _interface;
-    uint miningReward;
-    bytes32 miningTarget;
-  }
-
   // Array storing all info for each commodity
-  CommodityData[7] public commodities;
+  ICommodity[7] public commodities;
 
   constructor(address[] _commodities) public {
     for (uint i = 0; i < _commodities.length; i++) {
-      commodities[i] = CommodityData(
-        _commodities[i],
-        ICommodity(_commodities[i]),
-        8000,
-        bytes32(0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)
-      );
+      commodities[i] = ICommodity(_commodities[i]);
     }
   }
 
@@ -45,18 +33,16 @@ contract Commodities is ICommodities, Ownable {
   }
 
   function get(uint8 _id) external view returns (
-    address addr,
     string name,
     string symbol,
     uint miningReward,
     bytes32 miningTarget
   ) {
     return (
-      commodities[_id].addr,
       commodities[_id]._interface.name(),
       commodities[_id]._interface.symbol(),
-      commodities[_id].miningReward,
-      commodities[_id].miningTarget
+      commodities[_id]._interface.miningReward(),
+      commodities[_id]._interface.miningTarget()
     );
   }
 
@@ -82,10 +68,6 @@ contract Commodities is ICommodities, Ownable {
 
   function getInterface(uint8 _id) external view returns (ICommodity) {
     return commodities[_id]._interface;
-  }
-
-  function getAddress(uint8 _id) external view returns (address) {
-    return commodities[_id].addr;
   }
 
   function() public {}

@@ -3,7 +3,7 @@ const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.s
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const { fillUpCargoByMinting, mintCommodityXTimes } = require('./util/testUtils')
-const deployCommodities = require('../utils/deployCommodities')
+const deployCommodities = require('./util/deployCommodities')
 const sha256 = require('js-sha256');
 
 const maxGas = 7000000

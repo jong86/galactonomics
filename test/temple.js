@@ -5,7 +5,7 @@ const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAutho
 const ByzantianCrystal = artifacts.require("./items/ByzantianCrystal.sol")
 const TempleAuthority = artifacts.require("./TempleAuthority.sol")
 const { fillUpCargoByMinting, mintCommodityXTimes } = require('./util/testUtils')
-const deployCommodities = require('../utils/deployCommodities')
+const deployCommodities = require('./utils/deployCommodities')
 
 contract("TempleAuthority", accounts => {
   let gta, gea, gia, commodities, bCrystal, temple

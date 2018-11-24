@@ -18,17 +18,19 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled {
 
   constructor(string _name, string _symbol, uint _miningReward, uint _miningTarget)
   ERC20Detailed(_name, _symbol, 0)
-  public {}
+  public {
+    miningReward = _miningReward;
+    miningTarget = _miningTarget;
+  }
 
   /**
    * @notice Creates more of a token for an account
-   * @dev Called when investment in a commodity is made
+   * @dev Called by GIA when commodity is mined
    * @param _to Address of account to transfer to
-   * @param _value Quantity of token to transfer
    * @return boolean true on success
    */
-  function mint(address _to, uint _value) public returns (bool) {
-    _mint(_to, _value);
+  function dispenseReward(address _to) public onlyGIA returns (bool) {
+    _mint(_to, miningReward);
     return true;
   }
 

@@ -1,5 +1,5 @@
 const Commodity = artifacts.require("./items/Commodity.sol")
-const deployCommodities = require('../utils/deployCommodities')
+const deployCommodities = require('./utils/deployCommodities')
 
 contract("Commodity", accounts => {
   let commodities
