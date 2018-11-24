@@ -12,7 +12,6 @@ function deployCommodities() {
           commodity.symbol,
           commodity.startingReward,
           '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
-          { gas: 6000000 },
         )
         commodityInstances.push(commodityInstance)
       }
