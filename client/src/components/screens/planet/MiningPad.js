@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
 import LaserFrame from 'components/reusables/LaserFrame'
+import { MdLinearScale } from "react-icons/md";
 
 const styles = {
   MiningPad: {
@@ -13,6 +14,10 @@ const styles = {
 }
 
 class MiningPad extends Component {
+  mineArea = (start, end) => {
+    console.log('start, end', start, end);
+  }
+
   render() {
     const { classes } = this.props
 
@@ -21,9 +26,11 @@ class MiningPad extends Component {
         size="wide"
       >
         <div className={classes.MiningPad}>
-          {Array(4096).fill().map((_, i) => {
-            return <div>0</div>
-          })}
+          {Array(4096).fill().map((_, i) =>
+            <div
+              onClick={() => this.mineArea(i * 1024, i * 1024 + 1024)}
+            >0</div>
+          )}
         </div>
       </LaserFrame>
     )
