@@ -1,17 +1,20 @@
-import { createStore, applyMiddleware } from 'redux';
-import reducer from './reducers/index';
+import { createStore } from 'redux';
+import rootReducer from './reducers/index';
 import initialState from './initialState'
-// import storage from 'redux-persist/lib/storage';
-// import { persistStore, persistReducer } from 'redux-persist';
+
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// const persistConfig = {
-//   key: 'root',
-//   storage,
-// };
+const persistConfig = {
+  key: 'root',
+  storage,
+  stateReconciler: hardSet,
+};
 
-// const persistedReducer = persistReducer(persistConfig, reducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 let reduxDevTools;
 if (NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION__) {
@@ -19,11 +22,9 @@ if (NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION__) {
 }
 
 export const store = createStore(
-  // Commenting out persistedReducer for dev for now
-  // persistedReducer,
-  reducer,
+  persistedReducer,
   initialState,
-  reduxDevTools
+  reduxDevTools,
 )
 
-// export const persistor = persistStore(store)
+export const persistor = persistStore(store)

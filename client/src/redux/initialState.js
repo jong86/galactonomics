@@ -1,6 +1,6 @@
 export default {
   view: {
-    currentScreen: 'PlanetIndustrial',
+    currentScreen: 'Welcome',
   },
   industrial: {
     areasMined: [],

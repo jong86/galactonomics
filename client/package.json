@@ -13,6 +13,7 @@
     "react-redux": "^5.1.0",
     "react-scripts": "1.1.4",
     "redux": "^4.0.1",
+    "redux-persist": "^5.10.0",
     "three": "^0.98.0",
     "truffle-contract": "^4.0.0-next.0",
     "web3": "^1.0.0-beta.35"
