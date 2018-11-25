@@ -14,7 +14,6 @@ import {
 import { MdBusinessCenter } from 'react-icons/md'
 import getPlayerInfo from 'utils/getPlayerInfo'
 
-
 const styles = {
   PlanetHome: {
     width: 'fill-available',

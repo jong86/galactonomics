@@ -5,6 +5,7 @@ import contracts from './contracts'
 import view from './view'
 import user from './user'
 import industrial from './industrial'
+import audio from './audio'
 
 const appReducer = combineReducers({
   web3,
@@ -12,6 +13,7 @@ const appReducer = combineReducers({
   view,
   user,
   industrial,
+  audio,
 })
 
 export default (state, action) => appReducer(state, action)

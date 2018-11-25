@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import colorFromType from 'utils/colorFromType'
 
@@ -35,11 +36,22 @@ const styles = {
   }
 }
 
-let LaserFrame = ({ classes, children, onClick }) => (
-  <div className={classes.LaserFrame} onClick={onClick}>
-    { children }
-  </div>
-)
+class LaserFrame extends React.Component {
+  render() {
+    const { classes, children, onClick } = this.props
+
+    return (
+      <div
+        className={classes.LaserFrame}
+        onClick={() => {
+          if (onClick) onClick()
+        }}
+      >
+        { children }
+      </div>
+    )
+  }
+}
 
 LaserFrame = injectSheet(styles)(LaserFrame)
 export default LaserFrame;

@@ -4,6 +4,8 @@ import injectSheet from 'react-jss'
 import spaceship from 'assets/images/spaceship.jpg'
 import planets from 'utils/planets'
 import getRevertMsg from 'utils/getRevertMsg'
+import Sound from 'react-sound';
+import travellingSound from 'assets/sounds/travelling.wav'
 
 const styles = {
   container: {
@@ -54,6 +56,11 @@ class Travelling extends Component {
         <img
           src={spaceship}
           className={classes[isTravelling && 'travellingSpaceship']}
+        />
+        <Sound
+          url={travellingSound}
+          playStatus={isTravelling && Sound.status.PLAYING}
+          volume={5}
         />
       </div>
     );

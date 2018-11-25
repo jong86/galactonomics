@@ -169,7 +169,7 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   return {
     currentScreen: state.view.currentScreen,
     contracts: state.contracts,
