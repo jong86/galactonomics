@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import LaserFrame from 'components/reusables/LaserFrame'
-import spaceship from 'assets/spaceship.jpg'
+import spaceship from 'assets/images/spaceship.jpg'
 import Loader from 'components/reusables/Loader'
 import getRevertMsg from 'utils/getRevertMsg'
 

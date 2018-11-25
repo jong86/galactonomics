@@ -1,11 +1,11 @@
-import imgPlanet0 from 'assets/planet0.png'
-import imgPlanet1 from 'assets/planet1.png'
-import imgPlanet2 from 'assets/planet2.png'
-import imgPlanet3 from 'assets/planet3.png'
-import imgPlanet4 from 'assets/planet4.png'
-import imgPlanet5 from 'assets/planet5.png'
-import imgPlanet6 from 'assets/planet6.png'
-import imgTemple from 'assets/temple.png'
+import imgPlanet0 from 'assets/images/planet0.png'
+import imgPlanet1 from 'assets/images/planet1.png'
+import imgPlanet2 from 'assets/images/planet2.png'
+import imgPlanet3 from 'assets/images/planet3.png'
+import imgPlanet4 from 'assets/images/planet4.png'
+import imgPlanet5 from 'assets/images/planet5.png'
+import imgPlanet6 from 'assets/images/planet6.png'
+import imgTemple from 'assets/images/temple.png'
 
 export default [
   // Coordinates are intended to be 0-100% of window dimension

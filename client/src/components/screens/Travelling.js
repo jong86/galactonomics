@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import spaceship from 'assets/spaceship.jpg'
+import spaceship from 'assets/images/spaceship.jpg'
 import planets from 'utils/planets'
 import getRevertMsg from 'utils/getRevertMsg'
 
