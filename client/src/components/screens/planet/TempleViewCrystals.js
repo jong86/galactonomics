@@ -22,7 +22,7 @@ const styles = {
   }
 }
 
-class ViewCrystals extends Component {
+class TempleViewCrystals extends Component {
   constructor() {
     super()
     this.state = {
@@ -194,6 +194,6 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-ViewCrystals = connect(mapStateToProps, mapDispatchToProps)(ViewCrystals)
-ViewCrystals = injectSheet(styles)(ViewCrystals)
-export default ViewCrystals;
+TempleViewCrystals = connect(mapStateToProps, mapDispatchToProps)(TempleViewCrystals)
+TempleViewCrystals = injectSheet(styles)(TempleViewCrystals)
+export default TempleViewCrystals;

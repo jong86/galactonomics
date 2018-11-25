@@ -140,7 +140,10 @@ class App extends Component {
 
     const bgImage = () => {
       const styleObject = {}
-      if (currentScreen.substr(0, 6) === 'Planet' && currentScreen !== 'PlanetIntro') {
+      if (
+        (currentScreen.substr(0, 6) === 'Planet' || currentScreen.substr(0, 6) === 'Temple')&&
+        currentScreen !== 'PlanetIntro' && currentScreen !== 'TempleIntro'
+      ) {
         styleObject.backgroundImage = `url(${planet.img})`
       }
       if (user.currentPlanet == '255') {

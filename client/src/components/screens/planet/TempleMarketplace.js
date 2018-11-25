@@ -101,33 +101,33 @@ class TempleMarketplace extends Component {
     return (
       <MPIContainer sideButtons={sideButtons}>
         <div className={classes.container}>
-          Temple Marketplace
-        </div>
-        {crystals.map((crystal, i) => (
-          <div
+          {crystals.length === 0 && 'There are no crystals for sale right now'}
+          {crystals.map((crystal, i) => (
+            <div
             key={crystal.id}
             className={classes.crystal}
             onClick={() => this.setState({ selectedCrystalId: crystal.id })}
-          >
-            <div style={{
-              backgroundColor: selectedCrystalId === crystal.id ? '#fff' : null,
-              color: selectedCrystalId === crystal.id ? '#000' : null,
-            }}>
-              {crystal.id}
+            >
+              <div style={{
+                backgroundColor: selectedCrystalId === crystal.id ? '#fff' : null,
+                color: selectedCrystalId === crystal.id ? '#000' : null,
+              }}>
+                {crystal.id}
+              </div>
+              <div>
+                {crystal.uri}
+              </div>
+              <div>
+                {crystal.price}
+              </div>
+              <div>
+                {crystal.seller}
+              </div>
+              {/* <div id={i}>
+              </div> */}
             </div>
-            <div>
-              {crystal.uri}
-            </div>
-            <div>
-              {crystal.price}
-            </div>
-            <div>
-              {crystal.seller}
-            </div>
-            {/* <div id={i}>
-            </div> */}
-          </div>
-        ))}
+          ))}
+        </div>
       </MPIContainer>
     )
   }

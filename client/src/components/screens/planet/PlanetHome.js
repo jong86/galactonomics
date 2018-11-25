@@ -110,7 +110,7 @@ class PlanetHome extends Component {
                   Forge Byzantian Crystals
                 </LaserFrame>
                 <LaserFrame
-                  onClick={() => changeScreen('ViewCrystals')}
+                  onClick={() => changeScreen('TempleViewCrystals')}
                   isButton
                   type="info"
                   size="wide3"

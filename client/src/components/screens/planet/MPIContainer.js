@@ -46,7 +46,7 @@ class MPIContainer extends Component {
         { name: 'TempleMarketplace', label: 'Crystal marketplace' },
         { name: 'PlanetPrices', label: 'Prices elsewhere' },
         { name: 'TempleIndustrial', label: 'Forge Byzantian Crystals' },
-        { name: 'ViewCrystals', label: 'View My Crystals' },
+        { name: 'TempleViewCrystals', label: 'View My Crystals' },
       ]
     }
 

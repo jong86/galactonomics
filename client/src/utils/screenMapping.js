@@ -14,7 +14,7 @@ import PlanetPrices from  "components/screens/planet/PlanetPrices"
 
 import TempleMarketplace from  "components/screens/planet/TempleMarketplace"
 import TempleIndustrial from  "components/screens/planet/TempleIndustrial"
-import ViewCrystals from  "components/screens/planet/ViewCrystals"
+import TempleViewCrystals from  "components/screens/planet/TempleViewCrystals"
 
 export default screen => {
   switch(screen) {
@@ -32,7 +32,7 @@ export default screen => {
 
     case 'TempleMarketplace': return <TempleMarketplace/>
     case 'TempleIndustrial': return <TempleIndustrial/>
-    case 'ViewCrystals': return <ViewCrystals/>
+    case 'TempleViewCrystals': return <TempleViewCrystals/>
     default: break
   }
 }
