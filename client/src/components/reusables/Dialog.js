@@ -10,16 +10,25 @@ const styles = {
     borderRadius: 4,
     padding: '16px',
     textAlign: "center",
-    display: ({ isVisible }) => isVisible ? 'absolute' : 'none',
     position: 'absolute',
-    zIndex: 2,
+    zIndex: 3,
     backgroundColor: '#000',
+  },
+  backdrop: {
+    display: ({ isVisible }) => isVisible ? 'absolute' : 'none',
+    zIndex: 2,
+    position: 'absolute',
+    background: 'rgba(0, 0, 0, 0.75)',
+    height: '100vh',
+    width: '100vw',
   }
 }
 
 let Dialog = ({ classes, type, children }) => (
-  <div className={classes.Dialog}>
-    { children }
+  <div className={classes.backdrop}>
+    <div className={classes.Dialog}>
+      { children }
+    </div>
   </div>
 )
 

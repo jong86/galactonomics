@@ -8,7 +8,7 @@ const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const TempleAuthority = artifacts.require('./TempleAuthority.sol')
 
-const { mintCommodityXTimes } = require('../test/util/testUtils')
+const { mineCommodityXTimes } = require('../test/util/testUtils')
 
 module.exports = async function(done) {
   const accounts = await web3.eth.accounts
@@ -47,7 +47,7 @@ module.exports = async function(done) {
         const miningCost = commodity[3]
         const miningDuration = commodity[5]
         await gia.investInProduction(i, { from: bob, value: miningCost })
-        await mintCommodityXTimes(gia, miningDuration.toNumber(), bob)
+        await mineCommodityXTimes(gia, miningDuration.toNumber(), bob)
         commodityBalance = await commodities.getBalance(i, { from: bob })
       }
 

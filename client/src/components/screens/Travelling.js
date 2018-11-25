@@ -25,7 +25,7 @@ class Travelling extends Component {
   travelToPlanet = () => {
     const { contracts, user, changeScreen, setUserInfo, setAlertBoxContent } = this.props
 
-    contracts.gta.travelToPlanet(user.travellingTo, { from: user.address, gas: 200000 })
+    contracts.gta.travelToPlanet(user.travellingTo, { from: user.address })
     .on('transactionHash', () => {
       this.setState({ isTravelling: true })
     })

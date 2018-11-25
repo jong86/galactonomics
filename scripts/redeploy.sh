@@ -1,0 +1,1 @@
+truffle migrate --reset && cp -r ./build/contracts ./client/src/ && printf "\n✅ Done.\n"

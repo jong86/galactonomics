@@ -14,7 +14,7 @@ import truffleContract from "truffle-contract"
 
 import screenMapping from 'utils/screenMapping'
 import Dialog from 'components/reusables/Dialog'
-import Rect from 'components/reusables/Rect'
+import LaserFrame from 'components/reusables/LaserFrame'
 
 import getPlayerInfo from 'utils/getPlayerInfo'
 import planets from 'utils/planets'
@@ -92,6 +92,7 @@ class App extends Component {
   initEventListening = () => {
     const { contracts, user, setIndustrialState } = this.props
 
+    /* Not used anymore, but keeping code here if event listening needed later */
     // Listen for 'commodity-minted' events
     // contracts.gia.CommodityMinted({ fromBlock: 'latest' })
     // .on('data', data => {
@@ -158,11 +159,11 @@ class App extends Component {
         {/* Global alert dialog box */}
         <Dialog type="bad" isVisible={alertBoxContent}>
           {alertBoxContent}
-          <Rect
+          <LaserFrame
             type="bad"
             isButton
             onClick={clearAlertBoxContent}
-          >Ok</Rect>
+          >Ok</LaserFrame>
         </Dialog>
       </div>
     )

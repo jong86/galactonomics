@@ -22,3 +22,7 @@ yarn-debug.log*
 yarn-error.log*
 
 *.icloud
+
+ganache/
+
+/client/src/contracts/*

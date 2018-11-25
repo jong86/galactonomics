@@ -1,5 +1,5 @@
 const Commodity = artifacts.require("./items/Commodity.sol")
-const deployCommodities = require('../utils/deployCommodities')
+const deployCommodities = require('./util/deployCommodities')
 
 contract("Commodity", accounts => {
   let commodities
@@ -40,12 +40,5 @@ contract("Commodity", accounts => {
     } catch (e) {}
     const giaFromContract = await commodities[3].giaAddress()
     assert(giaFromContract !== gia, "could set GIA")
-  })
-
-  it("allows to set name of commodity in constructor", async () => {
-    commodityInstance = await Commodity.new("some name", "some symbol", { gas: 6000000 });
-    const name = await commodities[3].name()
-    console.log('name', name);
-    assert.equal(name, "some name", "did not set name")
   })
 })

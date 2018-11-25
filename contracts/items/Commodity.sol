@@ -12,20 +12,34 @@ import "../interfaces/ICommodity.sol";
  * @dev Use of variable name 'value' in this contract is to be consistent with ERC20 code --
  * elsewhere in this project, 'value' is referred to as 'amount'.
  */
-contract Commodity is ERC20, ERC20Detailed, AccessControlled, ICommodity {
-  constructor(string _name, string _symbol)
+contract Commodity is ERC20, ERC20Detailed, AccessControlled {
+  uint public miningReward;
+  bytes32 public miningTarget;
+  uint public timesMined = 0;
+  bytes32 public prevMiningHash;
+  uint public prevMiningBlock;
+
+  constructor(string _name, string _symbol, uint _miningReward, bytes32 _miningTarget)
   ERC20Detailed(_name, _symbol, 0)
-  public {}
+  public {
+    miningReward = _miningReward;
+    miningTarget = _miningTarget;
+    prevMiningHash = sha256(abi.encodePacked("0"));
+  }
 
   /**
    * @notice Creates more of a token for an account
-   * @dev Called when investment in a commodity is made
+   * @dev Called by GIA when commodity is mined
    * @param _to Address of account to transfer to
-   * @param _value Quantity of token to transfer
    * @return boolean true on success
    */
-  function mint(address _to, uint _value) public returns (bool) {
-    _mint(_to, _value);
+  function dispenseReward(address _to, bytes32 _hash) public onlyGIA returns (bool) {
+    // require(prevMiningBlock != block.number, "This commodity has already been mined this block");
+    _mint(_to, miningReward);
+    timesMined = timesMined.add(1);
+    prevMiningHash = _hash;
+    prevMiningBlock = block.number;
+    miningReward = miningReward.sub(1);
     return true;
   }
 

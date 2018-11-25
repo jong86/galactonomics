@@ -1,10 +1,12 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Rect from 'components/reusables/Rect'
-import planets from 'utils/planets'
-import commodities from 'utils/commodities'
+import LaserFrame from 'components/reusables/LaserFrame'
 import MPIContainer from 'components/screens/planet/MPIContainer'
+import sha256 from 'js-sha256'
+import getPlayerInfo from 'utils/getPlayerInfo'
+import Loader from 'components/reusables/Loader'
+import MiningPad from 'components/screens/planet/MiningPad'
 
 const styles = {
   acceptDecline: {
@@ -12,9 +14,38 @@ const styles = {
   }
 }
 
+const AREA_SIZE = 1024
+
+function checkIfHashUnderTarget(hash, target) {
+  hash = parseInt('0x' + String(hash), 16)
+  target = parseInt(target, 16)
+  return hash < target
+}
+
 class PlanetIndustrial extends Component {
   componentDidMount = () => {
     this.getCommodity()
+  }
+
+  componentDidUpdate = prevProps => {
+    const { setIndustrialState, setAlertBoxContent } = this.props
+    const { isMining, nonce, areaStart, areaEnd, areasMined, commodityName } = this.props.industrial
+
+    // When mining is started... (an area is clicked)
+    if (!prevProps.industrial.isMining && isMining) {
+      window.requestAnimationFrame(this.step)
+    }
+
+    // When finished mining an area...
+    if (prevProps.industrial.nonce !== nonce && nonce >= areaEnd) {
+      setIndustrialState({
+        nonce: undefined,
+        isMining: false,
+        // Array that holds indexes of areas that have been mined
+        areasMined: areasMined.concat([areaStart / AREA_SIZE]),
+      })
+      setAlertBoxContent(`No ${commodityName} was found in that area, \nclick to continue.`)
+    }
   }
 
   getCommodity = async () => {
@@ -28,39 +59,123 @@ class PlanetIndustrial extends Component {
     }
 
     setIndustrialState({
-      miningAmount: commodity.miningAmount.toString(),
+      commodityName: commodity.name,
+      commoditySymbol: commodity.symbol,
+      miningReward: commodity.miningReward.toString(),
       miningTarget: commodity.miningTarget.toString(),
-      commodityName: commodities[user.currentPlanet].name,
-      commoditySymbol: commodities[user.currentPlanet].symbol,
+      timesMined: commodity.timesMined.toString(),
+      prevMiningHash: commodity.prevMiningHash,
     })
   }
 
-  startMining = () => {
-    console.log('starting')
+  step = () => {
+    const { user, setIndustrialState } = this.props
+    const { miningTarget, prevMiningHash, nonce, isMining } = this.props.industrial
+
+    if (typeof nonce === 'number') {
+      const hash = sha256(
+        nonce.toString() +
+        user.currentPlanet.toString() +
+        prevMiningHash +
+        user.address.substring(2).toLowerCase()
+      )
+      setIndustrialState({ hash })
+
+      const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
+
+      if (validProofFound)
+        return setIndustrialState({
+          isMining: false,
+          hasValidProof: true,
+        })
+
+        setIndustrialState({ nonce: nonce + 1 })
+
+      if (isMining)
+        window.requestAnimationFrame(this.step)
+    }
+  }
+
+  stopMining = () => {
+    this.props.setIndustrialState({ isMining: false })
+  }
+
+  submitProof = async () => {
+    const { user, contracts, setIndustrialState } = this.props
+    const { nonce } = this.props.industrial
+
+    try {
+      await contracts.gia.submitProofOfWork(String(nonce), { from: user.address })
+    } catch (e) {
+      console.error(e)
+    }
+
+    getPlayerInfo()
+    this.getCommodity()
+    setIndustrialState({ isMining: false, hasValidProof: false, hash: '', nonce: 0, })
   }
 
   render() {
-    const { classes, user, web3, industrial } = this.props
+    const { classes, user, industrial } = this.props
     const {
-      miningAmount,
-      miningTarget,
+      isMining,
+      hash,
+      hasValidProof,
+      isSubmitting,
       commodityName,
-      commoditySymbol,
+      areaStart,
+      areaEnd,
     } = industrial
-    const planet = planets.find(planet => planet.id == user.currentPlanet)
 
     return (
       <MPIContainer>
-          <Rect
+          <LaserFrame
             size="wide"
           >
-            <Rect
-              isButton
-              onClick={this.startMining}
-            >
-              Mine
-            </Rect>
-          </Rect>
+            {!isMining && !hasValidProof &&
+              <Fragment>
+                Click an area to start mining for {commodityName}...
+                <MiningPad areaSize={AREA_SIZE} />
+                <LaserFrame
+                  type='status'
+                >
+                  {areaStart && areaEnd ? `Area ${areaStart} to ${areaEnd}` : 'Waiting...'}
+                </LaserFrame>
+              </Fragment>
+            }
+            {isMining &&
+              <Fragment>
+                <div>
+                  Mining in area {areaStart} to {areaEnd}...
+                </div>
+                <LaserFrame type='bad'>
+                  { hash }
+                </LaserFrame>
+                <LaserFrame
+                  isButton
+                  onClick={this.stopMining}
+                >
+                  Stop mining
+                </LaserFrame>
+              </Fragment>
+            }
+            {!isMining && hasValidProof &&
+              <Fragment>
+              <div>
+                Valid proof of work hash found!
+              </div>
+              <LaserFrame type='good'>
+                { hash }
+              </LaserFrame>
+              <LaserFrame
+                isButton
+                onClick={this.submitProof}
+              >
+                {!isSubmitting ? 'Submit proof of work' : <Loader />}
+              </LaserFrame>
+            </Fragment>
+            }
+          </LaserFrame>
       </MPIContainer>
     )
   }

@@ -3,7 +3,7 @@ import injectSheet from 'react-jss'
 import colorFromType from 'utils/colorFromType'
 
 const styles = {
-  Rect: {
+  LaserFrame: {
     textAlign: "center",
     border: ({ type }) => '1px solid ' + colorFromType(type),
     color: ({ type, active }) => {
@@ -11,7 +11,7 @@ const styles = {
       return colorFromType(type)
     },
     backgroundColor: ({ type, active }) => {
-      if (!active) return '#000'
+      if (!active) return 'rgba(0, 0, 0, 0.75)'
       return '#444'
     },
     width: ({ size }) => {
@@ -35,11 +35,11 @@ const styles = {
   }
 }
 
-let Rect = ({ classes, children, onClick }) => (
-  <div className={classes.Rect} onClick={onClick}>
+let LaserFrame = ({ classes, children, onClick }) => (
+  <div className={classes.LaserFrame} onClick={onClick}>
     { children }
   </div>
 )
 
-Rect = injectSheet(styles)(Rect)
-export default Rect;
+LaserFrame = injectSheet(styles)(LaserFrame)
+export default LaserFrame;

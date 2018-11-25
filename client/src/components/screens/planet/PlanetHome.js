@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Rect from 'components/reusables/Rect'
+import LaserFrame from 'components/reusables/LaserFrame'
 import FuelMeter from 'components/screens/planet/FuelMeter'
 import planets from 'utils/planets'
 import {
@@ -69,21 +69,21 @@ class PlanetHome extends Component {
       <Fragment>
         <div className={classes.PlanetHome}>
           <div>
-            <Rect
+            <LaserFrame
               onClick={() => changeScreen('Travel')}
               isButton
               type="good"
               size="wide"
-            >Travel (Leave {planet.name})</Rect>
-            <Rect
+            >Travel (Leave {planet.name})</LaserFrame>
+            <LaserFrame
               type="status"
               size="wide"
-            >Ξ{user.balance}</Rect>
+            >Ξ{user.balance}</LaserFrame>
           </div>
           <div className={classes.top3}>
             {planet.id == 255 ?
               <Fragment>
-                <Rect
+                <LaserFrame
                   onClick={() => changeScreen('TempleMarketplace')}
                   isButton
                   type="info"
@@ -91,8 +91,8 @@ class PlanetHome extends Component {
                 >
                   <MdBusinessCenter size={iconSize} />
                   Crystal Marketplace
-                </Rect>
-                <Rect
+                </LaserFrame>
+                <LaserFrame
                   onClick={() => changeScreen('PlanetPrices')}
                   isButton
                   type="info"
@@ -100,8 +100,8 @@ class PlanetHome extends Component {
                 >
                   <FaChartBar size={iconSize} />
                   Commodity Prices
-                </Rect>
-                <Rect
+                </LaserFrame>
+                <LaserFrame
                   onClick={() => changeScreen('TempleIndustrial')}
                   isButton
                   type="info"
@@ -109,8 +109,8 @@ class PlanetHome extends Component {
                 >
                   <FaHammer size={iconSize} />
                   Forge Byzantian Crystals
-                </Rect>
-                <Rect
+                </LaserFrame>
+                <LaserFrame
                   onClick={() => changeScreen('ViewCrystals')}
                   isButton
                   type="info"
@@ -118,11 +118,11 @@ class PlanetHome extends Component {
                 >
                   <FaEthereum size={iconSize} />
                   View My Crystals
-                </Rect>
+                </LaserFrame>
               </Fragment>
               :
               <Fragment>
-                <Rect
+                <LaserFrame
                   onClick={() => changeScreen('PlanetMarketplace')}
                   isButton
                   type="info"
@@ -130,8 +130,8 @@ class PlanetHome extends Component {
                 >
                   <FaBalanceScale size={iconSize} />
                   Marketplace
-                </Rect>
-                <Rect
+                </LaserFrame>
+                <LaserFrame
                   onClick={() => changeScreen('PlanetPrices')}
                   isButton
                   type="info"
@@ -139,8 +139,8 @@ class PlanetHome extends Component {
                 >
                   <FaChartBar className={classes.icon}size={iconSize} />
                   Commodity Prices
-                </Rect>
-                <Rect
+                </LaserFrame>
+                <LaserFrame
                   onClick={() => changeScreen('PlanetIndustrial')}
                   isButton
                   type="info"
@@ -148,7 +148,7 @@ class PlanetHome extends Component {
                 >
                   <FaIndustry size={iconSize} />
                   Industrial Operations
-                </Rect>
+                </LaserFrame>
               </Fragment>
             }
           </div>

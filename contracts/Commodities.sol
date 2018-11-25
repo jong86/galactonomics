@@ -9,104 +9,69 @@ import "./interfaces/ICommodities.sol";
 /**
  * @title Commodities
  *
- * @notice This contracts holds all data on the commodities
+ * @notice This contracts is for convenient access to the commodities
  */
 contract Commodities is ICommodities, Ownable {
   using SafeMath for uint;
 
-  event LogAddr(address addr);
-
-  struct CommodityData {
-    address addr;
-    ICommodity _interface;
-    uint miningAmount;
-    bytes32 miningTarget;
-  }
-
   // Array storing all info for each commodity
-  CommodityData[7] public commodities;
+  ICommodity[7] public commodities;
 
-  // Array storing all contracts of commodities
-  Commodity[2] public contracts;
-
-  constructor() public {
-    contracts[0] = new Commodity("Iodine", "IOD");
-    contracts[1] = new Commodity("Neon gas", "NEG");
-    // contracts[2] = new Commodity("Iron ore", "IRN");
-    // contracts[3] = new Commodity("Platinum ore", "PLT");
-    // contracts[4] = new Commodity("Gold ore", "GLD");
-    // contracts[5] = new Commodity("Petroleum", "PET");
-    // contracts[6] = new Commodity("Water", "WTR");
-
-    for (uint i = 0; i < contracts.length; i++) {
-      commodities[i] = CommodityData(
-        address(contracts[i]),
-        ICommodity(address(contracts[i])),
-        8000,
-        bytes32(0x0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)
-      );
+  constructor(address[] _commodities) public {
+    for (uint i = 0; i < _commodities.length; i++) {
+      commodities[i] = ICommodity(_commodities[i]);
     }
   }
 
   function getCurrentCargo(address _player) external view returns (uint) {
     uint currentCargo;
     for (uint8 i = 0; i < commodities.length; i++) {
-      uint cargoToAdd = commodities[i]._interface.balanceOf(_player);
+      uint cargoToAdd = commodities[i].balanceOf(_player);
       currentCargo = currentCargo.add(cargoToAdd);
     }
     return currentCargo;
   }
 
   function get(uint8 _id) external view returns (
-    address addr,
     string name,
     string symbol,
-    uint miningAmount,
-    bytes32 miningTarget
+    uint miningReward,
+    bytes32 miningTarget,
+    uint timesMined,
+    bytes32 prevMiningHash
   ) {
     return (
-      commodities[_id].addr,
-      commodities[_id]._interface.name(),
-      commodities[_id]._interface.symbol(),
-      commodities[_id].miningAmount,
-      commodities[_id].miningTarget
+      commodities[_id].name(),
+      commodities[_id].symbol(),
+      commodities[_id].miningReward(),
+      commodities[_id].miningTarget(),
+      commodities[_id].timesMined(),
+      commodities[_id].prevMiningHash()
     );
   }
 
   function getName(uint8 _id) external view returns (string) {
-    return commodities[_id]._interface.name();
+    return commodities[_id].name();
   }
 
   function getSymbol(uint8 _id) external view returns (string) {
-    return commodities[_id]._interface.symbol();
+    return commodities[_id].symbol();
   }
 
-  function getMiningAmount(uint8 _id) external view returns (uint) {
-    return commodities[_id].miningAmount;
+  function getMiningReward(uint8 _id) external view returns (uint) {
+    return commodities[_id].miningReward();
   }
 
   function getMiningTarget(uint8 _id) external view returns (bytes32) {
-    return commodities[_id].miningTarget;
+    return commodities[_id].miningTarget();
   }
 
   function getBalance(uint8 _id) external view returns (uint) {
-    return commodities[_id]._interface.balanceOf(msg.sender);
+    return commodities[_id].balanceOf(msg.sender);
   }
 
   function getInterface(uint8 _id) external view returns (ICommodity) {
-    return commodities[_id]._interface;
-  }
-
-  function getAddress(uint8 _id) external view returns (address) {
-    return commodities[_id].addr;
-  }
-
-  function setAccessForAll(address _geaAddress, address _giaAddress, address _taAddress) external {
-    for (uint i = 0; i < contracts.length; i++) {
-      commodities[i]._interface.setGEA(_geaAddress);
-      commodities[i]._interface.setGIA(_giaAddress);
-      commodities[i]._interface.setTA(_taAddress);
-    }
+    return commodities[_id];
   }
 
   function() public {}

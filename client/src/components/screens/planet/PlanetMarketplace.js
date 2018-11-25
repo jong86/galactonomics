@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import Rect from 'components/reusables/Rect'
+import LaserFrame from 'components/reusables/LaserFrame'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import handleChange from 'utils/handleChange'
 import uuid from 'utils/uuid'
@@ -9,7 +9,6 @@ import Dialog from 'components/reusables/Dialog'
 import SellOrder from 'components/reusables/SellOrder'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
-import commodities from 'utils/commodities'
 
 const styles = {
   container: {
@@ -89,12 +88,12 @@ class PlanetMarketplace extends Component {
     const commoditiesTraded = await this.getCommoditiesTraded()
     const commodityInfos = await this.getCommodityInfos(commoditiesTraded)
     const commodityBalances = await this.getCommodityBalances(commoditiesTraded)
-    console.log('commodityBalances', commodityBalances);
+
     this.setState({
       commodities: commodityInfos.map((commodityInfo, i) => ({
         id: commoditiesTraded[i],
-        name: commodities[i].name,
-        symbol: commodities[i].symbol,
+        name: commodityInfo.name,
+        symbol: commodityInfo.symbol,
         myBalance: commodityBalances[i]
       }))
     })
@@ -238,7 +237,7 @@ class PlanetMarketplace extends Component {
           <div>
             {/* Render commodity names and balances */}
             {commodities.map((commodity, i) => (
-              <Rect
+              <LaserFrame
                 key={i}
                 isButton
                 size="wide"
@@ -247,7 +246,7 @@ class PlanetMarketplace extends Component {
               >
                 <div>{commodity.name}</div>
                 <div>{"(You have: " + commodity.myBalance.toString() + " kg)"}</div>
-              </Rect>
+              </LaserFrame>
             ))}
           </div>
           {isLoading ?
@@ -297,11 +296,11 @@ class PlanetMarketplace extends Component {
             Price
             <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
           </label>
-          <Rect
+          <LaserFrame
             type="status"
             isButton
             onClick={this.createSellOrder}
-          >Ok</Rect>
+          >Ok</LaserFrame>
         </Dialog>
       </MPIContainer>
     )
