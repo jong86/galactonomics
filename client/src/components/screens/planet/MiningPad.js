@@ -18,7 +18,6 @@ const styles = {
     paddingTop: '2px',
     '&:hover': {
       backgroundColor: '#444 !important',
-      color: '#444 !important',
       cursor: 'pointer',
     }
   },
@@ -57,8 +56,7 @@ class MiningPad extends Component {
                     this.mineArea(areaStart, areaEnd)
                 }}
                 style={{
-                  color: wasMined ? null : '#060',
-                  backgroundColor: wasMined ? '#600' : '#060',
+                  color: wasMined ? '#f00' : '#0f0',
                 }}
                 onMouseEnter={e => {
                   e.stopPropagation()
