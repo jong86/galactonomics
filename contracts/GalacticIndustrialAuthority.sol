@@ -26,7 +26,7 @@ contract GalacticIndustrialAuthority {
     gta = IGalacticTransitAuthority(_gta);
   }
 
-  event ProofFound(bytes32 _hash, address miner);
+  event CommodityMined(bytes32 _hash, address miner);
 
   event LogBytes(bytes32 b);
   event LogString(string s);
@@ -57,7 +57,7 @@ contract GalacticIndustrialAuthority {
     // require(_hash < commodities.getMiningTarget(_commodityId), "That is not a valid proof-of-work");
 
     require(commodities.getInterface(_commodityId).dispenseReward(msg.sender, _hash), "Error doing reward");
-    emit ProofFound(_hash, msg.sender);
+    emit CommodityMined(_hash, msg.sender);
   }
 
   /**

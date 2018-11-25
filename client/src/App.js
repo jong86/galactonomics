@@ -34,6 +34,8 @@ class App extends Component {
 
       if (ownsSpaceship) {
         await getPlayerInfo()
+      } else {
+        this.props.changeScreen('Welcome')
       }
 
     } catch (e) {
@@ -90,21 +92,18 @@ class App extends Component {
   })
 
   initEventListening = () => {
-    const { contracts, user, setIndustrialState } = this.props
+    const { contracts, user, web3, setIndustrialState } = this.props
 
-    /* Not used anymore, but keeping code here if event listening needed later */
-    // Listen for 'commodity-minted' events
-    // contracts.gia.CommodityMinted({ fromBlock: 'latest' })
-    // .on('data', data => {
-    //   const { to, blocksLeft } = data.returnValues
-
-    //   if (to === user.address) {
-    //     getPlayerInfo()
-    //     setIndustrialState({
-    //       miningBlocksLeft: blocksLeft,
-    //     })
-    //   }
-    // })
+    // Reset areasMined when someone mines a commodity,
+    // because timesMined variable used in hash is changed
+    contracts.gia.CommodityMined({ fromBlock: 'latest' })
+    .on('data', data => {
+      const { miner } = data.returnValues
+      console.log(miner, 'just mined a commodity')
+      setIndustrialState({
+        areasMined: [],
+      })
+    })
   }
 
   checkIfOwnsSpaceship = () => new Promise(async (resolve, reject) => {
@@ -187,6 +186,7 @@ const mapDispatchToProps = dispatch => {
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
     setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
     clearAlertBoxContent: () => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content: '' }),
+    changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
   }
 }
 

@@ -10,6 +10,13 @@ const styles = {
 }
 
 class PlanetIntro extends Component {
+  componentDidMount = () => {
+    // Reset some state since on a new planet now
+    this.props.setIndustrialState({
+      areasMined: [],
+    })
+  }
+
   render() {
     const { classes, user, changeScreen } = this.props
     const planet = planets.find(planet => planet.id == user.currentPlanet)
@@ -39,6 +46,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
+    setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
   }
 }
 

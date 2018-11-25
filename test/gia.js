@@ -55,7 +55,7 @@ contract("GalacticIndustrialAuthority", accounts => {
     console.log(String(nonce), timesMined.toString(), prevHash.substring(2, 42), player1.substring(2))
 
     const response = await gia.submitProofOfWork(String(nonce), { from: player1 })
-    const hashFromSolidity = response.logs.find(log => log.event === 'ProofFound').args._hash
+    const hashFromSolidity = response.logs.find(log => log.event === 'CommodityMined').args._hash
 
     const balance = await commodities.getBalance(0, { from: player1 })
 
