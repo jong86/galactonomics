@@ -6,12 +6,13 @@ import CargoMeter from 'components/screens/planet/CargoMeter'
 
 const styles = {
   MPIContainer: {
-    height: '100%',
+    minHeight: '100vh',
     width: 'fill-available',
     '& > div': {
       width: 'fill-available',
     },
     '& > div:first-child': {
+      flex: 1,
       flexDirection: 'row',
       alignItems: 'flex-start',
       '& > div:first-child': {

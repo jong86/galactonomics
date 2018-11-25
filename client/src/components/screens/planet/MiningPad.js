@@ -56,7 +56,7 @@ class MiningPad extends Component {
                     this.mineArea(areaStart, areaEnd)
                 }}
                 style={{
-                  color: wasMined ? '#f00' : '#0f0',
+                  color: wasMined ? '#f00' : null,
                 }}
                 onMouseEnter={e => {
                   e.stopPropagation()
