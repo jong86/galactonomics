@@ -2,6 +2,10 @@ import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import LaserFrame from 'components/reusables/LaserFrame'
+<<<<<<< HEAD
+=======
+import planets from 'utils/planets'
+>>>>>>> dcad89e8ac1e39da820e27829a687e98ea4c21e8
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import sha256 from 'js-sha256'
 import getPlayerInfo from 'utils/getPlayerInfo'
@@ -14,8 +18,11 @@ const styles = {
   }
 }
 
+<<<<<<< HEAD
 const AREA_SIZE = 1024
 
+=======
+>>>>>>> dcad89e8ac1e39da820e27829a687e98ea4c21e8
 function checkIfHashUnderTarget(hash, target) {
   hash = parseInt('0x' + String(hash), 16)
   target = parseInt(target, 16)
@@ -28,8 +35,13 @@ class PlanetIndustrial extends Component {
   }
 
   componentDidUpdate = prevProps => {
+<<<<<<< HEAD
     const { setIndustrialState, setAlertBoxContent } = this.props
     const { isMining, nonce, areaStart, areaEnd, areasMined, commodityName } = this.props.industrial
+=======
+    const { setIndustrialState } = this.props
+    const { isMining, nonce, areaStart, areaEnd } = this.props.industrial
+>>>>>>> dcad89e8ac1e39da820e27829a687e98ea4c21e8
 
     // When mining is started... (an area is clicked)
     if (!prevProps.industrial.isMining && isMining) {
@@ -41,10 +53,14 @@ class PlanetIndustrial extends Component {
       setIndustrialState({
         nonce: undefined,
         isMining: false,
+<<<<<<< HEAD
         // Array that holds indexes of areas that have been mined
         areasMined: areasMined.concat([areaStart / AREA_SIZE]),
       })
       setAlertBoxContent(`No ${commodityName} was found in that area, \nclick to continue.`)
+=======
+      })
+>>>>>>> dcad89e8ac1e39da820e27829a687e98ea4c21e8
     }
   }
 
@@ -122,7 +138,14 @@ class PlanetIndustrial extends Component {
       hash,
       hasValidProof,
       isSubmitting,
+<<<<<<< HEAD
       commodityName,
+=======
+      miningReward,
+      miningTarget,
+      commodityName,
+      commoditySymbol,
+>>>>>>> dcad89e8ac1e39da820e27829a687e98ea4c21e8
       areaStart,
       areaEnd,
     } = industrial
@@ -134,8 +157,13 @@ class PlanetIndustrial extends Component {
           >
             {!isMining && !hasValidProof &&
               <Fragment>
+<<<<<<< HEAD
                 Click an area to start mining for {commodityName}...
                 <MiningPad areaSize={AREA_SIZE} />
+=======
+                Click an area to start mining...
+                <MiningPad />
+>>>>>>> dcad89e8ac1e39da820e27829a687e98ea4c21e8
                 <LaserFrame
                   type='status'
                 >
