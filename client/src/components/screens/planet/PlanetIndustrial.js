@@ -7,6 +7,8 @@ import sha256 from 'js-sha256'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
 import MiningPad from 'components/screens/planet/MiningPad'
+import Sound from 'react-sound';
+import miningSuccess from 'assets/sounds/miningSuccess.wav'
 
 const styles = {
   acceptDecline: {
@@ -176,6 +178,11 @@ class PlanetIndustrial extends Component {
             </Fragment>
             }
           </LaserFrame>
+          <Sound
+            url={miningSuccess}
+            playStatus={!isMining && hasValidProof && Sound.status.PLAYING}
+            volume={10}
+          />
       </MPIContainer>
     )
   }

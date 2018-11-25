@@ -15,9 +15,11 @@ const styles = {
     zIndex: 1,
     backgroundColor: '#44',
     width: 'min-content',
-    cursor: 'pointer',
+    paddingTop: '2px',
     '&:hover': {
-      backgroundColor: '#aaa',
+      backgroundColor: '#444 !important',
+      color: '#444 !important',
+      cursor: 'pointer',
     }
   },
 }
@@ -46,12 +48,18 @@ class MiningPad extends Component {
             const areaEnd = areaStart + areaSize
             const wasMined = Array.isArray(areasMined) && areasMined.includes(i)
             const char = wasMined ? 'X' : 'O'
-
             return (
               <span
                 className={classes.area}
                 key={i}
-                onClick={() => this.mineArea(areaStart, areaEnd)}
+                onClick={() => {
+                  if (!wasMined)
+                    this.mineArea(areaStart, areaEnd)
+                }}
+                style={{
+                  color: wasMined ? null : '#060',
+                  backgroundColor: wasMined ? '#600' : '#060',
+                }}
                 onMouseEnter={e => {
                   e.stopPropagation()
                   if (!wasMined)

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import LaserFrame from 'components/reusables/LaserFrame'
 import planets from 'utils/planets'
+import Sound from 'react-sound';
 
 const styles = {
   PlanetIntro: {
@@ -31,6 +32,11 @@ class PlanetIntro extends Component {
         >Continue >></LaserFrame>
         <img
           src={planet.img}
+        />
+        <Sound
+          url={planet.song}
+          playStatus={Sound.status.PLAYING}
+          volume={75}
         />
       </div>
     );
