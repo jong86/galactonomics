@@ -92,6 +92,12 @@ const mapStateToProps = state => {
   }
 }
 
-FuelMeter = connect(mapStateToProps)(FuelMeter)
+const mapDispatchToProps = dispatch => {
+  return {
+    setAlertBoxContent: content => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content }),
+  }
+}
+
+FuelMeter = connect(mapStateToProps, mapDispatchToProps)(FuelMeter)
 FuelMeter = injectSheet(styles)(FuelMeter)
 export default FuelMeter;
