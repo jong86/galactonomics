@@ -11,10 +11,13 @@ class Crystal extends Component {
 
     // Extract characters from URI to use for 3d model
     const color = eval('0x' + uri.substr(0, 6))
+    const lightColor = eval('0x' + uri.substr(7, 12))
+    console.log('lightColor', lightColor);
 
     var scene = new THREE.Scene();
     var cam = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 0.1, 1000);
-    var renderer = new THREE.WebGLRenderer();
+    var renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setClearColor(0x000000, 0.5);
     renderer.setSize(90, 120);
 
     const div = document.getElementById(uri)
