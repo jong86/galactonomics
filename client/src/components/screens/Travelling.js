@@ -60,7 +60,7 @@ class Travelling extends Component {
         <Sound
           url={travellingSound}
           playStatus={isTravelling && Sound.status.PLAYING}
-          volume={5}
+          volume={15}
         />
       </div>
     );

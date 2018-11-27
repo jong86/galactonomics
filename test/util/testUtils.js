@@ -21,10 +21,11 @@ function fillUpCargoByMining(commodities, gta, gia, player, commodityId) {
 }
 
 function mineCommodityXTimes(gia, numTimes, player) {
+  // Doesn't include commodityId because which commodity is mined is determined by user's current planet
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < numTimes; i++) {
       try {
-        await gia.submitProofOfWork(0, { from: player })
+        await gia.submitProofOfWork(commodityId, { from: player })
       } catch (e) {
         reject(e)
       }

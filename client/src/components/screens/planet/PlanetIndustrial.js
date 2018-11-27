@@ -9,6 +9,7 @@ import Loader from 'components/reusables/Loader'
 import MiningPad from 'components/screens/planet/MiningPad'
 import Sound from 'react-sound';
 import miningSuccess from 'assets/sounds/miningSuccess.wav'
+import receivedSomething from 'assets/sounds/receivedSomething.wav'
 
 const styles = {
   acceptDecline: {
@@ -87,6 +88,7 @@ class PlanetIndustrial extends Component {
 
       if (validProofFound)
         return setIndustrialState({
+          playSuccessSound: true,
           isMining: false,
           hasValidProof: true,
         })
@@ -106,6 +108,8 @@ class PlanetIndustrial extends Component {
     const { user, contracts, setIndustrialState } = this.props
     const { nonce } = this.props.industrial
 
+    setIndustrialState({ isSubmitting: true })
+
     try {
       await contracts.gia.submitProofOfWork(String(nonce), { from: user.address })
     } catch (e) {
@@ -114,11 +118,18 @@ class PlanetIndustrial extends Component {
 
     getPlayerInfo()
     this.getCommodity()
-    setIndustrialState({ isMining: false, hasValidProof: false, hash: '', nonce: 0, })
+    setIndustrialState({
+      isMining: false,
+      hasValidProof: false,
+      hash: '',
+      nonce: 0,
+      isSubmitting: false,
+      playReceivedSound: true,
+    })
   }
 
   render() {
-    const { classes, user, industrial } = this.props
+    const { classes, industrial, setIndustrialState } = this.props
     const {
       isMining,
       hash,
@@ -127,6 +138,8 @@ class PlanetIndustrial extends Component {
       commodityName,
       areaStart,
       areaEnd,
+      playReceivedSound,
+      playSuccessSound,
     } = industrial
 
     return (
@@ -163,25 +176,32 @@ class PlanetIndustrial extends Component {
             }
             {!isMining && hasValidProof &&
               <Fragment>
-              <div>
-                Valid proof of work hash found!
-              </div>
-              <LaserFrame type='good'>
-                { hash }
-              </LaserFrame>
-              <LaserFrame
-                isButton
-                onClick={this.submitProof}
-              >
-                {!isSubmitting ? 'Submit proof of work' : <Loader />}
-              </LaserFrame>
-            </Fragment>
+                <div>
+                  Valid proof of work hash found!
+                </div>
+                <LaserFrame type='good'>
+                  { hash }
+                </LaserFrame>
+                <LaserFrame
+                  isButton
+                  onClick={this.submitProof}
+                >
+                  {!isSubmitting ? 'Submit proof of work' : <Fragment>Waiting for validation...<Loader /></Fragment>}
+                </LaserFrame>
+              </Fragment>
             }
           </LaserFrame>
           <Sound
             url={miningSuccess}
-            playStatus={!isMining && hasValidProof && Sound.status.PLAYING}
+            playStatus={playSuccessSound && Sound.status.PLAYING}
             volume={10}
+            onFinishedPlaying={() => setIndustrialState({ playSuccessSound: false })}
+          />
+          <Sound
+            url={receivedSomething}
+            playStatus={playReceivedSound && Sound.status.PLAYING}
+            volume={25}
+            onFinishedPlaying={() => setIndustrialState({ playReceivedSound: false })}
           />
       </MPIContainer>
     )

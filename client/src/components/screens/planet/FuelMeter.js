@@ -6,6 +6,8 @@ import { FaGasPump } from 'react-icons/fa';
 import getRevertMsg from 'utils/getRevertMsg'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
+import Sound from 'react-sound';
+import receivedSomething from 'assets/sounds/receivedSomething.wav'
 
 const styles = {
 }
@@ -15,6 +17,7 @@ class FuelMeter extends Component {
     isLoading: false,
     isRefueling: false,
     refuelCost: {},
+    doneFueling: false,
   }
 
   componentDidMount = () => {
@@ -45,7 +48,10 @@ class FuelMeter extends Component {
     })
     .on('receipt', async () => {
       await getPlayerInfo()
-      this.setState({ isRefueling: false })
+      this.setState({
+        isRefueling: false,
+        doneFueling: true,
+      })
     })
     .on('error', e => {
       this.props.setAlertBoxContent(getRevertMsg(e.message))
@@ -54,7 +60,7 @@ class FuelMeter extends Component {
   
   render() {
     const { classes, currentFuel, maxFuel, web3 } = this.props
-    const { isRefueling } = this.state
+    const { isRefueling, doneFueling } = this.state
 
     let refuelCost
     try {
@@ -79,6 +85,12 @@ class FuelMeter extends Component {
           size="wide"
           onClick={() => { if (!isFull) this.refuel()}}
         >{isRefueling ? <div>Refueling... <Loader type="status" /></div> : (isFull ? 'Tank is full' : 'Fill-up tank')}</LaserFrame>
+        <Sound
+          url={receivedSomething}
+          playStatus={doneFueling && Sound.status.PLAYING}
+          volume={25}
+          onFinishedPlaying={() => this.setState({ doneFueling: false })}
+        />
       </Fragment>
     )
   }

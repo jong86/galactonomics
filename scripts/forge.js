@@ -3,6 +3,7 @@
   to forge a crystal
 */
 
+const Commodities = artifacts.require('./Commodities.sol')
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
@@ -20,6 +21,7 @@ module.exports = async function(done) {
   let gta, gea, gia, temple
 
   try {
+    commodities = await Commodities.deployed()
     gta = await GalacticTransitAuthority.deployed()
     gea = await GalacticEconomicAuthority.deployed()
     gia = await GalacticIndustrialAuthority.deployed()
@@ -43,11 +45,7 @@ module.exports = async function(done) {
 
       // Mint commodity until user has enough to forge
       while (commodityBalance.lt(forgingAmount)) {
-        const commodity = await gta.getCommodity(i)
-        const miningCost = commodity[3]
-        const miningDuration = commodity[5]
-        await gia.investInProduction(i, { from: bob, value: miningCost })
-        await mineCommodityXTimes(gia, miningDuration.toNumber(), bob)
+        await mineCommodityXTimes(gia, 5, bob)
         commodityBalance = await commodities.getBalance(i, { from: bob })
       }
 
