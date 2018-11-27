@@ -11,13 +11,12 @@ class Crystal extends Component {
 
     // Extract characters from URI to use for 3d model
     const color = eval('0x' + uri.substr(0, 6))
-    const color2 = eval('0x' + uri.substr(7, 6))
-    const metalness = parseInt("e420d9f5ab8f02f45d495ef280f336fb7c7d9936".substr(13, 2), 16) / 256
-    const roughness = parseInt("e420d9f5ab8f02f45d495ef280f336fb7c7d9936".substr(15, 2), 16) / 256
+    const metalness = parseInt(uri.substr(13, 2), 16) / 256
+    const roughness = parseInt(uri.substr(15, 2), 16) / 256
 
     var scene = new THREE.Scene();
     var cam = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 0.1, 1000);
-    var renderer = new THREE.WebGLRenderer({ alpha: true });
+    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setClearColor(0x000000, 0.25);
     renderer.setSize(90, 120);
 
@@ -43,7 +42,7 @@ class Crystal extends Component {
     scene.add(light2);
 
     cam.position.z = 2.75;
-    cube.rotation.x = 0.05;
+
     var render = function() {
       requestAnimationFrame(render);
       cube.rotation.y += 0.01;
