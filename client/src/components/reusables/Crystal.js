@@ -15,7 +15,7 @@ class Crystal extends Component {
     const roughness = parseInt(uri.substr(9, 2), 16) / 256
 
     var scene = new THREE.Scene();
-    var cam = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 0.1, 1000);
+    var cam = new THREE.PerspectiveCamera(100, 16/9, 0.1, 1000);
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setClearColor(0x000000, 0.25);
     renderer.setSize(90, 120);

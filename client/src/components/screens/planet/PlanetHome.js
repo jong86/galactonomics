@@ -107,7 +107,7 @@ class PlanetHome extends Component {
                   size="wide3"
                 >
                   <FaHammer size={iconSize} />
-                  Forge Byzantian Crystals
+                  Forge Crystals
                 </LaserFrame>
                 <LaserFrame
                   onClick={() => changeScreen('TempleViewCrystals')}

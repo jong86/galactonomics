@@ -17,11 +17,13 @@ contract ByzantianCrystal is ERC721Full, AccessControlled {
   ERC721Full("ByzantianCrystals", "BZC")
   public {}
 
+  event CrystalCreated(string indexed uri);
+
   /**
    * @notice Create a new token for specified address
    * @return Newly created token ID
    */
-  function create(address _for) external onlyTA returns (uint) {
+  function create(address _for) external onlyTA returns (string) {
     // Mint one token for user
     uint _tokenId = totalSupply() + 1;
     _mint(_for, _tokenId);
@@ -30,7 +32,8 @@ contract ByzantianCrystal is ERC721Full, AccessControlled {
     string memory _uri = bytes32ToString(keccak256(abi.encodePacked(_tokenId, now, _for)));
     _setTokenURI(_tokenId, _uri);
 
-    return _tokenId;
+    emit CrystalCreated(_uri);
+    return _uri;
   }
 
   /**

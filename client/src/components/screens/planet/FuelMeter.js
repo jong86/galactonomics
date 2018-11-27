@@ -84,7 +84,7 @@ class FuelMeter extends Component {
           isButton={!isFull}
           size="wide"
           onClick={() => { if (!isFull) this.refuel()}}
-        >{isRefueling ? <div>Refueling... <Loader type="status" /></div> : (isFull ? 'Tank is full' : 'Fill-up tank')}</LaserFrame>
+        >{isRefueling ? <div>Refueling... <Loader type="status" /></div> : (isFull ? 'Tank is full' : 'Fill up tank')}</LaserFrame>
         <Sound
           url={receivedSomething}
           playStatus={doneFueling && Sound.status.PLAYING}

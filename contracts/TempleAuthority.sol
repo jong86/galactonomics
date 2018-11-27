@@ -49,7 +49,7 @@ contract TempleAuthority {
    * @dev Burns a quantity of all 7 of an account's commodities
    * @return tokenId of newly created crystal
    */
-  function forge() external onlyPlayerAtTemple returns (uint) {
+  function forge() external onlyPlayerAtTemple returns (string) {
     uint8 i;
 
     // Check balance of every commodity to make sure there is enough
@@ -68,8 +68,8 @@ contract TempleAuthority {
       );
     }
 
-    uint _tokenId = bCrystal.create(msg.sender);
-    return _tokenId;
+    string memory _uri = bCrystal.create(msg.sender);
+    return _uri;
   }
 
   /**

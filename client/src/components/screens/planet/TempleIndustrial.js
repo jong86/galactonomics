@@ -2,10 +2,11 @@ import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import LaserFrame from 'components/reusables/LaserFrame'
-import planets from 'utils/planets'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
+import Dialog from 'components/reusables/Dialog'
+import Crystal from 'components/reusables/Crystal'
 
 const styles = {
   acceptDecline: {
@@ -18,6 +19,7 @@ class TempleIndustrial extends Component {
     super()
     this.state = {
       isForging: false,
+      isDialogVisible: false,
     }
   }
 
@@ -31,15 +33,39 @@ class TempleIndustrial extends Component {
       console.error(e)
     }
 
+    this.getLatestCrystalURI()
+    this.setState({
+      isForging: false,
+      isDialogVisible: true,
+    })
     await getPlayerInfo()
+  }
 
-    this.setState({ isForging: false })
+  getLatestCrystalURI = async () => {
+    const { contracts, user } = this.props
+    let lastURI
+
+    this.setState({ isLoading: true })
+
+    try {
+      const crystalIds = await contracts.temple.crystalsOfOwner(user.address, { from: user.address })
+      const lastId = crystalIds[crystalIds.length - 1]
+      lastURI = await contracts.temple.crystalURI(lastId, { from:user.address })
+    } catch (e) {
+      console.error(e)
+    }
+
+    console.log('lastURI', lastURI);
+
+    this.setState({
+      crystalURI: lastURI,
+      isLoading: false,
+    })
   }
 
   render() {
-    const { classes, user, web3 } = this.props
-    const { isForging } = this.state
-    const planet = planets.find(planet => planet.id == user.currentPlanet)
+    const { classes } = this.props
+    const { isForging, isDialogVisible, crystalURI } = this.state
 
     return (
       <MPIContainer>
@@ -66,6 +92,13 @@ class TempleIndustrial extends Component {
             }
           </div>
         </LaserFrame>
+        <Dialog isVisible={isDialogVisible}>
+          You have forged a new crystal:
+          {crystalURI && <Crystal uri={crystalURI} />}
+          <LaserFrame
+            onClick={() => this.setState({ isDialogVisible: false })}
+          >Ok</LaserFrame>
+        </Dialog>
       </MPIContainer>
     )
   }
