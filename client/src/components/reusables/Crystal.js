@@ -11,8 +11,8 @@ class Crystal extends Component {
 
     // Extract characters from URI to use for 3d model
     const color = eval('0x' + uri.substr(0, 6))
-    const metalness = parseInt(uri.substr(13, 2), 16) / 256
-    const roughness = parseInt(uri.substr(15, 2), 16) / 256
+    const metalness = parseInt(uri.substr(7, 2), 16) / 256
+    const roughness = parseInt(uri.substr(9, 2), 16) / 256
 
     var scene = new THREE.Scene();
     var cam = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 0.1, 1000);
