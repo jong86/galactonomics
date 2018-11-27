@@ -13,11 +13,7 @@ const { mineCommodityXTimes } = require('../test/util/testUtils')
 
 module.exports = async function(done) {
   const accounts = await web3.eth.accounts
-  const owner = accounts[0]
   const bob = accounts[1]
-  const alice = accounts[2]
-  const mallory = accounts[3]
-
   let gta, gea, gia, temple
 
   try {
