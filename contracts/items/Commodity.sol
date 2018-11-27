@@ -17,7 +17,6 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled {
   bytes32 public miningTarget;
   uint public timesMined = 0;
   bytes32 public prevMiningHash;
-  uint public prevMiningBlock;
 
   constructor(string _name, string _symbol, uint _miningReward, bytes32 _miningTarget)
   ERC20Detailed(_name, _symbol, 0)
@@ -34,11 +33,9 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled {
    * @return boolean true on success
    */
   function dispenseReward(address _to, bytes32 _hash) public onlyGIA returns (bool) {
-    // require(prevMiningBlock != block.number, "This commodity has already been mined this block");
     _mint(_to, miningReward);
     timesMined = timesMined.add(1);
     prevMiningHash = _hash;
-    prevMiningBlock = block.number;
     miningReward = miningReward.sub(1);
     return true;
   }
