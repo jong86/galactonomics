@@ -10,9 +10,10 @@ import SellOrder from 'components/reusables/SellOrder'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
 import * as THREE from 'three'
+import Crystal from 'components/reusables/Crystal'
 
 const styles = {
-  crystal: {
+  crystalRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     '& > div': {
@@ -40,51 +41,11 @@ class TempleViewCrystals extends Component {
     this.crystalsOfOwner()
   }
 
-  componentDidUpdate = (_, prevState) => {
-    if (prevState.crystals.length !== this.state.crystals.length) {
-      this.state.crystals.forEach((crystal, i) => this.renderCrystal(i, crystal.uri))
-    }
-  }
-
-  renderCrystal = (id, uri) => {
-    var scene = new THREE.Scene();
-    var cam = new THREE.PerspectiveCamera(100, window.innerWidth/window.innerHeight, 0.1, 1000);
-    var renderer = new THREE.WebGLRenderer();
-    renderer.setSize(90, 120);
-
-    const div = document.getElementById(id)
-    div.appendChild(renderer.domElement);
-
-    var box = new THREE.SphereGeometry(2, 6, 1);
-    var mesh = new THREE.MeshLambertMaterial({
-      reflectivity: 1000,
-    });
-    var cube = new THREE.Mesh(box, mesh);
-    scene.add(cube);
-
-    var directionalLight = new THREE.DirectionalLight(0xffffff, 0.25);
-    scene.add(directionalLight);
-
-    // Take first 6 characters of URI string and use for the colour
-    const color = eval('0x' + uri.substr(0, 6))
-    var light = new THREE.PointLight(color, 25, 100);
-    light.position.set(50, 50, 50);
-    scene.add(light);
-
-    cam.position.z = 2.75;
-    cube.rotation.x = 0.05;
-    var render = function() {
-      requestAnimationFrame(render);
-      cube.rotation.y += 0.01;
-      renderer.render(scene, cam);
-    };
-
-    render();
-  }
-
   crystalsOfOwner = async () => {
     const { contracts, user } = this.props
     const crystals = []
+
+    this.setState({ isLoading: true })
 
     try {
       const crystalIds = await contracts.temple.crystalsOfOwner(user.address, { from: user.address })
@@ -100,7 +61,10 @@ class TempleViewCrystals extends Component {
       console.error(e)
     }
 
-    this.setState({ crystals })
+    this.setState({
+      crystals,
+      isLoading: false
+    })
   }
 
   onClickSell = () => {
@@ -138,27 +102,33 @@ class TempleViewCrystals extends Component {
 
     return (
       <MPIContainer sideButtons={sideButtons}>
-        <div className={classes.container}>
-          {crystals.map((crystal, i) =>
-            <div
-              key={i}
-              className={classes.crystal}
-              onClick={() => this.setState({ selectedCrystalId: crystal.id })}
-            >
-              <div style={{
-                backgroundColor: selectedCrystalId === crystal.id ? '#fff' : null,
-                color: selectedCrystalId === crystal.id ? '#000' : null,
-              }}>
-                {crystal.id}
+        {isLoading ?
+          <Fragment>
+            <Loader />
+            Loading crystals...
+          </Fragment>
+          :
+          <div className={classes.container}>
+            {crystals.map((crystal, i) =>
+              <div
+                key={i}
+                className={classes.crystalRow}
+                onClick={() => this.setState({ selectedCrystalId: crystal.id })}
+              >
+                <div style={{
+                  backgroundColor: selectedCrystalId === crystal.id ? '#fff' : null,
+                  color: selectedCrystalId === crystal.id ? '#000' : null,
+                }}>
+                  {crystal.id}
+                </div>
+                <div>
+                  {crystal.uri}
+                </div>
+                <Crystal uri={crystal.uri} />
               </div>
-              <div>
-                {crystal.uri}
-              </div>
-              <div id={i}>
-              </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        }
 
         {/* Sell box */}
         <Dialog type="status" isVisible={isSellBoxVisible}>
