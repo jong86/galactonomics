@@ -36,7 +36,9 @@ module.exports = async function(done) {
     console.log("Bob is getting all the commodities...")
     for (let i = 0; i <= 6; i++) {
       console.log("Getting commodity", i + "...")
+      console.log(">> travelling...")
       await gta.travelToPlanet(i, { from: bob })
+      console.log(">> refueling...")
       const refuelCost = await gta.refuelCost()
       await gta.refuel({ from: bob, value: refuelCost })
 
@@ -45,12 +47,14 @@ module.exports = async function(done) {
 
       // Mint commodity until user has enough to forge
       while (commodityBalance.lt(forgingAmount)) {
-        await mineCommodityXTimes(gia, 5, bob)
+        console.log(">> mining...")
+        await mineCommodityXTimes(gia, 4, bob)
         commodityBalance = await commodities.getBalance(i, { from: bob })
       }
 
       // Unload unneeded overflow in a sell order, each iteration, to conserve cargo capacity
       if (commodityBalance.gt(forgingAmount)) {
+        console.log(">> unloading excess...")
         await gea.createSellOrder(i, i, commodityBalance.sub(forgingAmount), 100, { from: bob })
       }
     }

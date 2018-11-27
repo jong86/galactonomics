@@ -25,7 +25,7 @@ function mineCommodityXTimes(gia, numTimes, player) {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < numTimes; i++) {
       try {
-        await gia.submitProofOfWork(commodityId, { from: player })
+        await gia.submitProofOfWork(0, { from: player })
       } catch (e) {
         reject(e)
       }
