@@ -79,7 +79,7 @@ class TempleIndustrial extends Component {
     }, () => {
       this.props.setDialogBox(
         <Fragment>
-          You have forged a new crystal:
+          You have forged a new crystal!
           {lastURI && <Crystal uri={lastURI} />}
         </Fragment>,
         'good',

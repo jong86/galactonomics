@@ -22,16 +22,8 @@ const styles = {
     },
   },
   sellBox: {
-    '& > div:nth-child(1)': {
+    '& > div:first-child': {
       marginBottom: '1em',
-    },
-    '& > div:nth-child(2), & > div:nth-child(3)': {
-      '& > div:nth-child(1)': {
-        // fontSize: 4,
-      },
-      '& > div:nth-child(2)': {
-
-      },
     },
   },
 }
@@ -258,11 +250,8 @@ class PlanetMarketplace extends Component {
     const {
       commodities,
       sellOrders,
-      sellPrice,
-      sellAmount,
       selectedCommodityId,
       selectedSellOrderId,
-      isSellBoxVisible,
       isLoading,
     } = this.state
 

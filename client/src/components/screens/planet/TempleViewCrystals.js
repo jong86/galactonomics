@@ -15,7 +15,12 @@ const styles = {
       border: '1px solid grey',
       padding: 8,
     }
-  }
+  },
+  sellBox: {
+    '& > div:nth-child(3)': {
+      marginBottom: '1em',
+    },
+  },
 }
 
 class TempleViewCrystals extends Component {
@@ -63,23 +68,29 @@ class TempleViewCrystals extends Component {
   }
 
   onClickSell = () => {
-    const { selectedCrystalId,  sellPrice } = this.state
+    const { selectedCrystalId, sellPrice, crystals } = this.state
+    const { classes } = this.props
+    const crystal = crystals.find(crystal => crystal.id === selectedCrystalId)
 
     this.props.setDialogBox(
-      <Fragment>
+      <div className={classes.sellBox}>
         <div>
-          Sell crystal with id {selectedCrystalId}
+          Are you sure you want to sell this crystal?
         </div>
-        <label htmlFor="sellPrice">
-          Price
+        <Crystal uri={crystal.uri} />
+        <div>
+          Id {selectedCrystalId}
+        </div>
+        <div>
+          <div>Price</div>
           <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
-        </label>
+        </div>
         <LaserFrame
           flavour="info"
           isButton
           onClick={this.sell}
         >Ok</LaserFrame>
-      </Fragment>,
+      </div>,
       'info',
       true,
     )

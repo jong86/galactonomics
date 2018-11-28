@@ -26,8 +26,10 @@ class Crystal extends Component {
     renderer.setClearColor(0x000000, 0.25);
     renderer.setSize(90, 120);
 
-    const div = document.getElementById(uri)
-    div.appendChild(renderer.domElement);
+    const divs = document.getElementsByClassName(uri)
+    for (const div of divs) {
+      div.appendChild(renderer.domElement);
+    }
 
     var box = new THREE.SphereGeometry(2, 6, 2);
     var mesh = new THREE.MeshStandardMaterial({
@@ -62,7 +64,7 @@ class Crystal extends Component {
     const { uri } = this.props
 
     return (
-      <div id={uri} />
+      <div className={uri} />
     )
   }
 }
