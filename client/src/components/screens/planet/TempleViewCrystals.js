@@ -4,12 +4,7 @@ import injectSheet from 'react-jss'
 import LaserFrame from 'components/reusables/LaserFrame'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import handleChange from 'utils/handleChange'
-import uuid from 'utils/uuid'
-import Dialog from 'components/reusables/Dialog'
-import SellOrder from 'components/reusables/SellOrder'
-import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
-import * as THREE from 'three'
 import Crystal from 'components/reusables/Crystal'
 
 const styles = {
@@ -68,7 +63,26 @@ class TempleViewCrystals extends Component {
   }
 
   onClickSell = () => {
-    this.setState({ isSellBoxVisible: true })
+    const { selectedCrystalId,  sellPrice } = this.state
+
+    this.props.setDialogBox(
+      <Fragment>
+        <div>
+          Sell crystal with id {selectedCrystalId}
+        </div>
+        <label htmlFor="sellPrice">
+          Price
+          <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
+        </label>
+        <LaserFrame
+          flavour="info"
+          isButton
+          onClick={this.sell}
+        >Ok</LaserFrame>
+      </Fragment>,
+      'info',
+      true,
+    )
   }
 
   sell = async () => {
@@ -82,16 +96,13 @@ class TempleViewCrystals extends Component {
     }
 
     this.crystalsOfOwner()
-    this.setState({ isSellBoxVisible: false })
+    this.props.setDialogBox(null)
   }
 
   render() {
     const { classes } = this.props
     const {
       crystals,
-      sellAmount,
-      sellPrice,
-      isSellBoxVisible,
       isLoading,
       selectedCrystalId,
     } = this.state
@@ -129,22 +140,6 @@ class TempleViewCrystals extends Component {
             )}
           </div>
         }
-
-        {/* Sell box */}
-        <Dialog flavour="status" isVisible={isSellBoxVisible}>
-          <div>
-            Sell crystal with id {selectedCrystalId}
-          </div>
-          <label htmlFor="sellPrice">
-            Price
-            <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
-          </label>
-          <LaserFrame
-            flavour="status"
-            isButton
-            onClick={this.sell}
-          >Ok</LaserFrame>
-        </Dialog>
       </MPIContainer>
     )
   }
@@ -160,7 +155,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
+    setDialogBox: (content, flavour, noDefaultButton) =>
+      dispatch({ type: 'SET_DIALOG_BOX', content, flavour, noDefaultButton }),
   }
 }
 
