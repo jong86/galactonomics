@@ -20,7 +20,20 @@ const styles = {
     '& > div:last-child': {
       flex: '0.8',
     },
-  }
+  },
+  sellBox: {
+    '& > div:nth-child(1)': {
+      marginBottom: '1em',
+    },
+    '& > div:nth-child(2), & > div:nth-child(3)': {
+      '& > div:nth-child(1)': {
+        // fontSize: 4,
+      },
+      '& > div:nth-child(2)': {
+
+      },
+    },
+  },
 }
 
 class PlanetMarketplace extends Component {
@@ -164,7 +177,8 @@ class PlanetMarketplace extends Component {
       return
     }
 
-    this.setState({ isSellBoxVisible: false })
+    // Close dialog box
+    this.props.setDialogBox(null)
     // Refresh list of sell orders
     this.getSellOrders()
     // Refresh commodity balances
@@ -206,6 +220,8 @@ class PlanetMarketplace extends Component {
       selectedCommodityId,
     } = this.state
 
+    const { classes } = this.props
+
     let commodity = { name: '', symbol: '' }
     if (commodities.length && typeof selectedCommodityId === 'number') {
       commodity = commodities[commodities.findIndex(commodity => commodity.id === selectedCommodityId)]
@@ -213,24 +229,22 @@ class PlanetMarketplace extends Component {
 
     if (selectedCommodityId !== null) {
       this.props.setDialogBox(
-        <Fragment>
+        <div className={classes.sellBox}>
+          <div>Selling {commodity.name}</div>
           <div>
-          Selling {commodity.name}
+            <div>Amount</div>
+            <input name="sellAmount" defaultValue={sellAmount} type="number" onChange={this.handleChange} />
           </div>
-          <label htmlFor="sellAmount">
-            Amount
-            <input name="sellAmount" defaultValue={sellAmount} type="number" onChange={this.handleChange}></input>
-          </label>
-          <label htmlFor="sellPrice">
-            Price
-            <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
-          </label>
+          <div>
+            <div>Price</div>
+            <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange} />
+          </div>
           <LaserFrame
             flavour="info"
             isButton
             onClick={this.createSellOrder}
           >Ok</LaserFrame>
-        </Fragment>,
+        </div>,
         "info",
         true,
       )
