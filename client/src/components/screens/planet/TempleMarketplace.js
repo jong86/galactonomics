@@ -2,12 +2,11 @@ import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import MPIContainer from 'components/screens/planet/MPIContainer'
+import Crystal from 'components/reusables/Crystal'
 
 const styles = {
   container: {
-    flexDirection: 'row',
     width: '100%',
-    alignItems: 'flex-start',
     '& > div:first-child': {
       flex: '0.2',
     },
@@ -15,7 +14,7 @@ const styles = {
       flex: '0.8',
     },
   },
-  crystal: {
+  crystalRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     '& > div': {
@@ -95,11 +94,11 @@ class TempleMarketplace extends Component {
       <MPIContainer sideButtons={sideButtons}>
         <div className={classes.container}>
           {crystals.length === 0 && 'There are no crystals for sale right now'}
-          {crystals.map((crystal, i) => (
+          {crystals.map(crystal => (
             <div
-            key={crystal.id}
-            className={classes.crystal}
-            onClick={() => this.setState({ selectedCrystalId: crystal.id })}
+              key={crystal.id}
+              className={classes.crystalRow}
+              onClick={() => this.setState({ selectedCrystalId: crystal.id })}
             >
               <div style={{
                 backgroundColor: selectedCrystalId === crystal.id ? '#fff' : null,
@@ -116,8 +115,7 @@ class TempleMarketplace extends Component {
               <div>
                 {crystal.seller}
               </div>
-              {/* <div id={i}>
-              </div> */}
+              <Crystal uri={crystal.uri} />
             </div>
           ))}
         </div>
