@@ -13,9 +13,15 @@ class Crystal extends Component {
     const color = eval('0x' + uri.substr(0, 6))
     const metalness = parseInt(uri.substr(7, 2), 16) / 256
     const roughness = parseInt(uri.substr(9, 2), 16) / 256
+    const aspectDenom = ((parseInt(uri.substr(10, 2), 16) / 256) * 10) + 5
+    const zoom = ((parseInt(uri.substr(12, 2), 16) / 256) * 0.5) + 0.75
 
     var scene = new THREE.Scene();
-    var cam = new THREE.PerspectiveCamera(100, 16/9, 0.1, 1000);
+
+    // denom can be number between 4 and 15
+    var cam = new THREE.PerspectiveCamera(100, 16/aspectDenom, 0.1, 1000);
+    cam.zoom = zoom
+    cam.updateProjectionMatrix()
     var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setClearColor(0x000000, 0.25);
     renderer.setSize(90, 120);
