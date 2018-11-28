@@ -10,12 +10,16 @@ export default (state, action) => {
     }
 
     case 'SET_DIALOG_BOX': {
-      const { content, flavour } = action
+      const { content, flavour, noDefaultButton } = action
 
       return {
         ...state,
-        dialogBoxContent: content,
-        dialogBoxFlavour: flavour,
+        dialogBox: {
+          ...state.dialogBox,
+          content,
+          flavour,
+          noDefaultButton,
+        }
       }
     }
 

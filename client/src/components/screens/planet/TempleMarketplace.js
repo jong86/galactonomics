@@ -1,14 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import LaserFrame from 'components/reusables/LaserFrame'
 import MPIContainer from 'components/screens/planet/MPIContainer'
-import handleChange from 'utils/handleChange'
-import uuid from 'utils/uuid'
-import Dialog from 'components/reusables/Dialog'
-import SellOrder from 'components/reusables/SellOrder'
-import getPlayerInfo from 'utils/getPlayerInfo'
-import Loader from 'components/reusables/Loader'
 
 const styles = {
   container: {

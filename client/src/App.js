@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react"
+import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import globalStyles from 'globalStyles'
@@ -92,7 +92,7 @@ class App extends Component {
   })
 
   initEventListening = () => {
-    const { contracts, user, web3, setIndustrialState } = this.props
+    const { contracts, setIndustrialState } = this.props
 
     // Reset areasMined when someone mines a commodity,
     // because timesMined variable used in hash is changed
@@ -131,7 +131,7 @@ class App extends Component {
 
   render() {
     const { isInitialized } = this.state
-    const { classes, currentScreen, dialogBoxContent, dialogBoxFlavour, clearDialogBoxContent, user } = this.props
+    const { classes, currentScreen, dialogBox, closeDialogBox, user } = this.props
     const planet = planets.find(planet => planet.id == user.currentPlanet)
 
     if (!isInitialized) {
@@ -157,15 +157,16 @@ class App extends Component {
       <div className={classes.App} style={bgImage()}>
         {/* Render current screen */}
         {screenMapping(currentScreen)}
-
-        {/* Global alert dialog box */}
-        <Dialog flavour={dialogBoxFlavour} isVisible={dialogBoxContent}>
-          {dialogBoxContent}
-          <LaserFrame
-            flavour={dialogBoxFlavour}
-            isButton
-            onClick={clearDialogBoxContent}
-          >Ok</LaserFrame>
+        {/* Global dialog box */}
+        <Dialog flavour={dialogBox.flavour} isVisible={dialogBox.content}>
+          {dialogBox.content}
+          {!dialogBox.noDefaultButton &&
+            <LaserFrame
+              flavour={dialogBox.flavour}
+              isButton
+              onClick={closeDialogBox}
+            >Ok</LaserFrame>
+          }
         </Dialog>
       </div>
     )
@@ -177,8 +178,7 @@ const mapStateToProps = state => {
     currentScreen: state.view.currentScreen,
     contracts: state.contracts,
     user: state.user,
-    dialogBoxContent: state.view.dialogBoxContent,
-    dialogBoxFlavour: state.view.dialogBoxFlavour,
+    dialogBox: state.view.dialogBox,
   }
 }
 
@@ -189,7 +189,7 @@ const mapDispatchToProps = dispatch => {
     setAddress: (address) => dispatch({ type: 'SET_ADDRESS', address }),
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
     setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
-    clearDialogBoxContent: () => dispatch({ type: 'SET_DIALOG_BOX', content: '' }),
+    closeDialogBox: () => dispatch({ type: 'SET_DIALOG_BOX', content: '' }),
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
   }
 }

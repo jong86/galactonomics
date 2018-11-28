@@ -5,7 +5,6 @@ import LaserFrame from 'components/reusables/LaserFrame'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
-import Dialog from 'components/reusables/Dialog'
 import Crystal from 'components/reusables/Crystal'
 import Sound from 'react-sound';
 import aCrystalWasForged from 'assets/sounds/aCrystalWasForged.wav'

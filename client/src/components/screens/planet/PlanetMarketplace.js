@@ -200,9 +200,41 @@ class PlanetMarketplace extends Component {
   }
 
   onClickSell = () => {
-    const { selectedCommodityId } = this.state
+    const {
+      commodities,
+      sellPrice,
+      sellAmount,
+      selectedCommodityId,
+    } = this.state
+
+    let commodity = { name: '', symbol: '' }
+    if (commodities.length && typeof selectedCommodityId === 'number') {
+      commodity = commodities[commodities.findIndex(commodity => commodity.id === selectedCommodityId)]
+    }
+
     if (selectedCommodityId !== null) {
-      this.setState({ isSellBoxVisible: true })
+      this.props.setDialogBox(
+        <Fragment>
+          <div>
+          Selling {commodity.name}
+          </div>
+          <label htmlFor="sellAmount">
+            Amount
+            <input name="sellAmount" defaultValue={sellAmount} type="number" onChange={this.handleChange}></input>
+          </label>
+          <label htmlFor="sellPrice">
+            Price
+            <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
+          </label>
+          <LaserFrame
+            flavour="info"
+            isButton
+            onClick={this.createSellOrder}
+          >Ok</LaserFrame>
+        </Fragment>,
+        "info",
+        true,
+      )
     } else {
       this.props.setDialogBox("You need to select a commodity to sell", "bad")
     }
@@ -282,26 +314,6 @@ class PlanetMarketplace extends Component {
             </div>
           }
         </div>
-
-        {/* Sell box */}
-        <Dialog flavour="status" isVisible={isSellBoxVisible}>
-          <div>
-            Selling {commodity.name}
-          </div>
-          <label htmlFor="sellAmount">
-            Amount
-            <input name="sellAmount" defaultValue={sellAmount} type="number" onChange={this.handleChange}></input>
-          </label>
-          <label htmlFor="sellPrice">
-            Price
-            <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
-          </label>
-          <LaserFrame
-            flavour="status"
-            isButton
-            onClick={this.createSellOrder}
-          >Ok</LaserFrame>
-        </Dialog>
       </MPIContainer>
     )
   }
@@ -317,7 +329,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
+    setDialogBox: (content, flavour, noDefaultButton) =>
+      dispatch({ type: 'SET_DIALOG_BOX', content, flavour, noDefaultButton }),
   }
 }
 
