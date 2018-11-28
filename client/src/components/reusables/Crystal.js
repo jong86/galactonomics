@@ -62,8 +62,7 @@ class Crystal extends Component {
     const { uri } = this.props
 
     return (
-      <div id={uri}>
-      </div>
+      <div id={uri} />
     )
   }
 }
