@@ -15,7 +15,7 @@ const styles = {
     backgroundColor: '#000',
   },
   backdrop: {
-    display: ({ isVisible }) => isVisible ? 'absolute' : 'none',
+    display: ({ isVisible }) => isVisible ? 'flex' : 'none',
     zIndex: 2,
     position: 'absolute',
     background: 'rgba(0, 0, 0, 0.75)',

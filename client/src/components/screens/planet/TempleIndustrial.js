@@ -7,6 +7,8 @@ import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
 import Dialog from 'components/reusables/Dialog'
 import Crystal from 'components/reusables/Crystal'
+import Sound from 'react-sound';
+import aCrystalWasForged from 'assets/sounds/aCrystalWasForged.wav'
 
 const styles = {
   acceptDecline: {
@@ -20,6 +22,7 @@ class TempleIndustrial extends Component {
     this.state = {
       isForging: false,
       isDialogVisible: false,
+      playSound: false,
     }
   }
 
@@ -37,6 +40,7 @@ class TempleIndustrial extends Component {
     this.setState({
       isForging: false,
       isDialogVisible: true,
+      playSound: true,
     })
     await getPlayerInfo()
   }
@@ -55,8 +59,6 @@ class TempleIndustrial extends Component {
       console.error(e)
     }
 
-    console.log('lastURI', lastURI);
-
     this.setState({
       crystalURI: lastURI,
       isLoading: false,
@@ -65,7 +67,7 @@ class TempleIndustrial extends Component {
 
   render() {
     const { classes } = this.props
-    const { isForging, isDialogVisible, crystalURI } = this.state
+    const { isForging, isDialogVisible, crystalURI, playSound } = this.state
 
     return (
       <MPIContainer>
@@ -99,6 +101,12 @@ class TempleIndustrial extends Component {
             onClick={() => this.setState({ isDialogVisible: false })}
           >Ok</LaserFrame>
         </Dialog>
+        <Sound
+          url={aCrystalWasForged}
+          playStatus={playSound && Sound.status.PLAYING}
+          volume={25}
+          onFinishedPlaying={() => this.setState({ playSound: false })}
+        />
       </MPIContainer>
     )
   }
