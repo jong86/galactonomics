@@ -8,6 +8,7 @@ import Loader from 'components/reusables/Loader'
 import Crystal from 'components/reusables/Crystal'
 import Sound from 'react-sound';
 import aCrystalWasForged from 'assets/sounds/aCrystalWasForged.wav'
+import getRevertMsg from 'utils/getRevertMsg'
 
 const styles = {
   acceptDecline: {
@@ -15,38 +16,52 @@ const styles = {
   }
 }
 
+const defaultButtonText = 'Forge'
+
 class TempleIndustrial extends Component {
   constructor() {
     super()
     this.state = {
-      isForging: false,
-      isDialogVisible: false,
+      isLoading: false,
       playSound: false,
+      buttonText: defaultButtonText,
     }
   }
 
   forge = async () => {
-    const { contracts, user } = this.props
-    this.setState({ isForging: true })
+    const { contracts, user, setDialogBox } = this.props
 
-    try {
-      await contracts.temple.forge({ from: user.address })
-    } catch (e) {
-      console.error(e)
-    }
-
-    this.getLatestCrystalURI()
     this.setState({
-      isForging: false,
+      isLoading: true,
+      buttonText: 'Waiting for signature...'
     })
-    await getPlayerInfo()
+
+    contracts.temple.forge({ from: user.address })
+      .on('transactionHash', () => {
+        this.setState({
+          buttonText: 'Waiting for confirmation...'
+        })
+      })
+      .on('receipt', () => {
+        getPlayerInfo()
+        this.getLatestCrystalURI()
+      })
+      .on('error', e => {
+        setDialogBox(getRevertMsg(e.message), "bad")
+        this.setState({
+          isLoading: false,
+          buttonText: 'Forge',
+        })
+      })
   }
 
   getLatestCrystalURI = async () => {
     const { contracts, user } = this.props
     let lastURI
 
-    this.setState({ isLoading: true })
+    this.setState({
+      isLoading: true
+    })
 
     try {
       const crystalIds = await contracts.temple.crystalsOfOwner(user.address, { from: user.address })
@@ -60,6 +75,7 @@ class TempleIndustrial extends Component {
       crystalURI: lastURI,
       isLoading: false,
       playSound: true,
+      buttonText: defaultButtonText,
     }, () => {
       this.props.setDialogBox(
         <Fragment>
@@ -73,7 +89,7 @@ class TempleIndustrial extends Component {
 
   render() {
     const { classes } = this.props
-    const { isForging, isDialogVisible, crystalURI, playSound } = this.state
+    const { isLoading, playSound, buttonText } = this.state
 
     return (
       <MPIContainer>
@@ -83,21 +99,13 @@ class TempleIndustrial extends Component {
           <div>Would like to forge a crystal?</div>
           <div>(Requires 10,000 kg of all 7 commodities)</div>
           <div className={classes.acceptDecline}>
-            {isForging ?
-              <Loader />
-              :
               <Fragment>
                 <LaserFrame
-                  isButton
-                  flavour="bad"
-                >Decline</LaserFrame>
-                <LaserFrame
-                  isButton
+                  isButton={!isLoading}
                   flavour="good"
                   onClick={this.forge}
-                >Accept</LaserFrame>
+                >{buttonText}{isLoading && <Loader />}</LaserFrame>
               </Fragment>
-            }
           </div>
         </LaserFrame>
         <Sound
@@ -116,14 +124,12 @@ const mapStateToProps = state => {
     contracts: state.contracts,
     user: state.user,
     web3: state.web3,
-    industrial: state.industrial,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
-    setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
   }
 }
 

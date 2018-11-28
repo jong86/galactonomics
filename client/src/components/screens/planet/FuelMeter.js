@@ -43,19 +43,19 @@ class FuelMeter extends Component {
     const { contracts, user } = this.props
 
     contracts.gta.refuel({ from: user.address, value: this.state.refuelCost })
-    .on('transactionHash', () => {
-      this.setState({ isRefueling: true })
-    })
-    .on('receipt', async () => {
-      await getPlayerInfo()
-      this.setState({
-        isRefueling: false,
-        doneFueling: true,
+      .on('transactionHash', () => {
+        this.setState({ isRefueling: true })
       })
-    })
-    .on('error', e => {
-      this.props.setDialogBox(getRevertMsg(e.message), 'bad')
-    })
+      .on('receipt', async () => {
+        await getPlayerInfo()
+        this.setState({
+          isRefueling: false,
+          doneFueling: true,
+        })
+      })
+      .on('error', e => {
+        this.props.setDialogBox(getRevertMsg(e.message), 'bad')
+      })
   }
 
   render() {

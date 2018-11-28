@@ -25,16 +25,16 @@ class SpaceshipDealer extends Component {
       "My Spaceship",
       { from: user.address, value: web3.utils.toWei("0.01", "ether") }
     )
-    .on('transactionHash', () => {
-      this.setState({ isLoading: true, loadingText: 'Waiting processing by the Galactic Transit Authority' })
-    })
-    .on('receipt', receipt => {
-      changeScreen('Travel')
-    })
-    .on('error', e => {
-      this.setState({ isLoading: false })
-      setDialogBox(getRevertMsg(e.message), "bad")
-    })
+      .on('transactionHash', () => {
+        this.setState({ isLoading: true, loadingText: 'Waiting processing by the Galactic Transit Authority' })
+      })
+      .on('receipt', receipt => {
+        changeScreen('Travel')
+      })
+      .on('error', e => {
+        this.setState({ isLoading: false })
+        setDialogBox(getRevertMsg(e.message), "bad")
+      })
   }
 
   render() {

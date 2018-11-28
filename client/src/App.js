@@ -97,13 +97,13 @@ class App extends Component {
     // Reset areasMined when someone mines a commodity,
     // because timesMined variable used in hash is changed
     contracts.gia.CommodityMined({ fromBlock: 'latest' })
-    .on('data', data => {
-      const { miner } = data.returnValues
-      console.log(miner, 'just mined a commodity')
-      setIndustrialState({
-        areasMined: [],
+      .on('data', data => {
+        const { miner } = data.returnValues
+        console.log(miner, 'just mined a commodity')
+        setIndustrialState({
+          areasMined: [],
+        })
       })
-    })
   }
 
   checkIfOwnsSpaceship = () => new Promise(async (resolve, reject) => {

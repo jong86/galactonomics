@@ -28,17 +28,17 @@ class Travelling extends Component {
     const { contracts, user, changeScreen, setUserInfo, setDialogBox } = this.props
 
     contracts.gta.travelToPlanet(user.travellingTo, { from: user.address })
-    .on('transactionHash', () => {
-      this.setState({ isTravelling: true })
-    })
-    .on('receipt', receipt => {
-      setUserInfo({ currentPlanet: user.travellingTo })
-      changeScreen('PlanetIntro')
-    })
-    .on('error', e => {
-      setDialogBox(getRevertMsg(e.message), "bad")
-      changeScreen('Travel')
-    })
+      .on('transactionHash', () => {
+        this.setState({ isTravelling: true })
+      })
+      .on('receipt', receipt => {
+        setUserInfo({ currentPlanet: user.travellingTo })
+        changeScreen('PlanetIntro')
+      })
+      .on('error', e => {
+        setDialogBox(getRevertMsg(e.message), "bad")
+        changeScreen('Travel')
+      })
   }
 
   render() {
