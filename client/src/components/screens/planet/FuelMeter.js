@@ -54,10 +54,10 @@ class FuelMeter extends Component {
       })
     })
     .on('error', e => {
-      this.props.setAlertBoxContent(getRevertMsg(e.message))
+      this.props.setDialogBox(getRevertMsg(e.message), 'bad')
     })
   }
-  
+
   render() {
     const { classes, currentFuel, maxFuel, web3 } = this.props
     const { isRefueling, doneFueling } = this.state
@@ -80,11 +80,11 @@ class FuelMeter extends Component {
         <div>{currentFuel}/{maxFuel} megalitres</div>
         {!isFull && <div>Cost to refuel: Ξ{refuelCost}</div>}
         <LaserFrame
-          type={isRefueling ? 'status' : 'good'}
+          flavour={isRefueling ? 'status' : 'good'}
           isButton={!isFull}
           size="wide"
           onClick={() => { if (!isFull) this.refuel()}}
-        >{isRefueling ? <div>Refueling... <Loader type="status" /></div> : (isFull ? 'Tank is full' : 'Fill up tank')}</LaserFrame>
+        >{isRefueling ? <div>Refueling... <Loader flavour="status" /></div> : (isFull ? 'Tank is full' : 'Fill up tank')}</LaserFrame>
         <Sound
           url={receivedSomething}
           playStatus={doneFueling && Sound.status.PLAYING}
@@ -106,7 +106,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setAlertBoxContent: content => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content }),
+    setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
   }
 }
 

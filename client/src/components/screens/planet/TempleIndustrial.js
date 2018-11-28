@@ -39,8 +39,6 @@ class TempleIndustrial extends Component {
     this.getLatestCrystalURI()
     this.setState({
       isForging: false,
-      isDialogVisible: true,
-      playSound: true,
     })
     await getPlayerInfo()
   }
@@ -62,6 +60,15 @@ class TempleIndustrial extends Component {
     this.setState({
       crystalURI: lastURI,
       isLoading: false,
+      playSound: true,
+    }, () => {
+      this.props.setDialogBox(
+        <Fragment>
+          You have forged a new crystal:
+          {lastURI && <Crystal uri={lastURI} />}
+        </Fragment>,
+        'good',
+      )
     })
   }
 
@@ -83,24 +90,17 @@ class TempleIndustrial extends Component {
               <Fragment>
                 <LaserFrame
                   isButton
-                  type="bad"
+                  flavour="bad"
                 >Decline</LaserFrame>
                 <LaserFrame
                   isButton
-                  type="good"
+                  flavour="good"
                   onClick={this.forge}
                 >Accept</LaserFrame>
               </Fragment>
             }
           </div>
         </LaserFrame>
-        <Dialog isVisible={isDialogVisible}>
-          You have forged a new crystal:
-          {crystalURI && <Crystal uri={crystalURI} />}
-          <LaserFrame
-            onClick={() => this.setState({ isDialogVisible: false })}
-          >Ok</LaserFrame>
-        </Dialog>
         <Sound
           url={aCrystalWasForged}
           playStatus={playSound && Sound.status.PLAYING}
@@ -123,7 +123,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setAlertBoxContent: content => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content }),
+    setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
     setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
   }
 }

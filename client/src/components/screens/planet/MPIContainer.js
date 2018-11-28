@@ -64,7 +64,7 @@ class MPIContainer extends Component {
             <div >
               {/* Top-right */}
               <LaserFrame
-                type="status"
+                flavour="status"
                 size="wide"
                 >Ξ{user.balance}</LaserFrame>
               <div style={{ marginTop: '20%', width: '100%' }}>

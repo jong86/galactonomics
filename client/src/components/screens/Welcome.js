@@ -27,7 +27,7 @@ class Welcome extends Component {
         <LaserFrame
           isButton
           onClick={this.goToNextScreen}
-          type="good"
+          flavour="good"
         >Continue</LaserFrame>
       </div>
     );

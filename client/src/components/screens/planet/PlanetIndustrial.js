@@ -31,7 +31,7 @@ class PlanetIndustrial extends Component {
   }
 
   componentDidUpdate = prevProps => {
-    const { setIndustrialState, setAlertBoxContent } = this.props
+    const { setIndustrialState, setDialogBox } = this.props
     const { isMining, nonce, areaStart, areaEnd, areasMined, commodityName } = this.props.industrial
 
     // When mining is started... (an area is clicked)
@@ -47,7 +47,7 @@ class PlanetIndustrial extends Component {
         // Array that holds indexes of areas that have been mined
         areasMined: areasMined.concat([areaStart / AREA_SIZE]),
       })
-      setAlertBoxContent(`No ${commodityName} was found in that area, \nclick to continue.`)
+      setDialogBox(`No ${commodityName} was found in that area, \nclick to continue.`)
     }
   }
 
@@ -152,7 +152,7 @@ class PlanetIndustrial extends Component {
                 Click an area to start mining for {commodityName}...
                 <MiningPad areaSize={AREA_SIZE} />
                 <LaserFrame
-                  type='status'
+                  flavour='status'
                 >
                   {areaStart && areaEnd ? `Area ${areaStart} to ${areaEnd}` : 'Waiting...'}
                 </LaserFrame>
@@ -163,7 +163,7 @@ class PlanetIndustrial extends Component {
                 <div>
                   Mining in area {areaStart} to {areaEnd}...
                 </div>
-                <LaserFrame type='bad'>
+                <LaserFrame flavour='bad'>
                   { hash }
                 </LaserFrame>
                 <LaserFrame
@@ -179,7 +179,7 @@ class PlanetIndustrial extends Component {
                 <div>
                   Valid proof of work hash found!
                 </div>
-                <LaserFrame type='good'>
+                <LaserFrame flavour='good'>
                   { hash }
                 </LaserFrame>
                 <LaserFrame
@@ -219,7 +219,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setAlertBoxContent: content => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content }),
+    setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
     setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
   }
 }

@@ -28,7 +28,7 @@ class PlanetIntro extends Component {
         <LaserFrame
           isButton
           onClick={() => changeScreen('PlanetHome')}
-          type="good"
+          flavour="good"
         >Continue >></LaserFrame>
         <img
           src={planet.img}

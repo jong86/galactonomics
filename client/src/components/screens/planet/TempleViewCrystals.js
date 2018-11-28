@@ -131,7 +131,7 @@ class TempleViewCrystals extends Component {
         }
 
         {/* Sell box */}
-        <Dialog type="status" isVisible={isSellBoxVisible}>
+        <Dialog flavour="status" isVisible={isSellBoxVisible}>
           <div>
             Sell crystal with id {selectedCrystalId}
           </div>
@@ -140,7 +140,7 @@ class TempleViewCrystals extends Component {
             <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
           </label>
           <LaserFrame
-            type="status"
+            flavour="status"
             isButton
             onClick={this.sell}
           >Ok</LaserFrame>
@@ -160,7 +160,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setAlertBoxContent: content => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content }),
+    setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
   }
 }
 

@@ -1,17 +1,13 @@
 import React from "react";
-import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import colorFromType from 'utils/colorFromType'
+import colorFromFlavour from 'utils/colorFromFlavour'
 
 const styles = {
   LaserFrame: {
     textAlign: "center",
-    border: ({ type }) => '1px solid ' + colorFromType(type),
-    color: ({ type, active }) => {
-      // if (active) return '#000'
-      return colorFromType(type)
-    },
-    backgroundColor: ({ type, active }) => {
+    border: ({ flavour }) => '1px solid ' + colorFromFlavour(flavour),
+    color: ({ flavour }) => colorFromFlavour(flavour),
+    backgroundColor: ({ active }) => {
       if (!active) return 'rgba(0, 0, 0, 0.75)'
       return '#444'
     },
@@ -28,10 +24,9 @@ const styles = {
     margin: '4px',
     cursor: ({ isButton }) => isButton ? 'pointer' : 'default',
     userSelect: 'none',
-
     '&:hover': {
       color: ({ isButton }) => isButton ? '#000' : null,
-      backgroundColor: ({ isButton, type }) => isButton ? colorFromType(type) : null,
+      backgroundColor: ({ isButton, flavour }) => isButton ? colorFromFlavour(flavour) : null,
     }
   }
 }

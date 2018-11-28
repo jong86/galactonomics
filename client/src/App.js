@@ -131,7 +131,7 @@ class App extends Component {
 
   render() {
     const { isInitialized } = this.state
-    const { classes, currentScreen, alertBoxContent, clearAlertBoxContent, user } = this.props
+    const { classes, currentScreen, dialogBoxContent, dialogBoxFlavour, clearDialogBoxContent, user } = this.props
     const planet = planets.find(planet => planet.id == user.currentPlanet)
 
     if (!isInitialized) {
@@ -159,12 +159,12 @@ class App extends Component {
         {screenMapping(currentScreen)}
 
         {/* Global alert dialog box */}
-        <Dialog type="bad" isVisible={alertBoxContent}>
-          {alertBoxContent}
+        <Dialog flavour={dialogBoxFlavour} isVisible={dialogBoxContent}>
+          {dialogBoxContent}
           <LaserFrame
-            type="bad"
+            flavour={dialogBoxFlavour}
             isButton
-            onClick={clearAlertBoxContent}
+            onClick={clearDialogBoxContent}
           >Ok</LaserFrame>
         </Dialog>
       </div>
@@ -177,7 +177,8 @@ const mapStateToProps = state => {
     currentScreen: state.view.currentScreen,
     contracts: state.contracts,
     user: state.user,
-    alertBoxContent: state.view.alertBoxContent,
+    dialogBoxContent: state.view.dialogBoxContent,
+    dialogBoxFlavour: state.view.dialogBoxFlavour,
   }
 }
 
@@ -188,7 +189,7 @@ const mapDispatchToProps = dispatch => {
     setAddress: (address) => dispatch({ type: 'SET_ADDRESS', address }),
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
     setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
-    clearAlertBoxContent: () => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content: '' }),
+    clearDialogBoxContent: () => dispatch({ type: 'SET_DIALOG_BOX', content: '' }),
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
   }
 }

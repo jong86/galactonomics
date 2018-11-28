@@ -161,7 +161,7 @@ class PlanetMarketplace extends Component {
       )
     } catch (e) {
       this.setState({ isSellBoxVisible: false })
-      this.props.setAlertBoxContent("Error creating sell order")
+      this.props.setDialogBox("Error creating sell order", "bad")
       return
     }
 
@@ -187,7 +187,7 @@ class PlanetMarketplace extends Component {
         { from: user.address, value: sellOrder.amount.mul(sellOrder.price)},
       )
     } catch (e) {
-      this.props.setAlertBoxContent("Error buying order")
+      this.props.setDialogBox("Error buying order", "bad")
       return
     }
 
@@ -204,7 +204,7 @@ class PlanetMarketplace extends Component {
     if (selectedCommodityId !== null) {
       this.setState({ isSellBoxVisible: true })
     } else {
-      this.props.setAlertBoxContent("You need to select a commodity to sell")
+      this.props.setDialogBox("You need to select a commodity to sell", "bad")
     }
   }
 
@@ -284,7 +284,7 @@ class PlanetMarketplace extends Component {
         </div>
 
         {/* Sell box */}
-        <Dialog type="status" isVisible={isSellBoxVisible}>
+        <Dialog flavour="status" isVisible={isSellBoxVisible}>
           <div>
             Selling {commodity.name}
           </div>
@@ -297,7 +297,7 @@ class PlanetMarketplace extends Component {
             <input name="sellPrice" defaultValue={sellPrice} type="number" onChange={this.handleChange}></input>
           </label>
           <LaserFrame
-            type="status"
+            flavour="status"
             isButton
             onClick={this.createSellOrder}
           >Ok</LaserFrame>
@@ -317,7 +317,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setAlertBoxContent: content => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content }),
+    setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
   }
 }
 

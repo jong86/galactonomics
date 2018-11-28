@@ -1,6 +1,6 @@
 import React from "react";
 import injectSheet from 'react-jss'
-import colorFromType from 'utils/colorFromType'
+import colorFromFlavour from 'utils/colorFromFlavour'
 
 const styles = {
   Loader: {
@@ -8,9 +8,9 @@ const styles = {
   },
 }
 
-let Loader = ({ classes, type, size = 32 }) => (
+let Loader = ({ classes, flavour, size = 32 }) => (
   // <!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->
-  <svg className={classes.Loader} width={size} height={size} viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke={colorFromType(type)}>
+  <svg className={classes.Loader} width={size} height={size} viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke={colorFromFlavour(flavour)}>
     <g fill="none" fillRule="evenodd">
       <g transform="translate(1 1)" strokeWidth="2">
         <circle strokeOpacity=".5" cx="18" cy="18" r="18"/>

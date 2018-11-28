@@ -15,7 +15,7 @@ let CargoMeter = ({ classes, current = 0, max = 0, cargoPerCommodity = [] }) => 
       {"Total cargo: " + current.toString()}/{max.toString() + " kg"}
     </LaserFrame>
     {cargoPerCommodity.map((commodity, i) =>
-      <LaserFrame key={i} type="dark">
+      <LaserFrame key={i} flavour="dark">
         {commodities[i].symbol} {commodity.amount}
       </LaserFrame>
     )}

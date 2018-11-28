@@ -1,16 +1,16 @@
 import React from "react";
 import injectSheet from 'react-jss'
-import colorFromType from 'utils/colorFromType'
+import colorFromFlavour from 'utils/colorFromFlavour'
 
 const styles = {
   Rect: {
     textAlign: "center",
-    border: ({ type }) => '1px solid ' + colorFromType(type),
-    color: ({ type, active }) => {
+    border: ({ flavour }) => '1px solid ' + colorFromFlavour(flavour),
+    color: ({ flavour, active }) => {
       // if (active) return '#000'
-      return colorFromType(type)
+      return colorFromFlavour(flavour)
     },
-    backgroundColor: ({ type, active }) => {
+    backgroundColor: ({ flavour, active }) => {
       if (!active) return '#000'
       return '#444'
     },
@@ -30,7 +30,7 @@ const styles = {
 
     '&:hover': {
       color: ({ isButton }) => isButton ? '#000' : null,
-      backgroundColor: ({ isButton, type }) => isButton ? colorFromType(type) : null,
+      backgroundColor: ({ isButton, flavour }) => isButton ? colorFromFlavour(flavour) : null,
     }
   }
 }

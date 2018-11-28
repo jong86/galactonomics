@@ -1,10 +1,10 @@
 import React from "react";
 import injectSheet from 'react-jss'
-import colorFromType from 'utils/colorFromType'
+import colorFromFlavour from 'utils/colorFromFlavour'
 
 const styles = {
   Dialog: {
-    border: ({ type }) => '1px solid ' + colorFromType(type),
+    border: ({ flavour }) => '1px solid ' + colorFromFlavour(flavour),
     color: '#fff',
     width: 'fit-content',
     borderRadius: 4,
@@ -24,7 +24,7 @@ const styles = {
   }
 }
 
-let Dialog = ({ classes, type, children }) => (
+let Dialog = ({ classes, children }) => (
   <div className={classes.backdrop}>
     <div className={classes.Dialog}>
       { children }

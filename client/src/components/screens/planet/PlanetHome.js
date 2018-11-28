@@ -71,11 +71,11 @@ class PlanetHome extends Component {
             <LaserFrame
               onClick={() => changeScreen('Travel')}
               isButton
-              type="good"
+              flavour="good"
               size="wide"
             >Travel (Leave {planet.name})</LaserFrame>
             <LaserFrame
-              type="status"
+              flavour="status"
               size="wide"
             >Ξ{user.balance}</LaserFrame>
           </div>
@@ -85,7 +85,7 @@ class PlanetHome extends Component {
                 <LaserFrame
                   onClick={() => changeScreen('TempleMarketplace')}
                   isButton
-                  type="info"
+                  flavour="info"
                   size="wide3"
                 >
                   <MdBusinessCenter size={iconSize} />
@@ -94,7 +94,7 @@ class PlanetHome extends Component {
                 <LaserFrame
                   onClick={() => changeScreen('PlanetPrices')}
                   isButton
-                  type="info"
+                  flavour="info"
                   size="wide3"
                 >
                   <FaChartBar size={iconSize} />
@@ -103,7 +103,7 @@ class PlanetHome extends Component {
                 <LaserFrame
                   onClick={() => changeScreen('TempleIndustrial')}
                   isButton
-                  type="info"
+                  flavour="info"
                   size="wide3"
                 >
                   <FaHammer size={iconSize} />
@@ -112,7 +112,7 @@ class PlanetHome extends Component {
                 <LaserFrame
                   onClick={() => changeScreen('TempleViewCrystals')}
                   isButton
-                  type="info"
+                  flavour="info"
                   size="wide3"
                 >
                   <FaEthereum size={iconSize} />
@@ -124,7 +124,7 @@ class PlanetHome extends Component {
                 <LaserFrame
                   onClick={() => changeScreen('PlanetMarketplace')}
                   isButton
-                  type="info"
+                  flavour="info"
                   size="wide3"
                 >
                   <FaBalanceScale size={iconSize} />
@@ -133,7 +133,7 @@ class PlanetHome extends Component {
                 <LaserFrame
                   onClick={() => changeScreen('PlanetPrices')}
                   isButton
-                  type="info"
+                  flavour="info"
                   size="wide3"
                 >
                   <FaChartBar className={classes.icon}size={iconSize} />
@@ -142,7 +142,7 @@ class PlanetHome extends Component {
                 <LaserFrame
                   onClick={() => changeScreen('PlanetIndustrial')}
                   isButton
-                  type="info"
+                  flavour="info"
                   size="wide3"
                 >
                   <FaIndustry size={iconSize} />

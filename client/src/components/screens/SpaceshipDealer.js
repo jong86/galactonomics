@@ -19,7 +19,7 @@ class SpaceshipDealer extends Component {
   buySpaceship = async () => {
     this.setState({ isLoading: true, loadingText: 'Waiting for your approval of ownership transfer' })
 
-    const { web3, contracts, user, changeScreen, setAlertBoxContent } = this.props
+    const { web3, contracts, user, changeScreen, setDialogBox } = this.props
 
     contracts.gta.buySpaceship(
       "My Spaceship",
@@ -33,7 +33,7 @@ class SpaceshipDealer extends Component {
     })
     .on('error', e => {
       this.setState({ isLoading: false })
-      setAlertBoxContent(getRevertMsg(e.message))
+      setDialogBox(getRevertMsg(e.message), "bad")
     })
   }
 
@@ -49,8 +49,8 @@ class SpaceshipDealer extends Component {
         <img src={spaceship} />
         <LaserFrame
           onClick={this.buySpaceship}
-          type="good"
-        >{isLoading ? <div>{loadingText} <Loader type="good" /></div> : 'Okay'}</LaserFrame>
+          flavour="good"
+        >{isLoading ? <div>{loadingText} <Loader flavour="good" /></div> : 'Okay'}</LaserFrame>
       </div>
     );
   }
@@ -67,7 +67,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
-    setAlertBoxContent: content => dispatch({ type: 'SET_ALERT_BOX_CONTENT', content }),
+    setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
   }
 }
 
