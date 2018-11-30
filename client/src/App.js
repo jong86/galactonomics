@@ -92,17 +92,23 @@ class App extends Component {
   })
 
   initEventListening = () => {
-    const { contracts, setIndustrialState } = this.props
+    const { contracts, setIndustrialState, web3, setEthState } = this.props
 
-    // Reset areasMined when someone mines a commodity,
-    // because timesMined variable used in hash is changed
+    // Disable mining for commodity that was mined until next block
     contracts.gia.CommodityMined({ fromBlock: 'latest' })
       .on('data', data => {
         const { miner } = data.returnValues
-        console.log(miner, 'just mined a commodity')
-        setIndustrialState({
-          areasMined: [],
-        })
+        console.log('data.returnValues', data.returnValues);
+        console.log(miner, 'just mined commodity X')
+        // setIndustrialState({ isMiningDisabled: true })
+      })
+
+    // Reset areasMined when someone mines a commodity
+    web3.eth.subscribe('newBlockHeaders')
+      .on('data',  data => {
+        console.log('data', data);
+        setIndustrialState({ areasMined: [] })
+        setEthState({ blockNumber: data.number })
       })
   }
 
@@ -179,16 +185,18 @@ const mapStateToProps = state => {
     contracts: state.contracts,
     user: state.user,
     dialogBox: state.view.dialogBox,
+    web3: state.web3,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    setWeb3: (web3) => dispatch({ type: 'SET_WEB3', web3 }),
+    setWeb3: web3 => dispatch({ type: 'SET_WEB3', web3 }),
     addContract: (instance, name) => dispatch({ type: 'ADD_CONTRACT', instance, name }),
-    setAddress: (address) => dispatch({ type: 'SET_ADDRESS', address }),
+    setAddress: address => dispatch({ type: 'SET_ADDRESS', address }),
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
     setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
+    setEthState: ethState => dispatch({ type: 'SET_ETH_STATE', ethState }),
     closeDialogBox: () => dispatch({ type: 'SET_DIALOG_BOX', content: '' }),
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
   }

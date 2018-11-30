@@ -15,7 +15,6 @@ import "../interfaces/ICommodity.sol";
 contract Commodity is ERC20, ERC20Detailed, AccessControlled {
   uint public miningReward;
   bytes32 public miningTarget;
-  uint public timesMined = 0;
   bytes32 public prevMiningHash;
 
   constructor(string _name, string _symbol, uint _miningReward, bytes32 _miningTarget)
@@ -34,7 +33,6 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled {
    */
   function dispenseReward(address _to, bytes32 _hash) public onlyGIA returns (bool) {
     _mint(_to, miningReward);
-    timesMined = timesMined.add(1);
     prevMiningHash = _hash;
     miningReward = miningReward.sub(1);
     return true;

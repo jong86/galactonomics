@@ -17,6 +17,7 @@ contract GalacticIndustrialAuthority {
   using AddressCast for address;
   using BytesCast for bytes32;
   using UintCast for uint8;
+  using UintCast for uint;
 
   IGalacticTransitAuthority gta;
   ICommodities commodities;
@@ -27,9 +28,6 @@ contract GalacticIndustrialAuthority {
   }
 
   event CommodityMined(bytes32 _hash, address miner);
-
-  event LogBytes(bytes32 b);
-  event LogString(string s);
 
   /**
    * @notice Mints new commodity tokens for a player
@@ -47,14 +45,10 @@ contract GalacticIndustrialAuthority {
         _nonce,
         _commodityId.toString(),
         _prevHash,
-        msg.sender.toString()
+        msg.sender.toString(),
+        block.number.toString()
       )
     );
-
-    emit LogString(_commodityId.toString());
-    emit LogString(_prevHash);
-
-    // require(_hash < commodities.getMiningTarget(_commodityId), "That is not a valid proof-of-work");
 
     require(commodities.getInterface(_commodityId).dispenseReward(msg.sender, _hash), "Error doing reward");
     emit CommodityMined(_hash, msg.sender);
@@ -66,17 +60,16 @@ contract GalacticIndustrialAuthority {
   function getMiningData() external view returns (
     uint miningReward,
     bytes32 miningTarget,
-    uint timesMined,
-    string prevHash
+    string prevHash,
+    uint blockNumber
   ) {
-    require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
     uint8 _commodityId = gta.getCurrentPlanet(msg.sender);
 
     return (
       commodities.getInterface(_commodityId).miningReward(),
       commodities.getInterface(_commodityId).miningTarget(),
-      commodities.getInterface(_commodityId).timesMined(),
-      commodities.getInterface(_commodityId).prevMiningHash().toString()
+      commodities.getInterface(_commodityId).prevMiningHash().toString(),
+      block.number
     );
   }
 

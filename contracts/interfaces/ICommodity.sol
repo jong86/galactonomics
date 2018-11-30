@@ -11,9 +11,7 @@ contract ICommodity {
 
   function miningReward() public view returns (uint) {}
   function miningTarget() public view returns (bytes32) {}
-  function timesMined() public view returns (uint) {}
   function prevMiningHash() public view returns (bytes32) {}
-
 
   function setGEA(address) public {}
   function setGIA(address) public {}
