@@ -92,20 +92,11 @@ class App extends Component {
   })
 
   initEventListening = () => {
-    const { contracts, setIndustrialState, web3, setEthState } = this.props
-
-    // Disable mining for commodity that was mined until next block
-    contracts.gia.CommodityMined({ fromBlock: 'latest' })
-      .on('data', data => {
-        const { miner } = data.returnValues
-        console.log('data.returnValues', data.returnValues);
-        console.log(miner, 'just mined commodity X')
-        // setIndustrialState({ isMiningDisabled: true })
-      })
+    const { setIndustrialState, web3, setEthState } = this.props
 
     // Reset areasMined when someone mines a commodity
     web3.eth.subscribe('newBlockHeaders')
-      .on('data',  data => {
+      .on('data', data => {
         console.log('data', data);
         setIndustrialState({ areasMined: [] })
         setEthState({ blockNumber: data.number })

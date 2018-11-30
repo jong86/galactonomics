@@ -71,7 +71,7 @@ class PlanetIndustrial extends Component {
   }
 
   step = () => {
-    const { user, setIndustrialState } = this.props
+    const { user, setIndustrialState, eth } = this.props
     const { miningTarget, prevMiningHash, nonce, isMining } = this.props.industrial
 
     if (typeof nonce === 'number') {
@@ -79,7 +79,8 @@ class PlanetIndustrial extends Component {
         nonce.toString() +
         user.currentPlanet.toString() +
         prevMiningHash +
-        user.address.substring(2).toLowerCase()
+        user.address.substring(2).toLowerCase() +
+        eth.blockNumber.toString(),
       )
       setIndustrialState({ hash })
 
@@ -104,7 +105,7 @@ class PlanetIndustrial extends Component {
   }
 
   submitProof = async () => {
-    const { user, contracts, setIndustrialState } = this.props
+    let { user, contracts, setIndustrialState, setDialogBox } = this.props
     const { nonce } = this.props.industrial
 
     setIndustrialState({ isSubmitting: true })
@@ -115,7 +116,11 @@ class PlanetIndustrial extends Component {
       console.error(e)
     }
 
-    getPlayerInfo()
+    const oldQuant = Number(user.cargoPerCommodity[user.currentPlanet].amount)
+    await getPlayerInfo()
+    user = this.props.user
+    const newQuant = Number(user.cargoPerCommodity[user.currentPlanet].amount)
+
     this.getCommodity()
     setIndustrialState({
       isMining: false,
@@ -123,8 +128,13 @@ class PlanetIndustrial extends Component {
       hash: '',
       nonce: 0,
       isSubmitting: false,
-      playReceivedSound: true,
     })
+
+    if (newQuant > oldQuant) {
+      setIndustrialState({ playReceivedSound: true })
+    } else {
+      setDialogBox('Sorry, but someone else submitted a proof-of-work before you during the last block.', 'bad')
+    }
   }
 
   render() {
@@ -213,6 +223,7 @@ const mapStateToProps = state => {
     user: state.user,
     web3: state.web3,
     industrial: state.industrial,
+    eth: state.eth,
   }
 }
 
