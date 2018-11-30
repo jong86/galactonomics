@@ -17,6 +17,10 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled {
   bytes32 public miningTarget;
   bytes32 public prevMiningHash;
 
+  // Mapping of block number to bool indicating if commodity was mined
+  // (so each commodity can be mined only once per block)
+  mapping (uint => bool) private wasMinedInBlock;
+
   constructor(string _name, string _symbol, uint _miningReward, bytes32 _miningTarget)
   ERC20Detailed(_name, _symbol, 0)
   public {
@@ -32,9 +36,11 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled {
    * @return boolean true on success
    */
   function dispenseReward(address _to, bytes32 _hash) public onlyGIA returns (bool) {
+    require(wasMinedInBlock[block.number] == false, "Commodity already mined this block");
     _mint(_to, miningReward);
     prevMiningHash = _hash;
     miningReward = miningReward.sub(1);
+    wasMinedInBlock[block.number] = true;
     return true;
   }
 

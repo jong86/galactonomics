@@ -11,6 +11,10 @@ const styles = {
 }
 
 class PlanetIntro extends Component {
+  state = {
+    soundHasPlayed: false,
+  }
+
   componentDidMount = () => {
     // Reset some state since on a new planet now
     this.props.setIndustrialState({
@@ -19,6 +23,7 @@ class PlanetIntro extends Component {
   }
 
   render() {
+    const { soundHasPlayed } = this.state
     const { classes, user, changeScreen } = this.props
     const planet = planets.find(planet => planet.id == user.currentPlanet)
 
@@ -35,8 +40,9 @@ class PlanetIntro extends Component {
         />
         <Sound
           url={planet.song}
-          playStatus={Sound.status.PLAYING}
+          playStatus={!soundHasPlayed && Sound.status.PLAYING}
           volume={75}
+          onFinishedPlaying={() => this.setState({ soundHasPlayed: true })}
         />
       </div>
     );
