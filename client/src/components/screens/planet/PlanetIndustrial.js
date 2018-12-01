@@ -71,7 +71,7 @@ class PlanetIndustrial extends Component {
   }
 
   step = () => {
-    const { user, setIndustrialState, eth } = this.props
+    const { user, setIndustrialState } = this.props
     const { miningTarget, prevMiningHash, nonce, isMining } = this.props.industrial
 
     if (typeof nonce === 'number') {

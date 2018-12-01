@@ -10,12 +10,19 @@ const commodityData = require('../utils/commodityData')
 module.exports = function(deployer) {
   deployer.then(async () => {
     // Deploy each Commodity
-    commodityInstances = []
-    for (const commodity of commodityData) {
-      await deployer.deploy(Commodity, commodity.name, commodity.symbol, commodity.startingReward, commodity.startingTarget);
-      commodityInstance = await Commodity.deployed()
-      commodityInstances.push(commodityInstance);
-    }
+    const commodityInstances = await Promise.all(commodityData.map(commodity =>
+      new Promise(async (resolve, reject) => {
+        let commodityInstance
+        try {
+          await deployer.deploy(Commodity, commodity.name, commodity.symbol, commodity.startingReward, commodity.startingTarget);
+          commodityInstance = await Commodity.deployed()
+        } catch (e) {
+          reject(e)
+        }
+        resolve(commodityInstance)
+      })
+    ))
+
     const commodityAddresses = commodityInstances.map(commodity => commodity.address)
 
     // Deploy Commodities

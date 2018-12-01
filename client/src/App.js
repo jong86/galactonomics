@@ -92,9 +92,9 @@ class App extends Component {
   })
 
   initEventListening = () => {
-    const { setIndustrialState, web3, setEthState } = this.props
+    const { contracts, user, setIndustrialState, web3, setEthState } = this.props
 
-    contracts.gia.CommodityMinted({ fromBlock: 'latest' })
+    contracts.gia.CommodityMined({ fromBlock: 'latest' })
       .on('data', data => {
         const { _miner, _hash } = data.returnValues
 
