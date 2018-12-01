@@ -10,17 +10,12 @@ const commodityData = require('../utils/commodityData')
 module.exports = function(deployer) {
   deployer.then(async () => {
     // Deploy each Commodity
-    const commodityInstances = await Promise.all(commodityData.map(commodity =>
-      new Promise(async (resolve, reject) => {
-        try {
-          await deployer.deploy(Commodity, commodity.name, commodity.symbol, commodity.startingReward, commodity.startingTarget);
-          resolve(await Commodity.deployed())
-        } catch (e) {
-          reject(e)
-        }
-      })
-    ))
-
+    commodityInstances = []
+    for (const commodity of commodityData) {
+      await deployer.deploy(Commodity, commodity.name, commodity.symbol, commodity.startingReward, commodity.startingTarget);
+      commodityInstance = await Commodity.deployed()
+      commodityInstances.push(commodityInstance);
+    }
     const commodityAddresses = commodityInstances.map(commodity => commodity.address)
 
     // Deploy Commodities
@@ -46,25 +41,11 @@ module.exports = function(deployer) {
     const temple = await TempleAuthority.deployed()
 
     // Set access controls
-    // for (const commodity of commodityInstances) {
-    //   await commodity.setGEA(gea.address)
-    //   await commodity.setGIA(gia.address)
-    //   await commodity.setTA(temple.address)
-    // }
-
-    await Promise.all(commodityInstances.map(commodity =>
-      new Promise.all(async (resolve, reject) => {
-        try {
-          await commodity.setGEA(gea.address)
-          await commodity.setGIA(gia.address)
-          await commodity.setTA(temple.address)
-          resolve()
-        } catch (e) {
-          reject(e)
-        }
-      })
-    ))
-
+    for (const commodity of commodityInstances) {
+      await commodity.setGEA(gea.address)
+      await commodity.setGIA(gia.address)
+      await commodity.setTA(temple.address)
+    }
     await gta.setGEA(gea.address)
     await gta.setGIA(gia.address)
     return bCrystal.setTA(temple.address)

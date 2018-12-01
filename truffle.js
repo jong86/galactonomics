@@ -9,7 +9,9 @@ module.exports = {
       network_id: "5777",
     },
     ropsten: {
-      provider: new HDWalletProvider(testMnenomic, "https://ropsten.infura.io/v3/e3023fedad31499e899cec7b841ea70b"),
+      provider: function() {
+        return new HDWalletProvider(testMnenomic, "https://ropsten.infura.io/v3/e3023fedad31499e899cec7b841ea70b")
+      },
       network_id: "3",
       gasPrice: 440000000, // 2 GWei
     },
