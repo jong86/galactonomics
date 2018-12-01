@@ -8,8 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy-local": "truffle compile && truffle migrate --reset && npm run copy-contracts && printf '\n✅ Done.\n'",
-    "deploy-ropsten": "truffle compile && truffle migrate --reset --network ropsten && npm run copy-contracts && printf '\n✅ Done.\n'",
+    "deploy-local": "truffle migrate --reset && npm run copy-contracts && printf '\n✅ Done.\n'",
+    "deploy-ropsten": "truffle migrate --reset --network ropsten && npm run copy-contracts && printf '\n✅ Done.\n'",
     "copy-contracts": "cp -r ./build/contracts ./client/src/"
   },
   "keywords": [],
