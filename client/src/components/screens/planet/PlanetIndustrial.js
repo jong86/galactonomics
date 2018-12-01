@@ -79,8 +79,7 @@ class PlanetIndustrial extends Component {
         nonce.toString() +
         user.currentPlanet.toString() +
         prevMiningHash +
-        user.address.substring(2).toLowerCase() +
-        eth.blockNumber.toString(),
+        user.address.substring(2).toLowerCase()
       )
       setIndustrialState({ hash })
 

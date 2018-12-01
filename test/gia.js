@@ -42,13 +42,12 @@ contract("GalacticIndustrialAuthority", accounts => {
     const miningReward = miningData[0]
     const miningTarget = miningData[1]
     const prevHash = miningData[2]
-    const blockNumber = miningData[3]
 
     let nonce = 3500
     let hash
     do {
       nonce++
-      hash = sha256(nonce.toString() + (0).toString() + prevHash + player1.substring(2) + blockNumber.toString())
+      hash = sha256(nonce.toString() + (0).toString() + prevHash + player1.substring(2))
     } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
 
     const response = await gia.submitProofOfWork(String(nonce), { from: player1 })

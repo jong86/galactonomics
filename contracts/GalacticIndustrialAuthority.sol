@@ -27,7 +27,7 @@ contract GalacticIndustrialAuthority {
     gta = IGalacticTransitAuthority(_gta);
   }
 
-  event CommodityMined(bytes32 _hash, address miner);
+  event CommodityMined(bytes32 _hash, address _miner);
 
   /**
    * @notice Mints new commodity tokens for a player
@@ -45,8 +45,7 @@ contract GalacticIndustrialAuthority {
         _nonce,
         _commodityId.toString(),
         _prevHash,
-        msg.sender.toString(),
-        block.number.toString()
+        msg.sender.toString()
       )
     );
 
@@ -60,16 +59,14 @@ contract GalacticIndustrialAuthority {
   function getMiningData() external view returns (
     uint miningReward,
     bytes32 miningTarget,
-    string prevHash,
-    uint blockNumber
+    string prevHash
   ) {
     uint8 _commodityId = gta.getCurrentPlanet(msg.sender);
 
     return (
       commodities.getInterface(_commodityId).miningReward(),
       commodities.getInterface(_commodityId).miningTarget(),
-      commodities.getInterface(_commodityId).prevMiningHash().toString(),
-      block.number
+      commodities.getInterface(_commodityId).prevMiningHash().toString()
     );
   }
 
