@@ -94,13 +94,15 @@ class App extends Component {
   initEventListening = () => {
     const { setIndustrialState, web3, setEthState } = this.props
 
-    // Reset areasMined when someone mines a commodity
+    // Listen for new blocks
     web3.eth.subscribe('newBlockHeaders')
       .on('data', data => {
         console.log('data', data);
-        setIndustrialState({ areasMined: [] })
-        setEthState({ blockNumber: data.number })
-      })
+          // Reset areasMined when someone mines a commodity
+          setIndustrialState({ areasMined: [] })
+          // Store current block number in store
+          setEthState({ blockNumber: data.number })
+        })
   }
 
   checkIfOwnsSpaceship = () => new Promise(async (resolve, reject) => {

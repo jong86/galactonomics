@@ -17,7 +17,7 @@ contract("GalacticIndustrialAuthority", accounts => {
 
   beforeEach(async() => {
     // Deploy individual commodity addresses
-    const allCommodities = await deployCommodities()
+    const allCommodities = await deployCommodities('0x0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
     const commodityAddresses = allCommodities.map(commodity => commodity.address)
     // Deploy main contracts
     commodities = await Commodities.new(commodityAddresses)
@@ -58,5 +58,14 @@ contract("GalacticIndustrialAuthority", accounts => {
 
     assert.equal(balance.toString(), miningReward.toString(), "did not receive mining reward")
     assert.equal('0x' + hash, hashFromSolidity, "hash from javascript does not match hash from solidity")
+  })
+
+  it("does not mint commodity if user submits invalid proof-of-work", async () => {
+    const balanceBefore = await commodities.getBalance(0, { from: player1 })
+    try {
+      await gia.submitProofOfWork(0, { from: player1 })
+    } catch (e) {}
+    const balanceAfter = await commodities.getBalance(0, { from: player1 })
+    assert.equal(balanceBefore.toString(), balanceAfter.toString(), "did not receive mining reward")
   })
 })

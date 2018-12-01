@@ -56,7 +56,7 @@ class PlanetIndustrial extends Component {
     let commodity
 
     try {
-      commodity = await contracts.gia.get(user.currentPlanet, { from: user.address })
+      commodity = await contracts.commodities.get(user.currentPlanet, { from: user.address })
     } catch (e) {
       return console.error(e)
     }

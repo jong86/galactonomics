@@ -1,4 +1,4 @@
-const target = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+const target = '0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
 
 module.exports = [
   { name: 'Iodine', symbol: 'IOD', startingReward: 13124,  startingTarget: target },

@@ -37,6 +37,7 @@ contract Commodity is ERC20, ERC20Detailed, AccessControlled {
    */
   function dispenseReward(address _to, bytes32 _hash) public onlyGIA returns (bool) {
     require(wasMinedInBlock[block.number] == false, "Commodity already mined this block");
+    require(_hash < miningTarget, "That hash is not valid");
     _mint(_to, miningReward);
     prevMiningHash = _hash;
     miningReward = miningReward.sub(1);

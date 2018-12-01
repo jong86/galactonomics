@@ -1,7 +1,7 @@
 const Commodity = artifacts.require("./items/Commodity.sol")
 const commodityData = require('../../utils/commodityData')
 
-function deployCommodities() {
+function deployCommodities(target) {
   return new Promise(async (resolve, reject) => {
     const commodityInstances = []
 
@@ -11,7 +11,7 @@ function deployCommodities() {
           commodity.name,
           commodity.symbol,
           commodity.startingReward,
-          '0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+          target,
         )
         commodityInstances.push(commodityInstance)
       }
