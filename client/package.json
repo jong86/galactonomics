@@ -11,7 +11,7 @@
     "react-icons": "^3.2.2",
     "react-jss": "^8.6.1",
     "react-redux": "^5.1.0",
-    "react-scripts": "1.1.4",
+    "react-scripts": "^2.0.5",
     "react-sound": "^1.2.0",
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
@@ -31,5 +31,12 @@
   "devDependencies": {
     "cross-env": "^5.2.0",
     "run-script-os": "^1.0.3"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "homepage" : "https://jong86.github.io/galactonomics"
 }
