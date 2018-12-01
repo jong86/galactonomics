@@ -94,13 +94,26 @@ class App extends Component {
   initEventListening = () => {
     const { setIndustrialState, web3, setEthState } = this.props
 
+    contracts.gia.CommodityMinted({ fromBlock: 'latest' })
+      .on('data', data => {
+        const { _miner, _hash } = data.returnValues
+
+        setIndustrialState({
+          // Reset areas mined because there is a new prevHash
+          areasMined: [],
+          prevMiningHash: _hash,
+        })
+
+        // To refresh commodity amounts if current user was the miner
+        if (_miner === user.address) {
+          getPlayerInfo()
+        }
+      })
+
     // Listen for new blocks
     web3.eth.subscribe('newBlockHeaders')
       .on('data', data => {
-        console.log('data', data);
-          // Reset areasMined when someone mines a commodity
-          setIndustrialState({ areasMined: [] })
-          // Store current block number in store
+          // Store current block number in store (not used)
           setEthState({ blockNumber: data.number })
         })
   }
