@@ -14,7 +14,7 @@ import truffleContract from "truffle-contract"
 
 import screenMapping from 'utils/screenMapping'
 import Dialog from 'components/reusables/Dialog'
-import LaserFrame from 'components/reusables/LaserFrame'
+import Laserframe from 'components/reusables/Laserframe'
 
 import getPlayerInfo from 'utils/getPlayerInfo'
 import planets from 'utils/planets'
@@ -160,11 +160,11 @@ class App extends Component {
         <Dialog flavour={dialogBox.flavour} isVisible={dialogBox.content}>
           {dialogBox.content}
           {!dialogBox.noDefaultButton &&
-            <LaserFrame
+            <Laserframe
               flavour={dialogBox.flavour}
               isButton
               onClick={closeDialogBox}
-            >Ok</LaserFrame>
+            >Ok</Laserframe>
           }
         </Dialog>
       </div>

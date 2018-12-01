@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
-import LaserFrame from 'components/reusables/LaserFrame'
+import Laserframe from 'components/reusables/Laserframe'
 
 const styles = {
   MiningPad: {
@@ -38,7 +38,7 @@ class MiningPad extends Component {
     const { areasMined } = this.props.industrial
 
     return (
-      <LaserFrame
+      <Laserframe
         size="wide"
       >
         <div className={classes.MiningPad}>
@@ -72,7 +72,7 @@ class MiningPad extends Component {
             )
           })}
         </div>
-      </LaserFrame>
+      </Laserframe>
     )
   }
 }

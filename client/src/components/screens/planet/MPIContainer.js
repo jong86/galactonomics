@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import LaserFrame from 'components/reusables/LaserFrame'
+import Laserframe from 'components/reusables/Laserframe'
 import CargoMeter from 'components/screens/planet/CargoMeter'
 
 const styles = {
@@ -63,18 +63,18 @@ class MPIContainer extends Component {
             </div>
             <div >
               {/* Top-right */}
-              <LaserFrame
+              <Laserframe
                 flavour="status"
                 size="wide"
-                >Ξ{user.balance}</LaserFrame>
+                >Ξ{user.balance}</Laserframe>
               <div style={{ marginTop: '20%', width: '100%' }}>
                 {sideButtons && sideButtons.map((sideButton, i) => (
-                  <LaserFrame
+                  <Laserframe
                     key={i}
                     isButton
                     onClick={sideButton.fn}
                     size="wide"
-                  >{sideButton.label}</LaserFrame>
+                  >{sideButton.label}</Laserframe>
                 ))}
               </div>
             </div>
@@ -82,13 +82,13 @@ class MPIContainer extends Component {
           <div>
             {/* Bottom row */}
             {navLinks.map((link, i) =>
-              <LaserFrame
+              <Laserframe
                 key={i}
                 isButton
                 active={currentScreen === link.name}
                 size="wide4"
                 onClick={() => changeScreen(link.name)}
-              >{link.label}</LaserFrame>
+              >{link.label}</Laserframe>
             )}
           </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import LaserFrame from 'components/reusables/LaserFrame'
+import Laserframe from 'components/reusables/Laserframe'
 import FuelMeter from 'components/screens/planet/FuelMeter'
 import planets from 'utils/planets'
 import {
@@ -68,21 +68,21 @@ class PlanetHome extends Component {
       <Fragment>
         <div className={classes.PlanetHome}>
           <div>
-            <LaserFrame
+            <Laserframe
               onClick={() => changeScreen('Travel')}
               isButton
               flavour="good"
               size="wide"
-            >Travel (Leave {planet.name})</LaserFrame>
-            <LaserFrame
+            >Travel (Leave {planet.name})</Laserframe>
+            <Laserframe
               flavour="status"
               size="wide"
-            >Ξ{user.balance}</LaserFrame>
+            >Ξ{user.balance}</Laserframe>
           </div>
           <div className={classes.top3}>
             {planet.id == 255 ?
               <Fragment>
-                <LaserFrame
+                <Laserframe
                   onClick={() => changeScreen('TempleMarketplace')}
                   isButton
                   flavour="info"
@@ -90,8 +90,8 @@ class PlanetHome extends Component {
                 >
                   <MdBusinessCenter size={iconSize} />
                   Crystal Marketplace
-                </LaserFrame>
-                <LaserFrame
+                </Laserframe>
+                <Laserframe
                   onClick={() => changeScreen('PlanetPrices')}
                   isButton
                   flavour="info"
@@ -99,8 +99,8 @@ class PlanetHome extends Component {
                 >
                   <FaChartBar size={iconSize} />
                   Commodity Prices
-                </LaserFrame>
-                <LaserFrame
+                </Laserframe>
+                <Laserframe
                   onClick={() => changeScreen('TempleIndustrial')}
                   isButton
                   flavour="info"
@@ -108,8 +108,8 @@ class PlanetHome extends Component {
                 >
                   <FaHammer size={iconSize} />
                   Forge Crystals
-                </LaserFrame>
-                <LaserFrame
+                </Laserframe>
+                <Laserframe
                   onClick={() => changeScreen('TempleViewCrystals')}
                   isButton
                   flavour="info"
@@ -117,11 +117,11 @@ class PlanetHome extends Component {
                 >
                   <FaEthereum size={iconSize} />
                   View My Crystals
-                </LaserFrame>
+                </Laserframe>
               </Fragment>
               :
               <Fragment>
-                <LaserFrame
+                <Laserframe
                   onClick={() => changeScreen('PlanetMarketplace')}
                   isButton
                   flavour="info"
@@ -129,8 +129,8 @@ class PlanetHome extends Component {
                 >
                   <FaBalanceScale size={iconSize} />
                   Marketplace
-                </LaserFrame>
-                <LaserFrame
+                </Laserframe>
+                <Laserframe
                   onClick={() => changeScreen('PlanetPrices')}
                   isButton
                   flavour="info"
@@ -138,8 +138,8 @@ class PlanetHome extends Component {
                 >
                   <FaChartBar className={classes.icon}size={iconSize} />
                   Commodity Prices
-                </LaserFrame>
-                <LaserFrame
+                </Laserframe>
+                <Laserframe
                   onClick={() => changeScreen('PlanetIndustrial')}
                   isButton
                   flavour="info"
@@ -147,7 +147,7 @@ class PlanetHome extends Component {
                 >
                   <FaIndustry size={iconSize} />
                   Industrial Operations
-                </LaserFrame>
+                </Laserframe>
               </Fragment>
             }
           </div>

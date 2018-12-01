@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deployLocal": "./scripts/deployLocal.sh"
+    "deployLocal": "./scripts/deployLocal.sh",
+    "cpy2Src": "cp -r ./build/contracts ./client/src/"
   },
   "keywords": [],
   "author": "",

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import LaserFrame from 'components/reusables/LaserFrame'
+import Laserframe from 'components/reusables/Laserframe'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import sha256 from 'js-sha256'
 import getPlayerInfo from 'utils/getPlayerInfo'
@@ -153,18 +153,18 @@ class PlanetIndustrial extends Component {
 
     return (
       <MPIContainer>
-          <LaserFrame
+          <Laserframe
             size="wide"
           >
             {!isMining && !hasValidProof &&
               <Fragment>
                 Click an area to start mining for {commodityName}...
                 <MiningPad areaSize={AREA_SIZE} />
-                <LaserFrame
+                <Laserframe
                   flavour='status'
                 >
                   {areaStart && areaEnd ? `Area ${areaStart} to ${areaEnd}` : 'Waiting...'}
-                </LaserFrame>
+                </Laserframe>
               </Fragment>
             }
             {isMining &&
@@ -172,15 +172,15 @@ class PlanetIndustrial extends Component {
                 <div>
                   Mining in area {areaStart} to {areaEnd}...
                 </div>
-                <LaserFrame flavour='bad'>
+                <Laserframe flavour='bad'>
                   { hash }
-                </LaserFrame>
-                <LaserFrame
+                </Laserframe>
+                <Laserframe
                   isButton
                   onClick={this.stopMining}
                 >
                   Stop mining
-                </LaserFrame>
+                </Laserframe>
               </Fragment>
             }
             {!isMining && hasValidProof &&
@@ -188,18 +188,18 @@ class PlanetIndustrial extends Component {
                 <div>
                   Valid proof of work hash found!
                 </div>
-                <LaserFrame flavour='good'>
+                <Laserframe flavour='good'>
                   { hash }
-                </LaserFrame>
-                <LaserFrame
+                </Laserframe>
+                <Laserframe
                   isButton
                   onClick={this.submitProof}
                 >
                   {!isSubmitting ? 'Submit proof of work' : <Fragment>Waiting for validation...<Loader /></Fragment>}
-                </LaserFrame>
+                </Laserframe>
               </Fragment>
             }
-          </LaserFrame>
+          </Laserframe>
           <Sound
             url={miningSuccess}
             playStatus={playSuccessSound && Sound.status.PLAYING}

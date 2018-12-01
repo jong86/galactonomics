@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
-import LaserFrame from 'components/reusables/LaserFrame'
+import Laserframe from 'components/reusables/Laserframe'
 import { FaGasPump } from 'react-icons/fa';
 import getRevertMsg from 'utils/getRevertMsg'
 import getPlayerInfo from 'utils/getPlayerInfo'
@@ -73,18 +73,18 @@ class FuelMeter extends Component {
 
     return (
       <Fragment>
-        <LaserFrame
+        <Laserframe
           size="wide"
-        >Fuel</LaserFrame>
+        >Fuel</Laserframe>
         <FaGasPump />
         <div>{currentFuel}/{maxFuel} megalitres</div>
         {!isFull && <div>Cost to refuel: Ξ{refuelCost}</div>}
-        <LaserFrame
+        <Laserframe
           flavour={isRefueling ? 'status' : 'good'}
           isButton={!isFull}
           size="wide"
           onClick={() => { if (!isFull) this.refuel()}}
-        >{isRefueling ? <div>Refueling... <Loader flavour="status" /></div> : (isFull ? 'Tank is full' : 'Fill up tank')}</LaserFrame>
+        >{isRefueling ? <div>Refueling... <Loader flavour="status" /></div> : (isFull ? 'Tank is full' : 'Fill up tank')}</Laserframe>
         <Sound
           url={receivedSomething}
           playStatus={doneFueling && Sound.status.PLAYING}

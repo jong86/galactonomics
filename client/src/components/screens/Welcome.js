@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import LaserFrame from 'components/reusables/LaserFrame'
+import Laserframe from 'components/reusables/Laserframe'
 import Loader from 'components/reusables/Loader'
 
 const styles = {
@@ -24,11 +24,11 @@ class Welcome extends Component {
     return (
       <div className={classes.container}>
         <h1>Galactonomics</h1>
-        <LaserFrame
+        <Laserframe
           isButton
           onClick={this.goToNextScreen}
           flavour="good"
-        >Continue</LaserFrame>
+        >Continue</Laserframe>
       </div>
     );
   }

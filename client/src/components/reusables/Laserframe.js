@@ -3,7 +3,7 @@ import injectSheet from 'react-jss'
 import colorFromFlavour from 'utils/colorFromFlavour'
 
 const styles = {
-  LaserFrame: {
+  Laserframe: {
     textAlign: "center",
     border: ({ flavour }) => '1px solid ' + colorFromFlavour(flavour),
     color: ({ flavour }) => colorFromFlavour(flavour),
@@ -31,13 +31,13 @@ const styles = {
   }
 }
 
-class LaserFrame extends React.Component {
+class Laserframe extends React.Component {
   render() {
     const { classes, children, onClick } = this.props
 
     return (
       <div
-        className={classes.LaserFrame}
+        className={classes.Laserframe}
         onClick={() => {
           if (onClick) onClick()
         }}
@@ -48,5 +48,5 @@ class LaserFrame extends React.Component {
   }
 }
 
-LaserFrame = injectSheet(styles)(LaserFrame)
-export default LaserFrame;
+Laserframe = injectSheet(styles)(Laserframe)
+export default Laserframe;
