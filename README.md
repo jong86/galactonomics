@@ -1,2 +1,0 @@
-  # Galactonomics
-  * Economic simulation game set in space, created using smart contracts on Ethereum. Players can purchase a spaceship, travel to 7 planets, and then mine and trade commodities on those planets. After all 7 commodities are accumulated, they can be forged into unique Byzantian Crystals.
