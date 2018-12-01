@@ -133,7 +133,7 @@ class PlanetIndustrial extends Component {
     if (newQuant > oldQuant) {
       setIndustrialState({ playReceivedSound: true })
     } else {
-      setDialogBox('Sorry, but someone else submitted a proof-of-work before you during the last block.', 'bad')
+      setDialogBox('Sorry, but your proof-of-work was not accepted', 'bad')
     }
   }
 
