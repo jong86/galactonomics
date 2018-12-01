@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy-local": "truffle migrate --reset && npm run copy-contracts && printf '\n✅ Done.\n'",
     "deploy-ropsten": "truffle migrate --reset --network ropsten && npm run copy-contracts && printf '\n✅ Done.\n'",
-    "copy-contracts": "cp -r ./build/contracts ./client/src/"
+    "copy-contracts": "cp -r ./build/contracts ./client/src/",
+    "gh-pages": "git subtree push --prefix client/build origin gh-pages"
   },
   "keywords": [],
   "author": "",
@@ -19,5 +20,6 @@
     "js-sha256": "^0.9.0",
     "openzeppelin-solidity": "^2.0.0",
     "truffle-hdwallet-provider": "0.0.6"
-  }
+  },
+  "homepage" : "https://jong86.github.io/galactonomics"
 }
