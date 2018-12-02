@@ -15,6 +15,7 @@ class PlanetPrices extends Component {
     isLoading: true,
     commoditiesMinMaxes: [],
     commodityInfos: [],
+    tradedOnPlanet: [],
   }
 
   componentDidMount = async () => {
@@ -49,10 +50,15 @@ class PlanetPrices extends Component {
     const tradedOnPlanet = []
 
     for (let p = 0; p < 7; p++) {
-      const traded = (await contracts.gea.getCommoditiesTraded(p, { from: user.address })).toString().split(',')
+      const traded = (await contracts.gea.getCommoditiesTraded(p, { from: user.address }))
+        .toString()
+        .split(',')
+        .map(string => Number(string))
       tradedOnPlanet.push(traded)
     }
     console.log(tradedOnPlanet);
+
+    this.setState({ tradedOnPlanet })
   }
 
   getAllSellOrders = async () => {
