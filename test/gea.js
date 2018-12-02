@@ -3,10 +3,10 @@ const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.s
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const deployCommodities = require('./util/deployCommodities')
-const { fillUpCargoByMining, mineCommodityXTimes } = require('./util/testUtils')
+const { fillUpCargoByMining, mineCommodityXTimes, getCommoditiesTraded, getRandomPlanetToSell } = require('./util/testUtils')
 
 contract("GalacticEconomicAuthority", accounts => {
-  let gta, gea, gia, commodities, allCommodities
+  let gta, gea, gia, commodities, allCommodities, tradedOnPlanet
   const owner = accounts[0]
   const player1 = accounts[1]
   const player2 = accounts[2]
@@ -16,7 +16,7 @@ contract("GalacticEconomicAuthority", accounts => {
 
   beforeEach(async() => {
     // Deploy individual commodity addresses
-    allCommodities = await deployCommodities()
+    allCommodities = await deployCommodities('0x00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
     const commodityAddresses = allCommodities.map(commodity => commodity.address)
     // Deploy main contracts
     commodities = await Commodities.new(commodityAddresses)
@@ -34,10 +34,15 @@ contract("GalacticEconomicAuthority", accounts => {
     await gta.buySpaceship("B", { from: player2, value: costOfSpaceship })
     await gta.travelToPlanet(0, { from: player1 })
     await gta.travelToPlanet(0, { from: player2 })
+
+    tradedOnPlanet = await getCommoditiesTraded(gea)
   })
 
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {
-    await mineCommodityXTimes(gia, 4, player1)
+    await mineCommodityXTimes(gia, 4, player1, 0)
+
+    const planetToSell = getRandomPlanetToSell(0, tradedOnPlanet)
+    console.log('planetToSell (should be 1, 3, or 4):', planetToSell);
 
     const currentCargoBefore = await commodities.getCurrentCargo(player1)
     const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })

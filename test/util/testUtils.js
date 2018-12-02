@@ -52,7 +52,44 @@ function mineCommodityXTimes(gia, numTimes, player, commodityId) {
   })
 }
 
+async function getCommoditiesTraded(gea) {
+  /*
+    Returns promise that resolves with array of arrays
+    containing ids of commodities traded on each planet.
+    Parent array of returned 2d-array is indexed by planetId
+  */
+  return new Promise(async (resolve, reject) => {
+    try {
+      const tradedOnPlanet = []
+      for (let p = 0; p < 7; p++) {
+        const traded = (await gea.getCommoditiesTraded(p))
+          .toString()
+          .split(',')
+          .map(string => Number(string))
+        tradedOnPlanet.push(traded)
+      }
+      resolve(tradedOnPlanet)
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
+
+function getRandomPlanetToSell(commodityId, tradedOnPlanet) {
+  const planetsTradedOn = []
+  tradedOnPlanet.forEach((planet, i) => {
+    if (planet.includes(commodityId)) {
+      planetsTradedOn.push(i)
+    }
+  })
+
+  const randomIndex = Math.floor(Math.random() * planetsTradedOn.length)
+  return planetsTradedOn[randomIndex]
+}
+
 module.exports = {
-  fillUpCargoByMining: fillUpCargoByMining,
-  mineCommodityXTimes: mineCommodityXTimes,
+  fillUpCargoByMining,
+  mineCommodityXTimes,
+  getCommoditiesTraded,
+  getRandomPlanetToSell,
 }
