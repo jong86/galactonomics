@@ -8,13 +8,17 @@ const styles = {
   PricesRow: {
     flexDirection: 'row',
     width: 'fill-available',
-    backgroundColor: '#000',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+
 
     '& > div': {
-      border: '1px solid grey',
+      backgroundColor: 'rgba(50, 50, 50, 0.75)',
+      margin: '2px',
       width: '25%',
       fontWeight: ({ isHeader }) => isHeader ? 'bold' : null,
       flexDirection: 'row',
+      padding: '2px',
+      paddingTop: '4px',
     },
   }
 }
@@ -23,7 +27,7 @@ let PricesRow = ({ classes, onClick, symbol, minMaxes, isHeader, fromWei }) => {
   let items = []
   if (isHeader) {
     items = planets.slice(0, 7).map(planet => planet.name)
-    items.unshift(" ")
+    items.unshift(null)
   } else {
     items = minMaxes.slice()
     items.unshift({symbol})
@@ -35,14 +39,26 @@ let PricesRow = ({ classes, onClick, symbol, minMaxes, isHeader, fromWei }) => {
       className={classes.PricesRow}
     >
       {items.length && items.map((item, i) => {
-        if (isHeader) {
+        if (item === null) {
+          return (
+            <div key={uuid()} style={{ opacity: 0 }}>
+              {'n/a'}
+            </div>
+          )
+        } else if (isHeader) {
           return (
             <div key={uuid()}>
               {item}
             </div>
           )
+        } else if (i === 0) {
+          return (
+            <div key={uuid()}>
+              {item.symbol}
+            </div>
+          )
         } else {
-          return (i === 0 ? <div key={uuid()}>{item.symbol}</div> :
+          return (
             <div key={uuid()}>
               <span key={uuid()}>
                 {item.min && item.min.toString()}

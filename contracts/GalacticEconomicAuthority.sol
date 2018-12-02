@@ -78,9 +78,9 @@ contract GalacticEconomicAuthority {
    * @param _price Price per unit of commodity
    */
   function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _amount, uint _price)
-  external {
-  // commodityExists(_commodityId)
-  // commodityTradedOnPlanet(_planetId, _commodityId)
+  external
+  commodityExists(_commodityId)
+  commodityTradedOnPlanet(_planetId, _commodityId) {
     require(gta.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
     require(commodities.getInterface(_commodityId).balanceOf(msg.sender) >= _amount, "You do not own enough of this commodity");
 
