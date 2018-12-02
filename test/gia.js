@@ -38,17 +38,26 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("mints commodity for player when player submits valid proof-of-work", async () => {
-    const miningData = await gia.getMiningData({ from: player1 })
-    const miningReward = miningData[0]
-    const miningTarget = miningData[1]
-    const prevHash = miningData[2]
+    const miningData = await commodities.get(0, { from: player1 })
+    const miningReward = miningData[2]
+    const miningTarget = miningData[3]
+    const prevHash = miningData[4]
+
+    console.log('prevHash', prevHash);
 
     let nonce = 3500
     let hash
     do {
       nonce++
-      hash = sha256(nonce.toString() + (0).toString() + prevHash + player1.substring(2))
+      hash = sha256(
+        nonce.toString() +
+        (0).toString() +
+        prevHash +
+        player1.substring(2)
+      )
     } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
+
+    console.log('hash', hash);
 
     const response = await gia.submitProofOfWork(String(nonce), { from: player1 })
     const hashFromSolidity = response.logs.find(log => log.event === 'CommodityMined').args._hash

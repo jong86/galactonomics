@@ -85,14 +85,17 @@ class PlanetIndustrial extends Component {
 
       const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
 
-      if (validProofFound)
+      if (validProofFound) {
+        console.log(hash, miningTarget)
+
         return setIndustrialState({
           playSuccessSound: true,
           isMining: false,
           hasValidProof: true,
         })
+      }
 
-        setIndustrialState({ nonce: nonce + 1 })
+      setIndustrialState({ nonce: nonce + 1 })
 
       if (isMining)
         window.requestAnimationFrame(this.step)
