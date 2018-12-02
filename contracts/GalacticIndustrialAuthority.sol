@@ -42,7 +42,7 @@ contract GalacticIndustrialAuthority {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
     uint8 _commodityId = gta.getCurrentPlanet(msg.sender);
 
-    string _prevHash = commodities.getInterface(_commodityId).prevMiningHash().toString();
+    string memory _prevHash = commodities.getInterface(_commodityId).prevMiningHash().toString();
 
     bytes32 _hash = sha256(
       abi.encodePacked(
@@ -53,11 +53,28 @@ contract GalacticIndustrialAuthority {
       )
     );
 
+    require(commodities.getInterface(_commodityId).dispenseReward(msg.sender, _hash), "Error doing reward");
     emit CommodityMined(_hash, msg.sender);
-    // require(commodities.getInterface(_commodityId).dispenseReward(msg.sender, _hash), "Error doing reward");
   }
 
-  function getMiningData()
+  /**
+   * @notice Returns all data required for mining
+   */
+  function getMiningData() external view returns (
+    uint miningReward,
+    bytes32 miningTarget,
+    string prevHash
+  ) {
+    require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
+    uint8 _commodityId = gta.getCurrentPlanet(msg.sender);
+
+    return (
+      commodities.getInterface(_commodityId).miningReward(),
+      commodities.getInterface(_commodityId).miningTarget(),
+      // .toString on bytes32 only returns partial string (temporary solution)
+      commodities.getInterface(_commodityId).prevMiningHash().toString()
+    );
+  }
 
   function() public {}
 }

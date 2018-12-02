@@ -15,6 +15,7 @@ import "../interfaces/ICommodity.sol";
 contract Commodity is ERC20, ERC20Detailed, AccessControlled {
   uint public miningReward;
   bytes32 public miningTarget;
+  bytes32 public prevMiningHash;
 
   // Mapping of block number to bool indicating if commodity was mined
   // (so each commodity can be mined only once per block)

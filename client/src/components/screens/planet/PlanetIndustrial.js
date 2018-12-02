@@ -10,6 +10,7 @@ import MiningPad from 'components/screens/planet/MiningPad'
 import Sound from 'react-sound';
 import miningSuccess from 'assets/sounds/miningSuccess.wav'
 import receivedSomething from 'assets/sounds/receivedSomething.wav'
+import { debug } from "util";
 
 const styles = {
   acceptDecline: {
@@ -28,6 +29,7 @@ function checkIfHashUnderTarget(hash, target) {
 class PlanetIndustrial extends Component {
   componentDidMount = () => {
     this.getCommodity()
+    this.getMiningData()
   }
 
   componentDidUpdate = prevProps => {
@@ -51,24 +53,43 @@ class PlanetIndustrial extends Component {
     }
   }
 
-  getCommodity = async () => {
+  getCommodity = async () => new Promise(async (resolve, reject) => {
     const { user, contracts, setIndustrialState } = this.props
     let commodity
 
     try {
       commodity = await contracts.commodities.get(user.currentPlanet, { from: user.address })
     } catch (e) {
-      return console.error(e)
+      return reject(e)
     }
 
     setIndustrialState({
       commodityName: commodity.name,
       commoditySymbol: commodity.symbol,
-      miningReward: commodity.miningReward.toString(),
-      miningTarget: commodity.miningTarget.toString(),
-      prevMiningHash: commodity.prevMiningHash,
     })
-  }
+
+    resolve()
+  })
+
+  getMiningData = async () => new Promise(async (resolve, reject) => {
+    const { user, contracts, setIndustrialState } = this.props
+    let miningReward, miningTarget, prevMiningHash
+
+    try {
+      const response = await contracts.gia.getMiningData({ from: user.address })
+      miningReward = response[0]
+      miningTarget = response[1]
+      prevMiningHash = response[2]
+    } catch (e) {
+      return reject(e)
+    }
+
+    setIndustrialState({
+      miningReward, miningTarget, prevMiningHash
+    })
+
+    resolve()
+  })
 
   step = () => {
     const { user, setIndustrialState } = this.props
@@ -123,7 +144,10 @@ class PlanetIndustrial extends Component {
     user = this.props.user
     const newQuant = Number(user.cargoPerCommodity[user.currentPlanet].amount)
 
-    this.getCommodity()
+    // Refresh data
+    await this.getCommodity()
+    await this.getMiningData()
+
     setIndustrialState({
       isMining: false,
       hasValidProof: false,
