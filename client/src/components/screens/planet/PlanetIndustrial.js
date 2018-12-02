@@ -95,14 +95,15 @@ class PlanetIndustrial extends Component {
     const { user, setIndustrialState } = this.props
     const { miningTarget, prevMiningHash, nonce, isMining } = this.props.industrial
 
+
     if (typeof nonce === 'number') {
       const hash = sha256(
         nonce.toString() +
         user.currentPlanet.toString() +
         prevMiningHash +
         user.address.substring(2).toLowerCase()
-      )
-      setIndustrialState({ hash })
+        )
+        setIndustrialState({ hash })
 
       const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
 

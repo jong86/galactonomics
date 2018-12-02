@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import planets from 'utils/planets'
+import getPlayerInfo from 'utils/getPlayerInfo'
 
 const PWIDTH = 128
 
@@ -29,6 +30,10 @@ const styles = {
 
 class Travel extends Component {
   state = {};
+
+  componentDidMount = () => {
+    getPlayerInfo()
+  }
 
   startTravelling = async planetId => {
     const { user, changeScreen, setTravellingTo } = this.props

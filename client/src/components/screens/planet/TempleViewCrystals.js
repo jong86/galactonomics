@@ -61,6 +61,8 @@ class TempleViewCrystals extends Component {
       console.error(e)
     }
 
+    console.log('crystals', crystals);
+
     this.setState({
       crystals,
       isLoading: false

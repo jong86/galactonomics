@@ -1,3 +1,5 @@
+const sha256 = require('js-sha256');
+
 function fillUpCargoByMining(commodities, gta, gia, player, commodityId) {
   /* Fills cargo up by investments (will stop when another investment would be too much cargo) */
   return new Promise(async (resolve, reject) => {
@@ -20,12 +22,28 @@ function fillUpCargoByMining(commodities, gta, gia, player, commodityId) {
   })
 }
 
-function mineCommodityXTimes(gia, numTimes, player) {
-  // Doesn't include commodityId because which commodity is mined is determined by user's current planet
+function mineCommodityXTimes(gia, numTimes, player, commodityId) {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < numTimes; i++) {
       try {
-        await gia.submitProofOfWork(0, { from: player })
+        const miningData = await gia.getMiningData({ from: player })
+        const miningTarget = miningData[1]
+        const prevHash = miningData[2]
+
+        let nonce = 0
+        let hash
+        do {
+          nonce++
+          hash = sha256(
+            nonce.toString() +
+            commodityId.toString() +
+            prevHash +
+            player.substring(2)
+          )
+        } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
+
+        await gia.submitProofOfWork(String(nonce), { from: player })
+
       } catch (e) {
         reject(e)
       }
