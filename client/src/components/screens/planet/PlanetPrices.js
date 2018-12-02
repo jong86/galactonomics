@@ -21,10 +21,10 @@ class PlanetPrices extends Component {
     const commodityInfos = await this.getCommodityInfos()
     this.setState({commodityInfos})
     this.getAllSellOrders()
+    this.getCommoditiesTraded()
   }
 
   getCommodityInfos = async () => {
-    const { contracts, user } = this.props
     const commodityInfos = []
 
     return new Promise(async (resolve, reject) => {
@@ -41,6 +41,18 @@ class PlanetPrices extends Component {
 
       resolve(commodityInfos)
     })
+  }
+
+  getCommoditiesTraded = async () => {
+    const { contracts, user } = this.props
+
+    const tradedOnPlanet = []
+
+    for (let p = 0; p < 7; p++) {
+      const traded = (await contracts.gea.getCommoditiesTraded(p, { from: user.address })).toString().split(',')
+      tradedOnPlanet.push(traded)
+    }
+    console.log(tradedOnPlanet);
   }
 
   getAllSellOrders = async () => {
@@ -87,7 +99,6 @@ class PlanetPrices extends Component {
       })
     })
 
-    console.log('commoditiesMinMaxes', commoditiesMinMaxes);
     this.setState({ commoditiesMinMaxes, isLoading: false, })
   }
 
