@@ -22,6 +22,7 @@ class PlanetIntro extends Component {
       isMining: false,
       hasValidProof: false,
       miningJustFailed: false,
+      isSubmitting: false,
     })
   }
 

@@ -1,4 +1,4 @@
-const target = '0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+const target = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
 
 function randomReward() {
   return Math.round(Math.random() * 6000) + 10000

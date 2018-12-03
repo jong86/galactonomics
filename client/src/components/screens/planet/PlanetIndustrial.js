@@ -12,6 +12,7 @@ import miningSuccess from 'assets/sounds/miningSuccess.wav'
 import receivedSomething from 'assets/sounds/receivedSomething.wav'
 import mining from 'assets/sounds/mining.wav'
 import miningFail from 'assets/sounds/miningFail.wav'
+import getRevertMsg from "utils/getRevertMsg";
 
 const styles = {
   acceptDecline: {
@@ -152,7 +153,14 @@ class PlanetIndustrial extends Component {
     try {
       await contracts.gia.submitProofOfWork(String(nonce), { from: user.address })
     } catch (e) {
-      console.error(e)
+      setIndustrialState({
+        isMining: false,
+        hasValidProof: false,
+        hash: '',
+        nonce: 0,
+        isSubmitting: false,
+      })
+      return setDialogBox(getRevertMsg(e.toString()), 'bad')
     }
 
     const oldQuant = Number(user.cargoPerCommodity[user.currentPlanet].amount)
@@ -219,7 +227,7 @@ class PlanetIndustrial extends Component {
                   Click an area to start mining for {commodityName} ({commoditySymbol})...
                 </div>
                 <div>
-                  ({miningReward.toString()} kg will be received after a succcesful mining operation)
+                  ({miningReward ? miningReward.toString() : '0'} kg will be received after a succcesful mining operation)
                 </div>
                 <MiningPad areaSize={AREA_SIZE} />
                 <Laserframe
