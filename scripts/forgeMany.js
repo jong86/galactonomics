@@ -8,12 +8,13 @@ const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 const TempleAuthority = artifacts.require('./TempleAuthority.sol')
 
-const { mineCommodityXTimes } = require('../test/util/testUtils')
+const { mineCommodityXTimes, getCommoditiesTraded, getRandomPlanetToSell } = require('../test/util/testUtils')
+
 
 module.exports = async function(done) {
   const accounts = await web3.eth.accounts
   const bob = accounts[1]
-  let gta, gea, gia, temple
+  let gta, gea, gia, temple, tradedOnPlanet
 
   try {
     commodities = await Commodities.deployed()
@@ -23,6 +24,7 @@ module.exports = async function(done) {
     temple = await TempleAuthority.deployed()
     const costOfSpaceship = await gta.costOfSpaceship()
     await gta.buySpaceship('a', { from: bob, value: costOfSpaceship })
+    tradedOnPlanet = await getCommoditiesTraded(gea)
   } catch (e) {
     console.error(e)
   }
@@ -52,8 +54,11 @@ module.exports = async function(done) {
 
         // Unload unneeded overflow in a sell order, each iteration, to conserve cargo capacity
         if (commodityBalance.gt(forgingAmount)) {
-          console.log(">> unloading excess...")
-          await gea.createSellOrder(p, p, commodityBalance.sub(forgingAmount), 100, { from: bob })
+          const planetToSell = getRandomPlanetToSell(p, tradedOnPlanet)
+          await gta.travelToPlanet(planetToSell, { from: bob })
+          console.log(`>> unloading excess... (selling commodity ${p} on planet ${planetToSell})`)
+          const randomPrice = Math.round(Math.random() * 10000000)
+          await gea.createSellOrder(planetToSell, p, commodityBalance.sub(forgingAmount), randomPrice, { from: bob })
         }
       }
 

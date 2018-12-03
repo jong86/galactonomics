@@ -19,6 +19,8 @@ class PlanetIntro extends Component {
     // Reset some state since on a new planet now
     this.props.setIndustrialState({
       areasMined: [],
+      isMining: false,
+      hasValidProof: false,
     })
   }
 

@@ -176,6 +176,7 @@ class PlanetIndustrial extends Component {
       areaEnd,
       playReceivedSound,
       playSuccessSound,
+      miningReward,
     } = industrial
 
     return (
@@ -185,7 +186,12 @@ class PlanetIndustrial extends Component {
           >
             {!isMining && !hasValidProof &&
               <Fragment>
-                Click an area to start mining for {commodityName}...
+                <div>
+                  Click an area to start mining for {commodityName}...
+                </div>
+                <div>
+                  ({miningReward.toString()} kg will be received after a succcesful mining operation)
+                </div>
                 <MiningPad areaSize={AREA_SIZE} />
                 <Laserframe
                   flavour='status'
