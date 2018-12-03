@@ -64,7 +64,7 @@ class TempleViewCrystals extends Component {
     console.log('crystals', crystals);
 
     this.setState({
-      crystals,
+      crystals: crystals.reverse(),
       isLoading: false
     })
   }
