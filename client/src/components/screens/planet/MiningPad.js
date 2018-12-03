@@ -61,12 +61,21 @@ class MiningPad extends Component {
                 onMouseEnter={e => {
                   e.stopPropagation()
                   if (!wasMined)
-                    setIndustrialState({ areaStart, areaEnd, nonce: areaStart })
+                    setIndustrialState({
+                      areaStart,
+                      areaEnd,
+                      nonce: areaStart,
+                      miningJustFailed: false,
+                    })
                 }}
                 onMouseLeave={e => {
                   e.stopPropagation()
                   if (!wasMined)
-                    setIndustrialState({ areaStart: undefined, areaEnd: undefined })
+                    setIndustrialState({
+                      areaStart: undefined,
+                      areaEnd: undefined,
+                      miningJustFailed: false,
+                    })
                 }}
               >{char}</span>
             )

@@ -10,7 +10,8 @@ import MiningPad from 'components/screens/planet/MiningPad'
 import Sound from 'react-sound';
 import miningSuccess from 'assets/sounds/miningSuccess.wav'
 import receivedSomething from 'assets/sounds/receivedSomething.wav'
-import { debug } from "util";
+import mining from 'assets/sounds/mining.wav'
+import miningFail from 'assets/sounds/miningFail.wav'
 
 const styles = {
   acceptDecline: {
@@ -38,18 +39,27 @@ class PlanetIndustrial extends Component {
 
     // When mining is started... (an area is clicked)
     if (!prevProps.industrial.isMining && isMining) {
+      setIndustrialState({
+        miningJustFailed: false,
+        playMiningSound: true,
+      })
       window.requestAnimationFrame(this.step)
     }
 
-    // When finished mining an area...
+    // When finished mining an area (i.e., mining has failed in the area)...
     if (prevProps.industrial.nonce !== nonce && nonce >= areaEnd) {
       setIndustrialState({
         nonce: undefined,
         isMining: false,
         // Array that holds indexes of areas that have been mined
         areasMined: areasMined.concat([areaStart / AREA_SIZE]),
+        miningJustFailed: true,
+        areaStart: undefined,
+        areaEnd: undefined,
+        playMiningSound: false,
+        playMiningFailSound: true,
       })
-      setDialogBox(`No ${commodityName} was found in that area, \nclick to continue.`)
+      // setDialogBox(`No ${commodityName} was found in that area, \nclick to continue.`)
     }
   }
 
@@ -102,8 +112,9 @@ class PlanetIndustrial extends Component {
         user.currentPlanet.toString() +
         prevMiningHash +
         user.address.substring(2).toLowerCase()
-        )
-        setIndustrialState({ hash })
+      )
+
+      setIndustrialState({ hash })
 
       const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
 
@@ -112,6 +123,7 @@ class PlanetIndustrial extends Component {
 
         return setIndustrialState({
           playSuccessSound: true,
+          playMiningSound: false,
           isMining: false,
           hasValidProof: true,
         })
@@ -125,7 +137,10 @@ class PlanetIndustrial extends Component {
   }
 
   stopMining = () => {
-    this.props.setIndustrialState({ isMining: false })
+    this.props.setIndustrialState({
+      isMining: false,
+      playMiningSound: false,
+    })
   }
 
   submitProof = async () => {
@@ -177,8 +192,21 @@ class PlanetIndustrial extends Component {
       areaEnd,
       playReceivedSound,
       playSuccessSound,
+      playMiningFailSound,
+      playMiningSound,
       miningReward,
+      miningJustFailed,
     } = industrial
+
+    const statusBarText = (() => {
+      if (areaStart && areaEnd) {
+        return `Area ${areaStart} to ${areaEnd}`
+      } else if (miningJustFailed) {
+        return `No ${commodityName} was found in that area`
+      }  else {
+        return 'Waiting...'
+      }
+    })()
 
     return (
       <MPIContainer>
@@ -195,9 +223,9 @@ class PlanetIndustrial extends Component {
                 </div>
                 <MiningPad areaSize={AREA_SIZE} />
                 <Laserframe
-                  flavour='status'
+                  flavour={miningJustFailed ? 'bad' : 'status'}
                 >
-                  {areaStart && areaEnd ? `Area ${areaStart} to ${areaEnd}` : 'Waiting...'}
+                  {statusBarText}
                 </Laserframe>
               </Fragment>
             }
@@ -237,14 +265,27 @@ class PlanetIndustrial extends Component {
           <Sound
             url={miningSuccess}
             playStatus={playSuccessSound && Sound.status.PLAYING}
-            volume={10}
+            volume={6}
             onFinishedPlaying={() => setIndustrialState({ playSuccessSound: false })}
           />
           <Sound
             url={receivedSomething}
             playStatus={playReceivedSound && Sound.status.PLAYING}
-            volume={25}
+            volume={10}
             onFinishedPlaying={() => setIndustrialState({ playReceivedSound: false })}
+          />
+          <Sound
+            url={mining}
+            playStatus={playMiningSound && Sound.status.PLAYING}
+            volume={25}
+            // playFromPosition={Math.floor(Math.random() * 30000)}
+            onFinishedPlaying={() => setIndustrialState({ playMiningSound: false })}
+          />
+          <Sound
+            url={miningFail}
+            playStatus={playMiningFailSound && Sound.status.PLAYING}
+            volume={10}
+            onFinishedPlaying={() => setIndustrialState({ playMiningFailSound: false })}
           />
       </MPIContainer>
     )

@@ -21,6 +21,7 @@ class PlanetIntro extends Component {
       areasMined: [],
       isMining: false,
       hasValidProof: false,
+      miningJustFailed: false,
     })
   }
 
