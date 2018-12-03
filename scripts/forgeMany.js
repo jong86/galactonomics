@@ -13,7 +13,7 @@ const { mineCommodityXTimes, getCommoditiesTraded, getRandomPlanetToSell } = req
 
 module.exports = async function(done) {
   const accounts = await web3.eth.accounts
-  const bob = accounts[1]
+  const bob = accounts[2]
   let gta, gea, gia, temple, tradedOnPlanet
 
   try {

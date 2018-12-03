@@ -48,7 +48,7 @@ class SpaceshipDealer extends Component {
         <h3>WARNING: Spaceship ownership is required by law to handle commodities in this galactic region</h3>
         <img src={spaceship} />
         <Laserframe
-          isButton
+          isButton={!isLoading}
           onClick={this.buySpaceship}
           flavour="good"
         >{isLoading ? <div>{loadingText} <Loader flavour="good" /></div> : 'Okay'}</Laserframe>

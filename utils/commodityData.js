@@ -1,7 +1,7 @@
-const target = '0x0001ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+const target = '0x000effffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
 
 function randomReward() {
-  return Math.round(Math.random() * 10000) + 10000
+  return Math.round(Math.random() * 6000) + 10000
 }
 
 module.exports = [
