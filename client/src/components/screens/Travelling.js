@@ -58,11 +58,11 @@ class Travelling extends Component {
       })
       .on('receipt', receipt => {
         setUserInfo({ currentPlanet: user.travellingTo })
-        // changeScreen('PlanetIntro')
+        changeScreen('PlanetIntro')
       })
       .on('error', e => {
         setDialogBox(getErrorMsg(e.message), "bad")
-        // changeScreen('Travel')
+        changeScreen('Travel')
       })
   }
 
