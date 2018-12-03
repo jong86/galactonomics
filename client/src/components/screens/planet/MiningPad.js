@@ -9,7 +9,7 @@ const styles = {
     display: 'grid',
     'grid-template-columns': 'repeat(128, 1fr)',
     'grid-template-rows': 'auto',
-    fontSize: 16,
+    fontSize: 14,
   },
   area: {
     zIndex: 1,

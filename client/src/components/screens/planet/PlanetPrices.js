@@ -159,6 +159,7 @@ class PlanetPrices extends Component {
                 key={uuid()}
                 minMaxes={commodityMinMaxes}
                 symbol={commodityInfos[i].symbol}
+                commodityId={i}
               />
             ))}
           </Fragment>

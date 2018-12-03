@@ -172,6 +172,7 @@ class PlanetIndustrial extends Component {
       hasValidProof,
       isSubmitting,
       commodityName,
+      commoditySymbol,
       areaStart,
       areaEnd,
       playReceivedSound,
@@ -187,7 +188,7 @@ class PlanetIndustrial extends Component {
             {!isMining && !hasValidProof &&
               <Fragment>
                 <div>
-                  Click an area to start mining for {commodityName}...
+                  Click an area to start mining for {commodityName} ({commoditySymbol})...
                 </div>
                 <div>
                   ({miningReward.toString()} kg will be received after a succcesful mining operation)
