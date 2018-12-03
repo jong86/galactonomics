@@ -6,6 +6,7 @@ import planets from 'utils/planets'
 import getRevertMsg from 'utils/getRevertMsg'
 import Sound from 'react-sound';
 import travellingSound from 'assets/sounds/travelling.wav'
+import Laserframe from 'components/reusables/Laserframe.js'
 
 const styles = {
   container: {
@@ -18,10 +19,34 @@ const styles = {
 class Travelling extends Component {
   state = {
     isTravelling: false,
+    currentSpeed: 5.39,
   };
 
   componentDidMount = () => {
     this.travelToPlanet()
+  }
+
+  componentDidUpdate = (_, prevState) => {
+    if (!prevState.isTravelling && this.state.isTravelling) {
+      // start animation
+      window.requestAnimationFrame(this.changeSpeed)
+    }
+  }
+
+  changeSpeed = () => {
+    let signCoef = 1
+    if (Math.random() <= 0.5) {
+      signCoef = -1
+    }
+
+    const modulator = Math.random() * 0.1 * signCoef
+    const { currentSpeed } = this.state
+    const newSpeed = parseFloat(parseFloat(currentSpeed) + modulator).toFixed(7)
+
+    this.setState({
+      currentSpeed: newSpeed
+    })
+    window.requestAnimationFrame(this.changeSpeed)
   }
 
   travelToPlanet = () => {
@@ -33,17 +58,17 @@ class Travelling extends Component {
       })
       .on('receipt', receipt => {
         setUserInfo({ currentPlanet: user.travellingTo })
-        changeScreen('PlanetIntro')
+        // changeScreen('PlanetIntro')
       })
       .on('error', e => {
         setDialogBox(getRevertMsg(e.message), "bad")
-        changeScreen('Travel')
+        // changeScreen('Travel')
       })
   }
 
   render() {
-    const { classes, travellingTo, user } = this.props
-    const { isTravelling } = this.state
+    const { classes, user } = this.props
+    const { isTravelling, currentSpeed } = this.state
     const planet = planets.find(planet => planet.id == user.travellingTo)
 
     return (
@@ -57,6 +82,9 @@ class Travelling extends Component {
           src={spaceship}
           className={classes[isTravelling && 'travellingSpaceship']}
         />
+        <Laserframe flavour="info">
+          Current speed: {isTravelling ? currentSpeed + ' * 10^11 kph' : 'N/A'}
+        </Laserframe>
         <Sound
           url={travellingSound}
           playStatus={isTravelling && Sound.status.PLAYING}
@@ -69,7 +97,6 @@ class Travelling extends Component {
 
 const mapStateToProps = state => {
   return {
-    travellingTo: state.user.travellingTo,
     contracts: state.contracts,
     user: state.user,
   }

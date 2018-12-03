@@ -5,5 +5,5 @@ export default {
   },
   industrial: {
     areasMined: [],
-  }
+  },
 }
