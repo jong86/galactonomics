@@ -3,7 +3,7 @@ import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
 import Laserframe from 'components/reusables/Laserframe'
 import { FaGasPump } from 'react-icons/fa';
-import getRevertMsg from 'utils/getRevertMsg'
+import getErrorMsg from 'utils/getErrorMsg'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
 import Sound from 'react-sound';
@@ -54,7 +54,7 @@ class FuelMeter extends Component {
         })
       })
       .on('error', e => {
-        this.props.setDialogBox(getRevertMsg(e.message), 'bad')
+        this.props.setDialogBox(getErrorMsg(e.message), 'bad')
       })
   }
 

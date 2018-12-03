@@ -4,7 +4,7 @@ import injectSheet from 'react-jss'
 import Laserframe from 'components/reusables/Laserframe'
 import spaceship from 'assets/images/spaceship.jpg'
 import Loader from 'components/reusables/Loader'
-import getRevertMsg from 'utils/getRevertMsg'
+import getErrorMsg from 'utils/getErrorMsg'
 
 const styles = {
   container: {}
@@ -33,7 +33,7 @@ class SpaceshipDealer extends Component {
       })
       .on('error', e => {
         this.setState({ isLoading: false })
-        setDialogBox(getRevertMsg(e.message), "bad")
+        setDialogBox(getErrorMsg(e.message), "bad")
       })
   }
 

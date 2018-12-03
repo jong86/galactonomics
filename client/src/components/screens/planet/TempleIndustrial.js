@@ -8,7 +8,7 @@ import Loader from 'components/reusables/Loader'
 import Crystal from 'components/reusables/Crystal'
 import Sound from 'react-sound';
 import aCrystalWasForged from 'assets/sounds/aCrystalWasForged.wav'
-import getRevertMsg from 'utils/getRevertMsg'
+import getErrorMsg from 'utils/getErrorMsg'
 
 const styles = {
   acceptDecline: {
@@ -47,7 +47,7 @@ class TempleIndustrial extends Component {
         this.getLatestCrystalURI()
       })
       .on('error', e => {
-        setDialogBox(getRevertMsg(e.message), "bad")
+        setDialogBox(getErrorMsg(e.message), "bad")
         this.setState({
           isLoading: false,
           buttonText: 'Forge',

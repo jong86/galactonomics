@@ -12,7 +12,7 @@ import miningSuccess from 'assets/sounds/miningSuccess.wav'
 import receivedSomething from 'assets/sounds/receivedSomething.wav'
 import mining from 'assets/sounds/mining.wav'
 import miningFail from 'assets/sounds/miningFail.wav'
-import getRevertMsg from "utils/getRevertMsg";
+import getErrorMsg from "utils/getErrorMsg";
 
 const styles = {
   acceptDecline: {
@@ -160,7 +160,7 @@ class PlanetIndustrial extends Component {
         nonce: 0,
         isSubmitting: false,
       })
-      return setDialogBox(getRevertMsg(e.toString()), 'bad')
+      return setDialogBox(getErrorMsg(e.toString()), 'bad')
     }
 
     const oldQuant = Number(user.cargoPerCommodity[user.currentPlanet].amount)
