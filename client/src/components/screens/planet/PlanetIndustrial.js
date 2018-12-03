@@ -277,8 +277,8 @@ class PlanetIndustrial extends Component {
           <Sound
             url={mining}
             playStatus={playMiningSound && Sound.status.PLAYING}
-            volume={25}
-            // playFromPosition={Math.floor(Math.random() * 30000)}
+            volume={15}
+            loop={true}
             onFinishedPlaying={() => setIndustrialState({ playMiningSound: false })}
           />
           <Sound

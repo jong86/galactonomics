@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react"
 import injectSheet from 'react-jss'
 import commodities from 'utils/commodities'
 import Laserframe from 'components/reusables/Laserframe'

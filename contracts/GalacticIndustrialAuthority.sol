@@ -41,6 +41,14 @@ contract GalacticIndustrialAuthority {
   function submitProofOfWork(string _nonce) external {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
     uint8 _commodityId = gta.getCurrentPlanet(msg.sender);
+    require(
+      gta.canFitCargo(
+        msg.sender,
+        commodities.getCurrentCargo(msg.sender),
+        commodities.getInterface(_commodityId).miningReward()
+      ),
+      "Not enough cargo capacity available on your ship, you must unload cargo by selling it"
+    );
 
     string memory _prevHash = commodities.getInterface(_commodityId).prevMiningHash().toString();
 
@@ -53,7 +61,10 @@ contract GalacticIndustrialAuthority {
       )
     );
 
-    require(commodities.getInterface(_commodityId).dispenseReward(msg.sender, _hash), "Error doing reward");
+    require(
+      commodities.getInterface(_commodityId).dispenseReward(msg.sender, _hash),
+      "Error sending reward"
+    );
     emit CommodityMined(_hash, msg.sender);
   }
 

@@ -75,4 +75,37 @@ contract("GalacticIndustrialAuthority", accounts => {
     const balanceAfter = await commodities.getBalance(0, { from: player1 })
     assert.equal(balanceBefore.toString(), balanceAfter.toString(), "did not receive mining reward")
   })
+
+  it("does not mint if player cannot fit the mining reward in spaceship's cargo", async () => {
+    await fillUpCargoByMining(commodities, gta, gia, player1, 0)
+    const balanceBefore = await commodities.getBalance(0, { from: player1 })
+
+    const miningData = await gia.getMiningData({ from: player1 })
+    const miningTarget = miningData[1]
+    const prevHash = miningData[2]
+
+    let nonce = 3500
+    let hash
+    do {
+      nonce++
+      hash = sha256(
+        nonce.toString() +
+        (0).toString() +
+        prevHash +
+        player1.substring(2)
+      )
+    } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
+
+    try {
+      await gia.submitProofOfWork(String(nonce), { from: player1 })
+    } catch (e) {}
+
+    const balanceAfter = await commodities.getBalance(0, { from: player1 })
+
+    assert.equal(
+      balanceBefore.toString(),
+      balanceAfter.toString(),
+      "balance should not have changed after calling submitProofOfWork"
+    )
+  })
 })
