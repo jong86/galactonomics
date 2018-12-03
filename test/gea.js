@@ -42,10 +42,10 @@ contract("GalacticEconomicAuthority", accounts => {
     await mineCommodityXTimes(gia, 4, player1, 0)
 
     const planetToSell = getRandomPlanetToSell(0, tradedOnPlanet)
-    console.log('planetToSell (should be 1, 3, or 4):', planetToSell);
 
     const currentCargoBefore = await commodities.getCurrentCargo(player1)
-    const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
+    await gta.travelToPlanet(planetToSell, { from: player1 })
+    const response = await gea.createSellOrder(planetToSell, 0, qty, price, { from: player1 })
     const currentCargoAfter = await commodities.getCurrentCargo(player1)
 
     assert.equal(
@@ -55,7 +55,7 @@ contract("GalacticEconomicAuthority", accounts => {
     )
 
     const { orderId } = response.logs[0].args
-    const order = await gea.getSellOrder(0, 0, orderId)
+    const order = await gea.getSellOrder(planetToSell, 0, orderId)
     assert.equal(order[1], qty, 'did not create sell order')
     const balanceGEA = await allCommodities[0].balanceOf(gea.address)
     assert.equal(balanceGEA, qty, 'did not put commodity in escrow')
@@ -71,15 +71,23 @@ contract("GalacticEconomicAuthority", accounts => {
   })
 
   it("should let player2 buy player1's sell order", async () => {
-    await mineCommodityXTimes(gia, 4, player1)
+    // Give player1 somethingt o sell
+    await mineCommodityXTimes(gia, 4, player1, 0)
 
-    const response = await gea.createSellOrder(0, 0, qty, price, { from: player1 })
+    // Get id of planet player1 can sell it at
+    const planetToSell = getRandomPlanetToSell(0, tradedOnPlanet)
+
+    // Create sell order on that planet
+    await gta.travelToPlanet(planetToSell, { from: player1 })
+    const response = await gea.createSellOrder(planetToSell, 0, qty, price, { from: player1 })
     const balanceGEA = await allCommodities[0].balanceOf(gea.address)
 
     const player1EthBefore = await web3.eth.getBalance(player1)
     const { orderId } = response.logs[0].args
 
-    await gea.buySellOrder(0, 0, orderId, { from: player2, value: qty * price })
+    // Have player2 buy that sell order
+    await gta.travelToPlanet(planetToSell, { from: player2 })
+    await gea.buySellOrder(planetToSell, 0, orderId, { from: player2, value: qty * price })
 
     const currentCargoAfter = await commodities.getCurrentCargo(player2)
     assert.equal(currentCargoAfter.toString(), qty.toString(), "player2 did not have cargo adjusted")
@@ -91,18 +99,21 @@ contract("GalacticEconomicAuthority", accounts => {
     const tradeCost = web3.toBigNumber(qty * price)
     assert.equal(player1EthAfter.toString(), player1EthBefore.add(tradeCost).toString(), 'player1 did not receive payment')
 
-    const order = await gea.getSellOrder(0, 0, orderId)
+    const order = await gea.getSellOrder(planetToSell, 0, orderId)
     assert(!order[3], "did not set open bool to false")
 
     assert.equal(order[4], player2, "did not record player2 as buyer")
   })
 
   it("should not let non-player buy player1's sell order", async () => {
-    await mineCommodityXTimes(gia, 4, player1)
+    await mineCommodityXTimes(gia, 4, player1, 0)
 
-    await gea.createSellOrder(0, 0, qty, price, { from: player1 })
+    const planetToSell = getRandomPlanetToSell(0, tradedOnPlanet)
+
+    await gta.travelToPlanet(planetToSell, { from: player1 })
+    await gea.createSellOrder(planetToSell, 0, qty, price, { from: player1 })
     try {
-      await gea.buySellOrder(0, orderId, { from: nonPlayer, value: qty * price })
+      await gea.buySellOrder(planetToSell, orderId, { from: nonPlayer, value: qty * price })
     } catch (e) {
       return assert(true)
     }
@@ -111,7 +122,11 @@ contract("GalacticEconomicAuthority", accounts => {
 
   it("should fail if player cannot fit the cargo they want to buy", async () => {
     // Fill up player2's cargo
-    await fillUpCargoByMining(commodities, gta, gia, player2, 0)
+    try {
+      await fillUpCargoByMining(commodities, gta, gia, player2, 0)
+    } catch (e) {
+      return assert(false, e)
+    }
     // Find a amount of cargo that will max out player2's cargo
     const currentCargo = await commodities.getCurrentCargo(player2)
     const availableCargo = await gta.getAvailableCargo(player2, currentCargo)
@@ -120,14 +135,20 @@ contract("GalacticEconomicAuthority", accounts => {
     const miningReward = await commodities.getMiningReward(0)
     const timesToMint = availableCargo.div(miningReward)
     try {
-      await mineCommodityXTimes(gia, timesToMint.add(1), player1)
-    } catch (e) {}
-    const response = await gea.createSellOrder(0, 0, availableCargo.add(1), price, { from: player1 })
+      await mineCommodityXTimes(gia, timesToMint.add(1), player1, 0)
+    } catch (e) {
+      return assert(false, e)
+    }
+
+    const planetToSell = getRandomPlanetToSell(0, tradedOnPlanet)
+
+    await gta.travelToPlanet(planetToSell, { from: player1 })
+    const response = await gea.createSellOrder(planetToSell, 0, availableCargo.add(1), price, { from: player1 })
 
     const { orderId } = response.logs[0].args
 
     try {
-      await gea.buySellOrder(0, orderId, { from: player2, value: qty * price })
+      await gea.buySellOrder(planetToSell, orderId, { from: player2, value: qty * price })
     } catch (e) {
       return assert(true)
     }

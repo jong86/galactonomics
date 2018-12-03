@@ -7,7 +7,24 @@ function fillUpCargoByMining(commodities, gta, gia, player, commodityId) {
 
     do {
       try {
-        await gia.submitProofOfWork(commodityId, { from: player })
+        const miningData = await gia.getMiningData({ from: player })
+        const miningTarget = miningData[1]
+        const prevHash = miningData[2]
+
+        let nonce = 0
+        let hash
+        do {
+          nonce++
+          hash = sha256(
+            nonce.toString() +
+            commodityId.toString() +
+            prevHash +
+            player.substring(2)
+          )
+        } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
+
+        await gia.submitProofOfWork(String(nonce), { from: player })
+
       } catch (e) {
         reject("Error invoking submitProofOfWork")
       }
