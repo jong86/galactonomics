@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/galactonomics/precache-manifest.badbd2aaf8e0654eef04a2f997ed4f6b.js"
+  "/galactonomics/precache-manifest.41f251e98428e5e251491003c59379a5.js"
 );
 
 workbox.clientsClaim();
