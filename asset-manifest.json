@@ -1,6 +1,6 @@
 {
-  "main.js": "/galactonomics/static/js/main.78c1b1a0.chunk.js",
-  "main.js.map": "/galactonomics/static/js/main.78c1b1a0.chunk.js.map",
+  "main.js": "/galactonomics/static/js/main.c89809c5.chunk.js",
+  "main.js.map": "/galactonomics/static/js/main.c89809c5.chunk.js.map",
   "static/js/1.9f37eb19.chunk.js": "/galactonomics/static/js/1.9f37eb19.chunk.js",
   "static/js/1.9f37eb19.chunk.js.map": "/galactonomics/static/js/1.9f37eb19.chunk.js.map",
   "runtime~main.js": "/galactonomics/static/js/runtime~main.97872238.js",
@@ -29,6 +29,6 @@
   "static/media/miningFail.wav": "/galactonomics/static/media/miningFail.45ac8397.wav",
   "static/media/aCrystalWasForged.wav": "/galactonomics/static/media/aCrystalWasForged.f4b5ea14.wav",
   "index.html": "/galactonomics/index.html",
-  "precache-manifest.aec37f7186c5803d1cbdfe4957f9bbae.js": "/galactonomics/precache-manifest.aec37f7186c5803d1cbdfe4957f9bbae.js",
+  "precache-manifest.8aae483fec3a70b6d255cb4d1d4ea3ce.js": "/galactonomics/precache-manifest.8aae483fec3a70b6d255cb4d1d4ea3ce.js",
   "service-worker.js": "/galactonomics/service-worker.js"
 }
