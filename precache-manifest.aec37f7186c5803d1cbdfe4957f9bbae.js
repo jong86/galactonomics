@@ -4,8 +4,8 @@ self.__precacheManifest = [
     "url": "/galactonomics/static/media/planet0.047cef66.wav"
   },
   {
-    "revision": "cae99d6c570ddd9de0dc",
-    "url": "/galactonomics/static/js/main.cae99d6c.chunk.js"
+    "revision": "78c1b1a0c9e1bead3893",
+    "url": "/galactonomics/static/js/main.78c1b1a0.chunk.js"
   },
   {
     "revision": "97872238bf8ea34054fb",
@@ -104,7 +104,7 @@ self.__precacheManifest = [
     "url": "/galactonomics/static/js/1.9f37eb19.chunk.js"
   },
   {
-    "revision": "00a3d58ce6766cd28c7d0e0710345bef",
+    "revision": "c3da81a858e162d7bdc2348217d28837",
     "url": "/galactonomics/index.html"
   }
 ];
