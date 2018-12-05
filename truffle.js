@@ -13,7 +13,7 @@ module.exports = {
         return new HDWalletProvider(testMnenomic, "https://ropsten.infura.io/v3/e3023fedad31499e899cec7b841ea70b")
       },
       network_id: "3",
-      gasPrice: 5000000000,
+      gasPrice: 5600000000,
     },
   },
 };

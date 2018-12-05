@@ -20,7 +20,7 @@ const styles = {
   }
 }
 
-const AREA_SIZE = 256
+const AREA_SIZE = 768
 
 function checkIfHashUnderTarget(hash, target) {
   hash = parseInt('0x' + String(hash), 16)

@@ -13,7 +13,7 @@ const { mineCommodityXTimes, getCommoditiesTraded, getRandomPlanetToSell } = req
 
 module.exports = async function(done) {
   const accounts = await web3.eth.accounts
-  const bob = accounts[2]
+  const bob = accounts[1]
   let gta, gea, gia, temple, tradedOnPlanet
 
   try {
@@ -22,8 +22,8 @@ module.exports = async function(done) {
     gea = await GalacticEconomicAuthority.deployed()
     gia = await GalacticIndustrialAuthority.deployed()
     temple = await TempleAuthority.deployed()
-    const costOfSpaceship = await gta.costOfSpaceship()
-    await gta.buySpaceship('a', { from: bob, value: costOfSpaceship })
+    // const costOfSpaceship = await gta.costOfSpaceship()
+    // await gta.buySpaceship('a', { from: bob, value: costOfSpaceship })
     tradedOnPlanet = await getCommoditiesTraded(gea)
   } catch (e) {
     console.error(e)
