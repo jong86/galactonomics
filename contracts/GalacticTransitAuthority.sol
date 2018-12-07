@@ -5,6 +5,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/AccessControlled.sol";
 import "./items/Commodity.sol";
 import "./interfaces/IGalacticTransitAuthority.sol";
+import "./libraries/UintCast.sol";
 
 /**
  * @title Galactic Transit Authority (GTA)
@@ -13,10 +14,11 @@ import "./interfaces/IGalacticTransitAuthority.sol";
  */
 contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitAuthority {
   using SafeMath for uint;
+  using UintCast for uint;
 
   struct Spaceship {
     string name;
-    uint8 currentPlanet;
+    uint currentPlanet;
     uint maxCargo; // in kg
     uint currentFuel; // in litres
     uint maxFuel;
@@ -35,7 +37,7 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
   mapping(address => bool) public addressOwnsSpaceship;
 
   event SpaceshipBought(address owner, uint tokenId);
-  event TravelComplete(address player, uint8 planetId, uint currentFuel);
+  event TravelComplete(address player, uint planetId, uint currentFuel);
   event RefuelComplete(address player);
 
   modifier onlyPlayer() {
@@ -64,7 +66,7 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
    * @dev This function is responsible for deciding which planet IDs are valid planets
    * @param _planetId Id of planet to travel to (0 - 6), or 255 for the 8th planet
    */
-  function travelToPlanet(uint8 _planetId) external onlyPlayer {
+  function travelToPlanet(uint _planetId) external onlyPlayer {
     require((0 <= _planetId && _planetId <= 6) || _planetId == 255, "planetId must be between 0 and 6, inclusive, or be equal to 255");
     require(addressToSpaceship[msg.sender].currentFuel >= fuelUsage, "You do not have enough fuel to travel");
     addressToSpaceship[msg.sender].currentPlanet = _planetId;
@@ -86,7 +88,7 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
    */
   function getInfo() external view returns (
     string spaceshipName,
-    uint8 currentPlanet,
+    uint currentPlanet,
     uint maxCargo,
     uint currentFuel,
     uint maxFuel
@@ -104,7 +106,7 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
     return addressOwnsSpaceship[_address];
   }
 
-  function getCurrentPlanet(address _address) public view returns (uint8) {
+  function getCurrentPlanet(address _address) public view returns (uint) {
     return addressToSpaceship[_address].currentPlanet;
   }
 
@@ -127,6 +129,11 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
     uint _maxCargo = getMaxCargo(_player);
     uint _cargoAvailable = _maxCargo.sub(_currentCargo);
     return _cargoAvailable >= _incomingCargo;
+  }
+
+  function planetURI(uint _planetId) external view returns (bytes32) {
+    bytes32 _uri = sha256(abi.encodePacked(_planetId.toString()));
+    return _uri;
   }
 
   function() public {}

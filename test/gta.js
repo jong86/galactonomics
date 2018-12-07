@@ -150,4 +150,14 @@ contract("GalacticTransitAuthority", accounts => {
     }
     assert(errorCount === 2, "did not error properly")
   })
+
+  it("allows user to get planet's URI", async () => {
+    const num1 = '1042'
+    const uri1 = await gta.planetURI(num1, { from: player1 })
+    assert.equal(uri1, '0x216da54b5931a6d37cca8e29953361fe02c680bbd8b482343f508e32e8e9cc3b', 'returned wrong hash for num1')
+
+    const num2 = '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+    const uri2 = await gta.planetURI(num2, { from: player1 })
+    assert.equal(uri2, '0xf071ee960e2f5f0391c4fc4d5877f62a9c74ade164e8981c8c830f4fe2a16ee0', 'returned wrong hash for num2')
+  })
 })
