@@ -8,46 +8,46 @@ const TempleAuthority = artifacts.require('./TempleAuthority.sol')
 const commodityData = require('../utils/commodityData')
 
 module.exports = function(deployer) {
-  deployer.then(async () => {
-    // Deploy each Commodity
-    commodityInstances = []
-    for (const commodity of commodityData) {
-      await deployer.deploy(Commodity, commodity.name, commodity.symbol, commodity.startingReward, commodity.startingTarget);
-      commodityInstance = await Commodity.deployed()
-      commodityInstances.push(commodityInstance);
-    }
-    const commodityAddresses = commodityInstances.map(commodity => commodity.address)
+  // deployer.then(async () => {
+  //   // Deploy each Commodity
+  //   commodityInstances = []
+  //   for (const commodity of commodityData) {
+  //     await deployer.deploy(Commodity, commodity.name, commodity.symbol, commodity.startingReward, commodity.startingTarget);
+  //     commodityInstance = await Commodity.deployed()
+  //     commodityInstances.push(commodityInstance);
+  //   }
+  //   const commodityAddresses = commodityInstances.map(commodity => commodity.address)
 
-    // Deploy Commodities
-    await deployer.deploy(Commodities, commodityAddresses)
-    const commodities = await Commodities.deployed()
+  //   // Deploy Commodities
+  //   await deployer.deploy(Commodities, commodityAddresses)
+  //   const commodities = await Commodities.deployed()
 
-    // Deploy GTA
-    await deployer.deploy(GalacticTransitAuthority)
-    const gta = await GalacticTransitAuthority.deployed()
+  //   // Deploy GTA
+  //   await deployer.deploy(GalacticTransitAuthority)
+  //   const gta = await GalacticTransitAuthority.deployed()
 
-    // Deploy GEA and GIA
-    await deployer.deploy(GalacticEconomicAuthority, commodities.address, gta.address)
-    await deployer.deploy(GalacticIndustrialAuthority, commodities.address, gta.address)
-    const gea = await GalacticEconomicAuthority.deployed()
-    const gia = await GalacticIndustrialAuthority.deployed()
+  //   // Deploy GEA and GIA
+  //   await deployer.deploy(GalacticEconomicAuthority, commodities.address, gta.address)
+  //   await deployer.deploy(GalacticIndustrialAuthority, commodities.address, gta.address)
+  //   const gea = await GalacticEconomicAuthority.deployed()
+  //   const gia = await GalacticIndustrialAuthority.deployed()
 
-    // Deploy B. Crystal
-    await deployer.deploy(ByzantianCrystal)
-    const bCrystal = await ByzantianCrystal.deployed()
+  //   // Deploy B. Crystal
+  //   await deployer.deploy(ByzantianCrystal)
+  //   const bCrystal = await ByzantianCrystal.deployed()
 
-    // Deploy TA
-    await deployer.deploy(TempleAuthority, commodities.address, gta.address, bCrystal.address)
-    const temple = await TempleAuthority.deployed()
+  //   // Deploy TA
+  //   await deployer.deploy(TempleAuthority, commodities.address, gta.address, bCrystal.address)
+  //   const temple = await TempleAuthority.deployed()
 
-    // Set access controls
-    for (const commodity of commodityInstances) {
-      await commodity.setGEA(gea.address)
-      await commodity.setGIA(gia.address)
-      await commodity.setTA(temple.address)
-    }
-    await gta.setGEA(gea.address)
-    await gta.setGIA(gia.address)
-    return bCrystal.setTA(temple.address)
-  })
+  //   // Set access controls
+  //   for (const commodity of commodityInstances) {
+  //     await commodity.setGEA(gea.address)
+  //     await commodity.setGIA(gia.address)
+  //     await commodity.setTA(temple.address)
+  //   }
+  //   await gta.setGEA(gea.address)
+  //   await gta.setGIA(gia.address)
+  //   return bCrystal.setTA(temple.address)
+  // })
 }

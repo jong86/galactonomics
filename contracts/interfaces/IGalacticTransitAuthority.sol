@@ -1,5 +1,4 @@
 pragma solidity ^0.4.24;
-import "./ICommodity.sol";
 
 contract IGalacticTransitAuthority {
   function getCurrentPlanet(address) public view returns (uint) {}

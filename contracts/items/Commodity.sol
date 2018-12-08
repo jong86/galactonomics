@@ -3,7 +3,6 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../utils/AccessControlled.sol";
-import "../interfaces/ICommodity.sol";
 
 /**
  * @title Commodity

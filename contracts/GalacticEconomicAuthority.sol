@@ -24,13 +24,13 @@ contract GalacticEconomicAuthority {
   }
 
   // Mapping of planetId to array containing the commodity Ids that are sold on that planet
-  mapping(uint8 => uint[]) public planetIdToCommodityIdsTraded;
+  mapping(uint => uint[]) public planetIdToCommodityIdsTraded;
 
   // Mapping of planetId to commodityId to sell orders array
-  mapping(uint8 => mapping(uint8 => SellOrder[])) public marketplaces;
+  mapping(uint => mapping(uint => SellOrder[])) public marketplaces;
 
-  event sellOrderCreated(uint8 planetId, uint orderId);
-  event sellOrderPurchased(uint8 planetId, uint orderId);
+  event sellOrderCreated(uint planetId, uint orderId);
+  event sellOrderPurchased(uint planetId, uint orderId);
 
   constructor(address _commodities, address _gta) {
     commodities = ICommodities(_commodities);
@@ -49,7 +49,7 @@ contract GalacticEconomicAuthority {
   /**
    * @dev Modifier that ensures a commodity ID is valid
    */
-  modifier commodityExists(uint8 _commodityId) {
+  modifier commodityExists(uint _commodityId) {
     require(0 <= _commodityId && _commodityId <= 6, "That commodity does not exist");
     _;
   }
@@ -57,7 +57,7 @@ contract GalacticEconomicAuthority {
   /**
    * @dev Modifier that ensures that a commodity is traded on a planet
    */
-  modifier commodityTradedOnPlanet(uint8 _planetId, uint8 _commodityId) {
+  modifier commodityTradedOnPlanet(uint _planetId, uint _commodityId) {
     uint length = planetIdToCommodityIdsTraded[_planetId].length;
     bool isTraded;
     for (uint i = 0; i < length; i++) {
@@ -77,16 +77,16 @@ contract GalacticEconomicAuthority {
    * @param _amount Quantity of commodity to sell
    * @param _price Price per unit of commodity
    */
-  function createSellOrder(uint8 _planetId, uint8 _commodityId, uint _amount, uint _price)
+  function createSellOrder(uint _planetId, uint _commodityId, uint _amount, uint _price)
   external
   commodityExists(_commodityId)
   commodityTradedOnPlanet(_planetId, _commodityId) {
     require(gta.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
-    require(commodities.getInterface(_commodityId).balanceOf(msg.sender) >= _amount, "You do not own enough of this commodity");
+    require(commodities.balanceOf(msg.sender, _commodityId) >= _amount, "You do not own enough of this commodity");
 
     // Arrange transfer of commodity from user to escrow
     SellOrder memory sellOrder = SellOrder(msg.sender, _amount, _price, true, address(0));
-    commodities.getInterface(_commodityId).transferToEscrow(msg.sender, _amount);
+    commodities.transferToEscrow(msg.sender, _commodityId, _amount);
     // Store order in array
     uint _arrayLength = marketplaces[_planetId][_commodityId].push(sellOrder);
     uint _orderId = _arrayLength.sub(1);
@@ -100,7 +100,7 @@ contract GalacticEconomicAuthority {
    * @param _commodityId ID of commodity to buy
    * @param _orderId ID of order to purchase
    */
-  function buySellOrder(uint8 _planetId, uint8 _commodityId, uint _orderId) external payable
+  function buySellOrder(uint _planetId, uint _commodityId, uint _orderId) external payable
   commodityExists(_commodityId) {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
     require(gta.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
@@ -112,7 +112,7 @@ contract GalacticEconomicAuthority {
     require(msg.value == sellOrder.amount.mul(sellOrder.price), "You did not send the correct amount of ether");
 
     // Arrange transfer of commodity out of escrow
-    commodities.getInterface(_commodityId).transfer(msg.sender, sellOrder.amount);
+    commodities.transferFromEscrow(msg.sender, _commodityId, sellOrder.amount);
     // Transfer eth from buyer to seller
     sellOrder.seller.transfer(msg.value);
     // Close order
@@ -129,7 +129,7 @@ contract GalacticEconomicAuthority {
    * @param _commodityId ID of commodity being sold
    * @param _orderId ID of sell order
    */
-  function getSellOrder(uint8 _planetId, uint8 _commodityId, uint _orderId) external view
+  function getSellOrder(uint _planetId, uint _commodityId, uint _orderId) external view
   returns (
     address seller,
     uint amount,
@@ -154,7 +154,7 @@ contract GalacticEconomicAuthority {
    * @param _planetId ID of planet that sell order is on
    * @param _commodityId ID of commodity being sold
    */
-  function getNumSellOrders(uint8 _planetId, uint8 _commodityId) external view returns(uint) {
+  function getNumSellOrders(uint _planetId, uint _commodityId) external view returns(uint) {
     return marketplaces[_planetId][_commodityId].length;
   }
 
@@ -162,7 +162,7 @@ contract GalacticEconomicAuthority {
    * @notice Returns an array containing the IDs of the commodoties sold on a particular planet
    * @param _planetId ID of planet that sell order is on
    */
-  function getCommoditiesTraded(uint8 _planetId) external view returns (uint[] commoditiesTraded) {
+  function getCommoditiesTraded(uint _planetId) external view returns (uint[] commoditiesTraded) {
     return planetIdToCommodityIdsTraded[_planetId];
   }
 }

@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./interfaces/IGalacticTransitAuthority.sol";
 import "./libraries/AddressCast.sol";
 import "./libraries/BytesCast.sol";
 import "./libraries/UintCast.sol";
@@ -23,6 +24,9 @@ contract Commodities is Ownable {
   // Mapping of commodityId to address to amount of commodity owned
   mapping (uint => mapping (address => uint)) balances;
 
+  // Mapping of commodityId to total circulating supply of that commodity
+  mapping (uint => uint) totalSupplyOf;
+
   // Mapping of address to array containing Ids of commodities owned (for iterating)
   mapping (address => uint[]) commoditiesOwned;
 
@@ -34,6 +38,10 @@ contract Commodities is Ownable {
   }
 
   event CommodityMined(bytes32 _hash, address _miner);
+  event Minted(address _to, uint _id, uint _amount);
+
+  event LogB(bytes32 b);
+  event LogS(string s);
 
   /**
    * @notice Mints new commodity tokens for a player
@@ -42,7 +50,7 @@ contract Commodities is Ownable {
    */
   function mine(string _nonce) external {
     require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
-    uint8 _commodityId = gta.getCurrentPlanet(msg.sender);
+    uint _commodityId = gta.getCurrentPlanet(msg.sender);
     require(
       gta.canFitCargo(
         msg.sender,
@@ -63,7 +71,9 @@ contract Commodities is Ownable {
       )
     );
 
-    require(mint(msg.sender, getMiningReward(_commodityId)), "Error sending reward");
+    require(_hash < getMiningTarget(_commodityId), "That proof-of-work is not valid");
+    require(_mint(msg.sender, _commodityId, getMiningReward(_commodityId)), "Error sending reward");
+    prevMiningHashes[_commodityId] = _hash;
     emit CommodityMined(_hash, msg.sender);
   }
 
@@ -71,7 +81,7 @@ contract Commodities is Ownable {
    * @notice Returns total cargo stored on player's ship
    * @param _player Address of player to look up
    */
-  function getCurrentCargo(address _player) external view returns (uint) {
+  function getCurrentCargo(address _player) public view returns (uint) {
     uint currentCargo;
     for (uint i = 0; i < commoditiesOwned[_player].length; i++) {
       uint cargoToAdd = commoditiesOwned[_player][i];
@@ -85,18 +95,16 @@ contract Commodities is Ownable {
    * @param _id Id of commodity
    */
   function getCommodity(uint _id) external view returns (
-    string name,
-    uint balance,
+    bytes32 uri,
     uint miningReward,
     bytes32 miningTarget,
-    bytes32 prevMiningHash
+    string prevMiningHash
   ) {
     return (
-      getName(_id),
-      balances[_id][msg.sender],
+      getURI(_id),
       getMiningReward(_id),
       getMiningTarget(_id),
-      prevMiningHashes[_id]
+      prevMiningHashes[_id].toString()
     );
   }
 
@@ -104,7 +112,7 @@ contract Commodities is Ownable {
    * @notice Returns URI of a commodity
    * @param _id Id of commodity
    */
-  function getURI(uint _id) public view returns (string) {
+  function getURI(uint _id) public view returns (bytes32) {
     return sha256(abi.encodePacked(_id.toString()));
   }
 
@@ -113,7 +121,7 @@ contract Commodities is Ownable {
    * @param _id Id of commodity
    */
   function getMiningReward(uint _id) public view returns (uint) {
-    return 10;
+    return 1024;
   }
 
   /**
@@ -121,15 +129,73 @@ contract Commodities is Ownable {
    * @param _id Id of commodity
    */
   function getMiningTarget(uint _id) public view returns (bytes32) {
-    return sha256("0");
+    return bytes32(0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff);
   }
 
   /**
-   * @notice Returns amount of commodity the player owns
-   * @param _id Id of commodity
+   * @notice Returns amount of commodity an account owns
+   * @param _address Address of account to look up
+   * @param _commodityId Id of commodity
    */
-  function getBalance(uint _id) public view returns (uint) {
-    return balances[_id][msg.sender];
+  function balanceOf(address _address, uint _commodityId) public view returns (uint) {
+    return balances[_commodityId][_address];
+  }
+
+  /**
+   * @notice Transfers amount of commodity from seller to this contract
+   * @param _seller Address of account to transfer from
+   * @param _commodityId Id of commodity
+   * @param _amount Amount of commodity to transfer
+   */
+  function transferToEscrow(address _seller, uint _commodityId, uint _amount) public returns (bool) {
+    balances[_commodityId][_seller].sub(_amount);
+    balances[_commodityId][address(this)].add(_amount);
+    // Manage commoditiesOwned array:
+
+    return true;
+  }
+
+  /**
+   * @notice Transfers amount of commodity from this contract to buyer
+   * @param _buyer Address of account to transfer from
+   * @param _commodityId Id of commodity
+   * @param _amount Amount of commodity to transfer
+   */
+  function transferFromEscrow(address _buyer, uint _commodityId, uint _amount) public returns (bool) {
+    balances[_commodityId][address(this)].sub(_amount);
+    balances[_commodityId][_buyer].add(_amount);
+    // Manage commoditiesOwned array:
+
+    return true;
+  }
+
+  /**
+   * @notice Creates new units of commodity and assigns ownership to given address
+   * @param _to Address of account that mined the commodity
+   * @param _id Id of commodity
+   * @param _amount How many units of commodity to mint
+   */
+  function _mint(address _to, uint _id, uint _amount) private returns (bool) {
+    balances[_id][_to] = balances[_id][_to].add(_amount);
+    totalSupplyOf[_id] = totalSupplyOf[_id].add(_amount);
+    // Manage account's commoditiesOwned array:
+
+    emit Minted(_to, _id, _amount);
+    return true;
+  }
+
+  /**
+   * @notice Burns given amount of a commodity
+   * @param _owner Address of account that owns the commodity
+   * @param _id Id of commodity
+   * @param _amount How many units of commodity to burn
+   */
+  function burn(address _owner, uint _id, uint _amount) external returns (bool) {
+    balances[_id][_owner].sub(_amount);
+    totalSupplyOf[_id].sub(_amount);
+    // Manage account's commoditiesOwned array:
+
+    return true;
   }
 
   function() public {}

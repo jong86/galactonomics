@@ -55,15 +55,16 @@ contract TempleAuthority {
     // Check balance of every commodity to make sure there is enough
     for (i = 0; i <= 6; i++) {
       require(
-        commodities.getInterface(i).balanceOf(msg.sender) >= forgingAmount,
+        commodities.balanceOf(msg.sender, i) >= forgingAmount,
         "You do not have enough commodities to forge"
       );
     }
 
     // Burn x amount of all 7 of user's commodities
+    // [Dec 7: commodities burned will be the ones chosen to forge with]
     for (i = 0; i <= 6; i++) {
       require(
-        commodities.getInterface(i).burn(msg.sender, forgingAmount),
+        commodities.burn(msg.sender, i, forgingAmount),
         "Error burning commodity"
       );
     }

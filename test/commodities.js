@@ -1,24 +1,21 @@
-const Commodities = artifacts.require("./Commodities.sol")
 const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
 const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
-const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
+const Commodities = artifacts.require("./Commodities.sol")
 const { fillUpCargoByMining, mineCommodityXTimes } = require('./util/testUtils')
 const sha256 = require('js-sha256');
 
-contract("GalacticIndustrialAuthority", accounts => {
-  let gta, gea, gia, commodities
+contract("Commodities", accounts => {
+  let gta, gea, commodities
   const player1 = accounts[1]
   const player2 = accounts[2]
 
   beforeEach(async() => {
     // Deploy main contracts
-    commodities = await Commodities.new()
     gta = await GalacticTransitAuthority.new()
-    gea = await GalacticEconomicAuthority.new(gta.address)
-    gia = await GalacticIndustrialAuthority.new(gta.address)
+    commodities = await Commodities.new(gta.address)
+    gea = await GalacticEconomicAuthority.new(commodities.address, gta.address)
     // Set access roles
     await gta.setGEA(gea.address)
-    await gta.setGIA(gia.address)
 
     const costOfSpaceship = await gta.costOfSpaceship()
     await gta.buySpaceship("A", { from: player1, value: costOfSpaceship })
@@ -28,10 +25,14 @@ contract("GalacticIndustrialAuthority", accounts => {
   })
 
   it("mints commodity for player when player submits valid proof-of-work", async () => {
-    const miningData = await gia.getMiningData({ from: player1 })
-    const miningReward = miningData[0]
-    const miningTarget = miningData[1]
-    const prevHash = miningData[2]
+    const miningData = await commodities.getCommodity(0, { from: player1 })
+    const miningReward = miningData[1]
+    const miningTarget = miningData[2]
+    let prevHash = miningData[3]
+
+    if (prevHash.substr(2, 2) === '0x') {
+      prevHash = prevHash.substr(2)
+    }
 
     let nonce = 3500
     let hash
@@ -45,34 +46,31 @@ contract("GalacticIndustrialAuthority", accounts => {
       )
     } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
 
-    console.log('prevHash', prevHash);
-    console.log('hash', hash);
-
-    const response = await gia.submitProofOfWork(String(nonce), { from: player1 })
+    const response = await commodities.mine(String(nonce), { from: player1 })
     const hashFromSolidity = response.logs.find(log => log.event === 'CommodityMined').args._hash
 
-    const balance = await commodities.getBalance(0, { from: player1 })
+    const balance = await commodities.balanceOf(player1, 0)
 
     assert.equal(balance.toString(), miningReward.toString(), "did not receive mining reward")
     assert.equal('0x' + hash, hashFromSolidity, "hash from javascript does not match hash from solidity")
   })
 
   it("does not mint commodity if user submits invalid proof-of-work", async () => {
-    const balanceBefore = await commodities.getBalance(0, { from: player1 })
+    const balanceBefore = await commodities.balanceOf(player1, 0)
     try {
-      await gia.submitProofOfWork(0, { from: player1 })
+      await commodities.mine(0, { from: player1 })
     } catch (e) {}
-    const balanceAfter = await commodities.getBalance(0, { from: player1 })
-    assert.equal(balanceBefore.toString(), balanceAfter.toString(), "did not receive mining reward")
+    const balanceAfter = await commodities.balanceOf(player1, 0)
+    assert.equal(balanceBefore.toString(), balanceAfter.toString(), "received mining reward")
   })
 
   it("does not mint if player cannot fit the mining reward in spaceship's cargo", async () => {
-    await fillUpCargoByMining(commodities, gta, gia, player1, 0)
-    const balanceBefore = await commodities.getBalance(0, { from: player1 })
+    await fillUpCargoByMining(commodities, gta, commodities, player1, 0)
+    const balanceBefore = await commodities.balanceOf(player1, 0)
 
-    const miningData = await gia.getMiningData({ from: player1 })
-    const miningTarget = miningData[1]
-    const prevHash = miningData[2]
+    const miningData = await commodities.getCommodity(0, { from: player1 })
+    const miningTarget = miningData[2]
+    const prevHash = miningData[3]
 
     let nonce = 3500
     let hash
@@ -87,15 +85,15 @@ contract("GalacticIndustrialAuthority", accounts => {
     } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
 
     try {
-      await gia.submitProofOfWork(String(nonce), { from: player1 })
+      await commodities.mine(String(nonce), { from: player1 })
     } catch (e) {}
 
-    const balanceAfter = await commodities.getBalance(0, { from: player1 })
+    const balanceAfter = await commodities.balanceOf(player1, 0)
 
     assert.equal(
       balanceBefore.toString(),
       balanceAfter.toString(),
-      "balance should not have changed after calling submitProofOfWork"
+      "balance should not have changed after calling mine()"
     )
   })
 })
