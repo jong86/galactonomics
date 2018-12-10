@@ -26,5 +26,6 @@ yarn-error.log*
 ganache/
 
 client/src/contracts/*
+client/build/
 
 .vscode
