@@ -50,7 +50,7 @@ contract TempleAuthority {
    * @return tokenId of newly created crystal
    */
   function forge() external onlyPlayerAtTemple returns (string) {
-    uint8 i;
+    uint i;
 
     // Check balance of every commodity to make sure there is enough
     for (i = 0; i <= 6; i++) {

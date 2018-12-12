@@ -65,7 +65,7 @@ contract("Commodities", accounts => {
   })
 
   it("does not mint if player cannot fit the mining reward in spaceship's cargo", async () => {
-    await fillUpCargoByMining(commodities, gta, commodities, player1, 0)
+    await fillUpCargoByMining(commodities, gta, player1, 0)
     const balanceBefore = await commodities.balanceOf(player1, 0)
 
     const miningData = await commodities.getCommodity(0, { from: player1 })

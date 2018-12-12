@@ -1,15 +1,15 @@
 const sha256 = require('js-sha256');
 
-function fillUpCargoByMining(commodities, gta, gia, player, commodityId) {
+function fillUpCargoByMining(commodities, gta, player, commodityId) {
   /* Fills cargo up by investments (will stop when another investment would be too much cargo) */
   return new Promise(async (resolve, reject) => {
     let maxCargo, currentCargo, miningReward
 
     do {
       try {
-        const miningData = await gia.getMiningData({ from: player })
-        const miningTarget = miningData[1]
-        const prevHash = miningData[2]
+        const miningData = await commodities.getCommodity(commodityId, { from: player })
+        const miningTarget = miningData[2]
+        const prevHash = miningData[3]
 
         let nonce = 0
         let hash
@@ -21,12 +21,13 @@ function fillUpCargoByMining(commodities, gta, gia, player, commodityId) {
             prevHash +
             player.substring(2)
           )
+
         } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
 
-        await gia.submitProofOfWork(String(nonce), { from: player })
+        await commodities.mine(String(nonce), { from: player })
 
       } catch (e) {
-        reject("Error invoking submitProofOfWork")
+        reject(e)
       }
 
       maxCargo = (await gta.addressToSpaceship(player))[2]
@@ -39,13 +40,13 @@ function fillUpCargoByMining(commodities, gta, gia, player, commodityId) {
   })
 }
 
-function mineCommodityXTimes(gia, numTimes, player, commodityId) {
+function mineCommodityXTimes(commodities, numTimes, player, commodityId) {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < numTimes; i++) {
       try {
-        const miningData = await gia.getMiningData({ from: player })
-        const miningTarget = miningData[1]
-        const prevHash = miningData[2]
+        const miningData = await commodities.getCommodity(commodityId, { from: player })
+        const miningTarget = miningData[2]
+        const prevHash = miningData[3]
 
         let nonce = 0
         let hash
@@ -59,7 +60,7 @@ function mineCommodityXTimes(gia, numTimes, player, commodityId) {
           )
         } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
 
-        await gia.submitProofOfWork(String(nonce), { from: player })
+        await commodities.mine(String(nonce), { from: player })
 
       } catch (e) {
         reject(e)

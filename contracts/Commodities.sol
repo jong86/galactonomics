@@ -6,6 +6,7 @@ import "./interfaces/IGalacticTransitAuthority.sol";
 import "./libraries/AddressCast.sol";
 import "./libraries/BytesCast.sol";
 import "./libraries/UintCast.sol";
+import "./libraries/Array256Lib.sol";
 
 /**
  * @title Commodities
@@ -16,8 +17,8 @@ contract Commodities is Ownable {
   using SafeMath for uint;
   using AddressCast for address;
   using BytesCast for bytes32;
-  using UintCast for uint8;
   using UintCast for uint;
+  using Array256Lib for uint[];
 
   IGalacticTransitAuthority gta;
 
@@ -39,6 +40,7 @@ contract Commodities is Ownable {
 
   event CommodityMined(bytes32 _hash, address _miner);
   event Minted(address _to, uint _id, uint _amount);
+  event Burned(address _owner, uint _id, uint _amount);
 
   event LogB(bytes32 b);
   event LogS(string s);
@@ -80,14 +82,16 @@ contract Commodities is Ownable {
   /**
    * @notice Returns total cargo stored on player's ship
    * @param _player Address of player to look up
+   * @return Amount of cargo held
    */
   function getCurrentCargo(address _player) public view returns (uint) {
-    uint currentCargo;
+    uint _currentCargo;
     for (uint i = 0; i < commoditiesOwned[_player].length; i++) {
-      uint cargoToAdd = commoditiesOwned[_player][i];
-      currentCargo = currentCargo.add(cargoToAdd);
+      uint _commodityId = commoditiesOwned[_player][i];
+      uint _cargoToAdd = balances[_commodityId][_player];
+      _currentCargo = _currentCargo.add(_cargoToAdd);
     }
-    return currentCargo;
+    return _currentCargo;
   }
 
   /**
@@ -176,9 +180,16 @@ contract Commodities is Ownable {
    * @param _amount How many units of commodity to mint
    */
   function _mint(address _to, uint _id, uint _amount) private returns (bool) {
+    // Add amount to owner's balance
     balances[_id][_to] = balances[_id][_to].add(_amount);
+    // Add amount to total supply
     totalSupplyOf[_id] = totalSupplyOf[_id].add(_amount);
-    // Manage account's commoditiesOwned array:
+
+    // Check if user doesn't already own this commodity
+    if (!commoditiesOwned[_to].contains(_id)) {
+      // If not, add the commodity Id to commoditiesOwned for that player
+      commoditiesOwned[_to].push(_id);
+    }
 
     emit Minted(_to, _id, _amount);
     return true;
@@ -191,10 +202,18 @@ contract Commodities is Ownable {
    * @param _amount How many units of commodity to burn
    */
   function burn(address _owner, uint _id, uint _amount) external returns (bool) {
-    balances[_id][_owner].sub(_amount);
-    totalSupplyOf[_id].sub(_amount);
-    // Manage account's commoditiesOwned array:
+    // Subtract amount from owner's balance
+    balances[_id][_owner] = balances[_id][_owner].sub(_amount);
+    // Subtract amount from total supply
+    totalSupplyOf[_id] = totalSupplyOf[_id].sub(_amount);
 
+    // Check if user now owns 0 amount of that commodity
+    if (balances[_id][_owner] == 0) {
+      // If balance is zero, remove id from commoditiesOwned
+      commoditiesOwned[_owner].remove(_id);
+    }
+
+    emit Burned(_owner, _id, _amount);
     return true;
   }
 
