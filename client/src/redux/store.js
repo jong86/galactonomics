@@ -23,7 +23,6 @@ if (NODE_ENV !== 'production' && window.__REDUX_DEVTOOLS_EXTENSION__) {
 
 
 // Named exports:
-
 export const store = createStore(
   persistedReducer,
   initialState,

@@ -142,9 +142,24 @@ class App extends Component {
 
   createWebGLRenderer = () => {
     // Create renderer
-    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, autoClear: true });
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setClearColor(0xFFFFFF, 0.2)
+    renderer.setClearColor(0x000000, 0)
+
+    // Create scene
+    var scene = new THREE.Scene();
+
+    // Create camera
+    const width = window.innerWidth
+    const height = window.innerHeight
+    var camera = new THREE.PerspectiveCamera(10, width / height, 0.1, 4000);
+    camera.position.z = 3000
+
+    // Create light source
+    var light = new THREE.RectAreaLight(0xffffff, 4, 1250, 1000);
+    light.position.set(-300, -300, 550);
+    light.lookAt(0, 0, 0);
+    scene.add(light);
 
     // Append to DOM
     const div = document.getElementById('root')
@@ -152,6 +167,8 @@ class App extends Component {
     div.appendChild(renderer.domElement);
 
     this.props.setThreeRenderer(renderer)
+    this.props.setThreeScene(scene)
+    this.props.setThreeCamera(camera)
   }
 
   componentDidCatch = (error, errorInfo) => {
@@ -223,6 +240,8 @@ const mapDispatchToProps = dispatch => {
     closeDialogBox: () => dispatch({ type: 'SET_DIALOG_BOX', content: '' }),
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
     setThreeRenderer: renderer => dispatch({ type: 'SET_RENDERER', renderer }),
+    setThreeScene: scene => dispatch({ type: 'SET_SCENE', scene }),
+    setThreeCamera: camera => dispatch({ type: 'SET_CAMERA', camera }),
   }
 }
 

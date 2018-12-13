@@ -54,8 +54,7 @@ class Travel extends Component {
     const { user, contracts } = this.props
 
     const planets = []
-    for (let i = sector; i <= sector + 17; i++) {
-      console.log(i)
+    for (let i = sector; i < sector + 17; i++) {
       try {
         const planetURI = await contracts.gta.planetURI(String(i), { from: user.address } )
         planets.push({ id: i, uri: planetURI })
@@ -72,28 +71,38 @@ class Travel extends Component {
     const { planets } = this.props.travel
     const { renderer } = this.props.three
 
+    renderer.clear()
+
     return (
       <div className={classes.Travel}>
         <h1>Choose a planet to travel to</h1>
         <div className={classes.planets}>
-          {planets && planets.map((planet, i) =>
-            <div
-              key={i}
-              className={classes.planet}
-              style={{
-                left: ((window.innerWidth / 100) - (PWIDTH / 2)),
-                bottom: ((window.innerHeight / 100) * (10*i)),
-              }}
-              onClick={() => this.startTravelling(planet.id)}
-            >
-              <Planet uri={String(planet.uri)} renderer={renderer} />
-              <div> { String(planet.uri) }</div>
-              <div>
-                { planet.id }
+          {planets && planets.length === 17 && planets.map((planet, i) => {
+            const x = (i * 100) + 24
+            const y = 200
+            return (
+              <div
+                key={i}
+                className={classes.planet}
+                style={{
+                  left: x,
+                  top: y,
+                  zIndex: 2,
+                }}
+                onClick={() => this.startTravelling(planet.id)}
+              >
+                <Planet
+                  uri={String(planet.uri)}
+                  x={x}
+                  y={y}
+                />
+                <div>
+                  { planet.id }
+                </div>
+                {planet.id == user.currentPlanet && '(current)'}
               </div>
-              {planet.id == user.currentPlanet && '(current)'}
-            </div>
-          )}
+            )
+          })}
         </div>
       </div>
     );

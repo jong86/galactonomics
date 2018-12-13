@@ -9,6 +9,24 @@ export default (state, action) => {
       }
     }
 
+    case 'SET_SCENE': {
+      const { scene } = action
+
+      return {
+        ...state,
+        scene,
+      }
+    }
+
+    case 'SET_CAMERA': {
+      const { camera } = action
+
+      return {
+        ...state,
+        camera,
+      }
+    }
+
     default: return { ...state }
   }
 }
