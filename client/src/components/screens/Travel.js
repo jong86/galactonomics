@@ -15,6 +15,7 @@ const styles = {
     }
   },
   planets: {
+    position: 'absolute',
     width: '100%',
   },
   planet: {
@@ -85,9 +86,6 @@ class Travel extends Component {
   render() {
     const { classes, user } = this.props
     const { planets, sector } = this.props.travel
-    const { renderer } = this.props.three
-
-    renderer.clear()
 
     return (
       <div className={classes.Travel}>
@@ -119,21 +117,21 @@ class Travel extends Component {
               </div>
             )
           })}
-          Current sector: {sector}
-          <div className={classes.nav}>
-            <Laserframe
-              isButton
-              onClick={() => this.props.changeSector(sector - 17)}
-            >
-              {'<< Prev sector'}
-            </Laserframe>
-            <Laserframe
-              isButton
-              onClick={() => this.props.changeSector(sector + 17)}
-            >
-              {'Next sector >>'}
-            </Laserframe>
-          </div>
+        </div>
+        Current sector: {sector}
+        <div className={classes.nav}>
+          <Laserframe
+            isButton
+            onClick={() => this.props.changeSector(sector - 17)}
+          >
+            {'<< Prev sector'}
+          </Laserframe>
+          <Laserframe
+            isButton
+            onClick={() => this.props.changeSector(sector + 17)}
+          >
+            {'Next sector >>'}
+          </Laserframe>
         </div>
       </div>
     );

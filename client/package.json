@@ -15,7 +15,7 @@
     "react-sound": "^1.2.0",
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
-    "three": "^0.98.0",
+    "three": "^0.99.0",
     "truffle-contract": "^4.0.0-next.0",
     "web3": "^1.0.0-beta.35"
   },
@@ -38,5 +38,5 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "homepage" : "https://jong86.github.io/galactonomics"
+  "homepage": "https://jong86.github.io/galactonomics"
 }

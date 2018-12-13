@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import globalStyles from 'globalStyles'
@@ -20,6 +20,8 @@ import planets from 'utils/planets'
 
 import * as THREE from 'three'
 
+import Loader from 'components/reusables/Loader'
+
 
 class App extends Component {
   state = {
@@ -30,6 +32,7 @@ class App extends Component {
     try {
       await this.initWeb3AndContracts()
       await this.initEventListening()
+      this.initThreeJS()
 
       let ownsSpaceship
       ownsSpaceship = await this.checkIfOwnsSpaceship()
@@ -43,8 +46,6 @@ class App extends Component {
     } catch (e) {
       return console.error(e)
     }
-
-    this.createWebGLRenderer()
 
     this.setState({ isInitialized: true })
   }
@@ -140,26 +141,30 @@ class App extends Component {
     resolve(true)
   })
 
-  createWebGLRenderer = () => {
+  initThreeJS = () => {
     // Create renderer
-    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, autoClear: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      autoClear: true,
+    });
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setClearColor(0x000000, 0)
 
     // Create scene
-    var scene = new THREE.Scene();
+    const scene = new THREE.Scene()
 
     // Create camera
     const width = window.innerWidth
     const height = window.innerHeight
-    var camera = new THREE.PerspectiveCamera(10, width / height, 0.1, 4000);
-    camera.position.z = 3000
+    const camera = new THREE.PerspectiveCamera(10, width / height, 0.1, 4000)
+    camera.position.z = 2000
 
     // Create light source
-    var light = new THREE.RectAreaLight(0xffffff, 4, 1250, 1000);
-    light.position.set(-300, -300, 550);
-    light.lookAt(0, 0, 0);
-    scene.add(light);
+    const light = new THREE.RectAreaLight(0xffffff, 4, 1250, 1000)
+    light.position.set(-300, -300, 550)
+    light.lookAt(0, 0, 0)
+    scene.add(light)
 
     // Append to DOM
     const div = document.getElementById('root')
@@ -181,7 +186,12 @@ class App extends Component {
     const planet = planets.find(planet => planet.id == user.currentPlanet)
 
     if (!isInitialized) {
-      return <div>Activating L-337 Nanobulators...</div>
+      return (
+        <Fragment>
+          <div>Activating L-337 Nanobulators...</div>
+          <Loader />
+        </Fragment>
+      )
     }
 
     const bgImage = () => {
@@ -226,6 +236,7 @@ const mapStateToProps = state => {
     user: state.user,
     dialogBox: state.view.dialogBox,
     web3: state.web3,
+    three: state.three,
   }
 }
 
