@@ -6,4 +6,7 @@ export default {
   industrial: {
     areasMined: [],
   },
+  travel: {
+    sector: 0,
+  }
 }

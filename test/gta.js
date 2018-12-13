@@ -12,18 +12,12 @@ contract("GalacticTransitAuthority", accounts => {
   const nonPlayer = accounts[3]
 
   beforeEach(async() => {
-    // Deploy individual commodity addresses
-    const allCommodities = await deployCommodities()
-    const commodityAddresses = allCommodities.map(commodity => commodity.address)
     // Deploy main contracts
-    commodities = await Commodities.new(commodityAddresses)
     gta = await GalacticTransitAuthority.new()
+    commodities = await Commodities.new(gta.address)
     gea = await GalacticEconomicAuthority.new(commodities.address, gta.address)
-    gia = await GalacticIndustrialAuthority.new(commodities.address, gta.address)
+    // Set access roles
     await gta.setGEA(gea.address)
-    await gta.setGIA(gia.address)
-    allCommodities.forEach(async commodity => await commodity.setGEA(gea.address))
-    allCommodities.forEach(async commodity => await commodity.setGIA(gia.address))
 
     costOfSpaceship = await gta.costOfSpaceship()
   })

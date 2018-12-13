@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import planets from 'utils/planets'
 import getPlayerInfo from 'utils/getPlayerInfo'
+import Planet from 'components/reusables/Planet'
 
 const PWIDTH = 128
 
@@ -19,20 +19,20 @@ const styles = {
   planet: {
     position: 'absolute',
     cursor: 'pointer',
-    '&:hover > div': {
+    fontSize: 8,
+    '&:hover > div:nth-child(2), &:hover > div:nth-child(3)': {
       opacity: 1.0,
     },
-    '& > div': {
+    '& > div:nth-child(2), & > div:nth-child(3)': {
       opacity: 0.5,
     },
   },
 }
 
 class Travel extends Component {
-  state = {};
-
   componentDidMount = () => {
     getPlayerInfo()
+    this.getPlanetURIs()
   }
 
   startTravelling = async planetId => {
@@ -49,30 +49,46 @@ class Travel extends Component {
     changeScreen('Travelling')
   }
 
+  getPlanetURIs = async () => {
+    const { sector } = this.props.travel
+    const { user, contracts } = this.props
+
+    const planets = []
+    for (let i = sector; i <= sector + 17; i++) {
+      console.log(i)
+      try {
+        const planetURI = await contracts.gta.planetURI(String(i), { from: user.address } )
+        planets.push({ id: i, uri: planetURI })
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+    this.props.setTravelState({ planets })
+  }
+
   render() {
     const { classes, user } = this.props
+    const { planets } = this.props.travel
 
     return (
       <div className={classes.Travel}>
         <h1>Choose a planet to travel to</h1>
         <div className={classes.planets}>
-          {planets.map((planet, i) =>
+          {planets && planets.map((planet, i) =>
             <div
               key={i}
               className={classes.planet}
               style={{
-                left: ((window.innerWidth / 100) * planet.x) - (PWIDTH / 2),
-                bottom: ((window.innerHeight / 100) * planet.y),
+                left: ((window.innerWidth / 100) - (PWIDTH / 2)),
+                bottom: ((window.innerHeight / 100) * (10*i)),
               }}
               onClick={() => this.startTravelling(planet.id)}
             >
-              <img
-                src={planet.img}
-                width={PWIDTH}
-                alt=""
-              />
+              <Planet uri={String(planet.uri)} />
+              <div> { String(planet.uri) }</div>
               <div>
-                { planet.name }
+                { planet.id }
               </div>
               {planet.id == user.currentPlanet && '(current)'}
             </div>
@@ -88,6 +104,7 @@ const mapStateToProps = (state, ownProps) => {
     contracts: state.contracts,
     user: state.user,
     web3: state.web3,
+    travel: state.travel,
   }
 }
 
@@ -95,6 +112,7 @@ const mapDispatchToProps = dispatch => {
   return {
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
     setTravellingTo: travellingTo => dispatch({ type: 'SET_TRAVELLING_TO', travellingTo }),
+    setTravelState: travelState => dispatch({ type: 'SET_TRAVEL_STATE', travelState }),
   }
 }
 

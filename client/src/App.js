@@ -6,7 +6,6 @@ import globalStyles from 'globalStyles'
 import commoditiesJSON from "contracts/Commodities.json"
 import gtaJSON from "contracts/GalacticTransitAuthority.json"
 import geaJSON from "contracts/GalacticEconomicAuthority.json"
-import giaJSON from "contracts/GalacticIndustrialAuthority.json"
 import templeJSON from "contracts/TempleAuthority.json"
 
 import getWeb3 from "utils/getWeb3"
@@ -60,7 +59,6 @@ class App extends Component {
         { json: commoditiesJSON, name: 'commodities' },
         { json: gtaJSON, name: 'gta' },
         { json: geaJSON, name: 'gea' },
-        { json: giaJSON, name: 'gia' },
         { json: templeJSON, name: 'temple' },
       ]
 
@@ -94,21 +92,21 @@ class App extends Component {
   initEventListening = () => {
     const { contracts, user, setIndustrialState, web3, setEthState } = this.props
 
-    contracts.gia.CommodityMined({ fromBlock: 'latest' })
-      .on('data', data => {
-        const { _miner, _hash } = data.returnValues
+    // contracts.gia.CommodityMined({ fromBlock: 'latest' })
+    //   .on('data', data => {
+    //     const { _miner, _hash } = data.returnValues
 
-        setIndustrialState({
-          // Reset areas mined because there is a new prevHash
-          areasMined: [],
-          prevMiningHash: _hash,
-        })
+    //     setIndustrialState({
+    //       // Reset areas mined because there is a new prevHash
+    //       areasMined: [],
+    //       prevMiningHash: _hash,
+    //     })
 
-        // To refresh commodity amounts if current user was the miner
-        if (_miner === user.address) {
-          getPlayerInfo()
-        }
-      })
+    //     // To refresh commodity amounts if current user was the miner
+    //     if (_miner === user.address) {
+    //       getPlayerInfo()
+    //     }
+    //   })
 
     // Listen for new blocks
     web3.eth.subscribe('newBlockHeaders')
