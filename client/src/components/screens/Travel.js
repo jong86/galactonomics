@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Planet from 'components/reusables/Planet'
+import Laserframe from 'components/reusables/Laserframe'
 
 const PWIDTH = 128
 
@@ -27,12 +28,27 @@ const styles = {
       opacity: 0.5,
     },
   },
+  nav: {
+    flexDirection: 'row',
+  },
 }
 
 class Travel extends Component {
   componentDidMount = () => {
     getPlayerInfo()
     this.getPlanetURIs()
+  }
+
+  componentDidUpdate = prevProps => {
+    const { sector: prevSector } = prevProps.travel
+    const { sector } = this.props.travel
+
+    console.log('sector, prevSector', sector, prevSector);
+    
+    if (prevSector !== sector) {
+      this.props.three.renderer.clear()
+      this.getPlanetURIs()
+    }
   }
 
   startTravelling = async planetId => {
@@ -68,7 +84,7 @@ class Travel extends Component {
 
   render() {
     const { classes, user } = this.props
-    const { planets } = this.props.travel
+    const { planets, sector } = this.props.travel
     const { renderer } = this.props.three
 
     renderer.clear()
@@ -77,12 +93,12 @@ class Travel extends Component {
       <div className={classes.Travel}>
         <h1>Choose a planet to travel to</h1>
         <div className={classes.planets}>
-          {planets && planets.length === 17 && planets.map((planet, i) => {
+          {planets && planets.map((planet, i) => {
             const x = (i * 100) + 24
             const y = 200
             return (
               <div
-                key={i}
+                key={planet.id}
                 className={classes.planet}
                 style={{
                   left: x,
@@ -92,17 +108,32 @@ class Travel extends Component {
                 onClick={() => this.startTravelling(planet.id)}
               >
                 <Planet
-                  uri={String(planet.uri)}
+                  uri={planet.uri}
                   x={x}
                   y={y}
                 />
                 <div>
-                  { planet.id }
+                  {planet.id}
                 </div>
                 {planet.id == user.currentPlanet && '(current)'}
               </div>
             )
           })}
+          Current sector: {sector}
+          <div className={classes.nav}>
+            <Laserframe
+              isButton
+              onClick={() => this.props.changeSector(sector - 17)}
+            >
+              {'<< Prev sector'}
+            </Laserframe>
+            <Laserframe
+              isButton
+              onClick={() => this.props.changeSector(sector + 17)}
+            >
+              {'Next sector >>'}
+            </Laserframe>
+          </div>
         </div>
       </div>
     );
@@ -124,6 +155,7 @@ const mapDispatchToProps = dispatch => {
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
     setTravellingTo: travellingTo => dispatch({ type: 'SET_TRAVELLING_TO', travellingTo }),
     setTravelState: travelState => dispatch({ type: 'SET_TRAVEL_STATE', travelState }),
+    changeSector: newSector => dispatch({ type: 'CHANGE_SECTOR', newSector }),
   }
 }
 

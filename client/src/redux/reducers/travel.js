@@ -9,6 +9,15 @@ export default (state, action) => {
       }
     }
 
+    case 'CHANGE_SECTOR': {
+      const { newSector } = action
+
+      return {
+        ...state,
+        sector: newSector,
+      }
+    }
+
     default: return { ...state }
   }
 }

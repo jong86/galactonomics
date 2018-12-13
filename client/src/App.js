@@ -163,7 +163,7 @@ class App extends Component {
 
     // Append to DOM
     const div = document.getElementById('root')
-    renderer.domElement.style = "position:absolute;top:0;left:0;"
+    renderer.domElement.style = "position:absolute;top:0;left:0;z-index:-1;"
     div.appendChild(renderer.domElement);
 
     this.props.setThreeRenderer(renderer)
