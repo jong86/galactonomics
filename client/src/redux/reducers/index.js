@@ -8,6 +8,7 @@ import industrial from './industrial'
 import audio from './audio'
 import eth from './eth'
 import travel from './travel'
+import three from './three'
 
 const appReducer = combineReducers({
   web3,
@@ -18,6 +19,7 @@ const appReducer = combineReducers({
   audio,
   eth,
   travel,
+  three,
 })
 
 export default (state, action) => appReducer(state, action)

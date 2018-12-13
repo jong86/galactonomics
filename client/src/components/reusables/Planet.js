@@ -7,7 +7,7 @@ class Planet extends Component {
   }
 
   renderPlanet = () => {
-    const { uri } = this.props
+    const { uri, renderer } = this.props
 
     // Extract characters from URI to use for 3d model
     const color = parseInt(uri.substr(2, 6), 16)
@@ -20,10 +20,6 @@ class Planet extends Component {
     // Create camera
     var camera = new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 50
-
-    // Create renderer
-    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setClearColor(0xFFFFFF, 0.2)
 
     // Create the shape
     var geometry = new THREE.SphereGeometry(3, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2);
@@ -41,26 +37,11 @@ class Planet extends Component {
     light.lookAt( 0, 0, 0 );
     scene.add(light);
 
-    // Append to DOM
-    const divs = document.getElementsByClassName(uri)
-    for (const div of divs) {
-      div.appendChild(renderer.domElement);
-    }
-
-    // Render
-    var render = function() {
-      renderer.render(scene, camera);
-    };
-
-    render();
+    renderer.render(scene, camera);
   }
 
   render() {
-    const { uri } = this.props
-
-    return (
-      <div className={uri} style={{zIndex: 10}} />
-    )
+    return null
   }
 }
 export default Planet;

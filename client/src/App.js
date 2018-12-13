@@ -18,6 +18,9 @@ import Laserframe from 'components/reusables/Laserframe'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import planets from 'utils/planets'
 
+import * as THREE from 'three'
+
+
 class App extends Component {
   state = {
     isInitialized: null,
@@ -40,6 +43,8 @@ class App extends Component {
     } catch (e) {
       return console.error(e)
     }
+
+    this.createWebGLRenderer()
 
     this.setState({ isInitialized: true })
   }
@@ -135,6 +140,20 @@ class App extends Component {
     resolve(true)
   })
 
+  createWebGLRenderer = () => {
+    // Create renderer
+    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    renderer.setClearColor(0xFFFFFF, 0.2)
+
+    // Append to DOM
+    const div = document.getElementById('root')
+    renderer.domElement.style = "position:absolute;top:0;left:0;"
+    div.appendChild(renderer.domElement);
+
+    this.props.setThreeRenderer(renderer)
+  }
+
   componentDidCatch = (error, errorInfo) => {
     console.error(error, errorInfo)
   }
@@ -203,6 +222,7 @@ const mapDispatchToProps = dispatch => {
     setEthState: ethState => dispatch({ type: 'SET_ETH_STATE', ethState }),
     closeDialogBox: () => dispatch({ type: 'SET_DIALOG_BOX', content: '' }),
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
+    setThreeRenderer: renderer => dispatch({ type: 'SET_RENDERER', renderer }),
   }
 }
 

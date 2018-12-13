@@ -70,6 +70,7 @@ class Travel extends Component {
   render() {
     const { classes, user } = this.props
     const { planets } = this.props.travel
+    const { renderer } = this.props.three
 
     return (
       <div className={classes.Travel}>
@@ -85,7 +86,7 @@ class Travel extends Component {
               }}
               onClick={() => this.startTravelling(planet.id)}
             >
-              <Planet uri={String(planet.uri)} />
+              <Planet uri={String(planet.uri)} renderer={renderer} />
               <div> { String(planet.uri) }</div>
               <div>
                 { planet.id }
@@ -99,12 +100,13 @@ class Travel extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   return {
     contracts: state.contracts,
     user: state.user,
     web3: state.web3,
     travel: state.travel,
+    three: state.three,
   }
 }
 
