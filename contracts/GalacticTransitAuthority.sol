@@ -67,7 +67,6 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
    * @param _planetId Id of planet to travel to (0 - 6), or 255 for the 8th planet
    */
   function travelToPlanet(uint _planetId) external onlyPlayer {
-    require((0 <= _planetId && _planetId <= 6) || _planetId == 255, "planetId must be between 0 and 6, inclusive, or be equal to 255");
     require(addressToSpaceship[msg.sender].currentFuel >= fuelUsage, "You do not have enough fuel to travel");
     addressToSpaceship[msg.sender].currentPlanet = _planetId;
     addressToSpaceship[msg.sender].currentFuel = addressToSpaceship[msg.sender].currentFuel.sub(fuelUsage);
