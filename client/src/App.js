@@ -160,6 +160,8 @@ class App extends Component {
     const camera = new THREE.PerspectiveCamera(10, width / height, 0.1, 4000)
     camera.position.z = 2000
 
+    renderer.render(scene, camera);  
+
     // Create light source
     const light = new THREE.RectAreaLight(0xffffff, 4, 1250, 1000)
     light.position.set(-300, -300, 550)

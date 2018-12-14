@@ -37,7 +37,8 @@ const styles = {
 class Travel extends Component {
   componentDidMount = () => {
     getPlayerInfo()
-    this.getPlanetURIs()
+    setTimeout(this.getPlanetURIs, 2000)
+    // this.getPlanetURIs()
   }
 
   componentDidUpdate = prevProps => {
@@ -45,7 +46,7 @@ class Travel extends Component {
     const { sector } = this.props.travel
 
     console.log('sector, prevSector', sector, prevSector);
-    
+
     if (prevSector !== sector) {
       this.props.three.renderer.clear()
       this.getPlanetURIs()

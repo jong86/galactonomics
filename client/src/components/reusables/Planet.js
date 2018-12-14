@@ -2,30 +2,30 @@ import React, { Component } from "react"
 import { connect } from 'react-redux'
 import * as THREE from 'three'
 
-    function convertDomPosToThreePos(x, y, camera) {
-      console.log('x, y, y', x, y, camera);
-      const vPos = new THREE.Vector3()
+function convertDomPosToThreePos(x, y, camera) {
+  console.log('x, y, y', x, y, camera);
+  const vPos = new THREE.Vector3()
 
-      vPos.set(
-        -1.0 + 2.0 * x / window.innerWidth,
-        -(-1.0 + 2.0 * y / window.innerHeight),
-        0,
-      ).unproject(camera)
+  vPos.set(
+    -1.0 + 2.0 * x / window.innerWidth,
+    -(-1.0 + 2.0 * y / window.innerHeight),
+    0,
+  ).unproject(camera)
 
-      // Calculate a unit vector from the camera to the projected position
-      const vDir = vPos.clone()
-      vDir.sub(camera.position)
-      vDir.normalize()
+  // Calculate a unit vector from the camera to the projected position
+  const vDir = vPos.clone()
+  vDir.sub(camera.position)
+  vDir.normalize()
 
-      // Project onto z=0
-      const flDistance = -camera.position.z / vDir.z
+  // Project onto z=0
+  const flDistance = -camera.position.z / vDir.z
 
-      // Return vector
-      const vOutPos = camera.position.clone()
-      vOutPos.add(vDir.multiplyScalar(flDistance))
+  // Return vector
+  const vOutPos = camera.position.clone()
+  vOutPos.add(vDir.multiplyScalar(flDistance))
 
-      return vOutPos
-    }
+  return vOutPos
+}
 
 class Planet extends Component {
   componentDidMount = () => {
@@ -59,9 +59,10 @@ class Planet extends Component {
     sphere.position.z = pos.z
     scene.add(sphere);
 
+    debugger
     renderer.render(scene, camera);
   }
-  
+
   render() {
     return null
   }
