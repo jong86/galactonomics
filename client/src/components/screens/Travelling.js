@@ -49,14 +49,14 @@ class Travelling extends Component {
   }
 
   travelToPlanet = () => {
-    const { contracts, user, changeScreen, setUserInfo, setDialogBox } = this.props
+    const {contracts, user, changeScreen, finishTravel, setDialogBox } = this.props
 
-    contracts.gta.travelToPlanet(user.travellingTo, { from: user.address })
+    contracts.gta.travelToPlanet(user.travellingTo.id, { from: user.address })
       .on('transactionHash', () => {
         this.setState({ isTravelling: true })
       })
       .on('receipt', receipt => {
-        setUserInfo({ currentPlanet: user.travellingTo })
+        finishTravel()
         changeScreen('PlanetIntro')
       })
       .on('error', e => {
@@ -74,7 +74,7 @@ class Travelling extends Component {
         {!isTravelling ?
           <h1>Waiting for hyperdrive activation...</h1>
           :
-          <h1>Travelling to planet {user.travellingTo}...</h1>
+          <h1>Travelling to planet {user.travellingTo.id}...</h1>
         }
         <img
           src={spaceship}
@@ -104,6 +104,7 @@ const mapDispatchToProps = dispatch => {
   return {
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
     setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
+    finishTravel: () => dispatch({ type: 'FINISH_TRAVEL' }),
     setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
   }
 }

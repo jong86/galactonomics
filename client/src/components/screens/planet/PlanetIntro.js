@@ -31,7 +31,7 @@ class PlanetIntro extends Component {
 
     return (
       <div className={classes.PlanetIntro}>
-        <h1>Welcome to {user.currentPlanet}</h1>
+        <h1>Welcome to {user.currentPlanet.id}</h1>
         <Laserframe
           isButton
           onClick={() => changeScreen('PlanetHome')}

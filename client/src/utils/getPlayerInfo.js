@@ -29,7 +29,6 @@ export default () => new Promise(async (resolve, reject) => {
     type: 'SET_USER_INFO',
     info: {
       currentFuel: playerInfo.currentFuel.toString(),
-      currentPlanet: playerInfo.currentPlanet.toString(),
       currentCargo: currentCargo,
       maxCargo: playerInfo.maxCargo.toString(),
       maxFuel: playerInfo.maxFuel.toString(),

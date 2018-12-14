@@ -19,11 +19,22 @@ export default (state, action) => {
     }
 
     case 'SET_TRAVELLING_TO': {
-      const { travellingTo } = action
+      const { id, uri } = action
 
       return {
         ...state,
-        travellingTo,
+        travellingTo: {
+          ...state.travellingTo,
+          id,
+          uri,
+        }
+      }
+    }
+
+    case 'FINISH_TRAVEL': {
+      return {
+        ...state,
+        currentPlanet: state.travellingTo,
       }
     }
 

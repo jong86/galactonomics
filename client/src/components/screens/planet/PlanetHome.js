@@ -71,7 +71,7 @@ class PlanetHome extends Component {
               isButton
               flavour="good"
               size="wide"
-            >Travel (Leave {user.currentPlanet})</Laserframe>
+            >Travel (Leave {user.currentPlanet.id})</Laserframe>
             <Laserframe
               flavour="status"
               size="wide"
