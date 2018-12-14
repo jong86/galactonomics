@@ -29,10 +29,19 @@ function convertDomPosToThreePos(x, y, camera) {
 
 class Planet extends Component {
   componentDidMount = () => {
-    this.renderWebGL()
+    this.renderPlanet()
   }
 
-  renderWebGL = () => {
+  componentWillUnmount = () => {
+    this.clearPlanet()
+  }
+
+  clearPlanet = () => {
+    const { renderer } = this.props.three
+    renderer.clear()
+  }
+
+  renderPlanet = () => {
     const { uri, x, y } = this.props
     const { scene, camera, renderer } = this.props.three
 
@@ -59,7 +68,6 @@ class Planet extends Component {
     sphere.position.z = pos.z
     scene.add(sphere);
 
-    debugger
     renderer.render(scene, camera);
   }
 
