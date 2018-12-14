@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import spaceship from 'assets/images/spaceship.jpg'
-import planets from 'utils/planets'
 import getErrorMsg from 'utils/getErrorMsg'
 import Sound from 'react-sound';
 import travellingSound from 'assets/sounds/travelling.wav'
@@ -69,14 +68,13 @@ class Travelling extends Component {
   render() {
     const { classes, user } = this.props
     const { isTravelling, currentSpeed } = this.state
-    const planet = planets.find(planet => planet.id == user.travellingTo)
 
     return (
       <div className={classes.container}>
         {!isTravelling ?
           <h1>Waiting for hyperdrive activation...</h1>
           :
-          <h1>Travelling to {planet.id != '255' && 'planet '}{planet.name}...</h1>
+          <h1>Travelling to planet {user.travellingTo}...</h1>
         }
         <img
           src={spaceship}

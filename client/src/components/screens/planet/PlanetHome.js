@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Laserframe from 'components/reusables/Laserframe'
 import FuelMeter from 'components/screens/planet/FuelMeter'
-import planets from 'utils/planets'
 import {
   FaBalanceScale,
   FaChartBar,
@@ -61,7 +60,6 @@ class PlanetHome extends Component {
 
   render() {
     const { classes, user, changeScreen } = this.props
-    const planet = planets.find(planet => planet.id == user.currentPlanet)
     const iconSize = 96
 
     return (
@@ -73,83 +71,83 @@ class PlanetHome extends Component {
               isButton
               flavour="good"
               size="wide"
-            >Travel (Leave {planet.name})</Laserframe>
+            >Travel (Leave {user.currentPlanet})</Laserframe>
             <Laserframe
               flavour="status"
               size="wide"
             >Ξ{user.balance}</Laserframe>
           </div>
           <div className={classes.top3}>
-            {planet.id == 255 ?
-              <Fragment>
-                <Laserframe
-                  onClick={() => changeScreen('TempleMarketplace')}
-                  isButton
-                  flavour="info"
-                  size="wide3"
-                >
-                  <MdBusinessCenter size={iconSize} />
-                  Crystal Marketplace
-                </Laserframe>
-                <Laserframe
-                  onClick={() => changeScreen('PlanetPrices')}
-                  isButton
-                  flavour="info"
-                  size="wide3"
-                >
-                  <FaChartBar size={iconSize} />
-                  Commodity Prices
-                </Laserframe>
-                <Laserframe
-                  onClick={() => changeScreen('TempleIndustrial')}
-                  isButton
-                  flavour="info"
-                  size="wide3"
-                >
-                  <FaHammer size={iconSize} />
-                  Forge Crystals
-                </Laserframe>
-                <Laserframe
-                  onClick={() => changeScreen('TempleViewCrystals')}
-                  isButton
-                  flavour="info"
-                  size="wide3"
-                >
-                  <FaEthereum size={iconSize} />
-                  View My Crystals
-                </Laserframe>
-              </Fragment>
-              :
-              <Fragment>
-                <Laserframe
-                  onClick={() => changeScreen('PlanetMarketplace')}
-                  isButton
-                  flavour="info"
-                  size="wide3"
-                >
-                  <FaBalanceScale size={iconSize} />
-                  Marketplace
-                </Laserframe>
-                <Laserframe
-                  onClick={() => changeScreen('PlanetPrices')}
-                  isButton
-                  flavour="info"
-                  size="wide3"
-                >
-                  <FaChartBar className={classes.icon}size={iconSize} />
-                  Commodity Prices
-                </Laserframe>
-                <Laserframe
-                  onClick={() => changeScreen('PlanetIndustrial')}
-                  isButton
-                  flavour="info"
-                  size="wide3"
-                >
-                  <FaIndustry size={iconSize} />
-                  Industrial Operations
-                </Laserframe>
-              </Fragment>
-            }
+            {/* Old temple links: */}
+            {/* <Fragment>
+              <Laserframe
+                onClick={() => changeScreen('TempleMarketplace')}
+                isButton
+                flavour="info"
+                size="wide3"
+              >
+                <MdBusinessCenter size={iconSize} />
+                Crystal Marketplace
+              </Laserframe>
+              <Laserframe
+                onClick={() => changeScreen('PlanetPrices')}
+                isButton
+                flavour="info"
+                size="wide3"
+              >
+                <FaChartBar size={iconSize} />
+                Commodity Prices
+              </Laserframe>
+              <Laserframe
+                onClick={() => changeScreen('TempleIndustrial')}
+                isButton
+                flavour="info"
+                size="wide3"
+              >
+                <FaHammer size={iconSize} />
+                Forge Crystals
+              </Laserframe>
+              <Laserframe
+                onClick={() => changeScreen('TempleViewCrystals')}
+                isButton
+                flavour="info"
+                size="wide3"
+              >
+                <FaEthereum size={iconSize} />
+                View My Crystals
+              </Laserframe>
+            </Fragment> */}
+
+            {/* Regular planet links: */}
+            <Fragment>
+              <Laserframe
+                onClick={() => changeScreen('PlanetMarketplace')}
+                isButton
+                flavour="info"
+                size="wide3"
+              >
+                <FaBalanceScale size={iconSize} />
+                Marketplace
+              </Laserframe>
+              <Laserframe
+                onClick={() => changeScreen('PlanetPrices')}
+                isButton
+                flavour="info"
+                size="wide3"
+              >
+                <FaChartBar className={classes.icon}size={iconSize} />
+                Commodity Prices
+              </Laserframe>
+              <Laserframe
+                onClick={() => changeScreen('PlanetIndustrial')}
+                isButton
+                flavour="info"
+                size="wide3"
+              >
+                <FaIndustry size={iconSize} />
+                Industrial Operations
+              </Laserframe>
+            </Fragment>
           </div>
           <div>
             <FuelMeter

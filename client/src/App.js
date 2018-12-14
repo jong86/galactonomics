@@ -186,7 +186,6 @@ class App extends Component {
   render() {
     const { isInitialized } = this.state
     const { classes, currentScreen, dialogBox, closeDialogBox, user } = this.props
-    const planet = planets.find(planet => planet.id == user.currentPlanet)
 
     if (!isInitialized) {
       return (
@@ -197,23 +196,8 @@ class App extends Component {
       )
     }
 
-    const bgImage = () => {
-      const styleObject = {}
-      if (
-        (currentScreen.substr(0, 6) === 'Planet' || currentScreen.substr(0, 6) === 'Temple')&&
-        currentScreen !== 'PlanetIntro' && currentScreen !== 'TempleIntro'
-      ) {
-        styleObject.backgroundImage = `url(${planet.img})`
-      }
-      if (user.currentPlanet == '255') {
-        styleObject.backgroundPosition = '50% 40%'
-        styleObject.backgroundSize = '50%'
-      }
-      return styleObject
-    }
-
     return (
-      <div className={classes.App} style={bgImage()}>
+      <div className={classes.App}>
         {/* Render current screen */}
         {screenMapping(currentScreen)}
         {/* Global dialog box */}
