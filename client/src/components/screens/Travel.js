@@ -134,6 +134,7 @@ class Travel extends Component {
                     uri={planet.uri}
                     x={x}
                     y={y}
+                    radius={24}
                   />
                   <div>
                     {planet.id}

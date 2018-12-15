@@ -44,7 +44,7 @@ class Planet extends Component {
   }
 
   renderPlanet = () => {
-    const { uri, x, y } = this.props
+    const { uri, x, y, radius } = this.props
     const { scene, camera, renderer } = this.props.three
 
     // Extract characters from URI to use for 3d model
@@ -54,7 +54,7 @@ class Planet extends Component {
     const zoom = ((parseInt(uri.substr(12, 2), 16) / 256) * 0.5) + 0.75
 
     // Create the shape
-    const geometry = new THREE.SphereGeometry(24, 16, 16)
+    const geometry = new THREE.SphereGeometry(radius, 16, 16)
     const material = new THREE.MeshStandardMaterial({
       color: color,
       metalness: metalness,

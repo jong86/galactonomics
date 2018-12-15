@@ -35,7 +35,7 @@ class PlanetIntro extends Component {
 
     return (
       <div className={classes.PlanetIntro}>
-        <h1>Welcome to {user.currentPlanet.id}</h1>
+        <h1>Welcome to planet {user.currentPlanet.id}</h1>
         <Laserframe
           isButton
           onClick={() => changeScreen('PlanetHome')}
@@ -44,7 +44,8 @@ class PlanetIntro extends Component {
         <Planet
           uri={user.currentPlanet.uri}
           x={100}
-          y={100}
+          y={400}
+          radius={256}
         />
         {/* <Sound
           url={planet.song}
