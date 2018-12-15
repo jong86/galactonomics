@@ -16,8 +16,8 @@ class PlanetIntro extends Component {
   }
 
   componentDidMount = () => {
-    const { scene } = this.props.three
-    this.props.three.scene.remove.apply(scene, scene.children)
+
+    // renderer.render(scene, camera);
 
     // Reset some state since on a new planet now
     this.props.setIndustrialState({

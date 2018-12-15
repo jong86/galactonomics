@@ -47,8 +47,6 @@ class Travel extends Component {
     const { sector: prevSector } = prevProps.travel
     const { sector } = this.props.travel
 
-    console.log('sector, prevSector', sector, prevSector);
-
     if (prevSector !== sector) {
       this.props.three.renderer.clear()
       this.getPlanetURIs()

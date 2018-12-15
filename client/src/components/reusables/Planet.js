@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import * as THREE from 'three'
 
 function convertDomPosToThreePos(x, y, camera) {
-  console.log('x, y, y', x, y, camera);
   const vPos = new THREE.Vector3()
 
   vPos.set(
@@ -27,18 +26,21 @@ function convertDomPosToThreePos(x, y, camera) {
   return vOutPos
 }
 
+function removeEntity(renderer, scene, camera, name) {
+  var selectedObject = scene.getObjectByName(name);
+  scene.remove(selectedObject);
+  renderer.render(scene, camera);
+}
+
 class Planet extends Component {
   componentDidMount = () => {
     this.renderPlanet()
   }
 
   componentWillUnmount = () => {
-    this.clearPlanet()
-  }
-
-  clearPlanet = () => {
-    const { renderer } = this.props.three
-    renderer.clear()
+    const { uri } = this.props
+    const { scene, camera, renderer } = this.props.three
+    removeEntity(renderer, scene, camera, uri)
   }
 
   renderPlanet = () => {
@@ -58,15 +60,16 @@ class Planet extends Component {
       metalness: metalness,
       roughness: roughness,
     });
-    const sphere = new THREE.Mesh(geometry, material)
+    const planet = new THREE.Mesh(geometry, material)
+    planet.name = uri
 
     // To convert DOM pixels to threeJS coords
     const pos = convertDomPosToThreePos(x, y, camera);
 
-    sphere.position.x = pos.x
-    sphere.position.y = pos.y
-    sphere.position.z = pos.z
-    scene.add(sphere);
+    planet.position.x = pos.x
+    planet.position.y = pos.y
+    planet.position.z = pos.z
+    scene.add(planet);
 
     renderer.render(scene, camera);
   }
@@ -82,11 +85,5 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    setTravelState: travelState => dispatch({ type: 'SET_TRAVEL_STATE', travelState }),
-  }
-}
-
-Planet = connect(mapStateToProps, mapDispatchToProps)(Planet)
+Planet = connect(mapStateToProps)(Planet)
 export default Planet

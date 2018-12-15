@@ -161,7 +161,7 @@ class App extends Component {
     camera.position.z = 2000
 
     // https://stackoverflow.com/a/53775855/5266066
-    renderer.render(scene, camera);  
+    renderer.render(scene, camera);
 
     // Create light source
     const light = new THREE.RectAreaLight(0xffffff, 4, 1250, 1000)
