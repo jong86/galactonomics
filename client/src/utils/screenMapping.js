@@ -8,13 +8,11 @@ import Travelling from  "components/screens/Travelling"
 
 import PlanetIntro from  "components/screens/planet/PlanetIntro"
 import PlanetHome from  "components/screens/planet/PlanetHome"
-import PlanetMarketplace from  "components/screens/planet/PlanetMarketplace"
-import PlanetIndustrial from  "components/screens/planet/PlanetIndustrial"
-import PlanetPrices from  "components/screens/planet/PlanetPrices"
-
-import TempleMarketplace from  "components/screens/planet/TempleMarketplace"
-import TempleIndustrial from  "components/screens/planet/TempleIndustrial"
-import TempleViewCrystals from  "components/screens/planet/TempleViewCrystals"
+import CommodityMarket from  "components/screens/planet/CommodityMarket"
+import MineCommodities from  "components/screens/planet/MineCommodities"
+import CrystalMarket from  "components/screens/planet/CrystalMarket"
+import ForgeCrystal from  "components/screens/planet/ForgeCrystal"
+import ViewCrystals from  "components/screens/planet/ViewCrystals"
 
 export default screen => {
   switch(screen) {
@@ -26,13 +24,11 @@ export default screen => {
 
     case 'PlanetIntro': return <PlanetIntro/>
     case 'PlanetHome': return <PlanetHome/>
-    case 'PlanetMarketplace': return <PlanetMarketplace/>
-    case 'PlanetIndustrial': return <PlanetIndustrial/>
-    case 'PlanetPrices': return <PlanetPrices/>
-
-    case 'TempleMarketplace': return <TempleMarketplace/>
-    case 'TempleIndustrial': return <TempleIndustrial/>
-    case 'TempleViewCrystals': return <TempleViewCrystals/>
+    case 'CommodityMarket': return <CommodityMarket/>
+    case 'MineCommodities': return <MineCommodities/>
+    case 'CrystalMarket': return <CrystalMarket/>
+    case 'ForgeCrystal': return <ForgeCrystal/>
+    case 'ViewCrystals': return <ViewCrystals/>
     default: break
   }
 }

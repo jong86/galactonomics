@@ -33,23 +33,14 @@ class MPIContainer extends Component {
   render() {
     const { classes, user, changeScreen, currentScreen, sideButtons, cargoPerCommodity } = this.props
 
-    let navLinks
-    if (user.currentPlanet != 255) {
-      navLinks = [
-        { name: 'PlanetHome', label: '<< Back' },
-        { name: 'PlanetMarketplace', label: 'Marketplace' },
-        { name: 'PlanetPrices', label: 'Prices elsewhere' },
-        { name: 'PlanetIndustrial', label: 'Industrial operations' },
-      ]
-    } else {
-      navLinks = [
-        { name: 'PlanetHome', label: '<< Back' },
-        { name: 'TempleMarketplace', label: 'Crystal marketplace' },
-        { name: 'PlanetPrices', label: 'Prices elsewhere' },
-        { name: 'TempleIndustrial', label: 'Forge Crystals' },
-        { name: 'TempleViewCrystals', label: 'View My Crystals' },
-      ]
-    }
+    const navLinks = [
+      { name: 'PlanetHome', label: '<< Back' },
+      { name: 'CommodityMarket', label: 'Commodity Market' },
+      { name: 'MineCommodities', label: 'Mine Commodities' },
+      { name: 'ForgeCrystal', label: 'Forge Crystal' },
+      { name: 'CrystalMarket', label: 'Crystal Market' },
+      { name: 'ViewCrystals', label: 'View My Crystals' },
+    ]
 
     return (
       <Fragment>
@@ -82,15 +73,12 @@ class MPIContainer extends Component {
           </div>
           <div>
             {/* Bottom row */}
-            {navLinks.map((link, i) =>
+            {navLinks.map(link => (
               <Laserframe
-                key={i}
                 isButton
-                active={currentScreen === link.name}
-                size="wide4"
                 onClick={() => changeScreen(link.name)}
               >{link.label}</Laserframe>
-            )}
+            ))}
           </div>
           <Planet
             uri={user.currentPlanet.uri}
