@@ -10,8 +10,9 @@ import {
   FaHammer,
   FaEthereum,
 } from 'react-icons/fa';
-import { MdBusinessCenter } from 'react-icons/md'
+import { MdBusinessCenter, MdDirectionsWalk } from 'react-icons/md'
 import getPlayerInfo from 'utils/getPlayerInfo'
+import Planet from 'components/reusables/Planet'
 
 const styles = {
   PlanetHome: {
@@ -155,6 +156,12 @@ class PlanetHome extends Component {
               maxFuel={user.maxFuel}
               />
           </div>
+          <Planet
+            uri={user.currentPlanet.uri}
+            x={window.innerWidth / 2}
+            y={window.innerHeight}
+            radius={320}
+          />
         </div>
       </Fragment>
     );

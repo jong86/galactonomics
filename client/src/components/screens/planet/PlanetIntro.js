@@ -43,9 +43,9 @@ class PlanetIntro extends Component {
         >Continue >></Laserframe>
         <Planet
           uri={user.currentPlanet.uri}
-          x={100}
-          y={400}
-          radius={256}
+          x={window.innerWidth / 2}
+          y={window.innerHeight / 2}
+          radius={128}
         />
         {/* <Sound
           url={planet.song}
