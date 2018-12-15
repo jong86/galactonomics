@@ -101,6 +101,12 @@ class Travel extends Component {
         <div className={classes.nav}>
           <Laserframe
             isButton
+            onClick={() => this.props.changeScreen('PlanetHome')}
+          >
+            Cancel travelling
+          </Laserframe>
+          <Laserframe
+            isButton
             onClick={() => this.props.changeSector(sector - 17)}
           >
             {'<< Prev sector'}
