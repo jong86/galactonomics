@@ -4,6 +4,7 @@ import injectSheet from 'react-jss'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Planet from 'components/reusables/Planet'
 import Laserframe from 'components/reusables/Laserframe'
+import Loader from 'components/reusables/Loader'
 
 const PWIDTH = 128
 
@@ -35,6 +36,8 @@ const styles = {
 }
 
 class Travel extends Component {
+  state = {}
+
   componentDidMount = () => {
     getPlayerInfo()
     setTimeout(this.getPlanetURIs, 2000)
@@ -70,6 +73,7 @@ class Travel extends Component {
   }
 
   getPlanetURIs = async () => {
+    this.setState({ isLoadingPlanets: true })
     const { sector } = this.props.travel
     const { user, contracts } = this.props
 
@@ -83,44 +87,19 @@ class Travel extends Component {
       }
     }
 
+    this.setState({ isLoadingPlanets: false })
+
     this.props.setTravelState({ planets })
   }
 
   render() {
     const { classes, user } = this.props
     const { planets, sector } = this.props.travel
+    const { isLoadingPlanets } = this.state
 
     return (
       <div className={classes.Travel}>
         <h1>Choose a planet to travel to</h1>
-        <div className={classes.planets}>
-          {planets && planets.map((planet, i) => {
-            const x = (i * 100) + 24
-            const y = 200
-            return (
-              <div
-                key={planet.id}
-                className={classes.planet}
-                style={{
-                  left: x,
-                  top: y,
-                  zIndex: 2,
-                }}
-                onClick={() => this.startTravelling(planet.id)}
-              >
-                <Planet
-                  uri={planet.uri}
-                  x={x}
-                  y={y}
-                />
-                <div>
-                  {planet.id}
-                </div>
-                {planet.id == user.currentPlanet && '(current)'}
-              </div>
-            )
-          })}
-        </div>
         Current sector: {sector}
         <div className={classes.nav}>
           <Laserframe
@@ -136,8 +115,40 @@ class Travel extends Component {
             {'Next sector >>'}
           </Laserframe>
         </div>
+        {isLoadingPlanets ?
+          <Loader />
+          :
+          <div className={classes.planets}>
+            {planets && planets.map((planet, i) => {
+              const x = (i * 100) + 24
+              const y = 200
+              return (
+                <div
+                  key={planet.id}
+                  className={classes.planet}
+                  style={{
+                    left: x,
+                    top: y,
+                    zIndex: 2,
+                  }}
+                  onClick={() => this.startTravelling(planet.id)}
+                >
+                  <Planet
+                    uri={planet.uri}
+                    x={x}
+                    y={y}
+                  />
+                  <div>
+                    {planet.id}
+                  </div>
+                  {planet.id == user.currentPlanet && '(current)'}
+                </div>
+              )
+            })}
+          </div>
+        }
       </div>
-    );
+    )
   }
 }
 

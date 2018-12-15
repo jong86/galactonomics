@@ -170,7 +170,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
   }
 }
