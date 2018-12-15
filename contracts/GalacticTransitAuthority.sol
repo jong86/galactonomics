@@ -18,7 +18,7 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
 
   struct Spaceship {
     string name;
-    uint currentPlanet;
+    uint currentPlanetId;
     uint maxCargo; // in kg
     uint currentFuel; // in litres
     uint maxFuel;
@@ -68,7 +68,7 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
    */
   function travelToPlanet(uint _planetId) external onlyPlayer {
     require(addressToSpaceship[msg.sender].currentFuel >= fuelUsage, "You do not have enough fuel to travel");
-    addressToSpaceship[msg.sender].currentPlanet = _planetId;
+    addressToSpaceship[msg.sender].currentPlanetId = _planetId;
     addressToSpaceship[msg.sender].currentFuel = addressToSpaceship[msg.sender].currentFuel.sub(fuelUsage);
     emit TravelComplete(msg.sender, _planetId, addressToSpaceship[msg.sender].currentFuel);
   }
@@ -87,14 +87,16 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
    */
   function getInfo() external view returns (
     string spaceshipName,
-    uint currentPlanet,
+    uint currentPlanetId,
+    bytes32 currentPlanetURI,
     uint maxCargo,
     uint currentFuel,
     uint maxFuel
   ) {
     return (
       addressToSpaceship[msg.sender].name,
-      addressToSpaceship[msg.sender].currentPlanet,
+      addressToSpaceship[msg.sender].currentPlanetId,
+      planetURI(addressToSpaceship[msg.sender].currentPlanetId),
       addressToSpaceship[msg.sender].maxCargo,
       addressToSpaceship[msg.sender].currentFuel,
       addressToSpaceship[msg.sender].maxFuel
@@ -106,7 +108,7 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
   }
 
   function getCurrentPlanet(address _address) public view returns (uint) {
-    return addressToSpaceship[_address].currentPlanet;
+    return addressToSpaceship[_address].currentPlanetId;
   }
 
   function checkFuel(address _address) public view returns (uint currentFuel, uint maxFuel) {
@@ -130,7 +132,7 @@ contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitA
     return _cargoAvailable >= _incomingCargo;
   }
 
-  function planetURI(uint _planetId) external view returns (bytes32) {
+  function planetURI(uint _planetId) public view returns (bytes32) {
     bytes32 _uri = sha256(abi.encodePacked(_planetId.toString()));
     return _uri;
   }

@@ -154,7 +154,7 @@ class PlanetHome extends Component {
             <FuelMeter
               currentFuel={user.currentFuel}
               maxFuel={user.maxFuel}
-              />
+            />
           </div>
           <Planet
             uri={user.currentPlanet.uri}

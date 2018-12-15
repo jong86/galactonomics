@@ -28,6 +28,10 @@ export default () => new Promise(async (resolve, reject) => {
   store.dispatch({
     type: 'SET_USER_INFO',
     info: {
+      currentPlanet: {
+        id: playerInfo.currentPlanetId.toString(),
+        uri: playerInfo.currentPlanetURI,
+      },
       currentFuel: playerInfo.currentFuel.toString(),
       currentCargo: currentCargo,
       maxCargo: playerInfo.maxCargo.toString(),

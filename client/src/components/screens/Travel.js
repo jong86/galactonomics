@@ -117,6 +117,7 @@ class Travel extends Component {
           :
           <div className={classes.planets}>
             {planets && planets.map((planet, i) => {
+              console.log('planet', planet);
               const x = (i * 100) + 24
               const y = 200
               return (

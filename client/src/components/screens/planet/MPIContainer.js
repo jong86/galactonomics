@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Laserframe from 'components/reusables/Laserframe'
 import CargoMeter from 'components/screens/planet/CargoMeter'
+import Planet from 'components/reusables/Planet'
 
 const styles = {
   MPIContainer: {
@@ -91,6 +92,12 @@ class MPIContainer extends Component {
               >{link.label}</Laserframe>
             )}
           </div>
+          <Planet
+            uri={user.currentPlanet.uri}
+            x={window.innerWidth / 2}
+            y={window.innerHeight}
+            radius={320}
+          />
         </div>
       </Fragment>
     );
