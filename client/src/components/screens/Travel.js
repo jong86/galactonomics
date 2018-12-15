@@ -40,8 +40,7 @@ class Travel extends Component {
 
   componentDidMount = () => {
     getPlayerInfo()
-    setTimeout(this.getPlanetURIs, 2000)
-    // this.getPlanetURIs()
+    this.getPlanetURIs()
   }
 
   componentDidUpdate = prevProps => {
@@ -59,7 +58,7 @@ class Travel extends Component {
   startTravelling = async planetId => {
     const { user, changeScreen, setTravellingTo, travel } = this.props
     // Go right to planet home if user is already on chosen planet
-    if (planetId == user.currentPlanet) {
+    if (planetId == user.currentPlanet.id) {
       return changeScreen('PlanetHome')
     }
 
@@ -141,7 +140,7 @@ class Travel extends Component {
                   <div>
                     {planet.id}
                   </div>
-                  {planet.id == user.currentPlanet && '(current)'}
+                  {planet.id == user.currentPlanet.id && '(current)'}
                 </div>
               )
             })}

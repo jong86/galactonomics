@@ -42,9 +42,7 @@ class Travelling extends Component {
     const { currentSpeed } = this.state
     const newSpeed = parseFloat(parseFloat(currentSpeed) + modulator).toFixed(7)
 
-    this.setState({
-      currentSpeed: newSpeed
-    })
+    this.setState({ currentSpeed: newSpeed })
     window.requestAnimationFrame(this.changeSpeed)
   }
 

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Laserframe from 'components/reusables/Laserframe'
 import Sound from 'react-sound';
+import Planet from 'components/reusables/Planet'
 
 const styles = {
   PlanetIntro: {
@@ -15,6 +16,9 @@ class PlanetIntro extends Component {
   }
 
   componentDidMount = () => {
+    const { scene } = this.props.three
+    this.props.three.scene.remove.apply(scene, scene.children)
+
     // Reset some state since on a new planet now
     this.props.setIndustrialState({
       areasMined: [],
@@ -37,9 +41,11 @@ class PlanetIntro extends Component {
           onClick={() => changeScreen('PlanetHome')}
           flavour="good"
         >Continue >></Laserframe>
-        {/* <img
-          src={planet.img}
-        /> */}
+        <Planet
+          uri={user.currentPlanet.uri}
+          x={100}
+          y={100}
+        />
         {/* <Sound
           url={planet.song}
           playStatus={!soundHasPlayed && Sound.status.PLAYING}
@@ -54,6 +60,7 @@ class PlanetIntro extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
+    three: state.three,
   }
 }
 
