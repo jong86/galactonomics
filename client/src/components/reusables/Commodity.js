@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import * as THREE from 'three'
 import { convertDomPosToThreePos, removeEntity } from 'utils/threeUtils'
 
-class Planet extends Component {
+class Commodity extends Component {
   componentDidMount = () => {
-    this.renderPlanet()
+    this.renderCommodity()
   }
 
   componentWillUnmount = () => {
@@ -14,8 +14,8 @@ class Planet extends Component {
     removeEntity(renderer, scene, camera, uri)
   }
 
-  renderPlanet = () => {
-    const { uri, x, y, radius } = this.props
+  renderCommodity = () => {
+    const { uri, x, y } = this.props
     const { scene, camera, renderer } = this.props.three
 
     // Extract characters from URI to use for 3d model
@@ -25,24 +25,31 @@ class Planet extends Component {
     const zoom = ((parseInt(uri.substr(12, 2), 16) / 256) * 0.5) + 0.75
 
     // Create the shape
-    const geometry = new THREE.SphereGeometry(radius, 16, 16)
+    const geometry = new THREE.BoxGeometry(16, 16, 16)
     const material = new THREE.MeshStandardMaterial({
       color: color,
       metalness: metalness,
       roughness: roughness,
     });
-    const planet = new THREE.Mesh(geometry, material)
-    planet.name = uri
+    const cube = new THREE.Mesh(geometry, material)
+    cube.name = uri
 
     // To convert DOM pixels to threeJS coords
     const pos = convertDomPosToThreePos(x, y, camera);
 
-    planet.position.x = pos.x
-    planet.position.y = pos.y
-    planet.position.z = pos.z
-    scene.add(planet);
+    cube.position.x = pos.x
+    cube.position.y = pos.y
+    cube.position.z = pos.z
+    scene.add(cube);
 
-    renderer.render(scene, camera);
+    cube.rotation.z = 0.2
+    var render = function() {
+      requestAnimationFrame(render);
+      cube.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    };
+
+    render();
   }
 
   render() {
@@ -56,5 +63,5 @@ const mapStateToProps = state => {
   }
 }
 
-Planet = connect(mapStateToProps)(Planet)
-export default Planet
+Commodity = connect(mapStateToProps)(Commodity)
+export default Commodity

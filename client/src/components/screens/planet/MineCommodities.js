@@ -7,12 +7,14 @@ import sha256 from 'js-sha256'
 import getPlayerInfo from 'utils/getPlayerInfo'
 import Loader from 'components/reusables/Loader'
 import MiningPad from 'components/screens/planet/MiningPad'
-import Sound from 'react-sound';
+import Sound from 'react-sound'
 import miningSuccess from 'assets/sounds/miningSuccess.wav'
 import receivedSomething from 'assets/sounds/receivedSomething.wav'
 import mining from 'assets/sounds/mining.wav'
 import miningFail from 'assets/sounds/miningFail.wav'
-import getErrorMsg from "utils/getErrorMsg";
+import getErrorMsg from 'utils/getErrorMsg'
+import Commodity from 'components/reusables/Commodity'
+import ellipAddr from 'utils/ellipAddr'
 
 const styles = {
   acceptDecline: {
@@ -168,14 +170,12 @@ class PlanetIndustrial extends Component {
   }
 
   render() {
-    const { classes, industrial, setIndustrialState } = this.props
+    const { classes, industrial, setIndustrialState, user } = this.props
     const {
       isMining,
       hash,
       hasValidProof,
       isSubmitting,
-      commodityName,
-      commoditySymbol,
       areaStart,
       areaEnd,
       playReceivedSound,
@@ -190,7 +190,7 @@ class PlanetIndustrial extends Component {
       if (areaStart && areaEnd) {
         return `Area ${areaStart} to ${areaEnd}`
       } else if (miningJustFailed) {
-        return `No ${commodityName} was found in that area`
+        return `No commodity was found in that area`
       }  else {
         return 'Waiting...'
       }
@@ -204,7 +204,12 @@ class PlanetIndustrial extends Component {
             {!isMining && !hasValidProof &&
               <Fragment>
                 <div>
-                  Click an area to start mining for {commodityName} ({commoditySymbol})...
+                  Click an area to start mining for {ellipAddr(user.currentPlanet.uri)}
+                  <Commodity
+                    uri={user.currentPlanet.uri}
+                    x={100}
+                    y={100}
+                  />
                 </div>
                 <div>
                   ({miningReward ? miningReward.toString() : '0'} kg will be received after a succcesful mining operation)
