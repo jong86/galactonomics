@@ -6,24 +6,27 @@ export default () => new Promise(async (resolve, reject) => {
   const state = store.getState()
   const { contracts, user, web3 } = state
 
-  let playerInfo, currentCargo, balance
+  let playerInfo, currentCargo, balance, commoditiesOwned
   try {
     playerInfo = await contracts.gta.getInfo({ from: user.address })
     currentCargo = await contracts.commodities.getCurrentCargo(user.address, { from: user.address })
+    commoditiesOwned = await contracts.commodities.getCommoditiesOwned(user.address, { from: user.address })
     balance = await web3.eth.getBalance(user.address)
   } catch (e) {
     return reject(e)
   }
 
-  // const cargoPerCommodity = await Promise.all([0, 1, 2, 3, 4, 5, 6].map(id => new Promise(async (resolve, reject) => {
-  //   let amount, symbol
-  //   try {
-  //     amount = (await contracts.commodities.getBalance(id, { from: user.address })).toString()
-  //   } catch (e) {
-  //     return reject(e)
-  //   }
-  //   resolve({ amount, symbol: commodities[id].symbol })
-  // })))
+  console.log('commoditiesOwned', commoditiesOwned);
+
+  const cargoPerCommodity = await commoditiesOwned.map(id => new Promise(async (resolve, reject) => {
+    let amount
+    try {
+      amount = (await contracts.commodities.getBalance(id, { from: user.address })).toString()
+    } catch (e) {
+      return reject(e)
+    }
+    resolve({ id, amount })
+  }))
 
   store.dispatch({
     type: 'SET_USER_INFO',
@@ -38,7 +41,7 @@ export default () => new Promise(async (resolve, reject) => {
       maxFuel: playerInfo.maxFuel.toString(),
       spaceshipName: playerInfo.spaceshipName.toString(),
       balance: web3.utils.fromWei(balance),
-      // cargoPerCommodity: cargoPerCommodity,
+      cargoPerCommodity: cargoPerCommodity,
     }
   })
 

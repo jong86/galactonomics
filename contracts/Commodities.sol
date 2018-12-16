@@ -133,7 +133,7 @@ contract Commodities is Ownable {
    * @param _id Id of commodity
    */
   function getMiningTarget(uint _id) public view returns (bytes32) {
-    return bytes32(0x000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff);
+    return bytes32(0x0fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff);
   }
 
   /**
@@ -143,6 +143,14 @@ contract Commodities is Ownable {
    */
   function balanceOf(address _address, uint _commodityId) public view returns (uint) {
     return balances[_commodityId][_address];
+  }
+
+  /**
+   * @notice Returns list of commodity Ids owned by an address
+   * @param _address Address of account to look up
+   */
+  function getCommoditiesOwned(address _address) public view returns (uint[]) {
+    return commoditiesOwned[_address];
   }
 
   /**

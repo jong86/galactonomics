@@ -31,7 +31,6 @@ function checkIfHashUnderTarget(hash, target) {
 class PlanetIndustrial extends Component {
   componentDidMount = () => {
     this.getCommodity()
-    this.getMiningData()
   }
 
   componentDidUpdate = prevProps => {
@@ -69,34 +68,16 @@ class PlanetIndustrial extends Component {
     let commodity
 
     try {
-      commodity = await contracts.commodities.get(user.currentPlanet, { from: user.address })
+      commodity = await contracts.commodities.getCommodity(user.currentPlanet.id, { from: user.address })
     } catch (e) {
       return reject(e)
     }
 
     setIndustrialState({
-      commodityName: commodity.name,
-      commoditySymbol: commodity.symbol,
-    })
-
-    resolve()
-  })
-
-  getMiningData = async () => new Promise(async (resolve, reject) => {
-    const { user, contracts, setIndustrialState } = this.props
-    let miningReward, miningTarget, prevMiningHash
-
-    try {
-      const response = await contracts.gia.getMiningData({ from: user.address })
-      miningReward = response[0]
-      miningTarget = response[1]
-      prevMiningHash = response[2]
-    } catch (e) {
-      return reject(e)
-    }
-
-    setIndustrialState({
-      miningReward, miningTarget, prevMiningHash
+      miningReward: commodity.miningReward,
+      miningTarget: commodity.miningTarget,
+      prevMiningHash: commodity.prevMiningHash,
+      uri: commodity.uri,
     })
 
     resolve()
@@ -110,7 +91,7 @@ class PlanetIndustrial extends Component {
     if (typeof nonce === 'number') {
       const hash = sha256(
         nonce.toString() +
-        user.currentPlanet.toString() +
+        user.currentPlanet.id.toString() +
         prevMiningHash +
         user.address.substring(2).toLowerCase()
       )
@@ -120,8 +101,6 @@ class PlanetIndustrial extends Component {
       const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
 
       if (validProofFound) {
-        console.log(hash, miningTarget)
-
         return setIndustrialState({
           playSuccessSound: true,
           playMiningSound: false,
@@ -151,7 +130,7 @@ class PlanetIndustrial extends Component {
     setIndustrialState({ isSubmitting: true })
 
     try {
-      await contracts.gia.submitProofOfWork(String(nonce), { from: user.address })
+      await contracts.commodities.mine(String(nonce), { from: user.address })
     } catch (e) {
       setIndustrialState({
         isMining: false,
@@ -163,10 +142,10 @@ class PlanetIndustrial extends Component {
       return setDialogBox(getErrorMsg(e.toString()), 'bad')
     }
 
-    const oldQuant = Number(user.cargoPerCommodity[user.currentPlanet].amount)
+    const oldQuant = Number(user.cargoPerCommodity[user.currentPlanet.id].amount)
     await getPlayerInfo()
     user = this.props.user
-    const newQuant = Number(user.cargoPerCommodity[user.currentPlanet].amount)
+    const newQuant = Number(user.cargoPerCommodity[user.currentPlanet.id].amount)
 
     // Refresh data
     await this.getCommodity()
