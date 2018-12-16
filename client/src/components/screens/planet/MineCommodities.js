@@ -142,14 +142,15 @@ class PlanetIndustrial extends Component {
       return setDialogBox(getErrorMsg(e.toString()), 'bad')
     }
 
-    const oldQuant = Number(user.cargoPerCommodity[user.currentPlanet.id].amount)
-    await getPlayerInfo()
-    user = this.props.user
-    const newQuant = Number(user.cargoPerCommodity[user.currentPlanet.id].amount)
+    // const oldQuant = Number(user.cargoPerCommodity[user.currentPlanet.id].amount)
+    // await getPlayerInfo()
+    // user = this.props.user
+    // const newQuant = Number(user.cargoPerCommodity[user.currentPlanet.id].amount)
 
     // Refresh data
-    await this.getCommodity()
-    await this.getMiningData()
+    this.getCommodity()
+    getPlayerInfo()
+
 
     setIndustrialState({
       isMining: false,
@@ -159,11 +160,11 @@ class PlanetIndustrial extends Component {
       isSubmitting: false,
     })
 
-    if (newQuant > oldQuant) {
-      setIndustrialState({ playReceivedSound: true })
-    } else {
-      setDialogBox('Sorry, but your proof-of-work was not accepted', 'bad')
-    }
+    // if (newQuant > oldQuant) {
+    //   setIndustrialState({ playReceivedSound: true })
+    // } else {
+    //   setDialogBox('Sorry, but your proof-of-work was not accepted', 'bad')
+    // }
   }
 
   render() {

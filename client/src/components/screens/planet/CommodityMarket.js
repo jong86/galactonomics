@@ -50,7 +50,7 @@ class PlanetMarketplace extends Component {
   }
 
   componentDidMount = () => {
-    this.getCommodities()
+    // this.getCommodities()
   }
 
   componentDidUpdate(_, prevState) {
