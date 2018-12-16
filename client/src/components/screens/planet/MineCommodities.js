@@ -15,6 +15,7 @@ import miningFail from 'assets/sounds/miningFail.wav'
 import getErrorMsg from 'utils/getErrorMsg'
 import Commodity from 'components/reusables/Commodity'
 import ellipAddr from 'utils/ellipAddr'
+import Measure from 'react-measure'
 
 const styles = {
   acceptDecline: {
@@ -30,7 +31,9 @@ function checkIfHashUnderTarget(hash, target) {
   return hash < target
 }
 
-class PlanetIndustrial extends Component {
+class MineCommodities extends Component {
+  state = {}
+
   componentDidMount = () => {
     this.getCommodity()
   }
@@ -144,11 +147,6 @@ class PlanetIndustrial extends Component {
       return setDialogBox(getErrorMsg(e.toString()), 'bad')
     }
 
-    // const oldQuant = Number(user.cargoPerCommodity[user.currentPlanet.id].amount)
-    // await getPlayerInfo()
-    // user = this.props.user
-    // const newQuant = Number(user.cargoPerCommodity[user.currentPlanet.id].amount)
-
     // Refresh data
     this.getCommodity()
     getPlayerInfo()
@@ -161,12 +159,6 @@ class PlanetIndustrial extends Component {
       nonce: 0,
       isSubmitting: false,
     })
-
-    // if (newQuant > oldQuant) {
-    //   setIndustrialState({ playReceivedSound: true })
-    // } else {
-    //   setDialogBox('Sorry, but your proof-of-work was not accepted', 'bad')
-    // }
   }
 
   render() {
@@ -185,6 +177,7 @@ class PlanetIndustrial extends Component {
       miningReward,
       miningJustFailed,
     } = industrial
+    const { topClient, topOffset } = this.state
 
     const statusBarText = (() => {
       if (areaStart && areaEnd) {
@@ -198,88 +191,103 @@ class PlanetIndustrial extends Component {
 
     return (
       <MPIContainer>
-          <Laserframe
-            size="wide"
-          >
-            {!isMining && !hasValidProof &&
-              <Fragment>
-                <div>
-                  Click an area to start mining for {ellipAddr(user.currentPlanet.uri)}
-                  <Commodity
-                    uri={user.currentPlanet.uri}
-                    x={100}
-                    y={100}
-                  />
-                </div>
-                <div>
-                  ({miningReward ? miningReward.toString() : '0'} kg will be received after a succcesful mining operation)
-                </div>
-                <MiningPad areaSize={AREA_SIZE} />
-                <Laserframe
-                  flavour={miningJustFailed ? 'bad' : 'status'}
-                >
-                  {statusBarText}
-                </Laserframe>
-              </Fragment>
-            }
-            {isMining &&
-              <Fragment>
-                <div>
-                  Mining in area {areaStart} to {areaEnd}...
-                </div>
-                <Laserframe flavour='bad'>
-                  { hash }
-                </Laserframe>
-                <Laserframe
-                  isButton
-                  onClick={this.stopMining}
-                >
-                  Stop mining
-                </Laserframe>
-              </Fragment>
-            }
-            {!isMining && hasValidProof &&
-              <Fragment>
-                <div>
-                  Valid proof of work hash found!
-                </div>
-                <Laserframe flavour='good'>
-                  { hash }
-                </Laserframe>
-                <Laserframe
-                  isButton
-                  onClick={this.submitProof}
-                >
-                  {!isSubmitting ? 'Submit proof of work' : <Fragment>Waiting for validation...<Loader /></Fragment>}
-                </Laserframe>
-              </Fragment>
-            }
-          </Laserframe>
-          <Sound
-            url={miningSuccess}
-            playStatus={playSuccessSound && Sound.status.PLAYING}
-            volume={6}
-            onFinishedPlaying={() => setIndustrialState({ playSuccessSound: false })}
-          />
-          <Sound
-            url={receivedSomething}
-            playStatus={playReceivedSound && Sound.status.PLAYING}
-            volume={10}
-            onFinishedPlaying={() => setIndustrialState({ playReceivedSound: false })}
-          />
-          <Sound
-            url={mining}
-            playStatus={playMiningSound && Sound.status.PLAYING}
-            volume={15}
-            loop={true}
-            onFinishedPlaying={() => setIndustrialState({ playMiningSound: false })}
-          />
-          <Sound
-            url={miningFail}
-            playStatus={playMiningFailSound && Sound.status.PLAYING}
-            volume={10}
-            onFinishedPlaying={() => setIndustrialState({ playMiningFailSound: false })}
-          />
+        <Laserframe
+          size="wide"
+        >
+          {!isMining && !hasValidProof &&
+            <Fragment>
+              <Measure
+                client
+                offset
+                onResize={contentRect => {
+                  this.setState({
+                    topClient: contentRect.client,
+                    topOffset: contentRect.offset,
+                  })
+                }}
+              >
+                {({ measureRef }) => (
+                  <div ref={measureRef}>
+                    <div>
+                      Click an area to start mining for {ellipAddr(user.currentPlanet.uri)}
+                      {topOffset && <Commodity
+                        uri={user.currentPlanet.uri}
+                        x={topOffset.left + topOffset.width + (topOffset.width * 0.1)}
+                        y={topOffset.top + (topOffset.height * 0.5)}
+                      />}
+                    </div>
+                    <div>
+                      ({miningReward ? miningReward.toString() : '0'} kg will be received after a succcesful mining operation)
+                    </div>
+                  </div>
+                )}
+              </Measure>
+              <MiningPad areaSize={AREA_SIZE} />
+              <Laserframe
+                flavour={miningJustFailed ? 'bad' : 'status'}
+              >
+                {statusBarText}
+              </Laserframe>
+            </Fragment>
+          }
+          {isMining &&
+            <Fragment>
+              <div>
+                Mining in area {areaStart} to {areaEnd}...
+              </div>
+              <Laserframe flavour='bad'>
+                { hash }
+              </Laserframe>
+              <Laserframe
+                isButton
+                onClick={this.stopMining}
+              >
+                Stop mining
+              </Laserframe>
+            </Fragment>
+          }
+          {!isMining && hasValidProof &&
+            <Fragment>
+              <div>
+                Valid proof of work hash found!
+              </div>
+              <Laserframe flavour='good'>
+                { hash }
+              </Laserframe>
+              <Laserframe
+                isButton
+                onClick={this.submitProof}
+              >
+                {!isSubmitting ? 'Submit proof of work' : <Fragment>Waiting for validation...<Loader /></Fragment>}
+              </Laserframe>
+            </Fragment>
+          }
+        </Laserframe>
+        <Sound
+          url={miningSuccess}
+          playStatus={playSuccessSound && Sound.status.PLAYING}
+          volume={6}
+          onFinishedPlaying={() => setIndustrialState({ playSuccessSound: false })}
+        />
+        <Sound
+          url={receivedSomething}
+          playStatus={playReceivedSound && Sound.status.PLAYING}
+          volume={10}
+          onFinishedPlaying={() => setIndustrialState({ playReceivedSound: false })}
+        />
+        <Sound
+          url={mining}
+          playStatus={playMiningSound && Sound.status.PLAYING}
+          volume={15}
+          loop={true}
+          onFinishedPlaying={() => setIndustrialState({ playMiningSound: false })}
+        />
+        <Sound
+          url={miningFail}
+          playStatus={playMiningFailSound && Sound.status.PLAYING}
+          volume={10}
+          onFinishedPlaying={() => setIndustrialState({ playMiningFailSound: false })}
+        />
       </MPIContainer>
     )
   }
@@ -302,6 +310,6 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-PlanetIndustrial = connect(mapStateToProps, mapDispatchToProps)(PlanetIndustrial)
-PlanetIndustrial = injectSheet(styles)(PlanetIndustrial)
-export default PlanetIndustrial;
+MineCommodities = connect(mapStateToProps, mapDispatchToProps)(MineCommodities)
+MineCommodities = injectSheet(styles)(MineCommodities)
+export default MineCommodities;
