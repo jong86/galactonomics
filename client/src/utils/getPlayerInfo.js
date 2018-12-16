@@ -1,5 +1,4 @@
 import { store } from '../redux/store'
-import commodities from 'utils/commodities'
 
 export default () => new Promise(async (resolve, reject) => {
   /* 'Refreshes' user data and saves in redux store */
@@ -21,7 +20,7 @@ export default () => new Promise(async (resolve, reject) => {
   const cargoPerCommodity = await commoditiesOwned.map(id => new Promise(async (resolve, reject) => {
     let amount
     try {
-      amount = (await contracts.commodities.getBalance(id, { from: user.address })).toString()
+      amount = (await contracts.commodities.balanceOf(id, { from: user.address })).toString()
     } catch (e) {
       return reject(e)
     }

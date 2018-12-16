@@ -1,5 +1,6 @@
 export default function(string) {
-  // This is a temp solution, doesn't work that well
+  /* Extracts revert msg from error received */
+
   if (typeof string === 'object') {
     string = JSON.stringify(string)
   }
