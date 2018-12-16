@@ -1,29 +1,28 @@
 export default (state, action) => {
   switch (action.type) {
-    case 'SET_RENDERER': {
-      const { renderer } = action
+    case 'INIT_BG': {
+      const { renderer, scene, camera } = action
 
       return {
         ...state,
-        renderer,
+        bg: {
+          renderer,
+          scene,
+          camera,
+        }
       }
     }
 
-    case 'SET_SCENE': {
-      const { scene } = action
+    case 'INIT_FG': {
+      const { renderer, scene, camera } = action
 
       return {
         ...state,
-        scene,
-      }
-    }
-
-    case 'SET_CAMERA': {
-      const { camera } = action
-
-      return {
-        ...state,
-        camera,
+        fg: {
+          renderer,
+          scene,
+          camera,
+        }
       }
     }
 

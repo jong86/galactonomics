@@ -10,13 +10,13 @@ class Commodity extends Component {
 
   componentWillUnmount = () => {
     const { uri } = this.props
-    const { scene, camera, renderer } = this.props.three
+    const { scene, camera, renderer } = this.props.three.fg
     removeEntity(renderer, scene, camera, uri)
   }
 
   renderCommodity = () => {
     const { uri, x, y } = this.props
-    const { scene, camera, renderer } = this.props.three
+    const { scene, camera, renderer } = this.props.three.fg
 
     // Extract characters from URI to use for 3d model
     const color = parseInt(uri.substr(2, 6), 16)

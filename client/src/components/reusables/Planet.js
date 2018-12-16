@@ -10,13 +10,13 @@ class Planet extends Component {
 
   componentWillUnmount = () => {
     const { uri } = this.props
-    const { scene, camera, renderer } = this.props.three
+    const { scene, camera, renderer } = this.props.three.bg
     removeEntity(renderer, scene, camera, uri)
   }
 
   renderPlanet = () => {
     const { uri, x, y, radius } = this.props
-    const { scene, camera, renderer } = this.props.three
+    const { scene, camera, renderer } = this.props.three.bg
 
     // Extract characters from URI to use for 3d model
     const color = parseInt(uri.substr(2, 6), 16)

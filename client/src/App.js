@@ -142,41 +142,55 @@ class App extends Component {
   })
 
   initThreeJS = () => {
-    // Create renderer
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-      autoClear: true,
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.setClearColor(0x000000, 0)
+    const data = [
+      {
+        // Background renderer (behind all DOM elements)
+        reduxAction: this.props.initThreeBg,
+        zIndex: -1,
+      },
+      {
+        // Foreground renderer (in front of all DOM elements)
+        reduxAction: this.props.initThreeFg,
+        zIndex: 6,
+        extraStyle: 'pointer-events:none;'
+      },
+    ]
 
-    // Create scene
-    const scene = new THREE.Scene()
+    data.forEach(({ reduxAction, zIndex, extraStyle = '' }) => {
+      // Create renderer
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        autoClear: true,
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.setClearColor(0x000000, 0)
 
-    // Create camera
-    const width = window.innerWidth
-    const height = window.innerHeight
-    const camera = new THREE.PerspectiveCamera(10, width / height, 0.1, 4000)
-    camera.position.z = 2000
+      // Create scene
+      const scene = new THREE.Scene()
 
-    // https://stackoverflow.com/a/53775855/5266066
-    renderer.render(scene, camera);
+      // Create camera
+      const width = window.innerWidth
+      const height = window.innerHeight
+      const camera = new THREE.PerspectiveCamera(10, width / height, 0.1, 4000)
+      camera.position.z = 2000
 
-    // Create light source
-    const light = new THREE.RectAreaLight(0xffffff, 4, 1250, 1000)
-    light.position.set(-300, -300, 550)
-    light.lookAt(0, 0, 0)
-    scene.add(light)
+      // https://stackoverflow.com/a/53775855/5266066
+      renderer.render(scene, camera);
 
-    // Append to DOM
-    const div = document.getElementById('root')
-    renderer.domElement.style = "position:absolute;top:0;left:0;z-index:-1;"
-    div.appendChild(renderer.domElement);
+      // Create light source
+      const light = new THREE.RectAreaLight(0xffffff, 4, 1250, 1000)
+      light.position.set(-300, -300, 550)
+      light.lookAt(0, 0, 0)
+      scene.add(light)
 
-    this.props.setThreeRenderer(renderer)
-    this.props.setThreeScene(scene)
-    this.props.setThreeCamera(camera)
+      // Append to DOM
+      const div = document.getElementById('root')
+      renderer.domElement.style = `position:absolute;top:0;left:0;z-index:${zIndex};${extraStyle}`
+      div.appendChild(renderer.domElement);
+
+      reduxAction(renderer, scene, camera)
+    })
   }
 
   componentDidCatch = (error, errorInfo) => {
@@ -237,9 +251,8 @@ const mapDispatchToProps = dispatch => {
     setEthState: ethState => dispatch({ type: 'SET_ETH_STATE', ethState }),
     closeDialogBox: () => dispatch({ type: 'SET_DIALOG_BOX', content: '' }),
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
-    setThreeRenderer: renderer => dispatch({ type: 'SET_RENDERER', renderer }),
-    setThreeScene: scene => dispatch({ type: 'SET_SCENE', scene }),
-    setThreeCamera: camera => dispatch({ type: 'SET_CAMERA', camera }),
+    initThreeBg: (renderer, scene, camera) => dispatch({ type: 'INIT_BG', renderer, scene, camera }),
+    initThreeFg: (renderer, scene, camera) => dispatch({ type: 'INIT_FG', renderer, scene, camera }),
   }
 }
 
