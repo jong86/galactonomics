@@ -61,7 +61,7 @@ class PlanetHome extends Component {
 
   render() {
     const { classes, user, changeScreen } = this.props
-    const iconSize = 64
+    const iconSize = 48
 
     return (
       <Fragment>
@@ -80,53 +80,60 @@ class PlanetHome extends Component {
           </div>
           <div className={classes.top3}>
             {/* Regular planet links: */}
-            <Fragment>
-              <Laserframe
-                onClick={() => changeScreen('CommodityMarket')}
-                isButton
-                flavour="info"
-                size="wide3"
-              >
-                <FaBalanceScale size={iconSize} />
-                Commodity Market
-              </Laserframe>
-              <Laserframe
-                onClick={() => changeScreen('MineCommodities')}
-                isButton
-                flavour="info"
-                size="wide3"
-              >
-                <FaIndustry size={iconSize} />
-                Mine Commodities
-              </Laserframe>
-              <Laserframe
-                onClick={() => changeScreen('CrystalMarket')}
-                isButton
-                flavour="info"
-                size="wide3"
-              >
-                <MdBusinessCenter size={iconSize} />
-                Crystal Market
-              </Laserframe>
-              <Laserframe
-                onClick={() => changeScreen('ForgeCrystal')}
-                isButton
-                flavour="info"
-                size="wide3"
-              >
-                <FaHammer size={iconSize} />
-                Forge Crystal
-              </Laserframe>
-              <Laserframe
-                onClick={() => changeScreen('ViewCrystals')}
-                isButton
-                flavour="info"
-                size="wide3"
-              >
-                <FaEthereum size={iconSize} />
-                View My Crystals
-              </Laserframe>
-            </Fragment>
+            <Laserframe
+              onClick={() => changeScreen('MineCommodities')}
+              isButton
+              flavour="info"
+              size="wide"
+            >
+              <FaIndustry size={iconSize} />
+              Mine Commodities
+            </Laserframe>
+            <Laserframe
+              onClick={() => changeScreen('CommodityMarket')}
+              isButton
+              flavour="info"
+              size="wide"
+            >
+              <FaBalanceScale size={iconSize} />
+              Commodity Market
+            </Laserframe>
+            <Laserframe
+              onClick={() => changeScreen('View Cargo')}
+              isButton
+              flavour="info"
+              size="wide"
+            >
+              <FaBalanceScale size={iconSize} />
+              View My Cargo
+            </Laserframe>
+            <Laserframe
+              onClick={() => changeScreen('CrystalMarket')}
+              isButton
+              flavour="special"
+              size="wide"
+            >
+              <MdBusinessCenter size={iconSize} />
+              Crystal Market
+            </Laserframe>
+            <Laserframe
+              onClick={() => changeScreen('ForgeCrystal')}
+              isButton
+              flavour="special"
+              size="wide"
+            >
+              <FaHammer size={iconSize} />
+              Forge Crystal
+            </Laserframe>
+            <Laserframe
+              onClick={() => changeScreen('ViewCrystals')}
+              isButton
+              flavour="special"
+              size="wide"
+            >
+              <FaEthereum size={iconSize} />
+              View My Crystals
+            </Laserframe>
           </div>
           <div>
             <FuelMeter

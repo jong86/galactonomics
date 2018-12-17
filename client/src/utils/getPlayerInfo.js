@@ -15,17 +15,20 @@ export default () => new Promise(async (resolve, reject) => {
     return reject(e)
   }
 
-  console.log('commoditiesOwned', commoditiesOwned);
-
-  const cargoPerCommodity = await commoditiesOwned.map(id => new Promise(async (resolve, reject) => {
-    let amount
+  commoditiesOwned = await Promise.all(commoditiesOwned.map(id => new Promise(async (resolve, reject) => {
+    let amount, uri
     try {
-      amount = (await contracts.commodities.balanceOf(id, { from: user.address })).toString()
+      amount = (await contracts.commodities.balanceOf(user.address, id.toString()))
+      uri = await contracts.commodities.getURI(id)
     } catch (e) {
       return reject(e)
     }
-    resolve({ id, amount })
-  }))
+    resolve({
+      id: id.toString(),
+      amount: amount.toString(),
+      uri,
+    })
+  })))
 
   store.dispatch({
     type: 'SET_USER_INFO',
@@ -40,7 +43,7 @@ export default () => new Promise(async (resolve, reject) => {
       maxFuel: playerInfo.maxFuel.toString(),
       spaceshipName: playerInfo.spaceshipName.toString(),
       balance: web3.utils.fromWei(balance),
-      cargoPerCommodity: cargoPerCommodity,
+      commoditiesOwned,
     }
   })
 

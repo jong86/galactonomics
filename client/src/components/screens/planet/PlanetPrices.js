@@ -7,7 +7,6 @@ import PricesRow from 'components/reusables/PricesRow'
 import uuid from 'utils/uuid'
 import Loader from 'components/reusables/Loader'
 import commodities from 'utils/commodities'
-import { debug } from "util";
 
 const styles = {}
 

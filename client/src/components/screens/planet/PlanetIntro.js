@@ -16,9 +16,6 @@ class PlanetIntro extends Component {
   }
 
   componentDidMount = () => {
-
-    // renderer.render(scene, camera);
-
     // Reset some state since on a new planet now
     this.props.setIndustrialState({
       areasMined: [],

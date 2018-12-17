@@ -152,16 +152,16 @@ class App extends Component {
         // Foreground renderer (in front of all DOM elements)
         reduxAction: this.props.initThreeFg,
         zIndex: 6,
-        extraStyle: 'pointer-events:none;'
+        extraStyle: 'pointer-events:none;',
+        alpha: true,
       },
     ]
 
-    data.forEach(({ reduxAction, zIndex, extraStyle = '' }) => {
+    data.forEach(({ reduxAction, zIndex, extraStyle = '', alpha }) => {
       // Create renderer
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
-        alpha: true,
-        autoClear: true,
+        alpha,
       });
       renderer.setSize(window.innerWidth, window.innerHeight)
       renderer.setClearColor(0x000000, 0)

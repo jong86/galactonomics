@@ -270,18 +270,24 @@ class PlanetMarketplace extends Component {
         <div className={classes.container}>
           <div>
             {/* Render commodity names and balances */}
-            {commodities.map((commodity, i) => (
-              <Laserframe
-                key={i}
-                isButton
-                size="wide"
-                active={selectedCommodityId === commodity.id}
-                onClick={() => this.setState({ selectedCommodityId: commodities[i].id })}
-              >
-                <div>{commodity.name}</div>
-                <div>{"(You have: " + commodity.myBalance.toString() + " kg)"}</div>
+            {commodities.length ?
+              commodities.map((commodity, i) => (
+                <Laserframe
+                  key={i}
+                  isButton
+                  size="wide"
+                  isActive={selectedCommodityId === commodity.id}
+                  onClick={() => this.setState({ selectedCommodityId: commodities[i].id })}
+                >
+                  <div>{commodity.name}</div>
+                  <div>{"(You have: " + commodity.myBalance.toString() + " kg)"}</div>
+                </Laserframe>
+              ))
+              :
+              <Laserframe size="wide">
+                Filter commodities for sale here
               </Laserframe>
-            ))}
+            }
           </div>
           {isLoading ?
             <div>

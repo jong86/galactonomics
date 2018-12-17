@@ -7,8 +7,8 @@ const styles = {
     textAlign: "center",
     border: ({ flavour }) => '1px solid ' + colorFromFlavour(flavour),
     color: ({ flavour }) => colorFromFlavour(flavour),
-    backgroundColor: ({ active }) => {
-      if (!active) return 'rgba(0, 0, 0, 0.75)'
+    backgroundColor: ({ isActive }) => {
+      if (!isActive) return 'rgba(0, 0, 0, 0.75)'
       return '#444'
     },
     width: ({ size }) => {

@@ -31,12 +31,13 @@ const styles = {
 
 class MPIContainer extends Component {
   render() {
-    const { classes, user, changeScreen, currentScreen, sideButtons, cargoPerCommodity } = this.props
+    const { classes, user, view, changeScreen, currentScreen, sideButtons, commoditiesOwned } = this.props
 
     const navLinks = [
       { name: 'PlanetHome', label: '<< Back' },
-      { name: 'CommodityMarket', label: 'Commodity Market' },
       { name: 'MineCommodities', label: 'Mine Commodities' },
+      { name: 'CommodityMarket', label: 'Commodity Market' },
+      { name: 'ViewCargo', label: 'View Cargo' },
       { name: 'ForgeCrystal', label: 'Forge Crystal' },
       { name: 'CrystalMarket', label: 'Crystal Market' },
       { name: 'ViewCrystals', label: 'View My Crystals' },
@@ -49,7 +50,7 @@ class MPIContainer extends Component {
             {/* Top Row */}
             <div>
               {/* Top-left */}
-              <CargoMeter current={user.currentCargo} max={user.maxCargo} cargoPerCommodity={user.cargoPerCommodity} />
+              <CargoMeter current={user.currentCargo} max={user.maxCargo} commoditiesOwned={user.commoditiesOwned} />
               {/* Main screen content goes here */}
               <Fragment>{this.props.children}</Fragment>
             </div>
@@ -73,10 +74,12 @@ class MPIContainer extends Component {
           </div>
           <div>
             {/* Bottom row */}
-            {navLinks.map(link => (
+            {navLinks.map((link, i) => (
               <Laserframe
+                key={i}
                 isButton
                 onClick={() => changeScreen(link.name)}
+                isActive={link.name === view.currentScreen}
               >{link.label}</Laserframe>
             ))}
           </div>
@@ -98,6 +101,7 @@ const mapStateToProps = state => {
     contracts: state.contracts,
     user: state.user,
     web3: state.web3,
+    view: state.view,
   }
 }
 

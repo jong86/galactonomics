@@ -177,7 +177,7 @@ class MineCommodities extends Component {
       miningReward,
       miningJustFailed,
     } = industrial
-    const { topClient, topOffset } = this.state
+    const { offset } = this.state
 
     const statusBarText = (() => {
       if (areaStart && areaEnd) {
@@ -197,12 +197,10 @@ class MineCommodities extends Component {
           {!isMining && !hasValidProof &&
             <Fragment>
               <Measure
-                client
                 offset
                 onResize={contentRect => {
                   this.setState({
-                    topClient: contentRect.client,
-                    topOffset: contentRect.offset,
+                    offset: contentRect.offset,
                   })
                 }}
               >
@@ -210,10 +208,10 @@ class MineCommodities extends Component {
                   <div ref={measureRef}>
                     <div>
                       Click an area to start mining for {ellipAddr(user.currentPlanet.uri)}
-                      {topOffset && <Commodity
+                      {offset && <Commodity
                         uri={user.currentPlanet.uri}
-                        x={topOffset.left + topOffset.width + (topOffset.width * 0.1)}
-                        y={topOffset.top + (topOffset.height * 0.5)}
+                        x={offset.left + offset.width + (offset.width * 0.1)}
+                        y={offset.top + (offset.height * 0.5)}
                       />}
                     </div>
                     <div>
