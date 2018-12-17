@@ -14,17 +14,37 @@ const styles = {}
 class ViewCargo extends Component {
   state = {
     offsets: [],
+    selected: [],
   }
 
   componentDidMount = async () => {
   }
 
+  manageSelected = id => {
+    /* Adds or removes commodity ids from list of selected commodity ids */
+
+    const { selected } = this.state
+
+    if (selected.includes(id)) {
+      // Remove value if array already contains it
+      this.setState({ selected: selected.filter(item => item !== id) })
+    } else {
+      // If doesn't contain, just concat new id
+      this.setState({ selected: selected.concat([id]) })
+    }
+  }
+
   render() {
     const { classes, user } = this.props
-    const { isLoading, offsets } = this.state
+    const { isLoading, offsets, selected } = this.state
+
+
+    const sideButtons = [
+      { fn: this.forge, label: 'Forge with selected' },
+    ]
 
     return (
-      <MPIContainer>
+      <MPIContainer sideButtons={sideButtons}>
         {user.commoditiesOwned.map((commodity, i) => (
           <Measure
             offset
@@ -38,7 +58,11 @@ class ViewCargo extends Component {
               console.log('offsets', offsets);
               return (
                 <div ref={measureRef}>
-                  <Laserframe size="wide">
+                  <Laserframe
+                    size="wide"
+                    onClick={() => this.manageSelected(commodity.id)}
+                    isActive={selected.includes(commodity.id)}
+                  >
                     {offsets[i] && <Commodity
                       x={offsets[i].left + 20}
                       y={offsets[i].top + offsets[i].height / 2}

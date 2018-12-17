@@ -9,7 +9,7 @@ const styles = {
     color: ({ flavour }) => colorFromFlavour(flavour),
     backgroundColor: ({ isActive }) => {
       if (!isActive) return 'rgba(0, 0, 0, 0.75)'
-      return '#444'
+      return '#777'
     },
     width: ({ size }) => {
       switch (size) {
