@@ -99,7 +99,7 @@ class PlanetHome extends Component {
               Commodity Market
             </Laserframe>
             <Laserframe
-              onClick={() => changeScreen('View Cargo')}
+              onClick={() => changeScreen('ViewCargo')}
               isButton
               flavour="info"
               size="wide"

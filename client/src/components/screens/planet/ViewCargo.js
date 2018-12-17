@@ -17,7 +17,6 @@ class ViewCargo extends Component {
   }
 
   componentDidMount = async () => {
-    await getPlayerInfo()
   }
 
   render() {
@@ -41,10 +40,14 @@ class ViewCargo extends Component {
                 <div ref={measureRef}>
                   <Laserframe size="wide">
                     {offsets[i] && <Commodity
-                      x={offsets[i].left}
-                      y={offsets[i].top}
+                      x={offsets[i].left + 20}
+                      y={offsets[i].top + offsets[i].height / 2}
                       uri={commodity.uri}
                     />}
+                    {'     '}{' - '}
+                    {'ID: ' + commodity.id}{' - '}
+                    {'URI: ' + ellipAddr(commodity.uri)}{' - '}
+                    {'Amount: ' + commodity.amount}
                   </Laserframe>
                 </div>
               )
