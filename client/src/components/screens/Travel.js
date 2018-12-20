@@ -77,7 +77,7 @@ class Travel extends Component {
     const planets = []
     for (let i = sector; i < sector + 17; i++) {
       try {
-        const planetURI = await contracts.gta.planetURI(String(i), { from: user.address } )
+        const planetURI = await contracts.transitAuthority.planetURI(String(i), { from: user.address } )
         planets.push({ id: i, uri: planetURI })
       } catch (e) {
         console.error(e)

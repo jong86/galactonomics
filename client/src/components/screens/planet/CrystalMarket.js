@@ -43,19 +43,19 @@ class TempleMarketplace extends Component {
 
     try {
       // Get the IDs of each crystal for sale, then get their URIs
-      const crystalIds = await contracts.temple.getCrystalsForSale({ from: user.address })
+      const crystalIds = await contracts.crystalAuthority.getCrystalsForSale({ from: user.address })
       if (crystalIds.length) {
         const crystals = []
 
         for (let id of crystalIds) {
           crystals.push({
             id: id.toString(),
-            uri: await contracts.temple.crystalURI(id, { from: user.address }),
+            uri: await contracts.crystalAuthority.crystalURI(id, { from: user.address }),
           })
         }
 
         for (let [i, crystal] of crystals.entries()) {
-          const sellData = await contracts.temple.getCrystalSellData(crystal.id, { from: user.address })
+          const sellData = await contracts.crystalAuthority.getCrystalSellData(crystal.id, { from: user.address })
           crystals[i].price = sellData.price.toString()
           crystals[i].seller = sellData.seller
         }
@@ -72,7 +72,7 @@ class TempleMarketplace extends Component {
     const { crystals, selectedCrystalId } = this.state
     const crystal = crystals[crystals.findIndex(crystal => crystal.id === selectedCrystalId)]
     try {
-      await contracts.temple.buy(selectedCrystalId, { from: user.address, value: crystal.price })
+      await contracts.crystalAuthority.buy(selectedCrystalId, { from: user.address, value: crystal.price })
     } catch (e) {
       console.error(e)
     }

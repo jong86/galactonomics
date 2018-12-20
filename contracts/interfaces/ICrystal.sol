@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-contract IByzantianCrystal {
+contract ICrystal {
   function create(address) public pure returns (string) {}
   function balanceOf(address) public pure returns (uint) {}
   function totalSupply() public pure returns (uint) {}

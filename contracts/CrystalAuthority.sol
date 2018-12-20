@@ -2,21 +2,21 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./interfaces/IByzantianCrystal.sol";
-import "./interfaces/IGalacticTransitAuthority.sol";
-import "./interfaces/ICommodities.sol";
+import "./interfaces/ICrystal.sol";
+import "./interfaces/ITransitAuthority.sol";
+import "./interfaces/ICommodityAuthority.sol";
 
 /**
- * @title Temple Authority
+ * @title Crystal Authority (CA)
  *
- * @notice This contract handles Byzantian Crystal forging and trading
+ * @notice The CA handles crystal forging and trading
  */
-contract TempleAuthority {
+contract CrystalAuthority {
   using SafeMath for uint;
 
-  IByzantianCrystal bCrystal;
-  IGalacticTransitAuthority gta;
-  ICommodities commodities;
+  ICrystal crystal;
+  ITransitAuthority transitAuthority;
+  ICommodityAuthority commodityAuthority;
 
   // Units of each commodity required to forge a crystal
   uint public constant forgingAmount = 10000;
@@ -32,16 +32,10 @@ contract TempleAuthority {
     uint price;
   }
 
-  constructor(address _commodities, address _gta, address _bCrystal) public {
-    commodities = ICommodities(_commodities);
-    gta = IGalacticTransitAuthority(_gta);
-    bCrystal = IByzantianCrystal(_bCrystal);
-  }
-
-  modifier onlyPlayerAtTemple() {
-    require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
-    require(gta.getCurrentPlanet(msg.sender) == 255, "You are not on the correct planet");
-    _;
+  constructor(address _commodityAuthority, address _transitAuthority, address _crystal) public {
+    commodityAuthority = ICommodityAuthority(_commodityAuthority);
+    transitAuthority = ITransitAuthority(_transitAuthority);
+    crystal = ICrystal(_crystal);
   }
 
   /**
@@ -49,13 +43,13 @@ contract TempleAuthority {
    * @dev Burns a quantity of all 7 of an account's commodities
    * @return tokenId of newly created crystal
    */
-  function forge() external onlyPlayerAtTemple returns (string) {
+  function forge() external returns (string) {
     uint i;
 
     // Check balance of every commodity to make sure there is enough
     for (i = 0; i <= 6; i++) {
       require(
-        commodities.balanceOf(msg.sender, i) >= forgingAmount,
+        commodityAuthority.balanceOf(msg.sender, i) >= forgingAmount,
         "You do not have enough commodities to forge"
       );
     }
@@ -64,12 +58,12 @@ contract TempleAuthority {
     // [Dec 7: commodities burned will be the ones chosen to forge with]
     for (i = 0; i <= 6; i++) {
       require(
-        commodities.burn(msg.sender, i, forgingAmount),
+        commodityAuthority.burn(msg.sender, i, forgingAmount),
         "Error burning commodity"
       );
     }
 
-    string memory _uri = bCrystal.create(msg.sender);
+    string memory _uri = crystal.create(msg.sender);
     return _uri;
   }
 
@@ -78,19 +72,19 @@ contract TempleAuthority {
    * @param _owner Address of account to look up
    */
   function crystalsOfOwner(address _owner) external view returns (uint[] ownedCrystals) {
-    uint tokenCount = bCrystal.balanceOf(_owner);
+    uint tokenCount = crystal.balanceOf(_owner);
 
     if (tokenCount == 0) {
       // Return an empty array
       return new uint[](0);
     } else {
       uint[] memory result = new uint[](tokenCount);
-      uint totalCrystals = bCrystal.totalSupply();
+      uint totalCrystals = crystal.totalSupply();
       uint resultIndex = 0;
       uint crystalId;
 
       for (crystalId = 1; crystalId <= totalCrystals; crystalId++) {
-        if (bCrystal.ownerOf(crystalId) == _owner) {
+        if (crystal.ownerOf(crystalId) == _owner) {
           result[resultIndex] = crystalId;
           resultIndex++;
         }
@@ -105,22 +99,22 @@ contract TempleAuthority {
    * @param _tokenId Id of crystal to sell
    * @param _price Price in wei to sell crystal for
    */
-  function sell(uint _tokenId, uint _price) external onlyPlayerAtTemple {
-    require(bCrystal.ownerOf(_tokenId) == msg.sender, "You cannot sell a crystal you do not own");
+  function sell(uint _tokenId, uint _price) external {
+    require(crystal.ownerOf(_tokenId) == msg.sender, "You cannot sell a crystal you do not own");
 
     // Add crystal to list of crystals for sale
     crystalsForSale.push(_tokenId);
     // Store seller address and price in mapping
     tokenIdToSellData[_tokenId] = SellData(msg.sender, _price);
     // Transfer token from owner to this contract (acting as escrow)
-    bCrystal.transferToEscrow(msg.sender, _tokenId);
+    crystal.transferToEscrow(msg.sender, _tokenId);
   }
 
   /**
    * @notice Purchase a crystal
    * @param _tokenId Id of crystal to purchase
    */
-  function buy(uint _tokenId) external payable onlyPlayerAtTemple {
+  function buy(uint _tokenId) external payable {
     require(msg.value == tokenIdToSellData[_tokenId].price, "You did not provide the correct amount of ether");
 
     // Remove crystal from list of crystals for sale
@@ -141,7 +135,7 @@ contract TempleAuthority {
     // Transfer money to seller
     tokenIdToSellData[_tokenId].seller.transfer(msg.value);
     // Transfer token ownership to buyer
-    bCrystal.transferFromEscrow(msg.sender, _tokenId);
+    crystal.transferFromEscrow(msg.sender, _tokenId);
   }
 
   /**
@@ -158,7 +152,7 @@ contract TempleAuthority {
    *  the B. Crystal contract just to get the crystal's URI
    */
   function crystalURI(uint _tokenId) external view returns (string) {
-    return bCrystal.tokenURI(_tokenId);
+    return crystal.tokenURI(_tokenId);
   }
 
   /**

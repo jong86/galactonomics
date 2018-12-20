@@ -1,34 +1,32 @@
-const Commodity = artifacts.require("./items/Commodity.sol")
-const Commodities = artifacts.require("./Commodities.sol")
-const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
-const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
-const ByzantianCrystal = artifacts.require('./items/ByzantianCrystal.sol')
-const TempleAuthority = artifacts.require('./TempleAuthority.sol')
-const commodityData = require('../utils/commodityData')
+const CommodityAuthority = artifacts.require("./CommodityAuthority.sol")
+const TransitAuthority = artifacts.require("./TransitAuthority.sol")
+const EconomicAuthority = artifacts.require("./EconomicAuthority.sol")
+const Crystal = artifacts.require('./items/Crystal.sol')
+const CrystalAuthority = artifacts.require('./CrystalAuthority.sol')
 
 module.exports = function(deployer) {
   deployer.then(async () => {
     // Deploy GTA
-    await deployer.deploy(GalacticTransitAuthority)
-    const gta = await GalacticTransitAuthority.deployed()
+    await deployer.deploy(TransitAuthority)
+    const transitAuthority = await TransitAuthority.deployed()
 
-    // Deploy Commodities
-    await deployer.deploy(Commodities, gta.address)
-    const commodities = await Commodities.deployed()
+    // Deploy CommodityAuthority
+    await deployer.deploy(CommodityAuthority, transitAuthority.address)
+    const commodityAuthority = await CommodityAuthority.deployed()
 
     // Deploy GEA
-    await deployer.deploy(GalacticEconomicAuthority, commodities.address, gta.address)
-    const gea = await GalacticEconomicAuthority.deployed()
+    await deployer.deploy(EconomicAuthority, commodityAuthority.address, transitAuthority.address)
+    const economicAuthority = await EconomicAuthority.deployed()
 
     // Deploy B. Crystal
-    await deployer.deploy(ByzantianCrystal)
-    const bCrystal = await ByzantianCrystal.deployed()
+    await deployer.deploy(Crystal)
+    const crystal = await Crystal.deployed()
 
     // Deploy TA
-    await deployer.deploy(TempleAuthority, commodities.address, gta.address, bCrystal.address)
-    const temple = await TempleAuthority.deployed()
+    await deployer.deploy(CrystalAuthority, commodityAuthority.address, transitAuthority.address, crystal.address)
+    const crystalAuthority = await CrystalAuthority.deployed()
 
-    await gta.setGEA(gea.address)
-    return bCrystal.setTA(temple.address)
+    await transitAuthority.setEconomicAuthority(economicAuthority.address)
+    return crystal.setCrystalAuthority(crystalAuthority.address)
   })
 }

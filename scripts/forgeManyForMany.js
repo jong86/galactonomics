@@ -2,11 +2,11 @@
   This script gets state to point where account[1] owns many crystals
 */
 
-const Commodities = artifacts.require('./Commodities.sol')
-const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
-const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
+const CommodityAuthority = artifacts.require('./CommodityAuthority.sol')
+const TransitAuthority = artifacts.require("./TransitAuthority.sol")
+const EconomicAuthority = artifacts.require("./EconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
-const TempleAuthority = artifacts.require('./TempleAuthority.sol')
+const CrystalAuthority = artifacts.require('./CrystalAuthority.sol')
 
 const { mineCommodityXTimes, getCommoditiesTraded, getRandomPlanetToSell } = require('../test/util/testUtils')
 
@@ -16,17 +16,17 @@ module.exports = async function(done) {
 
   for (let i = 1; i < 9; i++) {
     const player = accounts[i]
-    let gta, gea, gia, temple, tradedOnPlanet
+    let transitAuthority, economicAuthority, gia, crystalAuthority, tradedOnPlanet
 
     try {
-      commodities = await Commodities.deployed()
-      gta = await GalacticTransitAuthority.deployed()
-      gea = await GalacticEconomicAuthority.deployed()
+      commodities = await CommodityAuthority.deployed()
+      transitAuthority = await TransitAuthority.deployed()
+      economicAuthority = await EconomicAuthority.deployed()
       gia = await GalacticIndustrialAuthority.deployed()
-      temple = await TempleAuthority.deployed()
-      const costOfSpaceship = await gta.costOfSpaceship()
-      await gta.buySpaceship('a', { from: player, value: costOfSpaceship })
-      tradedOnPlanet = await getCommoditiesTraded(gea)
+      crystalAuthority = await CrystalAuthority.deployed()
+      const costOfSpaceship = await transitAuthority.costOfSpaceship()
+      await transitAuthority.buySpaceship('a', { from: player, value: costOfSpaceship })
+      tradedOnPlanet = await getCommoditiesTraded(economicAuthority)
     } catch (e) {
       console.error(e)
     }
@@ -39,12 +39,12 @@ module.exports = async function(done) {
         for (let p = 0; p < 7; p++) {
           console.log("Getting commodity", p + "...")
           console.log(">> travelling...")
-          await gta.travelToPlanet(p, { from: player })
+          await transitAuthority.travelToPlanet(p, { from: player })
           console.log(">> refueling...")
-          const refuelCost = await gta.refuelCost()
-          await gta.refuel({ from: player, value: refuelCost })
+          const refuelCost = await transitAuthority.refuelCost()
+          await transitAuthority.refuel({ from: player, value: refuelCost })
 
-          const forgingAmount = await temple.forgingAmount()
+          const forgingAmount = await crystalAuthority.forgingAmount()
           let commodityBalance = await commodities.getBalance(p, { from: player })
 
           // Mint commodity until user has enough to forge
@@ -57,17 +57,17 @@ module.exports = async function(done) {
           // Unload unneeded overflow in a sell order, each iteration, to conserve cargo capacity
           if (commodityBalance.gt(forgingAmount)) {
             const planetToSell = getRandomPlanetToSell(p, tradedOnPlanet)
-            await gta.travelToPlanet(planetToSell, { from: player })
+            await transitAuthority.travelToPlanet(planetToSell, { from: player })
             console.log(`>> unloading excess... (selling commodity ${p} on planet ${planetToSell})`)
             const randomPrice = Math.round(Math.random() * 10000000)
-            await gea.createSellOrder(planetToSell, p, commodityBalance.sub(forgingAmount), randomPrice, { from: player })
+            await economicAuthority.createSellOrder(planetToSell, p, commodityBalance.sub(forgingAmount), randomPrice, { from: player })
           }
         }
 
-        console.log(">> travelling to temple...")
-        await gta.travelToPlanet(255, { from: player })
+        console.log(">> travelling to crystalAuthority...")
+        await transitAuthority.travelToPlanet(255, { from: player })
         console.log(">> forging a crystal...")
-        await temple.forge({ from: player })
+        await crystalAuthority.forge({ from: player })
       }
     } catch (e) {
       console.error(e)

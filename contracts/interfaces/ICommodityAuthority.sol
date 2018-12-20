@@ -1,9 +1,9 @@
 pragma solidity ^0.4.24;
 
 /**
- * @title ICommodities
+ * @title ICommodityAuthority
  */
-contract ICommodities {
+contract ICommodityAuthority {
   function mine(string) external {}
   function getCurrentCargo(address) external view returns (uint) {}
   function getCommodity(uint) external view returns (

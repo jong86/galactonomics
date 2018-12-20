@@ -1,19 +1,19 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./interfaces/IGalacticTransitAuthority.sol";
-import "./interfaces/ICommodities.sol";
+import "./interfaces/ITransitAuthority.sol";
+import "./interfaces/ICommodityAuthority.sol";
 
 /**
- * @title Galactic Economic Authority (GEA)
+ * @title Economic EA (EA)
  *
- * @notice The GEA handles commodity trading
+ * @notice The EA handles commodity trading
  */
-contract GalacticEconomicAuthority {
+contract EconomicAuthority {
   using SafeMath for uint;
 
-  IGalacticTransitAuthority gta;
-  ICommodities commodities;
+  ITransitAuthority transitAuthority;
+  ICommodityAuthority commodities;
 
   struct SellOrder {
     address seller;
@@ -32,9 +32,9 @@ contract GalacticEconomicAuthority {
   event sellOrderCreated(uint planetId, uint orderId);
   event sellOrderPurchased(uint planetId, uint orderId);
 
-  constructor(address _commodities, address _gta) {
-    commodities = ICommodities(_commodities);
-    gta = IGalacticTransitAuthority(_gta);
+  constructor(address _commodities, address _transitAuthority) {
+    commodities = ICommodityAuthority(_commodities);
+    transitAuthority = ITransitAuthority(_transitAuthority);
 
     // Arrays that set which commodities are available on each planet
     planetIdToCommodityIdsTraded[0] = [1, 4, 5];
@@ -81,7 +81,7 @@ contract GalacticEconomicAuthority {
   external
   commodityExists(_commodityId)
   commodityTradedOnPlanet(_planetId, _commodityId) {
-    require(gta.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
+    require(transitAuthority.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
     require(commodities.balanceOf(msg.sender, _commodityId) >= _amount, "You do not own enough of this commodity");
 
     // Arrange transfer of commodity from user to escrow
@@ -102,10 +102,10 @@ contract GalacticEconomicAuthority {
    */
   function buySellOrder(uint _planetId, uint _commodityId, uint _orderId) external payable
   commodityExists(_commodityId) {
-    require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
-    require(gta.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
+    require(transitAuthority.isPlayer(msg.sender), "You must own a spaceship for this action");
+    require(transitAuthority.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
     require(
-      gta.canFitCargo(msg.sender, commodities.getCurrentCargo(msg.sender), marketplaces[_planetId][_commodityId][_orderId].amount),
+      transitAuthority.canFitCargo(msg.sender, commodities.getCurrentCargo(msg.sender), marketplaces[_planetId][_commodityId][_orderId].amount),
       "Cannot fit this cargo on spaceship"
     );
     SellOrder memory sellOrder = marketplaces[_planetId][_commodityId][_orderId];

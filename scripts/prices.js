@@ -2,8 +2,8 @@
   This scripts gets state to point with many orders on each planet, to test viewing of prices on planets
 */
 
-const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
-const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
+const TransitAuthority = artifacts.require("./TransitAuthority.sol")
+const EconomicAuthority = artifacts.require("./EconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 
 module.exports = async function(done) {
@@ -11,16 +11,16 @@ module.exports = async function(done) {
   const owner = accounts[0]
   const sellingAccounts = accounts.slice(0, 4)
 
-  const gta = await GalacticTransitAuthority.deployed()
-  const gea = await GalacticEconomicAuthority.deployed()
+  const transitAuthority = await TransitAuthority.deployed()
+  const economicAuthority = await EconomicAuthority.deployed()
   const gia = await GalacticIndustrialAuthority.deployed()
 
-  const costOfSpaceship = await gta.costOfSpaceship()
+  const costOfSpaceship = await transitAuthority.costOfSpaceship()
 
   const planets = [0, 1, 2, 3, 4, 5, 6]
 
   for (let user of sellingAccounts) {
-    await gta.buySpaceship('a', { from: user, value: costOfSpaceship })
+    await transitAuthority.buySpaceship('a', { from: user, value: costOfSpaceship })
     console.log(user, 'bought a spaceship')
   }
 
@@ -30,7 +30,7 @@ module.exports = async function(done) {
 
       // Start every round of trips at planet 0
       let planet = 0
-      await gta.travelToPlanet(planet, { from: user })
+      await transitAuthority.travelToPlanet(planet, { from: user })
 
       let tripsLeft = 7
       while (tripsLeft) {
@@ -47,14 +47,14 @@ module.exports = async function(done) {
           const prevPlanet = planet
           planet = planet+xPlanets > 6 ? 0+(xPlanets-1) : planet+xPlanets
           console.log(user, 'is now travelling to planet', planet)
-          await gta.travelToPlanet(planet, { from: user })
-          const refuelCost = await gta.refuelCost()
-          await gta.refuel({ from: user, value: refuelCost })
+          await transitAuthority.travelToPlanet(planet, { from: user })
+          const refuelCost = await transitAuthority.refuelCost()
+          await transitAuthority.refuel({ from: user, value: refuelCost })
 
           // Unload commodity from previous planet on this new planet
           const balance = await commodities.getBalance(prevPlanet, { from: user })
           console.log(user, 'is unloading all previously mined commodity in a sell order')
-          await gea.createSellOrder(
+          await economicAuthority.createSellOrder(
             planet,
             prevPlanet,
             balance,

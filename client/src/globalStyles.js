@@ -1,4 +1,3 @@
-import planets from 'utils/planets'
 import telegrama from 'fonts/telegrama.woff'
 
 export default {

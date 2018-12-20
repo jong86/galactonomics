@@ -3,18 +3,18 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../utils/AccessControlled.sol";
-import "../interfaces/IByzantianCrystal.sol";
+import "../interfaces/ICrystal.sol";
 
 /**
- * @title Byzantian Crystal
+ * @title Crystal
  *
  * @notice Non-fungible ERC-721 tokens
  */
-contract ByzantianCrystal is ERC721Full, AccessControlled {
+contract Crystal is ERC721Full, AccessControlled {
   using SafeMath for uint;
 
   constructor()
-  ERC721Full("ByzantianCrystals", "BZC")
+  ERC721Full("Crystal", "CRY")
   public {}
 
   event CrystalCreated(string indexed uri);
@@ -23,7 +23,7 @@ contract ByzantianCrystal is ERC721Full, AccessControlled {
    * @notice Create a new token for specified address
    * @return Newly created token ID
    */
-  function create(address _for) external onlyTA returns (string) {
+  function create(address _for) external onlyCrystalAuthority returns (string) {
     // Mint one token for user
     uint _tokenId = totalSupply() + 1;
     _mint(_for, _tokenId);
@@ -41,10 +41,10 @@ contract ByzantianCrystal is ERC721Full, AccessControlled {
    * @param _from Address of seller
    * @param _tokenId Token ID to transfer
    */
-  function transferToEscrow(address _from, uint _tokenId) external onlyTA {
+  function transferToEscrow(address _from, uint _tokenId) external onlyCrystalAuthority {
     _removeTokenFrom(_from, _tokenId);
-    _addTokenTo(taAddress, _tokenId);
-    emit Transfer(_from, taAddress, _tokenId);
+    _addTokenTo(crystalAuthority, _tokenId);
+    emit Transfer(_from, crystalAuthority, _tokenId);
   }
 
   /**
@@ -52,10 +52,10 @@ contract ByzantianCrystal is ERC721Full, AccessControlled {
    * @param _to Address to transfer token
    * @param _tokenId Token ID to transfer
    */
-  function transferFromEscrow(address _to, uint _tokenId) external onlyTA {
-    _removeTokenFrom(taAddress, _tokenId);
+  function transferFromEscrow(address _to, uint _tokenId) external onlyCrystalAuthority {
+    _removeTokenFrom(crystalAuthority, _tokenId);
     _addTokenTo(_to, _tokenId);
-    emit Transfer(taAddress, _to, _tokenId);
+    emit Transfer(crystalAuthority, _to, _tokenId);
   }
 
   /**

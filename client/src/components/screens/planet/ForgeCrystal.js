@@ -36,7 +36,7 @@ class TempleIndustrial extends Component {
       buttonText: 'Waiting for signature...'
     })
 
-    contracts.temple.forge({ from: user.address })
+    contracts.crystalAuthority.forge({ from: user.address })
       .on('transactionHash', () => {
         this.setState({
           buttonText: 'Waiting for confirmation...'
@@ -64,9 +64,9 @@ class TempleIndustrial extends Component {
     })
 
     try {
-      const crystalIds = await contracts.temple.crystalsOfOwner(user.address, { from: user.address })
+      const crystalIds = await contracts.crystalAuthority.crystalsOfOwner(user.address, { from: user.address })
       const lastId = crystalIds[crystalIds.length - 1]
-      lastURI = await contracts.temple.crystalURI(lastId, { from:user.address })
+      lastURI = await contracts.crystalAuthority.crystalURI(lastId, { from:user.address })
     } catch (e) {
       console.error(e)
     }

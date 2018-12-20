@@ -1,6 +1,6 @@
 const sha256 = require('js-sha256');
 
-function fillUpCargoByMining(commodities, gta, player, commodityId) {
+function fillUpCargoByMining(commodities, transitAuthority, player, commodityId) {
   /* Fills cargo up by investments (will stop when another investment would be too much cargo) */
   return new Promise(async (resolve, reject) => {
     let maxCargo, currentCargo, miningReward
@@ -30,7 +30,7 @@ function fillUpCargoByMining(commodities, gta, player, commodityId) {
         reject(e)
       }
 
-      maxCargo = (await gta.addressToSpaceship(player))[2]
+      maxCargo = (await transitAuthority.addressToSpaceship(player))[2]
       currentCargo = await commodities.getCurrentCargo(player)
       miningReward = await commodities.getMiningReward(commodityId)
 
@@ -70,7 +70,7 @@ function mineCommodityXTimes(commodities, numTimes, player, commodityId) {
   })
 }
 
-async function getCommoditiesTraded(gea) {
+async function getCommoditiesTraded(economicAuthority) {
   /*
     Returns promise that resolves with array of arrays
     containing ids of commodities traded on each planet.
@@ -80,7 +80,7 @@ async function getCommoditiesTraded(gea) {
     try {
       const tradedOnPlanet = []
       for (let p = 0; p < 7; p++) {
-        const traded = (await gea.getCommoditiesTraded(p))
+        const traded = (await economicAuthority.getCommoditiesTraded(p))
           .toString()
           .split(',')
           .map(string => Number(string))

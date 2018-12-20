@@ -31,7 +31,7 @@ class FuelMeter extends Component {
 
     let refuelCost
     try {
-      refuelCost = await contracts.gta.refuelCost({ from: user.address })
+      refuelCost = await contracts.transitAuthority.refuelCost({ from: user.address })
     } catch (e) {
       return console.error(e)
     }
@@ -42,7 +42,7 @@ class FuelMeter extends Component {
   refuel = async () => {
     const { contracts, user } = this.props
 
-    contracts.gta.refuel({ from: user.address, value: this.state.refuelCost })
+    contracts.transitAuthority.refuel({ from: user.address, value: this.state.refuelCost })
       .on('transactionHash', () => {
         this.setState({ isRefueling: true })
       })

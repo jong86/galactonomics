@@ -49,7 +49,7 @@ class Travelling extends Component {
   travelToPlanet = () => {
     const {contracts, user, changeScreen, finishTravel, setDialogBox } = this.props
 
-    contracts.gta.travelToPlanet(user.travellingTo.id, { from: user.address })
+    contracts.transitAuthority.travelToPlanet(user.travellingTo.id, { from: user.address })
       .on('transactionHash', () => {
         this.setState({ isTravelling: true })
       })

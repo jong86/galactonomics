@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-contract IGalacticTransitAuthority {
+contract ITransitAuthority {
   function getCurrentPlanet(address) public view returns (uint) {}
   function isPlayer(address) public view returns (bool) {}
   function getMaxCargo(address) public view returns (uint) {}

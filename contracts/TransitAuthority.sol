@@ -3,16 +3,15 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./utils/AccessControlled.sol";
-import "./items/Commodity.sol";
-import "./interfaces/IGalacticTransitAuthority.sol";
+import "./interfaces/ITransitAuthority.sol";
 import "./libraries/UintCast.sol";
 
 /**
- * @title Galactic Transit Authority (GTA)
+ * @title Transit Authority (TA)
  *
- * @notice The GTA handles spaceship ownership, fuel and travel
+ * @notice The TA handles spaceship ownership, fuel and travel
  */
-contract GalacticTransitAuthority is ERC721, AccessControlled, IGalacticTransitAuthority {
+contract TransitAuthority is ERC721, AccessControlled, ITransitAuthority {
   using SafeMath for uint;
   using UintCast for uint;
 

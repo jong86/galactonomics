@@ -66,7 +66,7 @@ class PlanetMarketplace extends Component {
     if (selectedCommodityId !== null) {
       this.setState({ isLoading: true })
 
-      const numSellOrders = await contracts.gea.getNumSellOrders(
+      const numSellOrders = await contracts.economicAuthority.getNumSellOrders(
         user.currentPlanet,
         selectedCommodityId,
         { from: user.address }
@@ -78,7 +78,7 @@ class PlanetMarketplace extends Component {
       const sellOrders = await Promise.all(sellOrderIds.map(sellOrderId => new Promise(async (resolve, reject) => {
         let sellOrder
         try {
-          sellOrder = await contracts.gea.getSellOrder(user.currentPlanet, selectedCommodityId, sellOrderId, { from: user.address })
+          sellOrder = await contracts.economicAuthority.getSellOrder(user.currentPlanet, selectedCommodityId, sellOrderId, { from: user.address })
         } catch (e) {
           reject(e)
         }
@@ -108,7 +108,7 @@ class PlanetMarketplace extends Component {
     let commoditiesTraded
     return new Promise(async (resolve, reject) => {
       try {
-        commoditiesTraded = await contracts.gea.getCommoditiesTraded(user.currentPlanet, { from: user.address })
+        commoditiesTraded = await contracts.economicAuthority.getCommoditiesTraded(user.currentPlanet, { from: user.address })
       } catch (e) {
         return reject(e)
       }
@@ -124,8 +124,8 @@ class PlanetMarketplace extends Component {
       try {
         for (let id of commodityIds) {
           commodityInfos.push({
-            name: await contracts.commodities.getName(id, { from: user.address }),
-            symbol: await contracts.commodities.getSymbol(id, { from: user.address }),
+            name: await contracts.commodityAuthority.getName(id, { from: user.address }),
+            symbol: await contracts.commodityAuthority.getSymbol(id, { from: user.address }),
           })
         }
       } catch (e) {
@@ -141,7 +141,7 @@ class PlanetMarketplace extends Component {
     return new Promise(async (resolve, reject) => {
       try {
         for (let id of commodityIds) {
-          commodityBalances.push(await contracts.commodities.getBalance(id, { from: user.address }))
+          commodityBalances.push(await contracts.commodityAuthority.getBalance(id, { from: user.address }))
         }
       } catch (e) {
         reject(e)
@@ -156,7 +156,7 @@ class PlanetMarketplace extends Component {
     const { selectedCommodityId, sellAmount, sellPrice } = this.state
 
     try {
-      await contracts.gea.createSellOrder(
+      await contracts.economicAuthority.createSellOrder(
         user.currentPlanet,
         selectedCommodityId,
         sellAmount,
@@ -185,7 +185,7 @@ class PlanetMarketplace extends Component {
     const sellOrder = sellOrders[selectedSellOrderId]
 
     try {
-      await contracts.gea.buySellOrder(
+      await contracts.economicAuthority.buySellOrder(
         user.currentPlanet,
         selectedCommodityId,
         selectedSellOrderId,

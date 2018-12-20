@@ -2,8 +2,8 @@
   This script fast-forwards state to point where user can sell a commodity
 */
 
-const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
-const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
+const TransitAuthority = artifacts.require("./TransitAuthority.sol")
+const EconomicAuthority = artifacts.require("./EconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 
 module.exports = async function(done) {
@@ -15,22 +15,22 @@ module.exports = async function(done) {
   const alice = accounts[2]
   const mallory = accounts[3]
 
-  const gta = await GalacticTransitAuthority.deployed()
-  const gea = await GalacticEconomicAuthority.deployed()
+  const transitAuthority = await TransitAuthority.deployed()
+  const economicAuthority = await EconomicAuthority.deployed()
   const gia = await GalacticIndustrialAuthority.deployed()
 
-  const costOfSpaceship = await gta.costOfSpaceship()
+  const costOfSpaceship = await transitAuthority.costOfSpaceship()
 
 
   for (user of accounts) {
     try {
-      await gta.buySpaceship('a', { from: user, value: costOfSpaceship })
+      await transitAuthority.buySpaceship('a', { from: user, value: costOfSpaceship })
     } catch (e) {
       console.error(e)
     }
 
     try {
-      await gta.travelToPlanet(0, { from: user })
+      await transitAuthority.travelToPlanet(0, { from: user })
     } catch (e) {
       console.error(e)
     }
@@ -52,12 +52,12 @@ module.exports = async function(done) {
     await gia.mintCommodityFor(user, { from: owner })
 
     try {
-      await gta.travelToPlanet(1, { from: user })
+      await transitAuthority.travelToPlanet(1, { from: user })
     } catch (e) {
       console.error(e)
     }
 
-    await gea.createSellOrder(1, 0, 2000, 10, { from: user })
+    await economicAuthority.createSellOrder(1, 0, 2000, 10, { from: user })
   }
 
   done()

@@ -2,25 +2,26 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./interfaces/IGalacticTransitAuthority.sol";
+import "./utils/AccessControlled.sol";
+import "./interfaces/ITransitAuthority.sol";
 import "./libraries/AddressCast.sol";
 import "./libraries/BytesCast.sol";
 import "./libraries/UintCast.sol";
 import "./libraries/Array256Lib.sol";
 
 /**
- * @title Commodities
+ * @title CommodityAuthority
  *
- * @notice This contracts is for convenient access to the commodities
+ * @notice This contract manages the commodities
  */
-contract Commodities is Ownable {
+contract CommodityAuthority is Ownable, AccessControlled {
   using SafeMath for uint;
   using AddressCast for address;
   using BytesCast for bytes32;
   using UintCast for uint;
   using Array256Lib for uint[];
 
-  IGalacticTransitAuthority gta;
+  ITransitAuthority transitAuthority;
 
   // Mapping of commodityId to address to amount of commodity owned
   mapping (uint => mapping (address => uint)) balances;
@@ -34,8 +35,8 @@ contract Commodities is Ownable {
   // Mapping of commodityId to previous mining hash
   mapping (uint => bytes32) prevMiningHashes;
 
-  constructor(address _gta) public {
-    gta = IGalacticTransitAuthority(_gta);
+  constructor(address _transitAuthority) public {
+    transitAuthority = ITransitAuthority(_transitAuthority);
   }
 
   event CommodityMined(bytes32 _hash, address _miner);
@@ -51,10 +52,10 @@ contract Commodities is Ownable {
    *  commodity, results in an acceptable hash according to current target for that commodity
    */
   function mine(string _nonce) external {
-    require(gta.isPlayer(msg.sender), "You must own a spaceship for this action");
-    uint _commodityId = gta.getCurrentPlanet(msg.sender);
+    require(transitAuthority.isPlayer(msg.sender), "You must own a spaceship for this action");
+    uint _commodityId = transitAuthority.getCurrentPlanet(msg.sender);
     require(
-      gta.canFitCargo(
+      transitAuthority.canFitCargo(
         msg.sender,
         getCurrentCargo(msg.sender),
         getMiningReward(_commodityId)

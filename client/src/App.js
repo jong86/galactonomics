@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import globalStyles from 'globalStyles'
 
-import commoditiesJSON from "contracts/Commodities.json"
-import gtaJSON from "contracts/GalacticTransitAuthority.json"
-import geaJSON from "contracts/GalacticEconomicAuthority.json"
-import templeJSON from "contracts/TempleAuthority.json"
+import commodityAuthorityJSON from "contracts/CommodityAuthority.json"
+import transitAuthorityJSON from "contracts/TransitAuthority.json"
+import economicAuthorityJSON from "contracts/EconomicAuthority.json"
+import crystalAuthorityJSON from "contracts/CrystalAuthority.json"
 
 import getWeb3 from "utils/getWeb3"
 import truffleContract from "truffle-contract"
@@ -16,7 +16,6 @@ import Dialog from 'components/reusables/Dialog'
 import Laserframe from 'components/reusables/Laserframe'
 
 import getPlayerInfo from 'utils/getPlayerInfo'
-import planets from 'utils/planets'
 
 import * as THREE from 'three'
 
@@ -62,10 +61,10 @@ class App extends Component {
 
       // Get all contract instances
       let contracts = [
-        { json: commoditiesJSON, name: 'commodities' },
-        { json: gtaJSON, name: 'gta' },
-        { json: geaJSON, name: 'gea' },
-        { json: templeJSON, name: 'temple' },
+        { json: commodityAuthorityJSON, name: 'commodityAuthority' },
+        { json: transitAuthorityJSON, name: 'transitAuthority' },
+        { json: economicAuthorityJSON, name: 'economicAuthority' },
+        { json: crystalAuthorityJSON, name: 'crystalAuthority' },
       ]
 
       contracts = await Promise.all(
@@ -117,9 +116,9 @@ class App extends Component {
     // Listen for new blocks
     web3.eth.subscribe('newBlockHeaders')
       .on('data', data => {
-          // Store current block number in store (not used)
-          setEthState({ blockNumber: data.number })
-        })
+        // Store current block number in store (not used)
+        setEthState({ blockNumber: data.number })
+      })
   }
 
   checkIfOwnsSpaceship = () => new Promise(async (resolve, reject) => {
@@ -127,7 +126,7 @@ class App extends Component {
 
     let spaceshipsOwned
     try {
-      spaceshipsOwned = await contracts.gta.balanceOf(user.address, { from: user.address })
+      spaceshipsOwned = await contracts.transitAuthority.balanceOf(user.address, { from: user.address })
     } catch (e) {
       return reject(e)
     }

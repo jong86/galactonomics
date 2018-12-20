@@ -2,8 +2,8 @@
   This script fast-forwards state to point where user can invest in production
 */
 
-const GalacticTransitAuthority = artifacts.require("./GalacticTransitAuthority.sol")
-const GalacticEconomicAuthority = artifacts.require("./GalacticEconomicAuthority.sol")
+const TransitAuthority = artifacts.require("./TransitAuthority.sol")
+const EconomicAuthority = artifacts.require("./EconomicAuthority.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 
 module.exports = async function(done) {
@@ -15,23 +15,23 @@ module.exports = async function(done) {
   const alice = accounts[2]
   const mallory = accounts[3]
 
-  const gta = await GalacticTransitAuthority.deployed()
-  const gea = await GalacticEconomicAuthority.deployed()
+  const transitAuthority = await TransitAuthority.deployed()
+  const economicAuthority = await EconomicAuthority.deployed()
   const gia = await GalacticIndustrialAuthority.deployed()
 
-  const costOfSpaceship = await gta.costOfSpaceship()
+  const costOfSpaceship = await transitAuthority.costOfSpaceship()
 
-  // await gta.buySpaceship('a', { from: bob, value: costOfSpaceship })
-  // await gta.travelToPlanet(0, { from: bob })
+  // await transitAuthority.buySpaceship('a', { from: bob, value: costOfSpaceship })
+  // await transitAuthority.travelToPlanet(0, { from: bob })
 
   try {
-    await gta.buySpaceship('a', { from: alice, value: costOfSpaceship })
+    await transitAuthority.buySpaceship('a', { from: alice, value: costOfSpaceship })
   } catch (e) {
     console.error(e)
   }
 
   try {
-    await gta.travelToPlanet(0, { from: alice })
+    await transitAuthority.travelToPlanet(0, { from: alice })
   } catch (e) {
     console.error(e)
   }

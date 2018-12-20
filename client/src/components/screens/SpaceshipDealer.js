@@ -21,7 +21,7 @@ class SpaceshipDealer extends Component {
 
     const { web3, contracts, user, changeScreen, setDialogBox } = this.props
 
-    contracts.gta.buySpaceship(
+    contracts.transitAuthority.buySpaceship(
       "My Spaceship",
       { from: user.address, value: web3.utils.toWei("0.01", "ether") }
     )
