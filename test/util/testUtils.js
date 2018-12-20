@@ -1,67 +1,18 @@
 const sha256 = require('js-sha256');
 
-function fillUpCargoByMining(commodities, transitAuthority, player, commodityId) {
-  /* Fills cargo up by investments (will stop when another investment would be too much cargo) */
+function mineCommodityXTimes(commodityAuthority, numTimes, player, commodityId) {
   return new Promise(async (resolve, reject) => {
-    let maxCargo, currentCargo, miningReward
-
-    do {
+    for (let i = 0; i < numTimes; i++) {
+      let nonce
       try {
-        const miningData = await commodities.getCommodity(commodityId, { from: player })
-        const miningTarget = miningData[2]
-        const prevHash = miningData[3]
-
-        let nonce = 0
-        let hash
-        do {
-          nonce++
-          hash = sha256(
-            nonce.toString() +
-            commodityId.toString() +
-            prevHash +
-            player.substring(2)
-          )
-
-        } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
-
-        await commodities.mine(String(nonce), { from: player })
-
+        const results = await mine(commodityAuthority, commodityId, player)
+        nonce = results.nonce
       } catch (e) {
         reject(e)
       }
 
-      maxCargo = (await transitAuthority.addressToSpaceship(player))[2]
-      currentCargo = await commodities.getCurrentCargo(player)
-      miningReward = await commodities.getMiningReward(commodityId)
-
-    } while (maxCargo.sub(currentCargo).gt(miningReward))
-
-    resolve()
-  })
-}
-
-function mineCommodityXTimes(commodities, numTimes, player, commodityId) {
-  return new Promise(async (resolve, reject) => {
-    for (let i = 0; i < numTimes; i++) {
       try {
-        const miningData = await commodities.getCommodity(commodityId, { from: player })
-        const miningTarget = miningData[2]
-        const prevHash = miningData[3]
-
-        let nonce = 0
-        let hash
-        do {
-          nonce++
-          hash = sha256(
-            nonce.toString() +
-            commodityId.toString() +
-            prevHash +
-            player.substring(2)
-          )
-        } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
-
-        await commodities.mine(String(nonce), { from: player })
-
+        await commodityAuthority.submitPOW(nonce, { from: player })
       } catch (e) {
         reject(e)
       }
@@ -70,44 +21,43 @@ function mineCommodityXTimes(commodities, numTimes, player, commodityId) {
   })
 }
 
-async function getCommoditiesTraded(economicAuthority) {
-  /*
-    Returns promise that resolves with array of arrays
-    containing ids of commodities traded on each planet.
-    Parent array of returned 2d-array is indexed by planetId
-  */
+function mine(commodityAuthority, commodityId, player) {
   return new Promise(async (resolve, reject) => {
     try {
-      const tradedOnPlanet = []
-      for (let p = 0; p < 7; p++) {
-        const traded = (await economicAuthority.getCommoditiesTraded(p))
-          .toString()
-          .split(',')
-          .map(string => Number(string))
-        tradedOnPlanet.push(traded)
+      const miningData = await commodityAuthority.getCommodity(commodityId, { from: player })
+      const miningTarget = miningData[2]
+      let prevHash = miningData[3]
+
+      if (prevHash.substr(2, 2) === '0x') {
+        prevHash = prevHash.substr(2)
       }
-      resolve(tradedOnPlanet)
+
+      let nonce = web3.toBigNumber(0)
+      const one = web3.toBigNumber(1)
+
+      let hash
+      do {
+        nonce = nonce.add(one)
+        hash = sha256(
+          nonce.toString() +
+          commodityId.toString() +
+          prevHash +
+          player.substring(2)
+        )
+      } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
+
+      resolve({
+        nonce,
+        miningData,
+        hash,
+      })
     } catch (e) {
       reject(e)
     }
   })
 }
 
-function getRandomPlanetToSell(commodityId, tradedOnPlanet) {
-  const planetsTradedOn = []
-  tradedOnPlanet.forEach((planet, i) => {
-    if (planet.includes(commodityId)) {
-      planetsTradedOn.push(i)
-    }
-  })
-
-  const randomIndex = Math.floor(Math.random() * planetsTradedOn.length)
-  return planetsTradedOn[randomIndex]
-}
-
 module.exports = {
-  fillUpCargoByMining,
   mineCommodityXTimes,
-  getCommoditiesTraded,
-  getRandomPlanetToSell,
+  mine,
 }

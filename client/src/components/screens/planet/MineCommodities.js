@@ -135,7 +135,7 @@ class MineCommodities extends Component {
     setIndustrialState({ isSubmitting: true })
 
     try {
-      await contracts.commodityAuthority.mine(String(nonce), { from: user.address })
+      await contracts.commodityAuthority.submitPOW(String(nonce), { from: user.address })
     } catch (e) {
       setIndustrialState({
         isMining: false,

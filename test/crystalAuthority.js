@@ -3,7 +3,7 @@ const TransitAuthority = artifacts.require("./TransitAuthority.sol")
 const EconomicAuthority = artifacts.require("./EconomicAuthority.sol")
 const Crystal = artifacts.require("./items/Crystal.sol")
 const CrystalAuthority = artifacts.require("./CrystalAuthority.sol")
-const { fillUpCargoByMining, mineCommodityXTimes } = require('./util/testUtils')
+const { fillUpCargoByMining, mineCommodityXTimes, mine } = require('./util/testUtils')
 
 contract("CrystalAuthority", accounts => {
   let transitAuthority, economicAuthority, commodityAuthority, crystalAuthority

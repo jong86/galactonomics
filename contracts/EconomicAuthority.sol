@@ -47,14 +47,6 @@ contract EconomicAuthority {
   }
 
   /**
-   * @dev Modifier that ensures a commodity ID is valid
-   */
-  modifier commodityExists(uint _commodityId) {
-    require(0 <= _commodityId && _commodityId <= 6, "That commodity does not exist");
-    _;
-  }
-
-  /**
    * @dev Modifier that ensures that a commodity is traded on a planet
    */
   modifier commodityTradedOnPlanet(uint _planetId, uint _commodityId) {
@@ -77,10 +69,7 @@ contract EconomicAuthority {
    * @param _amount Quantity of commodity to sell
    * @param _price Price per unit of commodity
    */
-  function createSellOrder(uint _planetId, uint _commodityId, uint _amount, uint _price)
-  external
-  commodityExists(_commodityId)
-  commodityTradedOnPlanet(_planetId, _commodityId) {
+  function createSellOrder(uint _planetId, uint _commodityId, uint _amount, uint _price) external {
     require(transitAuthority.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
     require(commodities.balanceOf(msg.sender, _commodityId) >= _amount, "You do not own enough of this commodity");
 
@@ -100,10 +89,8 @@ contract EconomicAuthority {
    * @param _commodityId ID of commodity to buy
    * @param _orderId ID of order to purchase
    */
-  function buySellOrder(uint _planetId, uint _commodityId, uint _orderId) external payable
-  commodityExists(_commodityId) {
+  function buySellOrder(uint _planetId, uint _commodityId, uint _orderId) external payable {
     require(transitAuthority.isPlayer(msg.sender), "You must own a spaceship for this action");
-    require(transitAuthority.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
     require(
       transitAuthority.canFitCargo(msg.sender, commodities.getCurrentCargo(msg.sender), marketplaces[_planetId][_commodityId][_orderId].amount),
       "Cannot fit this cargo on spaceship"

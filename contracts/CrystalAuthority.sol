@@ -3,7 +3,6 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./interfaces/ICrystal.sol";
-import "./interfaces/ITransitAuthority.sol";
 import "./interfaces/ICommodityAuthority.sol";
 
 /**
@@ -15,7 +14,6 @@ contract CrystalAuthority {
   using SafeMath for uint;
 
   ICrystal crystal;
-  ITransitAuthority transitAuthority;
   ICommodityAuthority commodityAuthority;
 
   // Units of each commodity required to forge a crystal
@@ -32,7 +30,7 @@ contract CrystalAuthority {
     uint price;
   }
 
-  constructor(address _commodityAuthority, address _transitAuthority, address _crystal) public {
+  constructor(address _commodityAuthority, address _crystal) public {
     commodityAuthority = ICommodityAuthority(_commodityAuthority);
     transitAuthority = ITransitAuthority(_transitAuthority);
     crystal = ICrystal(_crystal);

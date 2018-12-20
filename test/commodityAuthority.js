@@ -1,8 +1,7 @@
 const TransitAuthority = artifacts.require("./TransitAuthority.sol")
 const EconomicAuthority = artifacts.require("./EconomicAuthority.sol")
 const CommodityAuthority = artifacts.require("./CommodityAuthority.sol")
-const { fillUpCargoByMining } = require('./util/testUtils')
-const sha256 = require('js-sha256');
+const { mine } = require('./util/testUtils')
 
 contract("CommodityAuthority", accounts => {
   let transitAuthority, economicAuthority, commodityAuthority
@@ -25,75 +24,48 @@ contract("CommodityAuthority", accounts => {
   })
 
   it("mints commodity for player when player submits valid proof-of-work", async () => {
-    const miningData = await commodityAuthority.getCommodity(0, { from: player1 })
-    const miningReward = miningData[1]
-    const miningTarget = miningData[2]
-    let prevHash = miningData[3]
+    const commodityId = 0
+    let response, balance, nonce, miningData, hash
 
-    if (prevHash.substr(2, 2) === '0x') {
-      prevHash = prevHash.substr(2)
+    try {
+      const results = await mine(commodityAuthority, commodityId, player1)
+      nonce = results.nonce
+      miningData = results.miningData
+      hash = results.hash
+    } catch (e) {
+      assert(false, e)
     }
 
-    let nonce = 3500
-    let hash
-    do {
-      nonce++
-      hash = sha256(
-        nonce.toString() +
-        (0).toString() +
-        prevHash +
-        player1.substring(2)
-      )
-    } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
-
-    const response = await commodityAuthority.mine(String(nonce), { from: player1 })
+    const miningReward = miningData[1]
+    console.log('nonce', nonce);
+    try {
+      response = await commodityAuthority.submitPOW(nonce, { from: player1 })
+    } catch (e) {
+      assert(false, e)
+    }
     const hashFromSolidity = response.logs.find(log => log.event === 'CommodityMined').args._hash
 
-    const balance = await commodityAuthority.balanceOf(player1, 0)
+    try {
+      balance = await commodityAuthority.balanceOf(player1, commodityId)
+    } catch (e) {
+      assert(false, e)
+    }
 
     assert.equal(balance.toString(), miningReward.toString(), "did not receive mining reward")
     assert.equal('0x' + hash, hashFromSolidity, "hash from javascript does not match hash from solidity")
   })
 
   it("does not mint commodity if user submits invalid proof-of-work", async () => {
-    const balanceBefore = await commodityAuthority.balanceOf(player1, 0)
+    const commodityId = 3
+    const balanceBefore = await commodityAuthority.balanceOf(player1, commodityId)
+
     try {
-      await commodityAuthority.mine(0, { from: player1 })
-    } catch (e) {}
-    const balanceAfter = await commodityAuthority.balanceOf(player1, 0)
+      await commodityAuthority.submitPOW(0, { from: player1 })
+    } catch (e) {
+      // Expecting this to fail so eating error
+    }
+
+    const balanceAfter = await commodityAuthority.balanceOf(player1, commodityId)
     assert.equal(balanceBefore.toString(), balanceAfter.toString(), "received mining reward")
-  })
-
-  it("does not mint if player cannot fit the mining reward in spaceship's cargo", async () => {
-    await fillUpCargoByMining(commodityAuthority, transitAuthority, player1, 0)
-    const balanceBefore = await commodityAuthority.balanceOf(player1, 0)
-
-    const miningData = await commodityAuthority.getCommodity(0, { from: player1 })
-    const miningTarget = miningData[2]
-    const prevHash = miningData[3]
-
-    let nonce = 3500
-    let hash
-    do {
-      nonce++
-      hash = sha256(
-        nonce.toString() +
-        (0).toString() +
-        prevHash +
-        player1.substring(2)
-      )
-    } while (parseInt(hash, 16) >= parseInt(miningTarget, 16))
-
-    try {
-      await commodityAuthority.mine(String(nonce), { from: player1 })
-    } catch (e) {}
-
-    const balanceAfter = await commodityAuthority.balanceOf(player1, 0)
-
-    assert.equal(
-      balanceBefore.toString(),
-      balanceAfter.toString(),
-      "balance should not have changed after calling mine()"
-    )
   })
 })
