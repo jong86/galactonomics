@@ -1,7 +1,7 @@
 const CommodityReg = artifacts.require("./CommodityReg.sol")
 const CommodityEcon = artifacts.require("./CommodityEcon.sol")
 const { mineCommodityXTimes } = require('./util/testUtils')
-const truffleAssert = require('truffle-assertions');
+const truffleAssert = require('truffle-assertions')
 
 contract("CommodityEcon", accounts => {
   let commodityEcon, commodityReg

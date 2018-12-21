@@ -1,13 +1,14 @@
 const CommodityReg = artifacts.require("./CommodityReg.sol")
+const TestContract = artifacts.require("./TestContract.sol")
 const { mine } = require('./util/testUtils')
 
 contract("CommodityReg", accounts => {
   let commodityReg
   const player1 = accounts[1]
-  const player2 = accounts[2]
 
   beforeEach(async() => {
     commodityReg = await CommodityReg.new()
+    testContract = await TestContract.new(commodityReg.address)
   })
 
   it("mints commodity for player when player submits valid proof-of-work", async () => {
@@ -60,44 +61,26 @@ contract("CommodityReg", accounts => {
     assert.equal(balanceBefore.toString(), balanceAfter.toString(), "received mining reward")
   })
 
-  it.only("only rewards one miner per block", async () => {
+  it("only one mining reward is given per block", async () => {
     const commodityId = web3.toBigNumber(0)
-    let balance1, balance2, nonce1, nonce2, miningData
+    let balance, nonce, miningReward
 
     try {
-      const results = await mine(commodityReg, commodityId, player1)
-      nonce1 = results.nonce
-      miningData = results.miningData
+      const results = await mine(commodityReg, commodityId, testContract.address)
+      nonce = results.nonce
+      miningReward = results.miningData[1]
     } catch (e) {
       assert(false, e.toString())
     }
 
     try {
-      const results = await mine(commodityReg, commodityId, player2)
-      nonce2 = results.nonce
-      miningData = results.miningData
+      await testContract.trySubmitPOWTwice(nonce, commodityId)
     } catch (e) {
       assert(false, e.toString())
     }
 
-    const miningReward = miningData[1]
+    balance = await commodityReg.balanceOf(testContract.address, commodityId)
 
-    try {
-      commodityReg.submitPOW(nonce1, commodityId, { from: player1 })
-      await commodityReg.submitPOW(nonce2, commodityId, { from: player2 })
-
-    } catch (e) {
-      assert(false, e.toString())
-    }
-
-    [balance1, balance2] = await Promise.all([
-      commodityReg.balanceOf(player1, commodityId),
-      commodityReg.balanceOf(player2, commodityId),
-    ])
-
-    console.log('balance1, balance2', balance1, balance2);
-
-    assert.equal(balance1.toString(), miningReward.toString(), "player1 did not receive mining reward")
-    assert.equal(balance2.toString(), "0", "player2 received mining reward")
+    assert.equal(balance.toString(), miningReward.toString(), "did not work as expected")
   })
 })

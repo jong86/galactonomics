@@ -35,6 +35,7 @@ contract CommodityReg is Ownable, AccessControlled {
   event CommodityMined(bytes32 _hash, address _miner);
   event Minted(address _to, uint _id, uint _amount);
   event Burned(address _owner, uint _id, uint _amount);
+  event AlreadyMined(address _sender);
 
   event LogB(bytes32 b);
   event LogS(string s);
@@ -48,10 +49,10 @@ contract CommodityReg is Ownable, AccessControlled {
    * @param _commodityId Id of commodity that you mined
    */
   function submitPOW(uint _nonce, uint _commodityId) external {
-    require(
-      wasMinedInBlock[_commodityId][block.number] == false,
-      "During the last block, another account submitted a POW before you (only one reward given per block)"
-    );
+    if (wasMinedInBlock[_commodityId][block.number] == true) {
+      emit AlreadyMined(msg.sender);
+      return;
+    }
 
     bytes32 _hash = sha256(
       abi.encodePacked(
@@ -61,19 +62,20 @@ contract CommodityReg is Ownable, AccessControlled {
       )
     );
 
-    emit LogN(block.number);
-    emit LogBool(wasMinedInBlock[_commodityId][block.number]);
-
     bytes32 _uri;
     uint _miningReward;
     uint _miningTarget;
     (_uri, _miningReward, _miningTarget) = getCommodity(_commodityId);
 
+    // Check if hash is valid
     require(uint(_hash) < _miningTarget, "That proof-of-work is not valid");
-    require(_mint(msg.sender, _commodityId, _miningReward), "Error sending reward");
 
     // Flag to prevent more than one miner to claim reward per block per commodity
     wasMinedInBlock[_commodityId][block.number] = true;
+
+    // Send reward
+    require(_mint(msg.sender, _commodityId, _miningReward), "Error sending reward");
+
     emit CommodityMined(_hash, msg.sender);
   }
 
