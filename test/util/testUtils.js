@@ -1,5 +1,4 @@
 const sha256 = require('js-sha256');
-const { promisify } = require('util')
 
 function mineCommodityXTimes(commodityReg, numTimes, player, commodityId) {
   return new Promise(async (resolve, reject) => {
@@ -30,7 +29,6 @@ function mine(commodityReg, commodityId, player) {
 
       let nonce = web3.toBigNumber(0)
       const one = web3.toBigNumber(1)
-      const blockNumber = await (promisify(web3.eth.getBlockNumber))()
 
       let hash
       do {
@@ -38,7 +36,6 @@ function mine(commodityReg, commodityId, player) {
         hash = sha256(
           nonce.toString() +
           commodityId.toString() +
-          (blockNumber + 1).toString() +
           player.substring(2)
         )
 

@@ -1,6 +1,11 @@
 pragma solidity ^0.4.24;
 
 library Array256Lib {
+  /**
+   * @notice Returns true or false if array contains given number
+   * @param _self Storage array containing uint256 type variables
+   * @param _num Item to check for
+   */
   function contains(uint256[] storage _self, uint256 _num) internal view returns (bool) {
     for (uint i = 0; i < _self.length; i++) {
       if (_self[i] == _num) {

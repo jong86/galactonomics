@@ -29,6 +29,9 @@ contract CommodityReg is Ownable, AccessControlled {
   // Mapping of address to array containing Ids of commodities owned (for iterating)
   mapping (address => uint[]) public commoditiesOwned;
 
+  // Mapping of commodityId to block number to bool indicating if commodity was mined in that block
+  mapping (uint => mapping (uint => bool)) public wasMinedInBlock;
+
   event CommodityMined(bytes32 _hash, address _miner);
   event Minted(address _to, uint _id, uint _amount);
   event Burned(address _owner, uint _id, uint _amount);
@@ -36,21 +39,30 @@ contract CommodityReg is Ownable, AccessControlled {
   event LogB(bytes32 b);
   event LogS(string s);
   event LogN(uint n);
+  event LogBool(bool b);
 
   /**
    * @notice Mints new commodity tokens for a player
-   * @param _nonce Value found that when hashed (using SHA-256) with the previous proof-of-work hash found for a
-   *  commodity, results in an acceptable hash according to current target for that commodity
+   * @param _nonce Value found that when sha256-hashed with the other params used in the code, results in an
+   *  acceptable hash value less than the target difficulty for the commodity
+   * @param _commodityId Id of commodity that you mined
    */
   function submitPOW(uint _nonce, uint _commodityId) external {
+    require(
+      wasMinedInBlock[_commodityId][block.number] == false,
+      "During the last block, another account submitted a POW before you (only one reward given per block)"
+    );
+
     bytes32 _hash = sha256(
       abi.encodePacked(
         _nonce.toString(),
         _commodityId.toString(),
-        block.number.toString(),
         msg.sender.toString()
       )
     );
+
+    emit LogN(block.number);
+    emit LogBool(wasMinedInBlock[_commodityId][block.number]);
 
     bytes32 _uri;
     uint _miningReward;
@@ -59,6 +71,9 @@ contract CommodityReg is Ownable, AccessControlled {
 
     require(uint(_hash) < _miningTarget, "That proof-of-work is not valid");
     require(_mint(msg.sender, _commodityId, _miningReward), "Error sending reward");
+
+    // Flag to prevent more than one miner to claim reward per block per commodity
+    wasMinedInBlock[_commodityId][block.number] = true;
     emit CommodityMined(_hash, msg.sender);
   }
 
@@ -74,7 +89,7 @@ contract CommodityReg is Ownable, AccessControlled {
     return (
       sha256(abi.encodePacked((_id))),
       1024,
-      0x00fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+      0x000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     );
   }
 
@@ -97,14 +112,25 @@ contract CommodityReg is Ownable, AccessControlled {
 
   /**
    * @notice Transfers amount of commodity from seller to this contract
-   * @param _seller Address of account to transfer from
+   * @param _from Address of account to transfer from
    * @param _commodityId Id of commodity
    * @param _amount Amount of commodity to transfer
    */
-  function transferToEscrow(address _seller, uint _commodityId, uint _amount) public returns (bool) {
-    balances[_commodityId][_seller].sub(_amount);
-    balances[_commodityId][address(this)].add(_amount);
-    // Manage commoditiesOwned array:
+  function transferToEscrow(address _from, uint _commodityId, uint _amount) public returns (bool) {
+    // Subtract amount from seller's balance
+    balances[_commodityId][_from] = balances[_commodityId][_from].sub(_amount);
+    // Add amount to escrow balance
+    balances[_commodityId][address(this)] = balances[_commodityId][address(this)].add(_amount);
+
+    // Keep track of commodities in escrow --
+    // Check if contract doesn't already have this commodity in escrow
+    if (!commoditiesOwned[address(this)].contains(_commodityId)) {
+      // If not, add the commodity Id to commoditiesOwned for that player
+      commoditiesOwned[address(this)].push(_commodityId);
+
+      // Need to record how much storing for who
+
+    }
 
     return true;
   }
@@ -116,8 +142,8 @@ contract CommodityReg is Ownable, AccessControlled {
    * @param _amount Amount of commodity to transfer
    */
   function transferFromEscrow(address _buyer, uint _commodityId, uint _amount) public returns (bool) {
-    balances[_commodityId][address(this)].sub(_amount);
-    balances[_commodityId][_buyer].add(_amount);
+    balances[_commodityId][address(this)] = balances[_commodityId][address(this)].sub(_amount);
+    balances[_commodityId][_buyer] = balances[_commodityId][_buyer].add(_amount);
     // Manage commoditiesOwned array:
 
     return true;
