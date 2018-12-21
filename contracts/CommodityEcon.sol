@@ -48,7 +48,7 @@ contract CommodityEcon {
     uint _arrayLength = markets[_commodityId].push(sellOrder);
     uint _orderId = _arrayLength.sub(1);
 
-    // Store orderId in array for user
+    // Store orderId in array for seller account
 
 
     emit SellOrderCreated(_commodityId, _orderId);

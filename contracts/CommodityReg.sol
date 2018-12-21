@@ -49,11 +49,13 @@ contract CommodityReg is Ownable, AccessControlled {
    * @param _commodityId Id of commodity that you mined
    */
   function submitPOW(uint _nonce, uint _commodityId) external {
+    // Block further access to function if reward already claimed for a block
     if (wasMinedInBlock[_commodityId][block.number] == true) {
       emit AlreadyMined(msg.sender);
       return;
     }
 
+    // Make the hash
     bytes32 _hash = sha256(
       abi.encodePacked(
         _nonce.toString(),
@@ -70,7 +72,7 @@ contract CommodityReg is Ownable, AccessControlled {
     // Check if hash is valid
     require(uint(_hash) < _miningTarget, "That proof-of-work is not valid");
 
-    // Flag to prevent more than one miner to claim reward per block per commodity
+    // Flag to prevent more than one miner to claim reward per block, per commodity
     wasMinedInBlock[_commodityId][block.number] = true;
 
     // Send reward
@@ -124,14 +126,11 @@ contract CommodityReg is Ownable, AccessControlled {
     // Add amount to escrow balance
     balances[_commodityId][address(this)] = balances[_commodityId][address(this)].add(_amount);
 
-    // Keep track of commodities in escrow --
+    // Manage commoditiesOwned array for escrow --
     // Check if contract doesn't already have this commodity in escrow
     if (!commoditiesOwned[address(this)].contains(_commodityId)) {
       // If not, add the commodity Id to commoditiesOwned for that player
       commoditiesOwned[address(this)].push(_commodityId);
-
-      // Need to record how much storing for who
-
     }
 
     return true;
@@ -144,9 +143,17 @@ contract CommodityReg is Ownable, AccessControlled {
    * @param _amount Amount of commodity to transfer
    */
   function transferFromEscrow(address _buyer, uint _commodityId, uint _amount) public returns (bool) {
+    // Subtract amount from escrow balance
     balances[_commodityId][address(this)] = balances[_commodityId][address(this)].sub(_amount);
+    // Add amount to buyer's balance
     balances[_commodityId][_buyer] = balances[_commodityId][_buyer].add(_amount);
-    // Manage commoditiesOwned array:
+
+    // Manage commoditiesOwned array for escrow --
+    // Check if user now owns 0 amount of that commodity
+    if (balances[_commodityId][address(this)] == 0) {
+      // If balance is zero, remove id from commoditiesOwned
+      commoditiesOwned[address(this)].remove(_commodityId);
+    }
 
     return true;
   }
