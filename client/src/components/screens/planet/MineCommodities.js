@@ -73,7 +73,7 @@ class MineCommodities extends Component {
     let commodity
 
     try {
-      commodity = await contracts.commodityAuthority.getCommodity(user.currentPlanet.id, { from: user.address })
+      commodity = await contracts.commodityReg.getCommodity(user.currentPlanet.id, { from: user.address })
     } catch (e) {
       return reject(e)
     }
@@ -135,7 +135,7 @@ class MineCommodities extends Component {
     setIndustrialState({ isSubmitting: true })
 
     try {
-      await contracts.commodityAuthority.submitPOW(String(nonce), { from: user.address })
+      await contracts.commodityReg.submitPOW(String(nonce), { from: user.address })
     } catch (e) {
       setIndustrialState({
         isMining: false,

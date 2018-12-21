@@ -3,18 +3,18 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./interfaces/ICrystal.sol";
-import "./interfaces/ICommodityAuthority.sol";
+import "./interfaces/ICommodityReg.sol";
 
 /**
  * @title Crystal Authority (CA)
  *
  * @notice The CA handles crystal forging and trading
  */
-contract CrystalAuthority {
+contract CrystalReg {
   using SafeMath for uint;
 
   ICrystal crystal;
-  ICommodityAuthority commodityAuthority;
+  ICommodityReg commodityReg;
 
   // Units of each commodity required to forge a crystal
   uint public constant forgingAmount = 10000;
@@ -30,9 +30,8 @@ contract CrystalAuthority {
     uint price;
   }
 
-  constructor(address _commodityAuthority, address _crystal) public {
-    commodityAuthority = ICommodityAuthority(_commodityAuthority);
-    transitAuthority = ITransitAuthority(_transitAuthority);
+  constructor(address _commodityReg, address _crystal) public {
+    commodityReg = ICommodityReg(_commodityReg);
     crystal = ICrystal(_crystal);
   }
 
@@ -47,7 +46,7 @@ contract CrystalAuthority {
     // Check balance of every commodity to make sure there is enough
     for (i = 0; i <= 6; i++) {
       require(
-        commodityAuthority.balanceOf(msg.sender, i) >= forgingAmount,
+        commodityReg.balanceOf(msg.sender, i) >= forgingAmount,
         "You do not have enough commodities to forge"
       );
     }
@@ -56,7 +55,7 @@ contract CrystalAuthority {
     // [Dec 7: commodities burned will be the ones chosen to forge with]
     for (i = 0; i <= 6; i++) {
       require(
-        commodityAuthority.burn(msg.sender, i, forgingAmount),
+        commodityReg.burn(msg.sender, i, forgingAmount),
         "Error burning commodity"
       );
     }

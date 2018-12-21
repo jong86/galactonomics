@@ -48,12 +48,12 @@ class ViewCrystals extends Component {
     this.setState({ isLoading: true })
 
     try {
-      const crystalIds = await contracts.crystalAuthority.crystalsOfOwner(user.address, { from: user.address })
+      const crystalIds = await contracts.crystalReg.crystalsOfOwner(user.address, { from: user.address })
       if (crystalIds && crystalIds.length) {
         for (let id of crystalIds) {
           crystals.push({
             id: id.toString(),
-            uri: await contracts.crystalAuthority.crystalURI(id, { from:user.address })
+            uri: await contracts.crystalReg.crystalURI(id, { from:user.address })
           })
         }
       }
@@ -103,7 +103,7 @@ class ViewCrystals extends Component {
     const { selectedCrystalId, sellPrice } = this.state
 
     try {
-      await contracts.crystalAuthority.sell(selectedCrystalId, sellPrice, { from: user.address })
+      await contracts.crystalReg.sell(selectedCrystalId, sellPrice, { from: user.address })
     } catch (e) {
       console.error(e)
     }

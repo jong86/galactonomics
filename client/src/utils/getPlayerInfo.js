@@ -8,8 +8,8 @@ export default () => new Promise(async (resolve, reject) => {
   let playerInfo, currentCargo, balance, commoditiesOwned
   try {
     playerInfo = await contracts.transitAuthority.getInfo({ from: user.address })
-    currentCargo = await contracts.commodityAuthority.getCurrentCargo(user.address, { from: user.address })
-    commoditiesOwned = await contracts.commodityAuthority.getCommoditiesOwned(user.address, { from: user.address })
+    currentCargo = await contracts.commodityReg.getCurrentCargo(user.address, { from: user.address })
+    commoditiesOwned = await contracts.commodityReg.getCommoditiesOwned(user.address, { from: user.address })
     balance = await web3.eth.getBalance(user.address)
   } catch (e) {
     return reject(e)
@@ -18,8 +18,8 @@ export default () => new Promise(async (resolve, reject) => {
   commoditiesOwned = await Promise.all(commoditiesOwned.map(id => new Promise(async (resolve, reject) => {
     let amount, uri
     try {
-      amount = (await contracts.commodityAuthority.balanceOf(user.address, id.toString()))
-      uri = await contracts.commodityAuthority.getURI(id)
+      amount = (await contracts.commodityReg.balanceOf(user.address, id.toString()))
+      uri = await contracts.commodityReg.getURI(id)
     } catch (e) {
       return reject(e)
     }

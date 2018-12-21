@@ -3,26 +3,26 @@
   to forge a crystal
 */
 
-const CommodityAuthority = artifacts.require('./CommodityAuthority.sol')
+const CommodityReg = artifacts.require('./CommodityReg.sol')
 const TransitAuthority = artifacts.require("./TransitAuthority.sol")
-const EconomicAuthority = artifacts.require("./EconomicAuthority.sol")
+const CommodityEcon = artifacts.require("./CommodityEcon.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
-const CrystalAuthority = artifacts.require('./CrystalAuthority.sol')
+const CrystalReg = artifacts.require('./CrystalReg.sol')
 
 const { mineCommodityXTimes, getCommoditiesTraded, getRandomPlanetToSell } = require('../test/util/testUtils')
 
 module.exports = async function(done) {
   const accounts = await web3.eth.accounts
   const bob = accounts[1]
-  let transitAuthority, economicAuthority, gia, crystalAuthority, tradedOnPlanet
+  let transitAuthority, commodityEcon, gia, crystalReg, tradedOnPlanet
 
   try {
-    commodities = await CommodityAuthority.deployed()
+    commodities = await CommodityReg.deployed()
     transitAuthority = await TransitAuthority.deployed()
-    economicAuthority = await EconomicAuthority.deployed()
+    commodityEcon = await CommodityEcon.deployed()
     gia = await GalacticIndustrialAuthority.deployed()
-    crystalAuthority = await CrystalAuthority.deployed()
-    tradedOnPlanet = await getCommoditiesTraded(economicAuthority)
+    crystalReg = await CrystalReg.deployed()
+    tradedOnPlanet = await getCommoditiesTraded(commodityEcon)
   } catch (e) {
     console.error(e)
   }
@@ -37,7 +37,7 @@ module.exports = async function(done) {
       const refuelCost = await transitAuthority.refuelCost()
       await transitAuthority.refuel({ from: bob, value: refuelCost })
 
-      const forgingAmount = await crystalAuthority.forgingAmount()
+      const forgingAmount = await crystalReg.forgingAmount()
       let commodityBalance = await commodities.getBalance(p, { from: bob })
 
       // Mint commodity until user has enough to forge
@@ -53,7 +53,7 @@ module.exports = async function(done) {
         await transitAuthority.travelToPlanet(planetToSell, { from: bob })
         console.log(`>> unloading excess... (selling commodity ${p} on planet ${planetToSell})`)
         const randomPrice = Math.round(Math.random() * 10000000)
-        await economicAuthority.createSellOrder(planetToSell, p, commodityBalance.sub(forgingAmount), randomPrice, { from: bob })
+        await commodityEcon.createSellOrder(planetToSell, p, commodityBalance.sub(forgingAmount), randomPrice, { from: bob })
       }
     }
   } catch (e) {

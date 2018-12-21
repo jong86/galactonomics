@@ -23,7 +23,7 @@ contract Crystal is ERC721Full, AccessControlled {
    * @notice Create a new token for specified address
    * @return Newly created token ID
    */
-  function create(address _for) external onlyCrystalAuthority returns (string) {
+  function create(address _for) external onlyCrystalReg returns (string) {
     // Mint one token for user
     uint _tokenId = totalSupply() + 1;
     _mint(_for, _tokenId);
@@ -41,10 +41,10 @@ contract Crystal is ERC721Full, AccessControlled {
    * @param _from Address of seller
    * @param _tokenId Token ID to transfer
    */
-  function transferToEscrow(address _from, uint _tokenId) external onlyCrystalAuthority {
+  function transferToEscrow(address _from, uint _tokenId) external onlyCrystalReg {
     _removeTokenFrom(_from, _tokenId);
-    _addTokenTo(crystalAuthority, _tokenId);
-    emit Transfer(_from, crystalAuthority, _tokenId);
+    _addTokenTo(crystalReg, _tokenId);
+    emit Transfer(_from, crystalReg, _tokenId);
   }
 
   /**
@@ -52,10 +52,10 @@ contract Crystal is ERC721Full, AccessControlled {
    * @param _to Address to transfer token
    * @param _tokenId Token ID to transfer
    */
-  function transferFromEscrow(address _to, uint _tokenId) external onlyCrystalAuthority {
-    _removeTokenFrom(crystalAuthority, _tokenId);
+  function transferFromEscrow(address _to, uint _tokenId) external onlyCrystalReg {
+    _removeTokenFrom(crystalReg, _tokenId);
     _addTokenTo(_to, _tokenId);
-    emit Transfer(crystalAuthority, _to, _tokenId);
+    emit Transfer(crystalReg, _to, _tokenId);
   }
 
   /**

@@ -1,19 +1,17 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./interfaces/ITransitAuthority.sol";
-import "./interfaces/ICommodityAuthority.sol";
+import "./interfaces/ICommodityReg.sol";
 
 /**
- * @title Economic EA (EA)
+ * @title CommodityEcon
  *
- * @notice The EA handles commodity trading
+ * @notice The CommodityEcon handles commodity trading
  */
-contract EconomicAuthority {
+contract CommodityEcon {
   using SafeMath for uint;
 
-  ITransitAuthority transitAuthority;
-  ICommodityAuthority commodities;
+  ICommodityReg commodityReg;
 
   struct SellOrder {
     address seller;
@@ -32,50 +30,22 @@ contract EconomicAuthority {
   event sellOrderCreated(uint planetId, uint orderId);
   event sellOrderPurchased(uint planetId, uint orderId);
 
-  constructor(address _commodities, address _transitAuthority) {
-    commodities = ICommodityAuthority(_commodities);
-    transitAuthority = ITransitAuthority(_transitAuthority);
-
-    // Arrays that set which commodities are available on each planet
-    planetIdToCommodityIdsTraded[0] = [1, 4, 5];
-    planetIdToCommodityIdsTraded[1] = [0, 2, 4, 6];
-    planetIdToCommodityIdsTraded[2] = [3, 6];
-    planetIdToCommodityIdsTraded[3] = [0, 2, 5];
-    planetIdToCommodityIdsTraded[4] = [0, 1, 3];
-    planetIdToCommodityIdsTraded[5] = [2, 6];
-    planetIdToCommodityIdsTraded[6] = [1, 3, 4, 5];
-  }
-
-  /**
-   * @dev Modifier that ensures that a commodity is traded on a planet
-   */
-  modifier commodityTradedOnPlanet(uint _planetId, uint _commodityId) {
-    uint length = planetIdToCommodityIdsTraded[_planetId].length;
-    bool isTraded;
-    for (uint i = 0; i < length; i++) {
-      if (planetIdToCommodityIdsTraded[_planetId][i] == _commodityId) {
-        isTraded = true;
-        break;
-      }
-    }
-    require(isTraded, "This commodity is not traded on this planet");
-    _;
+  constructor(address _commodityReg) {
+    commodityReg = ICommodityReg(_commodityReg);
   }
 
   /**
    * @notice To sell a commodity on a planet
-   * @param _planetId ID of planet to sell commodity on
    * @param _commodityId ID of commodity to sell
    * @param _amount Quantity of commodity to sell
    * @param _price Price per unit of commodity
    */
   function createSellOrder(uint _planetId, uint _commodityId, uint _amount, uint _price) external {
-    require(transitAuthority.getCurrentPlanet(msg.sender) == _planetId, "You are not on the correct planet");
-    require(commodities.balanceOf(msg.sender, _commodityId) >= _amount, "You do not own enough of this commodity");
+    require(commodityReg.balanceOf(msg.sender, _commodityId) >= _amount, "You do not own enough of this commodity");
 
     // Arrange transfer of commodity from user to escrow
     SellOrder memory sellOrder = SellOrder(msg.sender, _amount, _price, true, address(0));
-    commodities.transferToEscrow(msg.sender, _commodityId, _amount);
+    commodityReg.transferToEscrow(msg.sender, _commodityId, _amount);
     // Store order in array
     uint _arrayLength = marketplaces[_planetId][_commodityId].push(sellOrder);
     uint _orderId = _arrayLength.sub(1);
@@ -90,16 +60,11 @@ contract EconomicAuthority {
    * @param _orderId ID of order to purchase
    */
   function buySellOrder(uint _planetId, uint _commodityId, uint _orderId) external payable {
-    require(transitAuthority.isPlayer(msg.sender), "You must own a spaceship for this action");
-    require(
-      transitAuthority.canFitCargo(msg.sender, commodities.getCurrentCargo(msg.sender), marketplaces[_planetId][_commodityId][_orderId].amount),
-      "Cannot fit this cargo on spaceship"
-    );
     SellOrder memory sellOrder = marketplaces[_planetId][_commodityId][_orderId];
     require(msg.value == sellOrder.amount.mul(sellOrder.price), "You did not send the correct amount of ether");
 
     // Arrange transfer of commodity out of escrow
-    commodities.transferFromEscrow(msg.sender, _commodityId, sellOrder.amount);
+    commodityReg.transferFromEscrow(msg.sender, _commodityId, sellOrder.amount);
     // Transfer eth from buyer to seller
     sellOrder.seller.transfer(msg.value);
     // Close order

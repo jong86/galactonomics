@@ -2,11 +2,11 @@
   This script gets state to point where account[1] owns many crystals
 */
 
-const CommodityAuthority = artifacts.require('./CommodityAuthority.sol')
+const CommodityReg = artifacts.require('./CommodityReg.sol')
 const TransitAuthority = artifacts.require("./TransitAuthority.sol")
-const EconomicAuthority = artifacts.require("./EconomicAuthority.sol")
+const CommodityEcon = artifacts.require("./CommodityEcon.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
-const CrystalAuthority = artifacts.require('./CrystalAuthority.sol')
+const CrystalReg = artifacts.require('./CrystalReg.sol')
 
 const { mineCommodityXTimes, getCommoditiesTraded, getRandomPlanetToSell } = require('../test/util/testUtils')
 
@@ -16,17 +16,17 @@ module.exports = async function(done) {
 
   for (let i = 1; i < 9; i++) {
     const player = accounts[i]
-    let transitAuthority, economicAuthority, gia, crystalAuthority, tradedOnPlanet
+    let transitAuthority, commodityEcon, gia, crystalReg, tradedOnPlanet
 
     try {
-      commodities = await CommodityAuthority.deployed()
+      commodities = await CommodityReg.deployed()
       transitAuthority = await TransitAuthority.deployed()
-      economicAuthority = await EconomicAuthority.deployed()
+      commodityEcon = await CommodityEcon.deployed()
       gia = await GalacticIndustrialAuthority.deployed()
-      crystalAuthority = await CrystalAuthority.deployed()
+      crystalReg = await CrystalReg.deployed()
       const costOfSpaceship = await transitAuthority.costOfSpaceship()
       await transitAuthority.buySpaceship('a', { from: player, value: costOfSpaceship })
-      tradedOnPlanet = await getCommoditiesTraded(economicAuthority)
+      tradedOnPlanet = await getCommoditiesTraded(commodityEcon)
     } catch (e) {
       console.error(e)
     }
@@ -44,7 +44,7 @@ module.exports = async function(done) {
           const refuelCost = await transitAuthority.refuelCost()
           await transitAuthority.refuel({ from: player, value: refuelCost })
 
-          const forgingAmount = await crystalAuthority.forgingAmount()
+          const forgingAmount = await crystalReg.forgingAmount()
           let commodityBalance = await commodities.getBalance(p, { from: player })
 
           // Mint commodity until user has enough to forge
@@ -60,14 +60,14 @@ module.exports = async function(done) {
             await transitAuthority.travelToPlanet(planetToSell, { from: player })
             console.log(`>> unloading excess... (selling commodity ${p} on planet ${planetToSell})`)
             const randomPrice = Math.round(Math.random() * 10000000)
-            await economicAuthority.createSellOrder(planetToSell, p, commodityBalance.sub(forgingAmount), randomPrice, { from: player })
+            await commodityEcon.createSellOrder(planetToSell, p, commodityBalance.sub(forgingAmount), randomPrice, { from: player })
           }
         }
 
-        console.log(">> travelling to crystalAuthority...")
+        console.log(">> travelling to crystalReg...")
         await transitAuthority.travelToPlanet(255, { from: player })
         console.log(">> forging a crystal...")
-        await crystalAuthority.forge({ from: player })
+        await crystalReg.forge({ from: player })
       }
     } catch (e) {
       console.error(e)

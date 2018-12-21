@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import globalStyles from 'globalStyles'
 
-import commodityAuthorityJSON from "contracts/CommodityAuthority.json"
+import commodityRegJSON from "contracts/CommodityReg.json"
 import transitAuthorityJSON from "contracts/TransitAuthority.json"
-import economicAuthorityJSON from "contracts/EconomicAuthority.json"
-import crystalAuthorityJSON from "contracts/CrystalAuthority.json"
+import commodityEconJSON from "contracts/CommodityEcon.json"
+import crystalRegJSON from "contracts/CrystalReg.json"
 
 import getWeb3 from "utils/getWeb3"
 import truffleContract from "truffle-contract"
@@ -61,10 +61,10 @@ class App extends Component {
 
       // Get all contract instances
       let contracts = [
-        { json: commodityAuthorityJSON, name: 'commodityAuthority' },
+        { json: commodityRegJSON, name: 'commodityReg' },
         { json: transitAuthorityJSON, name: 'transitAuthority' },
-        { json: economicAuthorityJSON, name: 'economicAuthority' },
-        { json: crystalAuthorityJSON, name: 'crystalAuthority' },
+        { json: commodityEconJSON, name: 'commodityEcon' },
+        { json: crystalRegJSON, name: 'crystalReg' },
       ]
 
       contracts = await Promise.all(

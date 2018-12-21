@@ -9,11 +9,11 @@ import "./libraries/UintCast.sol";
 import "./libraries/Array256Lib.sol";
 
 /**
- * @title CommodityAuthority
+ * @title CommodityReg
  *
- * @notice This contract manages the commodities
+ * @notice This contract manages minting and ownership of the commodities
  */
-contract CommodityAuthority is Ownable, AccessControlled {
+contract CommodityReg is Ownable, AccessControlled {
   using SafeMath for uint;
   using AddressCast for address;
   using BytesCast for bytes32;
@@ -21,16 +21,13 @@ contract CommodityAuthority is Ownable, AccessControlled {
   using Array256Lib for uint[];
 
   // Mapping of commodityId to address to amount of commodity owned
-  mapping (uint => mapping (address => uint)) balances;
+  mapping (uint => mapping (address => uint)) public balances;
 
   // Mapping of commodityId to total circulating supply of that commodity
-  mapping (uint => uint) totalSupplyOf;
+  mapping (uint => uint) public totalSupplyOf;
 
   // Mapping of address to array containing Ids of commodities owned (for iterating)
-  mapping (address => uint[]) commoditiesOwned;
-
-  // Mapping of commodityId to previous mining hash
-  mapping (uint => bytes32) prevMiningHashes;
+  mapping (address => uint[]) public commoditiesOwned;
 
   event CommodityMined(bytes32 _hash, address _miner);
   event Minted(address _to, uint _id, uint _amount);
@@ -50,14 +47,18 @@ contract CommodityAuthority is Ownable, AccessControlled {
       abi.encodePacked(
         _nonce.toString(),
         _commodityId.toString(),
-        prevMiningHashes[_commodityId].toString(),
+        block.number.toString(),
         msg.sender.toString()
       )
     );
 
-    require(_hash < getMiningTarget(_commodityId), "That proof-of-work is not valid");
-    require(_mint(msg.sender, _commodityId, getMiningReward(_commodityId)), "Error sending reward");
-    prevMiningHashes[_commodityId] = _hash;
+    bytes32 _uri;
+    uint _miningReward;
+    uint _miningTarget;
+    (_uri, _miningReward, _miningTarget) = getCommodity(_commodityId);
+
+    require(uint(_hash) < _miningTarget, "That proof-of-work is not valid");
+    require(_mint(msg.sender, _commodityId, _miningReward), "Error sending reward");
     emit CommodityMined(_hash, msg.sender);
   }
 
@@ -65,17 +66,15 @@ contract CommodityAuthority is Ownable, AccessControlled {
    * @notice Returns data on a commodity
    * @param _id Id of commodity
    */
-  function getCommodity(uint _id) external view returns (
+  function getCommodity(uint _id) public view returns (
     bytes32 uri,
     uint miningReward,
-    bytes32 miningTarget,
-    string prevMiningHash
+    uint miningTarget
   ) {
     return (
-      getURI(_id),
-      getMiningReward(_id),
-      getMiningTarget(_id),
-      prevMiningHashes[_id].toString()
+      sha256(abi.encodePacked((_id))),
+      1024,
+      0x00fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     );
   }
 

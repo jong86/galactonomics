@@ -3,7 +3,7 @@
 */
 
 const TransitAuthority = artifacts.require("./TransitAuthority.sol")
-const EconomicAuthority = artifacts.require("./EconomicAuthority.sol")
+const CommodityEcon = artifacts.require("./CommodityEcon.sol")
 const GalacticIndustrialAuthority = artifacts.require("./GalacticIndustrialAuthority.sol")
 
 module.exports = async function(done) {
@@ -12,7 +12,7 @@ module.exports = async function(done) {
   const sellingAccounts = accounts.slice(0, 4)
 
   const transitAuthority = await TransitAuthority.deployed()
-  const economicAuthority = await EconomicAuthority.deployed()
+  const commodityEcon = await CommodityEcon.deployed()
   const gia = await GalacticIndustrialAuthority.deployed()
 
   const costOfSpaceship = await transitAuthority.costOfSpaceship()
@@ -54,7 +54,7 @@ module.exports = async function(done) {
           // Unload commodity from previous planet on this new planet
           const balance = await commodities.getBalance(prevPlanet, { from: user })
           console.log(user, 'is unloading all previously mined commodity in a sell order')
-          await economicAuthority.createSellOrder(
+          await commodityEcon.createSellOrder(
             planet,
             prevPlanet,
             balance,
