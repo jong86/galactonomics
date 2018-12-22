@@ -13,7 +13,7 @@ contract AccessControlled is Ownable {
    * @dev Access modifier for Economic Authority-only functionality
    */
   modifier onlyCommodityEcon() {
-    require(msg.sender == commodityEcon, "Only the Economic Authority may access this function");
+    require(msg.sender == commodityEcon, "Only CommodityEcon may access this function");
     _;
   }
 
@@ -21,7 +21,7 @@ contract AccessControlled is Ownable {
    * @dev Access modifier for Crysal Authority-only functionality
    */
   modifier onlyCrystalReg() {
-    require(msg.sender == crystalReg, "Only the Crystal Authority may access this function");
+    require(msg.sender == crystalReg, "Only CrystalReg may access this function");
     _;
   }
 

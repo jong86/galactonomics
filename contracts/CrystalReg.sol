@@ -17,7 +17,7 @@ contract CrystalReg {
   ICommodityReg commodityReg;
 
   // Units of each commodity required to forge a crystal
-  uint public constant forgingAmount = 10000;
+  uint public constant forgingAmount = 42000;
 
   // Array storing IDs of all crystals that are for sale
   uint[] public crystalsForSale;
@@ -35,33 +35,39 @@ contract CrystalReg {
     crystal = ICrystal(_crystal);
   }
 
+  event CrystalForged(string uri, address forger);
+
+  event Foo(uint x);
+
   /**
-   * @notice Creates a new crystal, requires forgingAmount in all 7 commodities
-   * @dev Burns a quantity of all 7 of an account's commodities
+   * @notice Creates a new crystal, requires forgingAmount balance in all chosen commodities
+   * @dev Burns a quantity of all chosen commodities
    * @return tokenId of newly created crystal
    */
-  function forge() external returns (string) {
+  function forge(uint[] _crystalIds) external {
     uint i;
 
     // Check balance of every commodity to make sure there is enough
-    for (i = 0; i <= 6; i++) {
+    uint length = _crystalIds.length;
+    for (i = 0; i < length; i++) {
       require(
-        commodityReg.balanceOf(msg.sender, i) >= forgingAmount,
+        commodityReg.balanceOf(msg.sender, _crystalIds[i]) >= forgingAmount,
         "You do not have enough commodities to forge"
       );
     }
 
-    // Burn x amount of all 7 of user's commodities
+    // Burn x amount of all user's chosen commodities
     // [Dec 7: commodities burned will be the ones chosen to forge with]
-    for (i = 0; i <= 6; i++) {
+    for (i = 0; i < length; i++) {
       require(
-        commodityReg.burn(msg.sender, i, forgingAmount),
+        commodityReg.burn(msg.sender, _crystalIds[i], forgingAmount),
         "Error burning commodity"
       );
     }
 
     string memory _uri = crystal.create(msg.sender);
-    return _uri;
+
+    emit CrystalForged(_uri, msg.sender);
   }
 
   /**

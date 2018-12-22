@@ -42,6 +42,9 @@ contract CommodityReg is Ownable, AccessControlled {
   event LogN(uint n);
   event LogBool(bool b);
 
+
+  // Mining
+
   /**
    * @notice Mints new commodity tokens for a player
    * @param _nonce Value found that when sha256-hashed with the other params used in the code, results in an
@@ -82,7 +85,7 @@ contract CommodityReg is Ownable, AccessControlled {
   }
 
   /**
-   * @notice Returns data on a commodity
+   * @notice Returns commodity data
    * @param _id Id of commodity
    */
   function getCommodity(uint _id) public view returns (
@@ -92,10 +95,37 @@ contract CommodityReg is Ownable, AccessControlled {
   ) {
     return (
       sha256(abi.encodePacked((_id))),
-      1024,
-      0x000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+      getMiningReward(_id),
+      getMiningTarget(_id)
     );
   }
+
+  /**
+   * @notice Returns URI of a commodity
+   * @param _id Id of commodity
+   */
+  function getURI(uint _id) public view returns (bytes32) {
+    return sha256(abi.encodePacked((_id)));
+  }
+
+  /**
+   * @notice Returns mining reward of a commodity
+   * @param _id Id of commodity
+   */
+  function getMiningReward(uint _id) public view returns (uint) {
+    return 24000;
+  }
+
+  /**
+   * @notice Returns mining target of a commodity
+   * @param _id Id of commodity
+   */
+  function getMiningTarget(uint _id) public view returns (uint) {
+    return 0x000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
+  }
+
+
+  // Ownership
 
   /**
    * @notice Returns amount of commodity an account owns
