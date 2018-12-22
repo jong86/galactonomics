@@ -8,7 +8,8 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 contract AccessControlled is Ownable {
   address public commodityEcon;
   address public commodityInd;
-  address public crystalReg;
+  address public crystalEcon;
+  address public crystalForge;
 
   /**
    * @dev Restricts access to address set as CommodityEcon
@@ -27,10 +28,18 @@ contract AccessControlled is Ownable {
   }
 
   /**
-   * @dev Restricts access to address set as CrystalReg
+   * @dev Restricts access to address set as CrystalEcon
    */
-  modifier onlyCrystalReg() {
-    require(msg.sender == crystalReg, "Only CrystalReg may access this function");
+  modifier onlyCrystalEcon() {
+    require(msg.sender == crystalEcon, "Only CrystalEcon may access this function");
+    _;
+  }
+
+  /**
+   * @dev Restricts access to address set as CrystalForge
+   */
+  modifier onlyCrystalForge() {
+    require(msg.sender == crystalForge, "Only CrystalForge may access this function");
     _;
   }
 
@@ -53,11 +62,20 @@ contract AccessControlled is Ownable {
   }
 
   /**
-   * @dev Assigns address of the Temple Authority
-   * @param _crystalReg Address of Temple Authority contract
+   * @dev Assigns address of CrystalEcon
+   * @param _crystalEcon Address of CrystalEcon contract
    */
-  function setCrystalReg(address _crystalReg) public onlyOwner {
-    require(_crystalReg != address(0), "New address cannot be zero address");
-    crystalReg = _crystalReg;
+  function setCrystalEcon(address _crystalEcon) public onlyOwner {
+    require(_crystalEcon != address(0), "New address cannot be zero address");
+    crystalEcon = _crystalEcon;
+  }
+
+  /**
+   * @dev Assigns address of the Temple Authority
+   * @param _crystalForge Address of Temple Authority contract
+   */
+  function setCrystalForge(address _crystalForge) public onlyOwner {
+    require(_crystalForge != address(0), "New address cannot be zero address");
+    crystalForge = _crystalForge;
   }
 }

@@ -2,8 +2,8 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Full.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../utils/AccessControlled.sol";
-import "../interfaces/ICrystal.sol";
+import "./utils/AccessControlled.sol";
+import "./interfaces/ICrystal.sol";
 
 /**
  * @title Crystal
@@ -17,13 +17,13 @@ contract Crystal is ERC721Full, AccessControlled {
   ERC721Full("Crystal", "CRY")
   public {}
 
-  event CrystalCreated(string indexed uri);
+  event CrystalCreated(string uri);
 
   /**
    * @notice Create a new token for specified address
    * @return Newly created token ID
    */
-  function create(address _for) external onlyCrystalReg returns (string) {
+  function create(address _for) external onlyCrystalForge returns (string) {
     // Mint one token for user
     uint _tokenId = totalSupply() + 1;
     _mint(_for, _tokenId);
@@ -41,10 +41,10 @@ contract Crystal is ERC721Full, AccessControlled {
    * @param _from Address of seller
    * @param _tokenId Token ID to transfer
    */
-  function transferToEscrow(address _from, uint _tokenId) external onlyCrystalReg {
+  function transferToEscrow(address _from, uint _tokenId) external onlyCrystalEcon {
     _removeTokenFrom(_from, _tokenId);
-    _addTokenTo(crystalReg, _tokenId);
-    emit Transfer(_from, crystalReg, _tokenId);
+    _addTokenTo(address(this), _tokenId);
+    emit Transfer(_from, address(this), _tokenId);
   }
 
   /**
@@ -52,10 +52,10 @@ contract Crystal is ERC721Full, AccessControlled {
    * @param _to Address to transfer token
    * @param _tokenId Token ID to transfer
    */
-  function transferFromEscrow(address _to, uint _tokenId) external onlyCrystalReg {
-    _removeTokenFrom(crystalReg, _tokenId);
+  function transferFromEscrow(address _to, uint _tokenId) external onlyCrystalEcon {
+    _removeTokenFrom(address(this), _tokenId);
     _addTokenTo(_to, _tokenId);
-    emit Transfer(crystalReg, _to, _tokenId);
+    emit Transfer(address(this), _to, _tokenId);
   }
 
   /**
