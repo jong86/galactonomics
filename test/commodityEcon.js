@@ -1,10 +1,11 @@
 const CommodityReg = artifacts.require("./CommodityReg.sol")
 const CommodityEcon = artifacts.require("./CommodityEcon.sol")
+const CommodityInd = artifacts.require("./CommodityInd.sol")
 const { mineCommodityXTimes } = require('./util/testUtils')
 const truffleAssert = require('truffle-assertions')
 
 contract("CommodityEcon", accounts => {
-  let commodityEcon, commodityReg
+  let commodityEcon, commodityReg, commodityInd
   const player1 = accounts[1]
   const player2 = accounts[2]
   const qty = 5
@@ -13,12 +14,18 @@ contract("CommodityEcon", accounts => {
   const gasPrice = web3.eth.gasPrice
 
   beforeEach(async() => {
+    // Deploy contracts
     commodityReg = await CommodityReg.new()
     commodityEcon = await CommodityEcon.new(commodityReg.address)
+    commodityInd = await CommodityInd.new(commodityReg.address)
+
+    // Set access controls
+    await commodityReg.setCommodityEcon(commodityEcon.address)
+    await commodityReg.setCommodityInd(commodityInd.address)
   })
 
   it("should let player1 create a sell order (w/ commodity deposited for escrow)", async () => {
-    await mineCommodityXTimes(commodityReg, 4, player1, commodityId)
+    await mineCommodityXTimes(commodityInd, 4, player1, commodityId)
 
     const response = await commodityEcon.createSellOrder(commodityId, qty, price, { from: player1 })
 
@@ -42,7 +49,7 @@ contract("CommodityEcon", accounts => {
 
   it("should let player2 buy player1's sell order", async () => {
     // Give player1 something to sell
-    await mineCommodityXTimes(commodityReg, 4, player1, commodityId)
+    await mineCommodityXTimes(commodityInd, 4, player1, commodityId)
 
     // Create sell order on that planet
     let response = await commodityEcon.createSellOrder(commodityId, qty, price, { from: player1 })

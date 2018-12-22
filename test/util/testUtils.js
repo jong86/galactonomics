@@ -24,8 +24,8 @@ function mineCommodityXTimes(commodityReg, numTimes, player, commodityId) {
 function mine(commodityReg, commodityId, player) {
   return new Promise(async (resolve, reject) => {
     try {
-      const miningData = await commodityReg.getCommodity(commodityId, { from: player })
-      const miningTarget = miningData[2]
+      const miningData = await commodityReg.getMiningData(commodityId, { from: player })
+      const miningTarget = miningData[1]
 
       let nonce = web3.toBigNumber(0)
       const one = web3.toBigNumber(1)

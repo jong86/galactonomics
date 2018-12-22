@@ -1,86 +1,163 @@
 const CommodityReg = artifacts.require("./CommodityReg.sol")
 const TestContract = artifacts.require("./TestContract.sol")
-const { mine } = require('./util/testUtils')
+const truffleAssert = require('truffle-assertions')
 
 contract("CommodityReg", accounts => {
   let commodityReg
-  const player1 = accounts[1]
+  const commodityEcon = accounts[1]
+  const commodityInd = accounts[2]
+  const player1 = accounts[3]
+  const player2 = accounts[4]
+  const commodityId = web3.toBigNumber(1230)
+  const qty = web3.toBigNumber(50000)
 
-  beforeEach(async() => {
-    commodityReg = await CommodityReg.new()
-    testContract = await TestContract.new(commodityReg.address)
+  function init() {
+    return new Promise(async resolve => {
+      // Deploy contracts
+      commodityReg = await CommodityReg.new()
+      testContract = await TestContract.new(commodityReg.address)
+
+      // Set access controls
+      await commodityReg.setCommodityEcon(commodityEcon)
+      await commodityReg.setCommodityInd(commodityInd)
+
+      resolve()
+    })
+  }
+
+  describe("mint function", () => {
+    beforeEach(async() => {
+      await init()
+      await commodityReg.mint(player1, commodityId, qty, { from: commodityInd })
+    })
+
+    it("adjusts balances correctly", async () => {
+      const balance = await commodityReg.balanceOf(player1, commodityId)
+      assert.deepEqual(balance, qty, "did not increase balance")
+    })
+
+    it("adjusts total supply correctly", async () => {
+      const totalSupply = await commodityReg.totalSupplyOf(commodityId)
+      assert.deepEqual(totalSupply, qty, "did not increase totalSupply")
+    })
+
+    it("adjusts commoditiesOwned array correctly", async () => {
+      const commoditiesOwned = await commodityReg.getCommoditiesOwned(player1)
+      assert.deepEqual(commoditiesOwned[0], commodityId, "did not add commodity to commoditiesOwned")
+    })
+
+    it("address that is not commodityInd may not call the function", async () => {
+      await truffleAssert.reverts(
+        commodityReg.mint(player1, commodityId, qty, { from: player1 }),
+        "Only CommodityInd may access this function"
+      )
+    })
   })
 
-  it("mints commodity for player when player submits valid proof-of-work", async () => {
-    const commodityId = web3.toBigNumber(0)
-    let response, balance, nonce, miningData, hash
+  describe("burn function", () => {
+    beforeEach(async() => {
+      await init()
+      await commodityReg.mint(player1, commodityId, qty, { from: commodityInd })
+      await commodityReg.mint(player1, commodityId, qty, { from: commodityInd })
+      await commodityReg.burn(player1, commodityId, qty, { from: commodityInd })
+    })
 
-    try {
-      const results = await mine(commodityReg, commodityId, player1)
-      nonce = results.nonce
-      miningData = results.miningData
-      hash = results.hash
-    } catch (e) {
-      assert(false, e.toString())
-    }
+    it("adjusts balances correctly", async () => {
+      const balance = await commodityReg.balanceOf(player1, commodityId)
+      assert.deepEqual(balance, qty, "did not decrease balance")
+    })
 
-    const miningReward = miningData[1]
-    const totalSupplyBefore = await commodityReg.totalSupplyOf(commodityId)
-    try {
-      response = await commodityReg.submitPOW(nonce, commodityId, { from: player1 })
-    } catch (e) {
-      assert(false, e.toString())
-    }
-    const totalSupplyAfter = await commodityReg.totalSupplyOf(commodityId)
-    const hashFromSolidity = response.logs.find(log => log.event === 'CommodityMined').args._hash
+    it("adjusts total supply correctly", async () => {
+      const totalSupply = await commodityReg.totalSupplyOf(commodityId)
+      assert.deepEqual(totalSupply, qty, "did not decrease totalSupply")
+    })
 
-    balance = await commodityReg.balanceOf(player1, commodityId)
+    it("adjusts commoditiesOwned array correctly", async () => {
+      // Burn once more so balance should be zero
+      await commodityReg.burn(player1, commodityId, qty, { from: commodityInd })
 
-    assert.equal(balance.toString(), miningReward.toString(), "did not receive mining reward")
-    assert.equal('0x' + hash, hashFromSolidity, "hash from javascript does not match hash from solidity")
-    assert.equal(
-      totalSupplyBefore.add(miningReward).toString(),
-      totalSupplyAfter.toString(),
-      "totalSupply did not increase by miningReward amount"
-    )
-    const commoditiesOwned = (await commodityReg.getCommoditiesOwned(player1)).map(bn => bn.toString())
-    assert(commoditiesOwned.includes(commodityId.toString()), "did not add commodityId to list of commoditiesOwned")
+      const commoditiesOwned = await commodityReg.getCommoditiesOwned(player1)
+      assert.equal(commoditiesOwned.length, 0, "did not remove commodity to commoditiesOwned")
+    })
+
+    it("address that is not commodityInd may not call the function", async () => {
+      await truffleAssert.reverts(
+        commodityReg.burn(player1, commodityId, qty, { from: player1 }),
+        "Only CommodityInd may access this function"
+      )
+    })
   })
 
-  it("does not mint commodity if user submits invalid proof-of-work", async () => {
-    const commodityId = 3
-    const balanceBefore = await commodityReg.balanceOf(player1, commodityId)
+  describe("transferToEscrow function", () => {
+    beforeEach(async() => {
+      await init()
+      await commodityReg.mint(player1, commodityId, qty, { from: commodityInd })
+      await commodityReg.transferToEscrow(player1, commodityId, qty, { from: commodityEcon })
+    })
 
-    try {
-      await commodityReg.submitPOW(0, 0, { from: player1 })
-    } catch (e) {
-      // Expecting this to fail so eating error
-    }
+    it("adjusts balances correctly", async () => {
+      const balanceEscrow = await commodityReg.balanceOf(commodityReg.address, commodityId)
+      assert.deepEqual(balanceEscrow, qty, "did not store in escrow")
 
-    const balanceAfter = await commodityReg.balanceOf(player1, commodityId)
-    assert.equal(balanceBefore.toString(), balanceAfter.toString(), "received mining reward")
+      const balancePlayer = await commodityReg.balanceOf(player1, commodityId)
+      assert.deepEqual(balancePlayer.toString(), "0", "did not subtract player balance")
+    })
+
+    it("adjusts commoditiesOwned array correctly", async () => {
+      let commsEscrow, commsPlayer
+
+      // Check if escrow's list adjusted
+      commsEscrow = await commodityReg.getCommoditiesOwned(commodityReg.address)
+      assert.equal(commsEscrow.length, 1, "did not push to escrow commoditiesOwned")
+      assert.deepEqual(commsEscrow[0], commodityId, "did not add correct commodityId to escrow commoditiesOwned")
+
+      // Check if player's list adjusted
+      commsPlayer = await commodityReg.getCommoditiesOwned(player1)
+      assert.equal(commsPlayer.length, 0, "did not remove from player's commoditiesOwned")
+    })
+
+    it("address that is not commodityEcon may not call the function", async () => {
+      await truffleAssert.reverts(
+        commodityReg.transferToEscrow(player1, commodityId, qty, { from: player1 }),
+        "Only CommodityEcon may access this function"
+      )
+    })
   })
 
-  it("only one mining reward is given per block", async () => {
-    const commodityId = web3.toBigNumber(0)
-    let balance, nonce, miningReward
+  describe("transferFromEscrow function", () => {
+    beforeEach(async() => {
+      await init()
+      await commodityReg.mint(player1, commodityId, qty, { from: commodityInd })
+      await commodityReg.transferToEscrow(player1, commodityId, qty, { from: commodityEcon })
+      await commodityReg.transferFromEscrow(player2, commodityId, qty, { from: commodityEcon })
+    })
 
-    try {
-      const results = await mine(commodityReg, commodityId, testContract.address)
-      nonce = results.nonce
-      miningReward = results.miningData[1]
-    } catch (e) {
-      assert(false, e.toString())
-    }
+    it("adjusts balances correctly", async () => {
+      const balanceEscrow = await commodityReg.balanceOf(commodityReg.address, commodityId)
+      assert.equal(balanceEscrow.toString(), "0", "did not remove from escrow")
 
-    try {
-      await testContract.trySubmitPOWTwice(nonce, commodityId)
-    } catch (e) {
-      assert(false, e.toString())
-    }
+      const balancePlayer = await commodityReg.balanceOf(player2, commodityId)
+      assert.deepEqual(balancePlayer, qty, "did not increase player balance")
+    })
 
-    balance = await commodityReg.balanceOf(testContract.address, commodityId)
+    it("adjusts commoditiesOwned array correctly", async () => {
+      let commsEscrow, commsPlayer
 
-    assert.equal(balance.toString(), miningReward.toString(), "did not work as expected")
+      // Check if players's list adjusted
+      commsPlayer = await commodityReg.getCommoditiesOwned(player2)
+      assert.equal(commsPlayer.length, 1, "did not push to player's commoditiesOwned")
+      assert.deepEqual(commsPlayer[0], commodityId, "did not add correct commodityId to player's commoditiesOwned")
+
+      // Check if escrow's list adjusted
+      commsEscrow = await commodityReg.getCommoditiesOwned(commodityReg.address)
+      assert.equal(commsEscrow.length, 0, "did not remove from escrow's commoditiesOwned")
+    })
+
+    it("address that is not commodityEcon may not call the function", async () => {
+      await truffleAssert.reverts(
+        commodityReg.transferFromEscrow(player2, commodityId, qty, { from: player2 }),
+        "Only CommodityEcon may access this function"
+      )
+    })
   })
 })

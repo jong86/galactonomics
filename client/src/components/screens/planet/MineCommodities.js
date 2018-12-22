@@ -35,7 +35,7 @@ class MineCommodities extends Component {
   state = {}
 
   componentDidMount = () => {
-    this.getCommodity()
+    this.getMiningData()
   }
 
   componentDidUpdate = prevProps => {
@@ -68,12 +68,12 @@ class MineCommodities extends Component {
     }
   }
 
-  getCommodity = async () => new Promise(async (resolve, reject) => {
+  getMiningData = async () => new Promise(async (resolve, reject) => {
     const { user, contracts, setIndustrialState } = this.props
     let commodity
 
     try {
-      commodity = await contracts.commodityReg.getCommodity(user.currentPlanet.id, { from: user.address })
+      commodity = await contracts.commodityReg.getMiningData(user.currentPlanet.id, { from: user.address })
     } catch (e) {
       return reject(e)
     }
@@ -148,7 +148,7 @@ class MineCommodities extends Component {
     }
 
     // Refresh data
-    this.getCommodity()
+    this.getMiningData()
     getPlayerInfo()
 
 
