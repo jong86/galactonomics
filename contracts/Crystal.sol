@@ -59,6 +59,33 @@ contract Crystal is ERC721Full, AccessControlled {
   }
 
   /**
+   * @notice Returns a list of all token IDs owned by an account
+   * @param _owner Address of account to look up
+   */
+  function crystalsOfOwner(address _owner) external view returns (uint[] ownedCrystals) {
+    uint tokenCount = balanceOf(_owner);
+
+    if (tokenCount == 0) {
+      // Return an empty array
+      return new uint[](0);
+    } else {
+      uint[] memory result = new uint[](tokenCount);
+      uint totalCrystals = totalSupply();
+      uint resultIndex = 0;
+      uint crystalId;
+
+      for (crystalId = 1; crystalId <= totalCrystals; crystalId++) {
+        if (ownerOf(crystalId) == _owner) {
+          result[resultIndex] = crystalId;
+          resultIndex++;
+        }
+      }
+
+      return result;
+    }
+  }
+
+  /**
    * @notice Helper function that converts a byte array to string
    * @param _data bytes32 to convert
    */
