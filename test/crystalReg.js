@@ -131,7 +131,7 @@ contract("CrystalReg", accounts => {
       assert.deepEqual(crystals, [c1, c2], 'did not return list')
     })
 
-    it("gives forged crystals a unique URI", async () => {
+    it("crystals have a unique URI", async () => {
       const crystals = await crystalReg.crystalsOfOwner(player1)
 
       const uri1 = await crystal.tokenURI(crystals[0])
