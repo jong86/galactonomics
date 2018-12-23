@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import globalStyles from 'globalStyles'
 
-import commodityRegJSON from "contracts/CommodityReg.json"
-import transitAuthorityJSON from "contracts/TransitAuthority.json"
 import commodityEconJSON from "contracts/CommodityEcon.json"
-import crystalRegJSON from "contracts/CrystalReg.json"
+import commodityIndJSON from "contracts/CommodityInd.json"
+import commodityRegJSON from "contracts/CommodityReg.json"
+import crystalJSON from "contracts/Crystal.json"
+import crystalEconJSON from "contracts/CrystalEcon.json"
+import crystalForgeJSON from "contracts/CrystalForge.json"
 
 import getWeb3 from "utils/getWeb3"
 import truffleContract from "truffle-contract"
@@ -24,7 +26,7 @@ import Loader from 'components/reusables/Loader'
 
 class App extends Component {
   state = {
-    isInitialized: null,
+    isInitialized: false,
   }
 
   componentDidMount = async () => {
@@ -32,15 +34,7 @@ class App extends Component {
       await this.initWeb3AndContracts()
       await this.initEventListening()
       this.initThreeJS()
-
-      let ownsSpaceship
-      ownsSpaceship = await this.checkIfOwnsSpaceship()
-
-      if (ownsSpaceship) {
-        await getPlayerInfo()
-      } else {
-        this.props.changeScreen('Welcome')
-      }
+      await getPlayerInfo()
 
     } catch (e) {
       return console.error(e)
@@ -61,10 +55,12 @@ class App extends Component {
 
       // Get all contract instances
       let contracts = [
-        { json: commodityRegJSON, name: 'commodityReg' },
-        { json: transitAuthorityJSON, name: 'transitAuthority' },
         { json: commodityEconJSON, name: 'commodityEcon' },
-        { json: crystalRegJSON, name: 'crystalReg' },
+        { json: commodityIndJSON, name: 'commodityInd' },
+        { json: commodityRegJSON, name: 'commodityReg' },
+        { json: crystalJSON, name: 'crystal' },
+        { json: crystalEconJSON, name: 'crystalEcon' },
+        { json: crystalForgeJSON, name: 'crystalForge' },
       ]
 
       contracts = await Promise.all(
@@ -120,25 +116,6 @@ class App extends Component {
         setEthState({ blockNumber: data.number })
       })
   }
-
-  checkIfOwnsSpaceship = () => new Promise(async (resolve, reject) => {
-    const { contracts, user } = this.props
-
-    let spaceshipsOwned
-    try {
-      spaceshipsOwned = await contracts.transitAuthority.balanceOf(user.address, { from: user.address })
-    } catch (e) {
-      return reject(e)
-    }
-
-    if (spaceshipsOwned.toString() === '0') {
-      this.props.setUserInfo({ ownsSpaceship: false })
-      return resolve(false)
-    }
-
-    this.props.setUserInfo({ ownsSpaceship: true })
-    resolve(true)
-  })
 
   initThreeJS = () => {
     const data = [
