@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Laserframe from 'components/reusables/Laserframe'
 import MPIContainer from 'components/screens/planet/MPIContainer'
-import getPlayerInfo from 'utils/getPlayerInfo'
+import refreshCommoditiesOwned from 'utils/refreshCommoditiesOwned'
 import Loader from 'components/reusables/Loader'
 import Crystal from 'components/reusables/Crystal'
 import Sound from 'react-sound';
@@ -43,7 +43,7 @@ class TempleIndustrial extends Component {
         })
       })
       .on('receipt', () => {
-        getPlayerInfo()
+        refreshCommoditiesOwned()
         this.getLatestCrystalURI()
       })
       .on('error', e => {

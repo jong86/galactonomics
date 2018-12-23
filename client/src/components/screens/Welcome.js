@@ -11,11 +11,7 @@ const styles = {
 class Welcome extends Component {
   goToNextScreen = () => {
     const { user, changeScreen} = this.props
-
-    if (user.ownsSpaceship)
-      changeScreen('Travel')
-    else
-      changeScreen('SpaceshipDealer')
+    changeScreen('Travel')
   }
 
   render() {

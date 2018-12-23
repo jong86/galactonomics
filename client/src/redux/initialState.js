@@ -8,5 +8,10 @@ export default {
   },
   travel: {
     sector: 0,
+  },
+  user: {
+    currentPlanet: {
+      id: 0,
+    }
   }
 }

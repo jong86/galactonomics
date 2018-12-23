@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
 import Laserframe from 'components/reusables/Laserframe'
-import FuelMeter from 'components/screens/planet/FuelMeter'
 import {
   FaBalanceScale,
   FaChartBar,
@@ -11,7 +10,7 @@ import {
   FaEthereum,
 } from 'react-icons/fa';
 import { MdBusinessCenter, MdDirectionsWalk } from 'react-icons/md'
-import getPlayerInfo from 'utils/getPlayerInfo'
+import refreshCommoditiesOwned from 'utils/refreshCommoditiesOwned'
 import Planet from 'components/reusables/Planet'
 
 const styles = {
@@ -56,7 +55,7 @@ class PlanetHome extends Component {
   state = {};
 
   componentDidMount = async () => {
-    getPlayerInfo()
+    refreshCommoditiesOwned()
   }
 
   render() {
@@ -135,12 +134,6 @@ class PlanetHome extends Component {
               View My Crystals
             </Laserframe>
           </div>
-          <div>
-            <FuelMeter
-              currentFuel={user.currentFuel}
-              maxFuel={user.maxFuel}
-            />
-          </div>
           <Planet
             uri={user.currentPlanet.uri}
             x={window.innerWidth / 2}
@@ -157,6 +150,7 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     web3: state.web3,
+    travel: state.travel,
   }
 }
 

@@ -14,7 +14,7 @@ export default (state, action) => {
 
       return {
         ...state,
-        visiblePlanets,
+        ...visiblePlanets,
       }
     }
 

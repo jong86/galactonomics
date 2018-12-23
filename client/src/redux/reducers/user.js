@@ -1,11 +1,11 @@
 export default (state, action) => {
   switch (action.type) {
-    case 'SET_USER_INFO': {
-      const { info } = action
+    case 'SET_COMMODITIES_OWNED': {
+      const { commoditiesOwned } = action
 
       return {
         ...state,
-        ...info,
+        commoditiesOwned,
       }
     }
 
@@ -39,11 +39,15 @@ export default (state, action) => {
     }
 
     case 'CHANGE_CURRENT_PLANET': {
-      const { currentPlanet } = action
-      
+      const { id, uri } = action
+
       return {
         ...state,
-        currentPlanet,
+        currentPlanet: {
+          ...state.currentPlanet,
+          id,
+          uri,
+        }
       }
     }
 

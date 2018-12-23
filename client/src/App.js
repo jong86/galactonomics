@@ -10,14 +10,13 @@ import crystalJSON from "contracts/Crystal.json"
 import crystalEconJSON from "contracts/CrystalEcon.json"
 import crystalForgeJSON from "contracts/CrystalForge.json"
 
-import getWeb3 from "utils/getWeb3"
 import truffleContract from "truffle-contract"
 
-import screenMapping from 'utils/screenMapping'
 import Dialog from 'components/reusables/Dialog'
 import Laserframe from 'components/reusables/Laserframe'
 
-import getPlayerInfo from 'utils/getPlayerInfo'
+import getWeb3 from "utils/getWeb3"
+import screenMapping from 'utils/screenMapping'
 
 import * as THREE from 'three'
 
@@ -34,7 +33,6 @@ class App extends Component {
       await this.initWeb3AndContracts()
       await this.initEventListening()
       this.initThreeJS()
-      await getPlayerInfo()
 
     } catch (e) {
       return console.error(e)
@@ -91,23 +89,7 @@ class App extends Component {
   })
 
   initEventListening = () => {
-    const { contracts, user, setIndustrialState, web3, setEthState } = this.props
-
-    // contracts.gia.CommodityMined({ fromBlock: 'latest' })
-    //   .on('data', data => {
-    //     const { _miner, _hash } = data.returnValues
-
-    //     setIndustrialState({
-    //       // Reset areas mined because there is a new prevHash
-    //       areasMined: [],
-    //       prevMiningHash: _hash,
-    //     })
-
-    //     // To refresh commodity amounts if current user was the miner
-    //     if (_miner === user.address) {
-    //       getPlayerInfo()
-    //     }
-    //   })
+    const { web3, setEthState } = this.props
 
     // Listen for new blocks
     web3.eth.subscribe('newBlockHeaders')
@@ -222,7 +204,6 @@ const mapDispatchToProps = dispatch => {
     setWeb3: web3 => dispatch({ type: 'SET_WEB3', web3 }),
     addContract: (instance, name) => dispatch({ type: 'ADD_CONTRACT', instance, name }),
     setAddress: address => dispatch({ type: 'SET_ADDRESS', address }),
-    setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
     setIndustrialState: industrialState => dispatch({ type: 'SET_INDUSTRIAL_STATE', industrialState }),
     setEthState: ethState => dispatch({ type: 'SET_ETH_STATE', ethState }),
     closeDialogBox: () => dispatch({ type: 'SET_DIALOG_BOX', content: '' }),

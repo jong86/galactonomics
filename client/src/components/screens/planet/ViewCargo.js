@@ -7,7 +7,7 @@ import Laserframe from 'components/reusables/Laserframe'
 import Commodity from 'components/reusables/Commodity'
 import ellipAddr from 'utils/ellipAddr'
 import Measure from 'react-measure'
-import getPlayerInfo from 'utils/getPlayerInfo'
+import refreshCommoditiesOwned from 'utils/refreshCommoditiesOwned'
 
 const styles = {}
 

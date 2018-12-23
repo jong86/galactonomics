@@ -6,7 +6,7 @@ import MPIContainer from 'components/screens/planet/MPIContainer'
 import handleChange from 'utils/handleChange'
 import uuid from 'utils/uuid'
 import SellOrder from 'components/reusables/SellOrder'
-import getPlayerInfo from 'utils/getPlayerInfo'
+import refreshCommoditiesOwned from 'utils/refreshCommoditiesOwned'
 import Loader from 'components/reusables/Loader'
 
 const styles = {
@@ -176,7 +176,7 @@ class PlanetMarketplace extends Component {
     // Refresh commodity balances
     this.getCommodities()
     // Refresh cargo
-    getPlayerInfo()
+    refreshCommoditiesOwned()
   }
 
   onClickBuy = async () => {
@@ -201,7 +201,7 @@ class PlanetMarketplace extends Component {
     // Refresh commodity balances
     this.getCommodities()
     // Refresh cargo
-    getPlayerInfo()
+    refreshCommoditiesOwned()
   }
 
   onClickSell = () => {

@@ -1,12 +1,10 @@
 import React, { Component } from "react"
 import { connect } from 'react-redux'
 import injectSheet from 'react-jss'
-import getPlayerInfo from 'utils/getPlayerInfo'
+import refreshCommoditiesOwned from 'utils/refreshCommoditiesOwned'
 import Planet from 'components/reusables/Planet'
 import Laserframe from 'components/reusables/Laserframe'
 import Loader from 'components/reusables/Loader'
-
-const PWIDTH = 128
 
 const styles = {
   Travel: {
@@ -39,7 +37,7 @@ class Travel extends Component {
   state = {}
 
   componentDidMount = () => {
-    getPlayerInfo()
+    refreshCommoditiesOwned()
     this.getPlanetURIs()
   }
 
@@ -54,16 +52,16 @@ class Travel extends Component {
   }
 
   travelToPlanet = async planetId => {
-    const { changeScreen, changeCurrentPlanet } = this.props
-
-    changeCurrentPlanet(planetId)
+    const { changeScreen, changeCurrentPlanet, travel } = this.props
+    const { uri } = travel.visiblePlanets.find(planet => planet.id === planetId)
+    changeCurrentPlanet(planetId, uri)
     changeScreen('PlanetHome')
   }
 
   getPlanetURIs = async () => {
     this.setState({ isLoadingPlanets: true })
     const { sector } = this.props.travel
-    const { user, contracts } = this.props
+    const { user, contracts, setVisiblePlanets } = this.props
 
     const planets = []
     for (let i = sector; i < sector + 17; i++) {
@@ -75,8 +73,8 @@ class Travel extends Component {
       }
     }
 
+    setVisiblePlanets({ visiblePlanets: planets })
     this.setState({ isLoadingPlanets: false })
-    this.props.setVisiblePlanets({ planets })
   }
 
   render() {
@@ -113,8 +111,9 @@ class Travel extends Component {
           :
           <div className={classes.planets}>
             {visiblePlanets && visiblePlanets.map((planet, i) => {
-              const x = (i * 100) + 24
+              const x = (i * 100) + 24;
               const y = 200
+
               return (
                 <div
                   key={planet.id}
@@ -124,7 +123,7 @@ class Travel extends Component {
                     top: y,
                     zIndex: 2,
                   }}
-                  onClick={() => this.startTravelling(planet.id)}
+                  onClick={() => this.travelToPlanet(planet.id)}
                 >
                   <Planet
                     uri={planet.uri}
@@ -135,7 +134,9 @@ class Travel extends Component {
                   <div>
                     {planet.id}
                   </div>
-                  {planet.id == user.currentPlanet.id && '(current)'}
+                  <div>
+                    {planet.id == user.currentPlanet.id ? "(current)" : ""}
+                  </div>
                 </div>
               )
             })}
@@ -158,7 +159,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    changeCurrentPlanet: currentPlanet => dispatch({ type: 'CHANGE_CURRENT_PLANET', currentPlanet }),
+    changeCurrentPlanet: (id, uri) => dispatch({ type: 'CHANGE_CURRENT_PLANET', id, uri }),
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
     setVisiblePlanets: visiblePlanets => dispatch({ type: 'SET_VISIBLE_PLANETS', visiblePlanets }),
     changeSector: newSector => dispatch({ type: 'CHANGE_SECTOR', newSector }),
@@ -167,4 +168,4 @@ const mapDispatchToProps = dispatch => {
 
 Travel = connect(mapStateToProps, mapDispatchToProps)(Travel)
 Travel = injectSheet(styles)(Travel)
-export default Travel;
+export default Travel

@@ -4,7 +4,7 @@ import injectSheet from 'react-jss'
 import Laserframe from 'components/reusables/Laserframe'
 import MPIContainer from 'components/screens/planet/MPIContainer'
 import sha256 from 'js-sha256'
-import getPlayerInfo from 'utils/getPlayerInfo'
+import refreshCommoditiesOwned from 'utils/refreshCommoditiesOwned'
 import Loader from 'components/reusables/Loader'
 import MiningPad from 'components/screens/planet/MiningPad'
 import Sound from 'react-sound'
@@ -149,7 +149,7 @@ class MineCommodities extends Component {
 
     // Refresh data
     this.getMiningData()
-    getPlayerInfo()
+    refreshCommoditiesOwned()
 
 
     setIndustrialState({

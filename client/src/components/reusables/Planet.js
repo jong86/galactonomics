@@ -17,7 +17,7 @@ class Planet extends Component {
   renderPlanet = () => {
     const { uri, x, y, radius } = this.props
     const { scene, camera, renderer } = this.props.three.bg
-
+    // debugger
     // Extract characters from URI to use for 3d model
     const color = parseInt(uri.substr(2, 6), 16)
     const metalness = parseInt(uri.substr(7, 2), 16) / 256
