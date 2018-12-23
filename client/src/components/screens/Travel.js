@@ -53,20 +53,11 @@ class Travel extends Component {
     }
   }
 
-  startTravelling = async planetId => {
-    const { user, changeScreen, setTravellingTo, travel } = this.props
-    // Go right to planet home if user is already on chosen planet
-    if (planetId == user.currentPlanet.id) {
-      return changeScreen('PlanetHome')
-    }
+  travelToPlanet = async planetId => {
+    const { changeScreen, changeCurrentPlanet } = this.props
 
-    // Grab URI of chosen planet from array
-    const planetURI = travel.planets.find(planet => planet.id === planetId).uri
-
-    // Save id and URI of chosen planet
-    setTravellingTo(planetId, planetURI)
-    // Go to travelling / 'loading' screen
-    changeScreen('Travelling')
+    changeCurrentPlanet(planetId)
+    changeScreen('PlanetHome')
   }
 
   getPlanetURIs = async () => {
@@ -77,7 +68,7 @@ class Travel extends Component {
     const planets = []
     for (let i = sector; i < sector + 17; i++) {
       try {
-        const planetURI = await contracts.transitAuthority.planetURI(String(i), { from: user.address } )
+        const planetURI = await contracts.commodityReg.getURI(String(i), { from: user.address } )
         planets.push({ id: i, uri: planetURI })
       } catch (e) {
         console.error(e)
@@ -85,13 +76,12 @@ class Travel extends Component {
     }
 
     this.setState({ isLoadingPlanets: false })
-
-    this.props.setTravelState({ planets })
+    this.props.setVisiblePlanets({ planets })
   }
 
   render() {
     const { classes, user } = this.props
-    const { planets, sector } = this.props.travel
+    const { visiblePlanets, sector } = this.props.travel
     const { isLoadingPlanets } = this.state
 
     return (
@@ -122,8 +112,7 @@ class Travel extends Component {
           <Loader />
           :
           <div className={classes.planets}>
-            {planets && planets.map((planet, i) => {
-              console.log('planet', planet);
+            {visiblePlanets && visiblePlanets.map((planet, i) => {
               const x = (i * 100) + 24
               const y = 200
               return (
@@ -169,9 +158,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    changeCurrentPlanet: currentPlanet => dispatch({ type: 'CHANGE_CURRENT_PLANET', currentPlanet }),
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
-    setTravellingTo: (id, uri) => dispatch({ type: 'SET_TRAVELLING_TO', id, uri }),
-    setTravelState: travelState => dispatch({ type: 'SET_TRAVEL_STATE', travelState }),
+    setVisiblePlanets: visiblePlanets => dispatch({ type: 'SET_VISIBLE_PLANETS', visiblePlanets }),
     changeSector: newSector => dispatch({ type: 'CHANGE_SECTOR', newSector }),
   }
 }

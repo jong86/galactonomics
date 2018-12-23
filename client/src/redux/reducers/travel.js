@@ -9,6 +9,15 @@ export default (state, action) => {
       }
     }
 
+    case 'SET_VISIBLE_PLANETS': {
+      const { visiblePlanets } = action
+
+      return {
+        ...state,
+        visiblePlanets,
+      }
+    }
+
     case 'CHANGE_SECTOR': {
       const { newSector } = action
 

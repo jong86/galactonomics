@@ -1,26 +1,36 @@
 const CommodityReg = artifacts.require("./CommodityReg.sol")
 const CommodityEcon = artifacts.require("./CommodityEcon.sol")
-const Crystal = artifacts.require('./items/Crystal.sol')
-const CrystalReg = artifacts.require('./Crystal.sol')
+const CommodityInd = artifacts.require("./CommodityInd.sol")
+const Crystal = artifacts.require('./Crystal.sol')
+const CrystalEcon = artifacts.require('./CrystalEcon.sol')
+const CrystalForge = artifacts.require('./CrystalForge.sol')
 
 module.exports = function(deployer) {
-  // deployer.then(async () => {
-  //   // Deploy CommodityReg
-  //   await deployer.deploy(CommodityReg)
-  //   const commodityReg = await CommodityReg.deployed()
+  deployer.then(async () => {
+    await deployer.deploy(CommodityReg)
+    const commodityReg = await CommodityReg.deployed()
 
-  //   // Deploy CommodityEcon
-  //   await deployer.deploy(CommodityEcon, commodityReg.address)
-  //   const commodityEcon = await CommodityEcon.deployed()
+    await deployer.deploy(CommodityEcon, commodityReg.address)
+    const commodityEcon = await CommodityEcon.deployed()
 
-  //   // Deploy Crystal
-  //   await deployer.deploy(Crystal)
-  //   const crystal = await Crystal.deployed()
+    await deployer.deploy(CommodityInd, commodityReg.address)
+    const commodityInd = await CommodityInd.deployed()
 
-  //   // Deploy CrystalReg
-  //   await deployer.deploy(CrystalReg, commodityReg.address, crystal.address)
-  //   const crystalReg = await CrystalReg.deployed()
+    await deployer.deploy(Crystal)
+    const crystal = await Crystal.deployed()
 
-  //   return crystal.setCrystalReg(crystalReg.address)
-  // })
+    await deployer.deploy(CrystalEcon, commodityReg.address, crystal.address)
+    const crystalEcon = await CrystalEcon.deployed()
+
+    await deployer.deploy(CrystalForge, commodityReg.address, crystal.address)
+    const crystalForge = await CrystalForge.deployed()
+
+    return Promise.all([
+      commodityReg.setCommodityEcon(commodityEcon.address),
+      commodityReg.setCommodityInd(commodityInd.address),
+      commodityReg.setCrystalForge(crystalForge.address),
+      crystal.setCrystalForge(crystalForge.address),
+      crystal.setCrystalEcon(crystalEcon.address),
+    ])
+  })
 }

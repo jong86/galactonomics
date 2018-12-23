@@ -101,7 +101,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     changeScreen: screen => dispatch({ type: 'CHANGE_SCREEN', screen }),
-    setUserInfo: info => dispatch({ type: 'SET_USER_INFO', info }),
     finishTravel: () => dispatch({ type: 'FINISH_TRAVEL' }),
     setDialogBox: (content, flavour)=> dispatch({ type: 'SET_DIALOG_BOX', content, flavour }),
   }

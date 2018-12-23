@@ -38,6 +38,15 @@ export default (state, action) => {
       }
     }
 
+    case 'CHANGE_CURRENT_PLANET': {
+      const { currentPlanet } = action
+      
+      return {
+        ...state,
+        currentPlanet,
+      }
+    }
+
     default: return { ...state }
   }
 }
