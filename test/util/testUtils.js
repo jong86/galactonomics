@@ -1,18 +1,18 @@
 const sha256 = require('js-sha256');
 
-function mineCommodityXTimes(commodityReg, numTimes, player, commodityId) {
+function mineCommodityXTimes(commodityInd, numTimes, player, commodityId) {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < numTimes; i++) {
       let nonce
       try {
-        const results = await mine(commodityReg, commodityId, player)
+        const results = await mine(commodityInd, commodityId, player)
         nonce = results.nonce
       } catch (e) {
         reject(e)
       }
 
       try {
-        await commodityReg.submitPOW(nonce, commodityId, { from: player })
+        await commodityInd.submitPOW(nonce, commodityId, { from: player })
       } catch (e) {
         reject(e)
       }
@@ -21,10 +21,10 @@ function mineCommodityXTimes(commodityReg, numTimes, player, commodityId) {
   })
 }
 
-function mine(commodityReg, commodityId, player) {
+function mine(commodityInd, commodityId, player) {
   return new Promise(async (resolve, reject) => {
     try {
-      const miningData = await commodityReg.getMiningData(commodityId, { from: player })
+      const miningData = await commodityInd.getMiningData(commodityId, { from: player })
       const miningTarget = miningData[1]
 
       let nonce = web3.toBigNumber(0)

@@ -6,8 +6,9 @@ contract("CommodityReg", accounts => {
   let commodityReg
   const commodityEcon = accounts[1]
   const commodityInd = accounts[2]
-  const player1 = accounts[3]
-  const player2 = accounts[4]
+  const crystalForge = accounts[3]
+  const player1 = accounts[4]
+  const player2 = accounts[5]
   const commodityId = web3.toBigNumber(1230)
   const qty = web3.toBigNumber(50000)
 
@@ -20,6 +21,7 @@ contract("CommodityReg", accounts => {
       // Set access controls
       await commodityReg.setCommodityEcon(commodityEcon)
       await commodityReg.setCommodityInd(commodityInd)
+      await commodityReg.setCrystalForge(crystalForge)
 
       resolve()
     })
@@ -59,7 +61,7 @@ contract("CommodityReg", accounts => {
       await init()
       await commodityReg.mint(player1, commodityId, qty, { from: commodityInd })
       await commodityReg.mint(player1, commodityId, qty, { from: commodityInd })
-      await commodityReg.burn(player1, commodityId, qty, { from: commodityInd })
+      await commodityReg.burn(player1, commodityId, qty, { from: crystalForge })
     })
 
     it("adjusts balances correctly", async () => {
@@ -74,16 +76,16 @@ contract("CommodityReg", accounts => {
 
     it("adjusts commoditiesOwned array correctly", async () => {
       // Burn once more so balance should be zero
-      await commodityReg.burn(player1, commodityId, qty, { from: commodityInd })
+      await commodityReg.burn(player1, commodityId, qty, { from: crystalForge })
 
       const commoditiesOwned = await commodityReg.getCommoditiesOwned(player1)
       assert.equal(commoditiesOwned.length, 0, "did not remove commodity to commoditiesOwned")
     })
 
-    it("address that is not commodityInd may not call the function", async () => {
+    it("address that is not crystalForge may not call the function", async () => {
       await truffleAssert.reverts(
         commodityReg.burn(player1, commodityId, qty, { from: player1 }),
-        "Only CommodityInd may access this function"
+        "Only CrystalForge may access this function"
       )
     })
   })

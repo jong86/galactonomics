@@ -50,7 +50,7 @@ contract CommodityReg is Ownable, AccessControlled {
    * @param _id Id of commodity
    * @param _amount How many units of commodity to burn
    */
-  function burn(address _owner, uint _id, uint _amount) external onlyCommodityInd returns (bool) {
+  function burn(address _owner, uint _id, uint _amount) external onlyCrystalForge returns (bool) {
     // Subtract amount from owner's balance
     balances[_id][_owner] = balances[_id][_owner].sub(_amount);
     // Subtract amount from total supply

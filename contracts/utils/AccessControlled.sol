@@ -71,8 +71,8 @@ contract AccessControlled is Ownable {
   }
 
   /**
-   * @dev Assigns address of the Temple Authority
-   * @param _crystalForge Address of Temple Authority contract
+   * @dev Assigns address of CrystalForge
+   * @param _crystalForge Address of CrystalForge contract
    */
   function setCrystalForge(address _crystalForge) public onlyOwner {
     require(_crystalForge != address(0), "New address cannot be zero address");

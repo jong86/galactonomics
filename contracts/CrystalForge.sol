@@ -26,6 +26,8 @@ contract CrystalForge {
 
   event CrystalForged(string uri, address forger);
 
+  event LogA(address a);
+
   /**
    * @notice Creates a new crystal, requires forgingAmount balance in all chosen commodities
    * @dev Burns a quantity of all chosen commodities
@@ -44,7 +46,6 @@ contract CrystalForge {
     }
 
     // Burn x amount of all user's chosen commodities
-    // [Dec 7: commodities burned will be the ones chosen to forge with]
     for (i = 0; i < length; i++) {
       require(
         commodityReg.burn(msg.sender, _crystalIds[i], forgingAmount),
