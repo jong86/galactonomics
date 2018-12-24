@@ -73,7 +73,7 @@ class MineCommodities extends Component {
     let commodity
 
     try {
-      commodity = await contracts.commodityReg.getMiningData(user.currentPlanet.id, { from: user.address })
+      commodity = await contracts.commodityInd.getMiningData(user.currentPlanet.id, { from: user.address })
     } catch (e) {
       return reject(e)
     }
@@ -92,12 +92,12 @@ class MineCommodities extends Component {
     const { user, setIndustrialState } = this.props
     const { miningTarget, prevMiningHash, nonce, isMining } = this.props.industrial
 
+    console.table({nonce, id: user.currentPlanet.id, address: user.address})
 
     if (typeof nonce === 'number') {
       const hash = sha256(
         nonce.toString() +
         user.currentPlanet.id.toString() +
-        prevMiningHash +
         user.address.substring(2).toLowerCase()
       )
 
@@ -135,7 +135,7 @@ class MineCommodities extends Component {
     setIndustrialState({ isSubmitting: true })
 
     try {
-      await contracts.commodityReg.submitPOW(String(nonce), { from: user.address })
+      await contracts.commodityInd.submitPOW(nonce, user.currentPlanet.id, { from: user.address })
     } catch (e) {
       setIndustrialState({
         isMining: false,

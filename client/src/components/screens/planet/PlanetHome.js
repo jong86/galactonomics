@@ -107,15 +107,6 @@ class PlanetHome extends Component {
               View My Cargo
             </Laserframe>
             <Laserframe
-              onClick={() => changeScreen('CrystalMarket')}
-              isButton
-              flavour="special"
-              size="wide"
-            >
-              <MdBusinessCenter size={iconSize} />
-              Crystal Market
-            </Laserframe>
-            <Laserframe
               onClick={() => changeScreen('ForgeCrystal')}
               isButton
               flavour="special"
@@ -123,6 +114,15 @@ class PlanetHome extends Component {
             >
               <FaHammer size={iconSize} />
               Forge Crystal
+            </Laserframe>
+            <Laserframe
+              onClick={() => changeScreen('CrystalMarket')}
+              isButton
+              flavour="special"
+              size="wide"
+            >
+              <MdBusinessCenter size={iconSize} />
+              Crystal Market
             </Laserframe>
             <Laserframe
               onClick={() => changeScreen('ViewCrystals')}

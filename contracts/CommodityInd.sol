@@ -37,8 +37,11 @@ contract CommodityInd is Ownable, AccessControlled {
    * @param _nonce Value found that when sha256-hashed with the other params used in the code, results in an
    *  acceptable hash value less than the target difficulty for the commodity
    * @param _commodityId Id of commodity that you mined
+   * @param _blockNumber blockNumber of hash used
    */
-  function submitPOW(uint _nonce, uint _commodityId) external {
+  function submitPOW(uint _nonce, uint _commodityId, uint _blockNumber) external {
+    require(block.number - _blockNumber <= 10, "You can only mine for a block at most 10 blocks in the past")
+    
     // Block further access to function if reward already claimed for a block
     if (wasMinedInBlock[_commodityId][block.number] == true) {
       emit AlreadyMined(msg.sender);
@@ -50,7 +53,8 @@ contract CommodityInd is Ownable, AccessControlled {
       abi.encodePacked(
         _nonce.toString(),
         _commodityId.toString(),
-        msg.sender.toString()
+        msg.sender.toString(),
+        uint256(block.blockhash(blockNumber)).toString()
       )
     );
 
