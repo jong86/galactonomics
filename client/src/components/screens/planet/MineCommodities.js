@@ -76,8 +76,6 @@ class MineCommodities extends Component {
       return reject(e)
     }
 
-    console.log('commodity', commodity);
-
     setIndustrialState({
       miningReward: commodity.miningReward.toString(),
       miningTarget: commodity.miningTarget.toString(),
@@ -100,12 +98,12 @@ class MineCommodities extends Component {
         bn.toString()
       )
 
-      console.table({
-        nonce: nonce.toString(),
-        commodityId: user.currentPlanet.id.toString(),
-        address: user.address.substring(2).toLowerCase(),
-        blockHash: bn.toString()
-      })
+      // console.table({
+      //   nonce: nonce.toString(),
+      //   commodityId: user.currentPlanet.id.toString(),
+      //   address: user.address.substring(2).toLowerCase(),
+      //   blockHash: bn.toString()
+      // })
 
       setIndustrialState({ hash })
 
@@ -163,7 +161,6 @@ class MineCommodities extends Component {
     // Refresh data
     this.getMiningData()
     refreshCommoditiesOwned()
-
 
     setIndustrialState({
       isMining: false,
