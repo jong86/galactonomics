@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import injectSheet from 'react-jss'
 import { connect } from 'react-redux'
 import Laserframe from 'components/reusables/Laserframe'

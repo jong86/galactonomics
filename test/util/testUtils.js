@@ -40,6 +40,13 @@ function mine(commodityInd, commodityId, player, blockHash) {
           BigInt(blockHash).toString()
         )
 
+        console.table({
+          nonce: nonce.toString(),
+          commodityId: commodityId.toString(),
+          address: player.substring(2),
+          blockHash: BigInt(blockHash).toString()
+        })
+
         hashBN = web3.toBigNumber('0x' + hash)
 
       } while (hashBN.gt(miningTarget))

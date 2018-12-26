@@ -19,7 +19,7 @@ contract("CommodityInd", accounts => {
     await commodityReg.setCommodityInd(commodityInd.address)
   })
 
-  it("approves of valid proof-of-work", async () => {
+  it.only("approves of valid proof-of-work", async () => {
     let response, balance, nonce, miningData, hash
     const { number: blockNumber, hash: blockHash } = web3.eth.getBlock('latest')
 

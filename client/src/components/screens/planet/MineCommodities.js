@@ -25,12 +25,6 @@ const styles = {
 
 const AREA_SIZE = 768
 
-function checkIfHashUnderTarget(hash, target) {
-  hash = parseInt('0x' + String(hash), 16)
-  target = parseInt(target, 16)
-  return hash < target
-}
-
 class MineCommodities extends Component {
   state = {}
 
@@ -38,16 +32,21 @@ class MineCommodities extends Component {
     this.getMiningData()
   }
 
-  componentDidUpdate = prevProps => {
-    const { setIndustrialState, setDialogBox } = this.props
+  componentDidUpdate = async prevProps => {
+    const { setIndustrialState, setDialogBox, web3 } = this.props
     const { isMining, nonce, areaStart, areaEnd, areasMined, commodityName } = this.props.industrial
 
     // When mining is started... (an area is clicked)
     if (!prevProps.industrial.isMining && isMining) {
+      const { number: blockNumber, hash: blockHash } = await web3.eth.getBlock('latest')
+
       setIndustrialState({
         miningJustFailed: false,
         playMiningSound: true,
+        blockNumber,
+        blockHash,
       })
+
       window.requestAnimationFrame(this.step)
     }
 
@@ -64,7 +63,6 @@ class MineCommodities extends Component {
         playMiningSound: false,
         playMiningFailSound: true,
       })
-      // setDialogBox(`No ${commodityName} was found in that area, \nclick to continue.`)
     }
   }
 
@@ -78,10 +76,11 @@ class MineCommodities extends Component {
       return reject(e)
     }
 
+    console.log('commodity', commodity);
+
     setIndustrialState({
-      miningReward: commodity.miningReward,
-      miningTarget: commodity.miningTarget,
-      prevMiningHash: commodity.prevMiningHash,
+      miningReward: commodity.miningReward.toString(),
+      miningTarget: commodity.miningTarget.toString(),
       uri: commodity.uri,
     })
 
@@ -89,21 +88,28 @@ class MineCommodities extends Component {
   })
 
   step = () => {
-    const { user, setIndustrialState } = this.props
-    const { miningTarget, prevMiningHash, nonce, isMining } = this.props.industrial
-
-    console.table({nonce, id: user.currentPlanet.id, address: user.address})
+    const { user, setIndustrialState, web3 } = this.props
+    const { miningTarget, nonce, isMining, blockNumber, blockHash } = this.props.industrial
+    const bn = new web3.utils.BN(blockHash.substr(2), 16)
 
     if (typeof nonce === 'number') {
       const hash = sha256(
         nonce.toString() +
         user.currentPlanet.id.toString() +
-        user.address.substring(2).toLowerCase()
+        user.address.substring(2).toLowerCase() +
+        bn.toString()
       )
+
+      console.table({
+        nonce: nonce.toString(),
+        commodityId: user.currentPlanet.id.toString(),
+        address: user.address.substring(2).toLowerCase(),
+        blockHash: bn.toString()
+      })
 
       setIndustrialState({ hash })
 
-      const validProofFound = checkIfHashUnderTarget(hash, miningTarget)
+      const validProofFound = this.checkIfHashUnderTarget(hash, miningTarget)
 
       if (validProofFound) {
         return setIndustrialState({
@@ -128,14 +134,21 @@ class MineCommodities extends Component {
     })
   }
 
+  checkIfHashUnderTarget = (hash, target) => {
+    const { web3 } = this.props
+    const bnHash = new web3.utils.BN(hash, 16)
+    const bnTarget = new web3.utils.BN(target)
+    return bnHash.lt(bnTarget)
+  }
+
   submitProof = async () => {
     let { user, contracts, setIndustrialState, setDialogBox } = this.props
-    const { nonce } = this.props.industrial
+    const { nonce, blockNumber } = this.props.industrial
 
     setIndustrialState({ isSubmitting: true })
 
     try {
-      await contracts.commodityInd.submitPOW(nonce, user.currentPlanet.id, { from: user.address })
+      await contracts.commodityInd.submitPOW(nonce, user.currentPlanet.id, blockNumber, { from: user.address })
     } catch (e) {
       setIndustrialState({
         isMining: false,
