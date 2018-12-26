@@ -16,8 +16,8 @@ contract TestContract {
    * @dev This function is for testing the blocking flag of function submitPOW in CommodityInd.
    *  (that function should only be allowed to be called successfully once per block)
    */
-  function trySubmitPOWTwice(uint _nonce, uint _commodityId) external {
-    commodityInd.submitPOW(_nonce, _commodityId);
-    commodityInd.submitPOW(_nonce, _commodityId);
+  function trySubmitPOWTwice(uint _nonce, uint _commodityId, uint _blockNumber) external {
+    commodityInd.submitPOW(_nonce, _commodityId, _blockNumber);
+    commodityInd.submitPOW(_nonce, _commodityId, _blockNumber);
   }
 }

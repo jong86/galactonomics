@@ -40,7 +40,11 @@ contract CommodityInd is Ownable, AccessControlled {
    * @param _blockNumber blockNumber of hash used
    */
   function submitPOW(uint _nonce, uint _commodityId, uint _blockNumber) external {
-    require(block.number - _blockNumber <= 10, "You can only mine for a block at most 10 blocks in the past")
+    uint _blockDiff = block.number - _blockNumber;
+    require(
+      0 <= _blockDiff && _blockDiff <= 256,
+      "You can only submit a POW for past blocks up to 256 blocks in the past"
+    );
     
     // Block further access to function if reward already claimed for a block
     if (wasMinedInBlock[_commodityId][block.number] == true) {
@@ -54,7 +58,7 @@ contract CommodityInd is Ownable, AccessControlled {
         _nonce.toString(),
         _commodityId.toString(),
         msg.sender.toString(),
-        uint256(block.blockhash(blockNumber)).toString()
+        uint256(block.blockhash(_blockNumber)).toString()
       )
     );
 

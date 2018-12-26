@@ -21,7 +21,7 @@ function mineCommodityXTimes(commodityInd, numTimes, player, commodityId) {
   })
 }
 
-function mine(commodityInd, commodityId, player) {
+function mine(commodityInd, commodityId, player, blockHash) {
   return new Promise(async (resolve, reject) => {
     try {
       const miningData = await commodityInd.getMiningData(commodityId, { from: player })
@@ -36,7 +36,8 @@ function mine(commodityInd, commodityId, player) {
         hash = sha256(
           nonce.toString() +
           commodityId.toString() +
-          player.substring(2)
+          player.substring(2) +
+          BigInt(blockHash).toString()
         )
 
         hashBN = web3.toBigNumber('0x' + hash)

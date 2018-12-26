@@ -21,10 +21,11 @@ contract("CommodityInd", accounts => {
 
   it("approves of valid proof-of-work", async () => {
     let response, balance, nonce, miningData, hash
+    const { number: blockNumber, hash: blockHash } = web3.eth.getBlock('latest')
 
     // Find the golden nonce by mining
     try {
-      const results = await mine(commodityInd, commodityId, player1)
+      const results = await mine(commodityInd, commodityId, player1, blockHash)
       nonce = results.nonce
       miningData = results.miningData
       hash = results.hash
@@ -35,7 +36,7 @@ contract("CommodityInd", accounts => {
     // Submit the nonce as POW
     const miningReward = miningData[0]
     try {
-      response = await commodityInd.submitPOW(nonce, commodityId, { from: player1 })
+      response = await commodityInd.submitPOW(nonce, commodityId, blockNumber, { from: player1 })
     } catch (e) {
       assert(false, e.toString())
     }
@@ -50,17 +51,20 @@ contract("CommodityInd", accounts => {
   })
 
   it("disapproves of invalid proof-of-work", async () => {
+    const { number: blockNumber } = web3.eth.getBlock('latest')
+
     await truffleAssert.reverts(
-      commodityInd.submitPOW(5, commodityId, { from: player1 }),
+      commodityInd.submitPOW(5, commodityId, blockNumber, { from: player1 }),
       "That proof-of-work is not valid"
     )
   })
 
   it("only one mining reward is given per block", async () => {
     let balance, nonce, miningReward
+    const { number: blockNumber, hash: blockHash } = web3.eth.getBlock('latest')
 
     try {
-      const results = await mine(commodityInd, commodityId, testContract.address)
+      const results = await mine(commodityInd, commodityId, testContract.address, blockHash)
       nonce = results.nonce
       miningReward = results.miningData[0]
     } catch (e) {
@@ -68,7 +72,7 @@ contract("CommodityInd", accounts => {
     }
 
     try {
-      await testContract.trySubmitPOWTwice(nonce, commodityId)
+      await testContract.trySubmitPOWTwice(nonce, commodityId, blockNumber)
     } catch (e) {
       assert(false, e.toString())
     }
